@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Photo Order Management System</title>
+  <!-- Inline favicon (no absolute path to support file:// usage) -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'%3E%3Ccircle cx='60' cy='60' r='55' fill='%232563eb'/%3E%3Ctext x='60' y='70' font-size='42' text-anchor='middle' fill='white' font-family='Arial,sans-serif'%3EP%3C/text%3E%3C/svg%3E">
+  <script async type="module" crossorigin src="/assets/index-6F3hq9O7.js"></script>
+  <script type="module">import.meta.url;import("_").catch(()=>1);(async function*(){})().next();if(location.protocol!="file:"){window.__vite_is_modern_browser=true}</script>
+  <script type="module">!function(){if(window.__vite_is_modern_browser)return;console.warn("vite: loading legacy chunks, syntax error above and the same error below should be ignored");var e=document.getElementById("vite-legacy-polyfill"),n=document.createElement("script");n.src=e.src,n.onload=function(){System.import(document.getElementById('vite-legacy-entry').getAttribute('data-src'))},document.body.appendChild(n)}();</script>
+</head>
+<body>
+  <div id="loading-screen" class="fixed inset-0 bg-white z-50 flex items-center justify-center">
+    <div class="text-center">
+      <div class="relative">
+        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+        <div class="absolute inset-0 rounded-full h-12 w-12 border-t-2 border-blue-300 mx-auto animate-pulse"></div>
+      </div>
+      <p class="mt-4 text-gray-600 font-medium">Loading Photo Order Management...</p>
+      <div class="mt-2 text-xs text-gray-400" id="loading-progress">Initializing...</div>
+    </div>
+  </div>
+  
+  <div id="app" class="min-h-screen bg-gray-50">
+    <!-- Application will be mounted here -->
+  </div>
+  
+  <script>
+    /* Environment detection: when served via Vite dev server the path /src/main.ts is valid.
+       When opened as file:// or from a plain static host without build artifacts we avoid
+       trying to load raw TypeScript that would fail. */
+    (async function(){
+      const isFile = location.protocol === 'file:';
+      // Only attempt dev script if running via http(s) AND typical dev ports
+      const devPortPattern = /^(3000|5173|5174|4173|4174)$/;
+      const maybeDev = !isFile && devPortPattern.test(location.port || '');
+      if (maybeDev) {
+        try {
+          const s = document.createElement('script');
+            s.type='module';
+            s.src='/src/main.ts';
+            s.onerror = () => console.warn('Dev script failed to load, fallback will engage.');
+            document.head.appendChild(s);
+        } catch {/* ignore */}
+      }
+      // Earlier fallback (800ms) for better UX
+      setTimeout(async () => {
+        if(!(window).__APP_STARTED__) {
+          console.warn('[Fallback] Main bundle not initialized; activating fallback runtime.');
+        /assets/fallback-bundle-zlz4OZeb.js('./fallback-bundle.js'); } catch(e){ console.error('Fallback load failed', e); }
+        }
+      }, 800);
+    })();
+  </script>
+  <style id="fallback-min-styles">
+    /* Minimal styles for fallback when Tailwind not processed */
+    body { font-family: system-ui, Arial, sans-serif; margin:0; background:#f3f4f6; }
+    .btn-primary { background:#2563eb;color:#fff;padding:8px 14px;border-radius:6px;border:none;cursor:pointer; }
+    .btn-secondary { background:#4b5563;color:#fff;padding:8px 14px;border-radius:6px;border:none;cursor:pointer; }
+  </style>
+  <noscript><div style="padding:1rem;font-family:Arial">Enable JavaScript to use the application.</div></noscript>
+  <script nomodule>!function(){var e=document,t=e.createElement("script");if(!("noModule"in t)&&"onbeforeload"in t){var n=!1;e.addEventListener("beforeload",(function(e){if(e.target===t)n=!0;else if(!e.target.hasAttribute("nomodule")||!n)return;e.preventDefault()}),!0),t.type="module",t.src=".",e.head.appendChild(t),t.remove()}}();</script>
+  <script nomodule crossorigin id="vite-legacy-polyfill" src="/assets/polyfills-legacy-Bj7NGYSK.js"></script>
+  <script nomodule crossorigin id="vite-legacy-entry" data-src="/assets/index-legacy-CnvmjJHj.js">System.import(document.getElementById('vite-legacy-entry').getAttribute('data-src'))</script>
+</body>
+</html>
