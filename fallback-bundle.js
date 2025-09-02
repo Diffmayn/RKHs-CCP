@@ -2,22 +2,23 @@
 (function(){
   console.log('[DEBUG] Fallback script loaded and executing');
   
-  const root = document.getElementById('app');
-  if(!root || window.__APP_STARTED__) {
-    console.log('[DEBUG] Early exit - root exists:', !!root, 'app started:', !!window.__APP_STARTED__);
-    return;
-  }
+  try {
+    const root = document.getElementById('app');
+    if(!root || window.__APP_STARTED__) {
+      console.log('[DEBUG] Early exit - root exists:', !!root, 'app started:', !!window.__APP_STARTED__);
+      return;
+    }
 
-  console.log('[Fallback] Activating fallback runtime');
+    console.log('[Fallback] Activating fallback runtime');
 
-  // Hide loading screen and show app
-  const loadingScreen = document.getElementById('loading-screen');
-  if (loadingScreen) {
-    loadingScreen.style.display = 'none';
-  }
+    // Hide loading screen and show app
+    const loadingScreen = document.getElementById('loading-screen');
+    if (loadingScreen) {
+      loadingScreen.style.display = 'none';
+    }
 
-  // Mark fallback as active
-  window.__FALLBACK_ACTIVE__ = true;
+    // Mark fallback as active
+    window.__FALLBACK_ACTIVE__ = true;
 
   // Authentication System
   class AuthSystem {
@@ -170,6 +171,11 @@
 
     canUploadImages() {
       return this.currentUser && ['Admin', 'Marketing Manager', 'Photographer', 'Photo Box'].includes(this.currentUser.role);
+    }
+
+    // Permission to manage order status and workflow
+    canManageOrders() {
+      return this.currentUser && ['Admin', 'Marketing Manager', 'Promo Coordinator'].includes(this.currentUser.role);
     }
 
     getFilteredOrders(allOrders) {
@@ -795,6 +801,7 @@
     #fallback-app .Delivered { background: #d1fae5; color: #065f46; }
     #fallback-app .Pending { background: #fef3c7; color: #92400e; }
     #fallback-app .Draft { background: #f3f4f6; color: #374151; }
+    #fallback-app .NewRequest { background: #e0f2fe; color: #075985; }
     #fallback-app .Received { background: #e0f2fe; color: #075985; }
     #fallback-app .InProgress { background: #dbeafe; color: #1e40af; }
     #fallback-app .Approved { background: #dcfce7; color: #166534; }
@@ -1026,7 +1033,7 @@
                 <span class="nav-item-icon">📅</span>
                 <span class="nav-item-text">Calendar</span>
               </div>
-              <div class="nav-item" data-tooltip="Workflow View" onclick="showView('workflow')">
+              <div class="nav-item" data-tooltip="Workflow View" onclick="console.log('Workflow button clicked'); showView('workflow')">
                 <span class="nav-item-icon">🔄</span>
                 <span class="nav-item-text">Workflow</span>
               </div>
@@ -1236,6 +1243,43 @@
                   <!-- Calendar will be populated here -->
                 </div>
               </div>
+
+              <!-- Workflow View -->
+              <div style="display: none;" id="workflowView">
+                <h3 style="margin: 16px 0 8px; font-size: 18px; color: #1f2937;">🔄 Workflow Overview</h3>
+                <p style="margin: 0 0 16px; color: #6b7280; font-size: 14px;">Track order progression through workflow stages</p>
+                
+                <div id="workflowKanban" style="display: flex; gap: 16px; overflow-x: auto; padding-bottom: 16px;">
+                  <div class="kanban-column" 
+                       style="min-width: 250px; background: #f8fafc; border-radius: 8px; padding: 12px;"
+                       ondrop="handleDrop(event, 'Draft')" 
+                       ondragover="handleDragOver(event)">
+                    <h4 style="margin: 0 0 12px; font-size: 14px; color: #374151; font-weight: 600;">📝 Draft Orders</h4>
+                    <div id="draftOrders" class="kanban-items"></div>
+                  </div>
+                  <div class="kanban-column" 
+                       style="min-width: 250px; background: #fef3c7; border-radius: 8px; padding: 12px;"
+                       ondrop="handleDrop(event, 'Samples Requested')" 
+                       ondragover="handleDragOver(event)">
+                    <h4 style="margin: 0 0 12px; font-size: 14px; color: #92400e; font-weight: 600;">⏳ Samples Requested</h4>
+                    <div id="samplesRequestedOrders" class="kanban-items"></div>
+                  </div>
+                  <div class="kanban-column" 
+                       style="min-width: 250px; background: #dbeafe; border-radius: 8px; padding: 12px;"
+                       ondrop="handleDrop(event, 'In Progress')" 
+                       ondragover="handleDragOver(event)">
+                    <h4 style="margin: 0 0 12px; font-size: 14px; color: #1e40af; font-weight: 600;">🎯 In Progress</h4>
+                    <div id="inProgressOrders" class="kanban-items"></div>
+                  </div>
+                  <div class="kanban-column" 
+                       style="min-width: 250px; background: #dcfce7; border-radius: 8px; padding: 12px;"
+                       ondrop="handleDrop(event, 'Complete')" 
+                       ondragover="handleDragOver(event)">
+                    <h4 style="margin: 0 0 12px; font-size: 14px; color: #166534; font-weight: 600;">✅ Completed</h4>
+                    <div id="completedOrders" class="kanban-items"></div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -1269,15 +1313,19 @@
         .sidebar.collapsed .nav-item {
           padding: 12px 20px;
           justify-content: center;
+          display: flex; /* Ensure nav items are displayed */
+          opacity: 1; /* Make sure they're visible */
         }
 
         .sidebar-header {
           padding: 20px;
+          padding-right: 50px;
           border-bottom: 1px solid rgba(0, 0, 0, 0.1);
           display: flex;
           align-items: center;
-          justify-content: space-between;
+          justify-content: flex-start;
           background: rgba(255, 255, 255, 0.8);
+          position: relative;
         }
 
         .sidebar-title {
@@ -1292,6 +1340,12 @@
           opacity: 0;
         }
 
+        .sidebar.collapsed .sidebar-header {
+          padding: 20px;
+          height: auto;
+          min-height: inherit;
+        }
+
         .sidebar-toggle {
           background: none;
           border: none;
@@ -1304,12 +1358,32 @@
           display: flex;
           align-items: center;
           justify-content: center;
+          position: absolute;
+          right: 8px;
+          top: 12px;
+          width: 32px;
+          height: 32px;
+          z-index: 10;
+        }
+
+        .sidebar.collapsed .sidebar-toggle {
+          right: 20px; /* Move button 6px further right to compensate */
+          background: rgba(255, 255, 255, 0.9);
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+          border: 1px solid rgba(0, 0, 0, 0.1);
+          transform: translateX(-6px); /* Move the entire button with background 6px left */
         }
 
         .sidebar-toggle:hover {
           background: rgba(0, 0, 0, 0.1);
           color: #374151;
           transform: scale(1.1);
+        }
+
+        .sidebar.collapsed .sidebar-toggle:hover {
+          background: rgba(255, 255, 255, 1);
+          color: #374151;
+          transform: translateX(-6px) scale(1.1); /* Maintain left shift and add scale */
         }
 
         .sidebar-toggle:active {
@@ -1319,6 +1393,8 @@
         #sidebarToggleIcon {
           transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
           display: inline-block;
+          font-size: 14px;
+        }
         }
 
         .sidebar-nav {
@@ -1380,6 +1456,8 @@
 
         .sidebar.collapsed .nav-item-icon {
           margin-right: 0;
+          display: block; /* Ensure icons are displayed */
+          opacity: 1; /* Make sure icons are visible */
         }
 
         .nav-item-text {
@@ -1390,6 +1468,7 @@
 
         .sidebar.collapsed .nav-item-text {
           opacity: 0;
+          display: none; /* Completely hide the text */
         }
 
         /* Tooltip for collapsed sidebar */
@@ -1443,7 +1522,7 @@
           background: rgba(255, 255, 255, 0.95);
           backdrop-filter: blur(20px);
           margin: 20px;
-          margin-left: 0;
+          margin-left: 20px;
           border-radius: 16px;
           box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
           overflow: hidden;
@@ -1504,7 +1583,7 @@
         }
 
         /* View Transition Animations */
-        #ordersView, #kanbanView, #calendarView, #samplesView, #createOrderView {
+        #ordersView, #kanbanView, #calendarView, #samplesView, #createOrderView, #workflowView {
           opacity: 0;
           transform: translateY(20px);
           transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
@@ -1512,7 +1591,7 @@
         }
 
         #ordersView.view-active, #kanbanView.view-active, #calendarView.view-active, 
-        #samplesView.view-active, #createOrderView.view-active {
+        #samplesView.view-active, #createOrderView.view-active, #workflowView.view-active {
           opacity: 1;
           transform: translateY(0);
           animation: fadeInUp 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
@@ -1558,50 +1637,6 @@
       </style>
 
       <script>
-        // Enhanced Sidebar toggle functionality with smooth animations
-        function toggleSidebar() {
-          const sidebar = document.getElementById('sidebar');
-          const toggleIcon = document.getElementById('sidebarToggleIcon');
-          const mainContent = document.querySelector('.main-content');
-          
-          if (!sidebar || !toggleIcon) return;
-          
-          const isCollapsed = sidebar.classList.contains('collapsed');
-          
-          // Add transitioning class for extra smooth animation
-          sidebar.classList.add('transitioning');
-          
-          if (isCollapsed) {
-            // Expanding sidebar
-            sidebar.classList.remove('collapsed');
-            toggleIcon.style.transform = 'rotate(0deg)';
-            toggleIcon.textContent = '◀';
-            
-            // Animate main content margin for more space
-            if (mainContent) {
-              mainContent.style.marginLeft = '0';
-            }
-          } else {
-            // Collapsing sidebar
-            sidebar.classList.add('collapsed');
-            toggleIcon.style.transform = 'rotate(180deg)';
-            toggleIcon.textContent = '▶';
-            
-            // Animate main content margin to gain space
-            if (mainContent) {
-              mainContent.style.marginLeft = '-220px';
-            }
-          }
-          
-          // Remove transitioning class after animation completes
-          setTimeout(() => {
-            sidebar.classList.remove('transitioning');
-          }, 300);
-        }
-        
-        // Assign to window immediately after definition
-        window.toggleSidebar = toggleSidebar;
-
         // Update content title when switching views
         function updateContentTitle(title) {
           const contentTitle = document.getElementById('contentTitle');
@@ -1609,34 +1644,6 @@
             contentTitle.textContent = title;
           }
         }
-
-        // Enhanced view switching with title updates
-        const originalShowView = window.showView;
-        window.showView = function(view) {
-          const titles = {
-            'orders': 'Orders Overview',
-            'samples': 'Sample Management',
-            'kanban': 'Kanban Board',
-            'calendar': 'Calendar View',
-            'workflow': 'Workflow View'
-          };
-          
-          updateContentTitle(titles[view] || 'Dashboard');
-          
-          // Update active nav item
-          document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
-          document.querySelectorAll('.nav-item').forEach(item => {
-            const onclick = item.getAttribute('onclick');
-            if (onclick && onclick.includes("'" + view + "'")) {
-              item.classList.add('active');
-            }
-          });
-          
-          // Call the original function
-          if (originalShowView) {
-            originalShowView(view);
-          }
-        };
 
         // Quick action functions
         function refreshData() {
@@ -1867,31 +1874,6 @@
           </div>
         </div>
 
-        <div style="display: none;" id="workflowView">
-          <h3 style="margin: 16px 0 8px; font-size: 18px; color: #1f2937;">🔄 Workflow Overview</h3>
-          <div id="workflowKanban" style="display: flex; gap: 16px; overflow-x: auto; padding-bottom: 16px;">
-            <div class="kanban-column" style="min-width: 250px; background: #f8fafc; border-radius: 8px; padding: 12px;">
-              <h4 style="margin: 0 0 12px; font-size: 14px; color: #374151; font-weight: 600;">📝 Draft Orders</h4>
-              <div id="draftOrders" class="kanban-items"></div>
-            </div>
-            <div class="kanban-column" style="min-width: 250px; background: #fef3c7; border-radius: 8px; padding: 12px;">
-              <h4 style="margin: 0 0 12px; font-size: 14px; color: #92400e; font-weight: 600;">⏳ Samples Requested</h4>
-              <div id="samplesRequestedOrders" class="kanban-items"></div>
-            </div>
-            <div class="kanban-column" style="min-width: 250px; background: #dbeafe; border-radius: 8px; padding: 12px;">
-              <h4 style="margin: 0 0 12px; font-size: 14px; color: #1e40af; font-weight: 600;">🎯 In Progress</h4>
-              <div id="inProgressOrders" class="kanban-items"></div>
-            </div>
-            <div class="kanban-column" style="min-width: 250px; background: #dcfce7; border-radius: 8px; padding: 12px;">
-              <h4 style="margin: 0 0 12px; font-size: 14px; color: #166534; font-weight: 600;">✅ Completed</h4>
-              <div id="completedOrders" class="kanban-items"></div>
-            </div>
-          </div>
-          <div style="text-align: center; margin-top: 16px;">
-            <button id="backFromWorkflow" class="btn">← Back to Dashboard</button>
-          </div>
-        </div>
-
         <div style="display: none;" id="bulkActionsPanel">
           <div style="background: #fef3c7; border: 1px solid #f59e0b; border-radius: 6px; padding: 12px; margin: 16px 0;">
             <span id="selectedCount">0</span> items selected
@@ -1929,6 +1911,52 @@
         </div>
       </div>
     `;
+
+    // Define toggleSidebar function globally after HTML is rendered
+    window.toggleSidebar = function() {
+      console.log('[Sidebar] Toggle function called');
+      const sidebar = document.getElementById('sidebar');
+      const toggleIcon = document.getElementById('sidebarToggleIcon');
+      const mainContent = document.querySelector('.main-content');
+      
+      if (!sidebar || !toggleIcon) {
+        console.log('[Sidebar] Missing elements - sidebar:', !!sidebar, 'toggleIcon:', !!toggleIcon);
+        return;
+      }
+      
+      const isCollapsed = sidebar.classList.contains('collapsed');
+      console.log('[Sidebar] Current state - collapsed:', isCollapsed);
+      
+      // Add transitioning class for extra smooth animation
+      sidebar.classList.add('transitioning');
+      
+      if (isCollapsed) {
+        // Expanding sidebar
+        sidebar.classList.remove('collapsed');
+        toggleIcon.style.transform = 'rotate(0deg)';
+        toggleIcon.textContent = '◀';
+        
+        // Reset main content margin to normal spacing
+        if (mainContent) {
+          mainContent.style.marginLeft = '20px';
+        }
+      } else {
+        // Collapsing sidebar
+        sidebar.classList.add('collapsed');
+        toggleIcon.style.transform = 'rotate(180deg)';
+        toggleIcon.textContent = '◀'; // Keep same character, just rotate it
+        
+        // Keep main content in place, just let it expand naturally
+        if (mainContent) {
+          mainContent.style.marginLeft = '0px'; // No movement, just natural expansion
+        }
+      }
+      
+      // Remove transitioning class after animation completes
+      setTimeout(() => {
+        sidebar.classList.remove('transitioning');
+      }, 300);
+    };
 
     const tbody = document.getElementById('ordersBody');
     const samplesBody = document.getElementById('samplesBody');
@@ -1982,8 +2010,6 @@
     };
 
     function showView(viewName) {
-      console.log('showView called with:', viewName);
-      
       // Close any open right-side modals when switching views (except for create view)
       if (viewName !== 'create') {
         closeAllRightSideModals();
@@ -2179,19 +2205,19 @@
       } else if (viewName === 'samples') {
         drawSampleRows();
       } else if (viewName === 'workflow') {
-        console.log('Drawing workflow view...');
         drawWorkflowView();
       } else if (viewName === 'kanban') {
-        console.log('Drawing kanban board...');
         drawKanbanBoard();
       } else if (viewName === 'calendar') {
-        console.log('Drawing calendar view...');
         drawCalendarView();
       }
     }
 
     // Expose showView globally for onclick handlers
     window.showView = showView;
+    
+    // Debug workflow button click
+    console.log('Workflow functionality initialized');
 
     // Close all right-side modals
     function closeAllRightSideModals() {
@@ -2442,31 +2468,127 @@
         return;
       }
       
+      const currentUser = authSystem.getCurrentUser();
+      const canManageOrders = authSystem.canManageOrders();
+      const canAssignWork = authSystem.canAssignWork();
+      
+      // Available status options for progression
+      const statusOptions = [
+        'Draft',
+        'New Request', 
+        'Samples Requested',
+        'In Progress',
+        'Approved',
+        'Complete',
+        'Delivered'
+      ];
+      
+      // Available team members for assignment
+      const teamMembers = [
+        'Unassigned',
+        'Alice Johnson',
+        'Bob Smith', 
+        'Charlie Brown',
+        'Diana Prince',
+        'Eva Martinez',
+        'Frank Wilson',
+        'Grace Lee'
+      ];
+      
       const modal = document.createElement('div');
       modal.className = 'order-details-modal';
       modal.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;z-index:1000';
       modal.innerHTML = `
-        <div style="background:white;border-radius:12px;padding:32px;max-width:600px;width:95%;max-height:80vh;overflow-y:auto;">
+        <div style="background:white;border-radius:12px;padding:32px;max-width:700px;width:95%;max-height:85vh;overflow-y:auto;">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;">
             <h2 style="margin:0;font-size:24px;color:#1f2937;">📋 Order Details</h2>
             <button onclick="this.closest('.order-details-modal').remove()" style="background:none;border:none;font-size:28px;cursor:pointer;color:#6b7280;">×</button>
           </div>
+          
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:24px;">
+            <!-- Left Column - Order Info -->
+            <div>
+              <div style="margin-bottom:16px;"><strong>Order Number:</strong> ${order.orderNumber}</div>
+              <div style="margin-bottom:16px;"><strong>Title:</strong> ${order.title}</div>
+              <div style="margin-bottom:16px;"><strong>Created By:</strong> ${order.createdBy}</div>
+              <div style="margin-bottom:16px;"><strong>Created Date:</strong> ${order.createdDate}</div>
+              <div style="margin-bottom:16px;"><strong>Deadline:</strong> ${order.deadline}</div>
+              <div style="margin-bottom:16px;"><strong>Priority:</strong> <span class="status ${order.priority}">${order.priority}</span></div>
+              ${order.budget ? `<div style="margin-bottom:16px;"><strong>Budget:</strong> ${order.budget}</div>` : ''}
+            </div>
+            
+            <!-- Right Column - Status & Assignment Management -->
+            <div style="background:#f8fafc;padding:16px;border-radius:8px;">
+              <h3 style="margin:0 0 16px;font-size:16px;color:#1f2937;">📊 Workflow Management</h3>
+              
+              <!-- Current Status -->
+              <div style="margin-bottom:16px;">
+                <strong>Current Status:</strong>
+                <div style="margin-top:4px;">
+                  <span class="status ${order.status.replace(/\\s+/g, '')}" style="font-size:14px;">${order.status}</span>
+                </div>
+              </div>
+              
+              ${canManageOrders ? `
+                <!-- Status Change -->
+                <div style="margin-bottom:16px;">
+                  <strong>Update Status:</strong>
+                  <select id="statusSelect_${orderNumber}" style="width:100%;padding:8px;border:1px solid #d1d5db;border-radius:4px;margin-top:4px;">
+                    ${statusOptions.map(status => 
+                      `<option value="${status}" ${status === order.status ? 'selected' : ''}>${status}</option>`
+                    ).join('')}
+                  </select>
+                </div>
+              ` : ''}
+              
+              <!-- Current Assignment -->
+              <div style="margin-bottom:16px;">
+                <strong>Assigned To:</strong>
+                <div style="margin-top:4px;color:#6b7280;">
+                  ${order.photographer || 'Unassigned'}
+                </div>
+              </div>
+              
+              ${canAssignWork ? `
+                <!-- Assignment Change -->
+                <div style="margin-bottom:16px;">
+                  <strong>Reassign To:</strong>
+                  <select id="assignSelect_${orderNumber}" style="width:100%;padding:8px;border:1px solid #d1d5db;border-radius:4px;margin-top:4px;">
+                    ${teamMembers.map(member => 
+                      `<option value="${member}" ${(member === order.photographer || (member === 'Unassigned' && !order.photographer)) ? 'selected' : ''}>${member}</option>`
+                    ).join('')}
+                  </select>
+                </div>
+              ` : ''}
+              
+              ${(canManageOrders || canAssignWork) ? `
+                <button onclick="updateOrderWorkflow('${orderNumber}')" 
+                        style="width:100%;background:#2563eb;color:white;border:none;padding:12px;border-radius:6px;cursor:pointer;font-weight:600;margin-top:8px;">
+                  💾 Update Workflow
+                </button>
+              ` : ''}
+            </div>
+          </div>
+          
+          <!-- Order Details -->
           <div style="space-y:16px;">
-            <div><strong>Order Number:</strong> ${order.orderNumber}</div>
-            <div><strong>Title:</strong> ${order.title}</div>
-            <div><strong>Status:</strong> <span class="status ${order.status.replace(/\\s+/g, '')}">${order.status}</span></div>
-            <div><strong>Priority:</strong> <span class="status ${order.priority}">${order.priority}</span></div>
-            <div><strong>Created By:</strong> ${order.createdBy}</div>
-            <div><strong>Created Date:</strong> ${order.createdDate}</div>
-            <div><strong>Deadline:</strong> ${order.deadline}</div>
-            ${order.photographer ? `<div><strong>Photographer:</strong> ${order.photographer}</div>` : ''}
             ${order.brief ? `<div><strong>Brief:</strong><br><div style="margin-top:8px;padding:12px;background:#f8fafc;border-radius:6px;">${order.brief}</div></div>` : ''}
             ${order.articles ? `<div><strong>Articles:</strong><br><div style="margin-top:8px;padding:12px;background:#f8fafc;border-radius:6px;">${order.articles}</div></div>` : ''}
             ${order.deliverables ? `<div><strong>Deliverables:</strong><br><div style="margin-top:8px;padding:12px;background:#f8fafc;border-radius:6px;">${order.deliverables}</div></div>` : ''}
-            ${order.budget ? `<div><strong>Budget:</strong> ${order.budget}</div>` : ''}
           </div>
+          
+          <!-- Action Buttons -->
           <div style="margin-top:24px;display:flex;gap:12px;justify-content:flex-end;">
-            <button onclick="this.closest('.order-details-modal').remove()" style="background:#6b7280;color:white;border:none;padding:12px 24px;border-radius:6px;cursor:pointer;">Close</button>
+            ${canManageOrders ? `
+              <button onclick="showOrderHistory('${orderNumber}')" 
+                      style="background:#6b7280;color:white;border:none;padding:12px 24px;border-radius:6px;cursor:pointer;">
+                📜 View History
+              </button>
+            ` : ''}
+            <button onclick="this.closest('.order-details-modal').remove()" 
+                    style="background:#6b7280;color:white;border:none;padding:12px 24px;border-radius:6px;cursor:pointer;">
+              Close
+            </button>
           </div>
         </div>
       `;
@@ -2476,6 +2598,246 @@
     
     // Assign to window immediately after definition
     window.showOrderDetails = showOrderDetails;
+    
+    // Function to update order workflow (status and assignment)
+    function updateOrderWorkflow(orderNumber) {
+      const order = allOrders.find(o => o.orderNumber === orderNumber);
+      if (!order) {
+        alert('Order not found!');
+        return;
+      }
+      
+      const statusSelect = document.getElementById(`statusSelect_${orderNumber}`);
+      const assignSelect = document.getElementById(`assignSelect_${orderNumber}`);
+      const currentUser = authSystem.getCurrentUser();
+      
+      let updated = false;
+      let changes = [];
+      
+      // Update status if changed and user has permission
+      if (statusSelect && authSystem.canManageOrders()) {
+        const newStatus = statusSelect.value;
+        if (newStatus !== order.status) {
+          order.status = newStatus;
+          changes.push(`Status: ${newStatus}`);
+          updated = true;
+        }
+      }
+      
+      // Update assignment if changed and user has permission
+      if (assignSelect && authSystem.canAssignWork()) {
+        const newAssignment = assignSelect.value === 'Unassigned' ? null : assignSelect.value;
+        if (newAssignment !== order.photographer) {
+          order.photographer = newAssignment;
+          changes.push(`Assigned to: ${newAssignment || 'Unassigned'}`);
+          updated = true;
+        }
+      }
+      
+      if (updated) {
+        // Add to order history
+        if (!order.history) order.history = [];
+        order.history.push({
+          timestamp: new Date().toLocaleString(),
+          user: currentUser.name,
+          action: 'Workflow Update',
+          changes: changes,
+          details: `Updated: ${changes.join(', ')}`
+        });
+        
+        // Save to localStorage
+        localStorage.setItem('photoOrders', JSON.stringify(allOrders));
+        
+        // Show success message
+        alert(`✅ Order ${orderNumber} updated successfully!\\n\\nChanges made:\\n• ${changes.join('\\n• ')}`);
+        
+        // Refresh the views
+        drawOrderRows();
+        drawWorkflowView();
+        
+        // Close and reopen the modal to show updated info
+        document.querySelector('.order-details-modal')?.remove();
+        setTimeout(() => showOrderDetails(orderNumber), 300);
+        
+      } else {
+        alert('ℹ️ No changes detected.');
+      }
+    }
+    
+    // Function to show order history
+    function showOrderHistory(orderNumber) {
+      const order = allOrders.find(o => o.orderNumber === orderNumber);
+      if (!order || !order.history) {
+        alert('No history available for this order.');
+        return;
+      }
+      
+      const modal = document.createElement('div');
+      modal.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.6);display:flex;align-items:center;justify-content:center;z-index:1001';
+      modal.innerHTML = `
+        <div style="background:white;border-radius:12px;padding:24px;max-width:600px;width:90%;max-height:70vh;overflow-y:auto;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+            <h3 style="margin:0;color:#1f2937;">📜 Order History - ${orderNumber}</h3>
+            <button onclick="this.parentElement.parentElement.parentElement.remove()" 
+                    style="background:none;border:none;font-size:24px;cursor:pointer;color:#6b7280;">×</button>
+          </div>
+          <div style="space-y:12px;">
+            ${order.history.slice().reverse().map(entry => `
+              <div style="border-left:4px solid #3b82f6;padding-left:16px;margin-bottom:16px;">
+                <div style="font-weight:600;color:#1f2937;margin-bottom:4px;">${entry.action}</div>
+                <div style="color:#6b7280;font-size:13px;margin-bottom:4px;">${entry.timestamp} • ${entry.user}</div>
+                <div style="color:#374151;font-size:14px;">${entry.details}</div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `;
+      document.body.appendChild(modal);
+      modal.addEventListener('click', (e) => { if(e.target === modal) modal.remove(); });
+    }
+    
+    // Initialize order history for existing orders
+    function initializeOrderHistory() {
+      allOrders.forEach(order => {
+        if (!order.history) {
+          order.history = [{
+            timestamp: order.createdDate || new Date().toLocaleString(),
+            user: order.createdBy || 'System',
+            action: 'Order Created',
+            changes: ['Order created'],
+            details: `Initial order creation with status: ${order.status}`
+          }];
+        }
+      });
+      localStorage.setItem('photoOrders', JSON.stringify(allOrders));
+    }
+    
+    // Initialize on load
+    initializeOrderHistory();
+
+    // Drag and Drop functionality for workflow kanban
+    let draggedOrderNumber = null;
+    
+    function handleDragStart(event, orderNumber) {
+      draggedOrderNumber = orderNumber;
+      event.dataTransfer.effectAllowed = 'move';
+      event.target.style.opacity = '0.5';
+    }
+    
+    function handleDragOver(event) {
+      event.preventDefault();
+      event.dataTransfer.dropEffect = 'move';
+      event.currentTarget.style.backgroundColor = 'rgba(59, 130, 246, 0.1)';
+    }
+    
+    function handleDrop(event, newStatus) {
+      event.preventDefault();
+      event.currentTarget.style.backgroundColor = '';
+      
+      if (!draggedOrderNumber) return;
+      
+      const currentUser = authSystem.getCurrentUser();
+      if (!authSystem.canManageOrders()) {
+        alert('❌ You do not have permission to change order status.');
+        resetDragState();
+        return;
+      }
+      
+      const order = allOrders.find(o => o.orderNumber === draggedOrderNumber);
+      if (!order) {
+        resetDragState();
+        return;
+      }
+      
+      if (order.status === newStatus) {
+        resetDragState();
+        return;
+      }
+      
+      // Update order status
+      const oldStatus = order.status;
+      order.status = newStatus;
+      
+      // Add to history
+      if (!order.history) order.history = [];
+      order.history.push({
+        timestamp: new Date().toLocaleString(),
+        user: currentUser.name,
+        action: 'Status Changed (Drag & Drop)',
+        changes: [`Status: ${oldStatus} → ${newStatus}`],
+        details: `Status changed from "${oldStatus}" to "${newStatus}" via drag and drop`
+      });
+      
+      // Save changes
+      localStorage.setItem('photoOrders', JSON.stringify(allOrders));
+      
+      // Refresh views
+      drawWorkflowView();
+      drawOrderRows();
+      
+      // Show success notification
+      showNotification(`✅ Order ${draggedOrderNumber} moved to ${newStatus}`, 'success');
+      
+      resetDragState();
+    }
+    
+    function resetDragState() {
+      if (draggedOrderNumber) {
+        const draggedElement = document.querySelector(`[data-order="${draggedOrderNumber}"]`);
+        if (draggedElement) {
+          draggedElement.style.opacity = '1';
+        }
+      }
+      draggedOrderNumber = null;
+      
+      // Remove highlight from all columns
+      document.querySelectorAll('.kanban-column').forEach(col => {
+        col.style.backgroundColor = '';
+      });
+    }
+    
+    // Add notification system
+    function showNotification(message, type = 'info') {
+      const notification = document.createElement('div');
+      notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 12px 20px;
+        border-radius: 6px;
+        color: white;
+        font-weight: 600;
+        z-index: 10000;
+        opacity: 0;
+        transform: translateX(100%);
+        transition: all 0.3s ease;
+        ${type === 'success' ? 'background: #10b981;' : 'background: #3b82f6;'}
+      `;
+      notification.textContent = message;
+      document.body.appendChild(notification);
+      
+      // Animate in
+      setTimeout(() => {
+        notification.style.opacity = '1';
+        notification.style.transform = 'translateX(0)';
+      }, 100);
+      
+      // Remove after 3 seconds
+      setTimeout(() => {
+        notification.style.opacity = '0';
+        notification.style.transform = 'translateX(100%)';
+        setTimeout(() => notification.remove(), 300);
+      }, 3000);
+    }
+    
+    // Expose functions globally
+    window.handleDragStart = handleDragStart;
+    window.handleDragOver = handleDragOver;
+    window.handleDrop = handleDrop;
+
+    // Expose functions globally
+    window.updateOrderWorkflow = updateOrderWorkflow;
+    window.showOrderHistory = showOrderHistory;
 
     function drawOrderRows() {
       const tbody = document.getElementById('ordersBody'); // Get fresh reference each time
@@ -2534,10 +2896,7 @@
     // Kanban Board Functions
     function drawKanbanBoard() {
       const currentUser = authSystem.getCurrentUser();
-      console.log('Kanban Debug - Current User:', currentUser);
-      console.log('Kanban Debug - All Orders:', allOrders);
       const orders = authSystem.getFilteredOrders(allOrders);
-      console.log('Kanban Debug - Filtered Orders:', orders);
       const board = document.getElementById('kanbanBoard');
       
       // Add visible debug info
@@ -2942,13 +3301,18 @@
         const container = document.getElementById(containerId);
         if (container) {
           container.innerHTML = ordersList.map(o => `
-            <div class="kanban-item" onclick="showOrderDetails('${o.orderNumber}')">
+            <div class="kanban-item" 
+                 onclick="showOrderDetails('${o.orderNumber}')"
+                 draggable="true"
+                 ondragstart="handleDragStart(event, '${o.orderNumber}')"
+                 data-order="${o.orderNumber}">
               <div style="font-weight: 600; margin-bottom: 4px;">${o.title}</div>
               <div style="color: #6b7280; margin-bottom: 4px;">${o.orderNumber}</div>
               <div style="display: flex; justify-content: space-between; align-items: center;">
                 <span class="status ${o.priority}" style="font-size: 10px;">${o.priority}</span>
                 <span style="font-size: 10px; color: #9ca3af;">${o.deadline}</span>
               </div>
+              ${o.photographer ? `<div style="font-size: 10px; color: #3b82f6; margin-top: 4px;">👤 ${o.photographer}</div>` : ''}
             </div>
           `).join('');
         }
@@ -7005,4 +7369,65 @@
       }, 50);
     }
   }, 100);
+  
+  // Global error handler for debugging
+  window.addEventListener('error', function(e) {
+    console.error('[Fallback] Global error caught:', e.error);
+    console.error('[Fallback] Error details:', {
+      message: e.message,
+      filename: e.filename,
+      lineno: e.lineno,
+      colno: e.colno,
+      error: e.error
+    });
+  });
+  
+  // Unhandled promise rejection handler
+  window.addEventListener('unhandledrejection', function(e) {
+    console.error('[Fallback] Unhandled promise rejection:', e.reason);
+    e.preventDefault(); // Prevent the default browser behavior
+  });
+  
+  console.log('[Fallback] Initialization complete');
+} catch (error) {
+  console.error('[Fallback] Critical initialization error:', error);
+  
+  // Show error UI to user
+  const root = document.getElementById('app');
+  if (root) {
+    root.innerHTML = `
+      <div style="min-height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+        <div style="background: white; padding: 48px; border-radius: 16px; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); max-width: 500px; width: 100%; text-align: center;">
+          <div style="color: #ef4444; font-size: 48px; margin-bottom: 24px;">⚠️</div>
+          <h1 style="margin: 0 0 16px 0; font-size: 24px; font-weight: 700; color: #1f2937;">Application Error</h1>
+          <p style="margin: 0 0 24px 0; color: #6b7280; font-size: 16px;">The photo order management system encountered an error during initialization.</p>
+          
+          <div style="background: #fef2f2; border: 1px solid #fecaca; border-radius: 8px; padding: 16px; margin-bottom: 24px; text-align: left;">
+            <div style="font-weight: 600; color: #dc2626; margin-bottom: 8px;">Error Details:</div>
+            <div style="font-family: monospace; font-size: 12px; color: #7f1d1d; word-break: break-word;">${error.message}</div>
+          </div>
+          
+          <div style="display: flex; gap: 12px; justify-content: center;">
+            <button onclick="location.reload()" style="background: #3b82f6; color: white; border: none; padding: 12px 24px; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; transition: background-color 0.15s;">
+              🔄 Reload Application
+            </button>
+            <button onclick="window.open('mailto:support@company.com?subject=Photo Order System Error&body=' + encodeURIComponent('Error: ${error.message}\\n\\nPlease describe what you were doing when this error occurred...'), '_blank')" style="background: #6b7280; color: white; border: none; padding: 12px 24px; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; transition: background-color 0.15s;">
+              📧 Report Issue
+            </button>
+          </div>
+          
+          <div style="margin-top: 24px; padding-top: 24px; border-top: 1px solid #e5e7eb;">
+            <p style="margin: 0; font-size: 14px; color: #9ca3af;">If this problem persists, please contact your system administrator.</p>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+  
+  // Hide loading screen if visible
+  const loadingScreen = document.getElementById('loading-screen');
+  if (loadingScreen) {
+    loadingScreen.style.display = 'none';
+  }
+}
 })();

@@ -24,43 +24,48 @@
   </div>
   
   <script>
-    /* Environment detection: when served via Vite dev server the path /src/main.ts is valid.
-       When opened as file:// or from a plain static host without build artifacts we avoid
-       trying to load raw TypeScript that would fail. */
+    /* Environment detection for fallback runtime */
     (async function(){
       const isFile = location.protocol === 'file:';
       console.log('[Init] Protocol:', location.protocol, 'Is file:', isFile);
       
-      // Only attempt dev script if running via http(s) AND typical dev ports
-      const devPortPattern = /^(3000|5173|5174|4173|4174)$/;
-      const maybeDev = !isFile && devPortPattern.test(location.port || '');
-      
-      if (maybeDev) {
-        try {
-          const s = document.createElement('script');
-            s.type='module';
-            s.src='/src/main.ts';
-            s.onerror = () => console.warn('Dev script failed to load, fallback will engage.');
-            document.head.appendChild(s);
-        } catch {/* ignore */}
-      }
-      
-      // For file:// protocol, load fallback immediately
-      // For other protocols, wait a bit for dev server
-      const timeout = isFile ? 100 : 800;
+      // For file:// protocol or production use, load fallback immediately
+      const timeout = isFile ? 100 : 300;
       
       setTimeout(async () => {
         if(!(window).__APP_STARTED__) {
-          console.warn('[Fallback] Main bundle not initialized; activating fallback runtime.');
+          console.warn('[Fallback] Activating fallback runtime.');
           try { 
-            // Use script tag instead of dynamic import for better file:// protocol compatibility
+            // Use script tag for better file:// protocol compatibility
             const script = document.createElement('script');
             script.src = './fallback-bundle.js';
-            script.onload = () => console.log('[Fallback] Script loaded successfully');
-            script.onerror = (e) => console.error('Fallback load failed', e);
+            script.onload = () => {
+              console.log('[Fallback] Script loaded successfully');
+              // Add a small delay to ensure initialization completes
+              setTimeout(() => {
+                if (!window.__FALLBACK_ACTIVE__) {
+                  console.error('[Fallback] Fallback did not initialize properly');
+                }
+              }, 100);
+            };
+            script.onerror = (e) => {
+              console.error('[Fallback] Script failed to load:', e);
+              // Show error message to user
+              const loadingProgress = document.getElementById('loading-progress');
+              if (loadingProgress) {
+                loadingProgress.textContent = 'Error: Failed to load application. Please check console for details.';
+                loadingProgress.style.color = '#ef4444';
+              }
+            };
             document.head.appendChild(script);
           } catch(e){ 
-            console.error('Fallback load failed', e); 
+            console.error('[Fallback] Load failed with exception:', e);
+            // Show error message to user
+            const loadingProgress = document.getElementById('loading-progress');
+            if (loadingProgress) {
+              loadingProgress.textContent = 'Error: Application failed to start. Please refresh the page.';
+              loadingProgress.style.color = '#ef4444';
+            }
           }
         }
       }, timeout);

@@ -38,17 +38,21 @@ A comprehensive enterprise photo order management application with modern UI and
 
 ## Getting Started
 
-1. Clone this repository
-2. Open `index.html` in a web browser (or serve via HTTP server)
-3. The application will automatically load the fallback bundle
-4. Login with appropriate credentials to access features
+1. Simply open `index.html` in a web browser (supports file:// protocol)
+2. The application automatically loads the optimized bundle
+3. Login with appropriate credentials to access features
+4. No build process or server required - works offline
 
 ## File Structure
 
 ```
-├── fallback-bundle.js    # Main application bundle (7000+ lines)
-├── index.html           # Entry point
-└── README.md           # This file
+├── fallback-bundle.js    # Main application bundle (7000+ lines, optimized)
+├── index.html           # Entry point (optimized for single-file deployment)
+├── README.md           # This file
+├── .gitignore          # Git ignore rules
+└── documentation/      # Additional documentation
+    ├── ENTERPRISE-REVIEW.md
+    └── readme-troubleshoot.md
 ```
 
 ## Technology Stack
