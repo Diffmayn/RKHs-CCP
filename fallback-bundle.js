@@ -998,23 +998,19 @@
             <!-- Core Operations -->
             <div class="nav-section">
               <div class="nav-section-title">Core Operations</div>
-              <div class="nav-item" data-tooltip="Dashboard Overview" onclick="showView('dashboard')">
+              <div class="nav-item" data-tooltip="Dashboard Overview" onclick="showDashboardModal()">
                 <span class="nav-item-icon">🏠</span>
                 <span class="nav-item-text">Dashboard</span>
               </div>
               ${authSystem.canCreateOrders() ? `
-                <div class="nav-item" data-tooltip="Create New Order" onclick="showView('create')">
+                <div class="nav-item" data-tooltip="Create New Order" onclick="showNewOrderModal()">
                   <span class="nav-item-icon">➕</span>
                   <span class="nav-item-text">New Order</span>
                 </div>
               ` : ''}
-              <div class="nav-item" data-tooltip="View All Orders" onclick="showView('orders')">
+              <div class="nav-item" data-tooltip="View All Orders" onclick="showOrdersModal()">
                 <span class="nav-item-icon">📋</span>
                 <span class="nav-item-text">Orders</span>
-              </div>
-              <div class="nav-item" data-tooltip="Sample Management" onclick="showView('samples')">
-                <span class="nav-item-icon">📦</span>
-                <span class="nav-item-text">Samples</span>
               </div>
               <div class="nav-item" data-tooltip="Scan Article" onclick="showScanArticleRightModal()">
                 <span class="nav-item-icon">📷</span>
@@ -1326,6 +1322,9 @@
           justify-content: flex-start;
           background: rgba(255, 255, 255, 0.8);
           position: relative;
+          height: 80px; /* Fixed height to maintain consistent header size */
+          min-height: 80px; /* Ensure minimum height */
+          box-sizing: border-box; /* Include padding in height calculation */
         }
 
         .sidebar-title {
@@ -1341,9 +1340,10 @@
         }
 
         .sidebar.collapsed .sidebar-header {
-          padding: 20px;
-          height: auto;
-          min-height: inherit;
+          padding: 20px 15px; /* Reduce right padding when collapsed */
+          height: 80px; /* Maintain exact same height */
+          min-height: 80px; /* Maintain exact same min-height */
+          box-sizing: border-box; /* Include padding in height calculation */
         }
 
         .sidebar-toggle {
@@ -1706,24 +1706,25 @@
 
         <div id="mainContent">
           <!-- Content will be dynamically loaded here -->
-        </div>
-
-        <div style="display: none;" id="samplesView">
-          <h3 style="margin: 16px 0 8px; font-size: 18px; color: #1f2937;">📦 Sample Management</h3>
-          <table>
-            <thead>
-              <tr>
-                <th>Sample ID</th>
-                <th>Article Name</th>
-                <th>Status</th>
-                <th>Location</th>
-                <th>Assigned To</th>
-                <th>Transit History</th>
-                <th>Last Update</th>
-              </tr>
-            </thead>
-            <tbody id="samplesBody"></tbody>
-          </table>
+          
+          <!-- Samples View (moved inside mainContent for proper positioning) -->
+          <div style="display: none;" id="samplesView">
+            <h3 style="margin: 16px 0 8px; font-size: 18px; color: #1f2937;">📦 Sample Management</h3>
+            <table>
+              <thead>
+                <tr>
+                  <th>Sample ID</th>
+                  <th>Article Name</th>
+                  <th>Status</th>
+                  <th>Location</th>
+                  <th>Assigned To</th>
+                  <th>Transit History</th>
+                  <th>Last Update</th>
+                </tr>
+              </thead>
+              <tbody id="samplesBody"></tbody>
+            </table>
+          </div>
         </div>
 
         <div style="display: none;" id="createOrderView">
@@ -2010,207 +2011,62 @@
     };
 
     function showView(viewName) {
-      // Close any open right-side modals when switching views (except for create view)
-      if (viewName !== 'create') {
-        closeAllRightSideModals();
-      }
+      console.log('showView called with:', viewName);
       
-      // Update content title based on view
-      const titleElement = document.getElementById('contentTitle');
-      const titles = {
-        'dashboard': 'Dashboard Overview',
-        'orders': 'Orders Management',
-        'samples': 'Sample Tracking',
-        'create': 'Create New Order',
-        'templates': 'Order Templates',
-        'workflow': 'Workflow Overview',
-        'kanban': 'Kanban Board',
-        'calendar': 'Calendar View'
-      };
-      if (titleElement && titles[viewName]) {
-        titleElement.textContent = titles[viewName];
-      }
-      
-      // Handle create view specially as a right-side modal (don't hide current view)
-      if (viewName === 'create') {
-        // Show right-side create order modal without hiding current view
-        showCreateOrderLeftModal();
-        return;
-      } else {
-        // Remove any existing left-side modal
-        const existingModal = document.getElementById('leftSideCreateModal');
-        if (existingModal) {
-          existingModal.remove();
-        }
-      }
-      
-      // Get all view elements
-      const views = ['ordersView', 'samplesView', 'createOrderView', 'templatesView', 'workflowView', 'kanbanView', 'calendarView'];
-      const currentActiveView = views.find(viewId => {
-        const element = document.getElementById(viewId);
-        return element && element.style.display === 'block';
-      });
-      
-      // Add transition out animation to current view
-      if (currentActiveView) {
-        const currentElement = document.getElementById(currentActiveView);
-        currentElement.classList.add('view-transitioning-out');
-        
-        // Wait for fade out animation to complete
-        setTimeout(() => {
-          currentElement.style.display = 'none';
-          currentElement.classList.remove('view-transitioning-out', 'view-active');
-          
-          // Show the new view with fade in animation
-          showNewView();
-        }, 200);
-      } else {
-        // No current view, show new view immediately
-        showNewView();
-      }
-      
-      function showNewView() {
-        // Hide all views first
-        views.forEach(viewId => {
-          const element = document.getElementById(viewId);
-          if (element) {
-            element.style.display = 'none';
-            element.classList.remove('view-active');
-          }
-        });
-        
-        // Show the target view
-        let targetView = null;
-        if (viewName === 'orders' || viewName === 'dashboard') {
-          targetView = document.getElementById('ordersView');
-        } else if (viewName === 'samples') {
-          targetView = document.getElementById('samplesView');
-        } else if (viewName === 'templates') {
-          targetView = document.getElementById('templatesView');
-        } else if (viewName === 'workflow') {
-          targetView = document.getElementById('workflowView');
-        } else if (viewName === 'kanban') {
-          targetView = document.getElementById('kanbanView');
-        } else if (viewName === 'calendar') {
-          targetView = document.getElementById('calendarView');
-        }
-        
-        if (targetView) {
-          targetView.style.display = 'block';
-          // Force reflow to ensure display:block is applied
-          targetView.offsetHeight;
-          // Add animation class
-          targetView.classList.add('view-active');
-        }
-      }
-      
-      document.getElementById('defaultTable').style.display = 'none';
+      // Simple implementation to get the app working
       currentView = viewName;
       
-      if (viewName === 'orders' || viewName === 'dashboard') {
-        if (viewName === 'dashboard') {
-          // Show dashboard overview with stats
-          const ordersViewElement = document.getElementById('ordersView');
-          const orders = authSystem.getFilteredOrders(allOrders); // Get filtered orders same as drawOrderRows
-          ordersViewElement.innerHTML = `
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-bottom: 30px;">
-              <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 24px; border-radius: 12px; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);">
-                <h3 style="margin: 0 0 8px 0; font-size: 14px; opacity: 0.9;">Total Orders</h3>
-                <div style="font-size: 32px; font-weight: 700; margin-bottom: 8px;">${orders.length}</div>
-                <div style="font-size: 12px; opacity: 0.8;">↗ 12% vs last month</div>
-              </div>
-              <div style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; padding: 24px; border-radius: 12px; box-shadow: 0 4px 12px rgba(240, 147, 251, 0.3);">
-                <h3 style="margin: 0 0 8px 0; font-size: 14px; opacity: 0.9;">Active Orders</h3>
-                <div style="font-size: 32px; font-weight: 700; margin-bottom: 8px;">${orders.filter(o => o.status === 'In Progress' || o.status === 'Processing' || o.status === 'Ready for Review').length}</div>
-                <div style="font-size: 12px; opacity: 0.8;">Currently in production</div>
-              </div>
-              <div style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); color: white; padding: 24px; border-radius: 12px; box-shadow: 0 4px 12px rgba(79, 172, 254, 0.3);">
-                <h3 style="margin: 0 0 8px 0; font-size: 14px; opacity: 0.9;">Completed This Month</h3>
-                <div style="font-size: 32px; font-weight: 700; margin-bottom: 8px;">${orders.filter(o => o.status === 'Completed').length}</div>
-                <div style="font-size: 12px; opacity: 0.8;">↗ 8% vs last month</div>
-              </div>
-              <div style="background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); color: #374151; padding: 24px; border-radius: 12px; box-shadow: 0 4px 12px rgba(168, 237, 234, 0.3);">
-                <h3 style="margin: 0 0 8px 0; font-size: 14px; opacity: 0.7;">Urgent Orders</h3>
-                <div style="font-size: 32px; font-weight: 700; margin-bottom: 8px;">${orders.filter(o => o.priority === 'Urgent' || o.priority === 'High').length}</div>
-                <div style="font-size: 12px; opacity: 0.6;">Need immediate attention</div>
-              </div>
-            </div>
-            
-            <div style="background: white; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); padding: 24px; margin-bottom: 20px;">
-              <h3 style="margin: 0 0 20px 0; font-size: 18px; font-weight: 600; color: #374151;">Recent Activity</h3>
-              <div style="space-y: 12px;">
-                ${orders.slice(0, 5).map(order => `
-                  <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #f3f4f6;">
-                    <div>
-                      <div style="font-weight: 500; color: #374151;">${order.title}</div>
-                      <div style="font-size: 12px; color: #6b7280;">Order #${order.orderNumber} • ${order.photographer}</div>
-                    </div>
-                    <div style="text-align: right;">
-                      <span style="background: ${order.status === 'Completed' ? '#10b981' : order.status === 'In Progress' ? '#f59e0b' : '#6b7280'}; color: white; padding: 4px 8px; border-radius: 4px; font-size: 11px;">${order.status}</span>
-                      <div style="font-size: 11px; color: #6b7280; margin-top: 4px;">${order.deadline}</div>
-                    </div>
-                  </div>
-                `).join('')}
-              </div>
-            </div>
-            
-            <div style="text-align: center; margin-top: 30px;">
-              <button onclick="showView('orders')" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; padding: 12px 24px; border-radius: 8px; font-weight: 500; cursor: pointer; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);">
-                View Full Orders Table →
-              </button>
-            </div>
-          `;
-        } else {
-          // Restore original orders table view
-          const ordersViewElement = document.getElementById('ordersView');
-          ordersViewElement.innerHTML = `
-            <div style="background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 20px;">
-              <div style="padding: 16px; border-bottom: 1px solid #e5e7eb;">
-                <input id="searchBox" placeholder="🔍 Search orders by title, number, or photographer..." 
-                       style="width: 100%; padding: 8px 16px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px;" />
-              </div>
-            </div>
-
-            <div style="background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); overflow: hidden;">
-              <table style="width: 100%; border-collapse: collapse;">
-                <thead>
-                  <tr style="background: linear-gradient(135deg, #f8fafc, #f1f5f9);">
-                    <th style="width: 40px; display: none;" class="bulk-checkbox"><input type="checkbox" id="selectAllOrders"></th>
-                    <th style="padding: 12px 16px; text-align: left; font-weight: 600; color: #374151; border-bottom: 1px solid #e5e7eb;">Order Number</th>
-                    <th style="padding: 12px 16px; text-align: left; font-weight: 600; color: #374151; border-bottom: 1px solid #e5e7eb;">Title</th>
-                    <th style="padding: 12px 16px; text-align: left; font-weight: 600; color: #374151; border-bottom: 1px solid #e5e7eb;">Status</th>
-                    <th style="padding: 12px 16px; text-align: left; font-weight: 600; color: #374151; border-bottom: 1px solid #e5e7eb;">Method</th>
-                    <th style="padding: 12px 16px; text-align: left; font-weight: 600; color: #374151; border-bottom: 1px solid #e5e7eb;">Purchase Group</th>
-                    <th style="padding: 12px 16px; text-align: left; font-weight: 600; color: #374151; border-bottom: 1px solid #e5e7eb;">Event ID</th>
-                    <th style="padding: 12px 16px; text-align: left; font-weight: 600; color: #374151; border-bottom: 1px solid #e5e7eb;">Photographer</th>
-                    <th style="padding: 12px 16px; text-align: left; font-weight: 600; color: #374151; border-bottom: 1px solid #e5e7eb;">Priority</th>
-                    <th style="padding: 12px 16px; text-align: left; font-weight: 600; color: #374151; border-bottom: 1px solid #e5e7eb;">Deadline</th>
-                    <th style="padding: 12px 16px; text-align: left; font-weight: 600; color: #374151; border-bottom: 1px solid #e5e7eb;">Progress</th>
-                    <th style="padding: 12px 16px; text-align: left; font-weight: 600; color: #374151; border-bottom: 1px solid #e5e7eb; width: 100px;">Comments</th>
-                  </tr>
-                </thead>
-                <tbody id="ordersBody" style="background: white;">
-                  <!-- Orders will be populated here -->
-                </tbody>
-              </table>
-            </div>
-          `;
-          drawOrderRows();
-          // Re-setup search functionality
-          const newSearchBox = document.getElementById('searchBox');
-          if (newSearchBox) {
-            newSearchBox.addEventListener('input', drawOrderRows);
-          }
+      // Hide all views first
+      const views = ['ordersView', 'samplesView', 'createOrderView', 'templatesView', 'workflowView', 'kanbanView', 'calendarView'];
+      views.forEach(viewId => {
+        const element = document.getElementById(viewId);
+        if (element) {
+          element.style.display = 'none';
         }
+      });
+      
+      // Show the target view
+      let targetView = null;
+      if (viewName === 'orders' || viewName === 'dashboard') {
+        targetView = document.getElementById('ordersView');
+        // Update content title based on view
+        updateContentTitle(viewName === 'dashboard' ? '📊 Dashboard' : '📋 Orders');
+        // Don't replace innerHTML for orders/dashboard - preserve the existing structure
+        // The drawOrderRows function will populate the existing ordersBody element
       } else if (viewName === 'samples') {
-        drawSampleRows();
-      } else if (viewName === 'workflow') {
-        drawWorkflowView();
+        targetView = document.getElementById('samplesView');
+        updateContentTitle('📦 Samples');
+        if (targetView) {
+          targetView.innerHTML = '<h2>Samples View</h2><div id="samplesBody">Loading samples...</div>';
+        }
       } else if (viewName === 'kanban') {
-        drawKanbanBoard();
+        targetView = document.getElementById('kanbanView');
+        updateContentTitle('📊 Kanban Board');
       } else if (viewName === 'calendar') {
-        drawCalendarView();
+        targetView = document.getElementById('calendarView');
+        updateContentTitle('📅 Calendar View');
+      } else if (viewName === 'workflow') {
+        targetView = document.getElementById('workflowView');
+        updateContentTitle('🔄 Workflow');
+      } else if (viewName === 'create') {
+        targetView = document.getElementById('createOrderView');
+        updateContentTitle('➕ Create Order');
       }
+      
+      // Call the appropriate draw function
+      setTimeout(() => {
+        if (viewName === 'orders' || viewName === 'dashboard') {
+          if (typeof drawOrderRows === 'function') drawOrderRows();
+        } else if (viewName === 'samples') {
+          if (typeof drawSampleRows === 'function') drawSampleRows();
+        } else if (viewName === 'kanban') {
+          if (typeof drawKanbanBoard === 'function') drawKanbanBoard();
+        } else if (viewName === 'calendar') {
+          if (typeof drawCalendarView === 'function') drawCalendarView();
+        } else if (viewName === 'workflow') {
+          if (typeof drawWorkflowView === 'function') drawWorkflowView();
+        }
+      }, 100);
     }
 
     // Expose showView globally for onclick handlers
@@ -2460,6 +2316,499 @@
     window.showCreateOrderLeftModal = showCreateOrderLeftModal;
     window.closeCreateOrderLeftModal = closeCreateOrderLeftModal;
 
+    // Show new order modal on the right side of sidebar
+    function showNewOrderModal() {
+      // Check if this modal is already open (toggle behavior)
+      const existingModal = document.getElementById('newOrderRightModal');
+      if (existingModal) {
+        closeNewOrderModal();
+        return;
+      }
+
+      // Close any other open right-side modals
+      closeAllRightSideModals();
+
+      // Create right-side modal (positioned after sidebar)
+      const modal = document.createElement('div');
+      modal.id = 'newOrderRightModal';
+      modal.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 280px;
+        width: 450px;
+        height: 100vh;
+        background: rgba(255, 255, 255, 0.98);
+        backdrop-filter: blur(20px);
+        border-right: 1px solid rgba(0, 0, 0, 0.1);
+        box-shadow: 4px 0 20px rgba(0, 0, 0, 0.15);
+        z-index: 1000;
+        overflow-y: auto;
+        transform: translateX(-100%);
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        padding: 20px;
+      `;
+
+      modal.innerHTML = `
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 2px solid #e5e7eb;">
+          <h3 style="margin: 0; font-size: 20px; color: #1f2937; font-weight: 600;">➕ Create New Photo Order</h3>
+          <button onclick="closeNewOrderModal()" style="background: #ef4444; color: white; border: none; border-radius: 50%; width: 32px; height: 32px; cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center;">×</button>
+        </div>
+
+        <div style="background: #f8fafc; padding: 16px; border-radius: 8px; margin-bottom: 16px;">
+          <form id="newOrderForm" onsubmit="handleNewOrderSubmit(event)">
+            <div style="margin-bottom: 16px;">
+              <label style="display: block; font-weight: 500; margin-bottom: 4px; color: #374151;">Order Title</label>
+              <input name="title" required style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px;"
+                     placeholder="e.g., Premium Product Photography Session">
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px;">
+              <div>
+                <label style="display: block; font-weight: 500; margin-bottom: 4px; color: #374151;">Method</label>
+                <select name="method" required style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px;">
+                  <option value="">Select method...</option>
+                  <option value="Photographer">Photographer</option>
+                  <option value="Photo Box">Photo Box</option>
+                  <option value="Internal Studio">Internal Studio</option>
+                  <option value="External Studio">External Studio</option>
+                </select>
+              </div>
+              <div>
+                <label style="display: block; font-weight: 500; margin-bottom: 4px; color: #374151;">Priority</label>
+                <select name="priority" required style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px;">
+                  <option value="Low">Low</option>
+                  <option value="Medium" selected>Medium</option>
+                  <option value="High">High</option>
+                  <option value="Urgent">Urgent</option>
+                </select>
+              </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px;">
+              <div>
+                <label style="display: block; font-weight: 500; margin-bottom: 4px; color: #374151;">Deadline</label>
+                <input name="deadline" type="date" required style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px;">
+              </div>
+              <div>
+                <label style="display: block; font-weight: 500; margin-bottom: 4px; color: #374151;">Budget (SEK)</label>
+                <input name="budget" type="number" min="0" style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px;" placeholder="0">
+              </div>
+            </div>
+
+            <div style="margin-bottom: 16px;">
+              <label style="display: block; font-weight: 500; margin-bottom: 4px; color: #374151;">Assign To</label>
+              <select name="photographer" style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px;">
+                <option value="">Select photographer/photo box...</option>
+                <option value="Mike Rodriguez">Mike Rodriguez (Photographer)</option>
+                <option value="Emily Chen">Emily Chen (Photographer)</option>
+                <option value="Alex Turner">Alex Turner (Photo Box)</option>
+              </select>
+            </div>
+
+            <div style="margin-bottom: 16px;">
+              <label style="display: block; font-weight: 500; margin-bottom: 4px; color: #374151;">Brief Description</label>
+              <textarea name="brief" required rows="3" style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px; resize: vertical;"
+                        placeholder="Provide detailed instructions for the content creation..."></textarea>
+            </div>
+
+            <div style="margin-bottom: 20px;">
+              <label style="display: block; font-weight: 500; margin-bottom: 4px; color: #374151;">Articles</label>
+              <textarea id="newOrderArticles" name="articles" required rows="2" style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px; resize: vertical;"
+                        placeholder="Articles with EAN codes will appear here...&#10;Format: Article Name [EAN: 1234567890123]"></textarea>
+            </div>
+
+            <div style="display: flex; gap: 12px;">
+              <button type="button" onclick="closeNewOrderModal()" style="flex: 1; padding: 12px 16px; border: 1px solid #d1d5db; background: white; border-radius: 6px; cursor: pointer; font-weight: 500;">Cancel</button>
+              <button type="submit" style="flex: 1; padding: 12px 16px; background: linear-gradient(135deg, #059669 0%, #047857 100%); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 500; box-shadow: 0 2px 4px rgba(5, 150, 105, 0.3);">Create Order</button>
+            </div>
+          </form>
+        </div>
+      `;
+
+      document.body.appendChild(modal);
+
+      // Animate in
+      setTimeout(() => {
+        modal.style.transform = 'translateX(0)';
+      }, 10);
+
+      // Shift main content to the right to make space for modal
+      const mainContent = document.querySelector('.main-content');
+      if (mainContent) {
+        mainContent.style.marginLeft = '450px';
+        mainContent.style.transition = 'margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+      }
+
+      // Focus on the first input
+      setTimeout(() => {
+        document.querySelector('#newOrderForm input[name="title"]')?.focus();
+      }, 300);
+    }
+
+    // Close the new order modal
+    function closeNewOrderModal() {
+      const modal = document.getElementById('newOrderRightModal');
+      if (modal) {
+        modal.style.transform = 'translateX(-100%)';
+        setTimeout(() => {
+          modal.remove();
+        }, 300);
+      }
+
+      // Reset main content position
+      const mainContent = document.querySelector('.main-content');
+      if (mainContent) {
+        mainContent.style.marginLeft = '0';
+      }
+    }
+
+    // Handle new order form submission
+    function handleNewOrderSubmit(event) {
+      event.preventDefault();
+
+      const formData = new FormData(event.target);
+      const currentUser = authSystem.getCurrentUser();
+
+      // Generate order number
+      const orderNumber = 'ORD-' + Date.now();
+
+      // Create new order object
+      const newOrder = {
+        orderNumber: orderNumber,
+        title: formData.get('title'),
+        method: formData.get('method'),
+        priority: formData.get('priority'),
+        deadline: formData.get('deadline'),
+        budget: formData.get('budget') ? parseFloat(formData.get('budget')) : null,
+        photographer: formData.get('photographer') || null,
+        brief: formData.get('brief'),
+        articles: formData.get('articles').split('\n').filter(line => line.trim()),
+        status: 'Draft',
+        createdBy: currentUser.name,
+        createdDate: new Date().toLocaleDateString(),
+        updatedAt: new Date().toISOString(),
+        comments: [],
+        deliverables: ['Product Photos', 'High-Resolution Images']
+      };
+
+      // Add to orders array
+      allOrders.push(newOrder);
+
+      // Save to localStorage
+      localStorage.setItem('photoOrders', JSON.stringify(allOrders));
+
+      // Show success message
+      alert(`✅ Order "${newOrder.title}" created successfully!\n\nOrder Number: ${orderNumber}`);
+
+      // Close modal
+      closeNewOrderModal();
+
+      // Refresh the orders view
+      if (currentView === 'orders' || currentView === 'dashboard') {
+        drawOrderRows();
+      }
+    }
+
+    // Expose functions globally
+    window.showNewOrderModal = showNewOrderModal;
+    window.closeNewOrderModal = closeNewOrderModal;
+    window.handleNewOrderSubmit = handleNewOrderSubmit;
+
+    // Show orders modal on the right side of sidebar
+    function showOrdersModal() {
+      // Check if this modal is already open (toggle behavior)
+      const existingModal = document.getElementById('ordersRightModal');
+      if (existingModal) {
+        closeOrdersModal();
+        return;
+      }
+
+      // Close any other open right-side modals
+      closeAllRightSideModals();
+
+      // Create right-side modal (positioned after sidebar)
+      const modal = document.createElement('div');
+      modal.id = 'ordersRightModal';
+      modal.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 280px;
+        width: 800px;
+        height: 100vh;
+        background: rgba(255, 255, 255, 0.98);
+        backdrop-filter: blur(20px);
+        border-right: 1px solid rgba(0, 0, 0, 0.1);
+        box-shadow: 4px 0 20px rgba(0, 0, 0, 0.15);
+        z-index: 1000;
+        overflow-y: auto;
+        transform: translateX(-100%);
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        padding: 20px;
+      `;
+
+      // Get orders data
+      const orders = authSystem.getFilteredOrders(allOrders);
+      const searchBox = document.getElementById('searchBox');
+      const term = searchBox?.value.toLowerCase() || '';
+      const filtered = orders.filter(o =>
+        !term ||
+        o.orderNumber.toLowerCase().includes(term) ||
+        o.title.toLowerCase().includes(term) ||
+        o.photographer.toLowerCase().includes(term) ||
+        o.status.toLowerCase().includes(term)
+      );
+
+      modal.innerHTML = `
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 2px solid #e5e7eb;">
+          <h3 style="margin: 0; font-size: 20px; color: #1f2937; font-weight: 600;">📋 All Orders (${filtered.length})</h3>
+          <button onclick="closeOrdersModal()" style="background: #ef4444; color: white; border: none; border-radius: 50%; width: 32px; height: 32px; cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center;">×</button>
+        </div>
+
+        <div style="background: #f8fafc; padding: 16px; border-radius: 8px; margin-bottom: 16px;">
+          <div style="margin-bottom: 12px;">
+            <input type="text" id="modalSearchBox" placeholder="🔍 Search orders..." style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px;" value="${term}">
+          </div>
+        </div>
+
+        <div style="background: #f8fafc; padding: 16px; border-radius: 8px; max-height: calc(100vh - 200px); overflow-y: auto;">
+          <table style="width: 100%; border-collapse: collapse;">
+            <thead>
+              <tr style="background: #f1f5f9; border-bottom: 2px solid #e2e8f0;">
+                <th style="padding: 12px; text-align: left; font-weight: 600; color: #374151; font-size: 12px;">Order #</th>
+                <th style="padding: 12px; text-align: left; font-weight: 600; color: #374151; font-size: 12px;">Title</th>
+                <th style="padding: 12px; text-align: left; font-weight: 600; color: #374151; font-size: 12px;">Status</th>
+                <th style="padding: 12px; text-align: left; font-weight: 600; color: #374151; font-size: 12px;">Priority</th>
+                <th style="padding: 12px; text-align: left; font-weight: 600; color: #374151; font-size: 12px;">Deadline</th>
+                <th style="padding: 12px; text-align: left; font-weight: 600; color: #374151; font-size: 12px;">Progress</th>
+              </tr>
+            </thead>
+            <tbody id="modalOrdersBody">
+              ${filtered.map(o => {
+                const progress = calculateProgress(o.status);
+                const isOverdue = new Date(o.deadline) < new Date() && o.status !== 'Complete' && o.status !== 'Delivered';
+                const deadlineStyle = isOverdue ? 'color: #dc2626; font-weight: bold;' : '';
+                const commentCount = (o.comments || []).length;
+
+                return `
+                <tr onclick="showOrderDetails('${o.orderNumber}'); closeOrdersModal();" style="cursor: pointer; border-bottom: 1px solid #e5e7eb; hover: background: #f9fafb;">
+                  <td style="padding: 12px; font-weight: 600; color: #1f2937;">${o.orderNumber}</td>
+                  <td style="padding: 12px; color: #374151;">${o.title}</td>
+                  <td style="padding: 12px;"><span class="status ${o.status.replace(/\s+/g, '')}" style="font-size: 12px;">${o.status}</span></td>
+                  <td style="padding: 12px;"><span class="status ${o.priority}" style="font-size: 12px;">${o.priority}</span></td>
+                  <td style="padding: 12px; ${deadlineStyle}">${o.deadline}${isOverdue ? ' ⚠️' : ''}</td>
+                  <td style="padding: 12px;">
+                    <div class="progress-bar" style="width: 60px; height: 6px; background: #e5e7eb; border-radius: 3px; overflow: hidden;">
+                      <div class="progress-fill" style="width: ${progress}%; height: 100%; background: ${progress === 100 ? '#10b981' : '#3b82f6'}; transition: width 0.3s ease;"></div>
+                    </div>
+                    <div style="font-size: 10px; color: #6b7280; margin-top: 2px;">${progress}%</div>
+                  </td>
+                </tr>
+                `;
+              }).join('')}
+            </tbody>
+          </table>
+
+          ${filtered.length === 0 ? '<div style="text-align: center; color: #6b7280; padding: 40px; font-style: italic;">No orders found matching your search.</div>' : ''}
+        </div>
+      `;
+
+      document.body.appendChild(modal);
+
+      // Animate in
+      setTimeout(() => {
+        modal.style.transform = 'translateX(0)';
+      }, 10);
+
+      // Shift main content to the right to make space for modal
+      const mainContent = document.querySelector('.main-content');
+      if (mainContent) {
+        mainContent.style.marginLeft = '800px';
+        mainContent.style.transition = 'margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+      }
+
+      // Add search functionality
+      setTimeout(() => {
+        const modalSearchBox = document.getElementById('modalSearchBox');
+        if (modalSearchBox) {
+          modalSearchBox.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            const rows = document.querySelectorAll('#modalOrdersBody tr');
+
+            rows.forEach(row => {
+              const text = row.textContent.toLowerCase();
+              row.style.display = text.includes(searchTerm) ? '' : 'none';
+            });
+          });
+        }
+      }, 100);
+    }
+
+    // Close the orders modal
+    function closeOrdersModal() {
+      const modal = document.getElementById('ordersRightModal');
+      if (modal) {
+        modal.style.transform = 'translateX(-100%)';
+        setTimeout(() => {
+          modal.remove();
+        }, 300);
+      }
+
+      // Reset main content position
+      const mainContent = document.querySelector('.main-content');
+      if (mainContent) {
+        mainContent.style.marginLeft = '0';
+      }
+    }
+
+    // Show dashboard modal on the right side of sidebar
+    function showDashboardModal() {
+      // Check if this modal is already open (toggle behavior)
+      const existingModal = document.getElementById('dashboardRightModal');
+      if (existingModal) {
+        closeDashboardModal();
+        return;
+      }
+
+      // Close any other open right-side modals
+      closeAllRightSideModals();
+
+      // Create right-side modal (positioned after sidebar)
+      const modal = document.createElement('div');
+      modal.id = 'dashboardRightModal';
+      modal.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 280px;
+        width: 700px;
+        height: 100vh;
+        background: rgba(255, 255, 255, 0.98);
+        backdrop-filter: blur(20px);
+        border-right: 1px solid rgba(0, 0, 0, 0.1);
+        box-shadow: 4px 0 20px rgba(0, 0, 0, 0.15);
+        z-index: 1000;
+        overflow-y: auto;
+        transform: translateX(-100%);
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        padding: 20px;
+      `;
+
+      // Get dashboard data
+      const orders = authSystem.getFilteredOrders(allOrders);
+      const totalOrders = orders.length;
+      const newOrders = orders.filter(o => o.status === 'New Request' || o.status === 'Draft').length;
+      const inProgressOrders = orders.filter(o => o.status === 'In Progress' || o.status === 'Approved').length;
+      const completedOrders = orders.filter(o => o.status === 'Complete' || o.status === 'Delivered').length;
+      const overdueOrders = orders.filter(o => new Date(o.deadline) < new Date() && o.status !== 'Complete' && o.status !== 'Delivered').length;
+
+      modal.innerHTML = `
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 2px solid #e5e7eb;">
+          <h3 style="margin: 0; font-size: 20px; color: #1f2937; font-weight: 600;">📊 Dashboard Overview</h3>
+          <button onclick="closeDashboardModal()" style="background: #ef4444; color: white; border: none; border-radius: 50%; width: 32px; height: 32px; cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center;">×</button>
+        </div>
+
+        <div style="background: #f8fafc; padding: 16px; border-radius: 8px; margin-bottom: 16px;">
+          <h4 style="margin: 0 0 16px; font-size: 16px; color: #1f2937;">📈 Key Metrics</h4>
+          <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;">
+            <div style="background: white; padding: 16px; border-radius: 8px; border-left: 4px solid #3b82f6;">
+              <div style="font-size: 24px; font-weight: bold; color: #1f2937;">${totalOrders}</div>
+              <div style="font-size: 12px; color: #6b7280;">Total Orders</div>
+            </div>
+            <div style="background: white; padding: 16px; border-radius: 8px; border-left: 4px solid #f59e0b;">
+              <div style="font-size: 24px; font-weight: bold; color: #1f2937;">${newOrders}</div>
+              <div style="font-size: 12px; color: #6b7280;">New Orders</div>
+            </div>
+            <div style="background: white; padding: 16px; border-radius: 8px; border-left: 4px solid #0ea5e9;">
+              <div style="font-size: 24px; font-weight: bold; color: #1f2937;">${inProgressOrders}</div>
+              <div style="font-size: 12px; color: #6b7280;">In Progress</div>
+            </div>
+            <div style="background: white; padding: 16px; border-radius: 8px; border-left: 4px solid #10b981;">
+              <div style="font-size: 24px; font-weight: bold; color: #1f2937;">${completedOrders}</div>
+              <div style="font-size: 12px; color: #6b7280;">Completed</div>
+            </div>
+          </div>
+
+          ${overdueOrders > 0 ? `
+            <div style="background: #fef2f2; border: 1px solid #fecaca; border-radius: 8px; padding: 12px; margin-top: 16px;">
+              <div style="font-size: 14px; color: #dc2626; font-weight: 600;">⚠️ ${overdueOrders} orders are overdue</div>
+            </div>
+          ` : ''}
+        </div>
+
+        <div style="background: #f8fafc; padding: 16px; border-radius: 8px; margin-bottom: 16px;">
+          <h4 style="margin: 0 0 16px; font-size: 16px; color: #1f2937;">🔥 Recent Activity</h4>
+          <div style="max-height: 300px; overflow-y: auto;">
+            ${orders.slice(0, 10).map(o => {
+              const progress = calculateProgress(o.status);
+              const isOverdue = new Date(o.deadline) < new Date() && o.status !== 'Complete' && o.status !== 'Delivered';
+
+              return `
+                <div onclick="showOrderDetails('${o.orderNumber}'); closeDashboardModal();" style="background: white; padding: 12px; border-radius: 6px; margin-bottom: 8px; cursor: pointer; border-left: 4px solid ${getStatusColor(o.status)}; hover: background: #f9fafb;">
+                  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                    <div style="font-weight: 600; color: #1f2937; font-size: 14px;">${o.orderNumber}</div>
+                    <span class="status ${o.status.replace(/\s+/g, '')}" style="font-size: 11px;">${o.status}</span>
+                  </div>
+                  <div style="color: #6b7280; font-size: 12px; margin-bottom: 4px;">${o.title}</div>
+                  <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div style="font-size: 11px; color: #9ca3af;">${o.deadline}</div>
+                    <div style="font-size: 11px; color: #6b7280;">${progress}% complete</div>
+                  </div>
+                </div>
+              `;
+            }).join('')}
+          </div>
+        </div>
+
+        <div style="background: #f8fafc; padding: 16px; border-radius: 8px;">
+          <h4 style="margin: 0 0 16px; font-size: 16px; color: #1f2937;">⚡ Quick Actions</h4>
+          <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px;">
+            <button onclick="showNewOrderModal(); closeDashboardModal();" style="padding: 12px; background: linear-gradient(135deg, #059669 0%, #047857 100%); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 500; text-align: center;">
+              ➕ New Order
+            </button>
+            <button onclick="showOrdersModal(); closeDashboardModal();" style="padding: 12px; background: #3b82f6; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 500; text-align: center;">
+              📋 View All Orders
+            </button>
+          </div>
+        </div>
+      `;
+
+      document.body.appendChild(modal);
+
+      // Animate in
+      setTimeout(() => {
+        modal.style.transform = 'translateX(0)';
+      }, 10);
+
+      // Shift main content to the right to make space for modal
+      const mainContent = document.querySelector('.main-content');
+      if (mainContent) {
+        mainContent.style.marginLeft = '700px';
+        mainContent.style.transition = 'margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+      }
+    }
+
+    // Close the dashboard modal
+    function closeDashboardModal() {
+      const modal = document.getElementById('dashboardRightModal');
+      if (modal) {
+        modal.style.transform = 'translateX(-100%)';
+        setTimeout(() => {
+          modal.remove();
+        }, 300);
+      }
+
+      // Reset main content position
+      const mainContent = document.querySelector('.main-content');
+      if (mainContent) {
+        mainContent.style.marginLeft = '0';
+      }
+    }
+
+    // Expose functions globally
+    window.showOrdersModal = showOrdersModal;
+    window.closeOrdersModal = closeOrdersModal;
+    window.showDashboardModal = showDashboardModal;
+    window.closeDashboardModal = closeDashboardModal;
+
     // Show order details function
     function showOrderDetails(orderNumber) {
       const order = allOrders.find(o => o.orderNumber === orderNumber);
@@ -2649,7 +2998,7 @@
         localStorage.setItem('photoOrders', JSON.stringify(allOrders));
         
         // Show success message
-        alert(`✅ Order ${orderNumber} updated successfully!\\n\\nChanges made:\\n• ${changes.join('\\n• ')}`);
+        alert(`✅ Order ${orderNumber} updated successfully!\n\nChanges made:\n• ${changes.join('\n• ')}`);
         
         // Refresh the views
         drawOrderRows();
@@ -3448,8 +3797,40 @@
     }
 
     function drawSampleRows() {
-      if (samplesBody) {
+      const samplesBody = document.getElementById('samplesBody');
+      const dashboardSamplesBody = document.getElementById('dashboardSamplesBody');
+      
+      // Only populate samplesBody if we're in samples view
+      if (samplesBody && currentView === 'samples') {
         samplesBody.innerHTML = samples.map(s => `
+          <tr onclick="showSampleDetails('${s.id}')" style="cursor: pointer;">
+            <td><strong>${s.id}</strong></td>
+            <td>${s.articleName}</td>
+            <td><span class="status ${s.status.replace(/\s+/g, '')}">${s.status}</span></td>
+            <td>${s.location}</td>
+            <td>${s.assignedTo}</td>
+            <td style="font-size: 11px;">${s.transitHistory}</td>
+            <td>${s.lastUpdate}</td>
+          </tr>
+        `).join('');
+      }
+      
+      // Only populate dashboardSamplesBody if we're in dashboard view
+      if (dashboardSamplesBody && currentView === 'dashboard') {
+        // Get search term from dashboard search box
+        const searchBox = document.getElementById('dashboardSampleSearch');
+        const term = searchBox?.value.toLowerCase() || '';
+        
+        // Filter samples based on search term
+        const filtered = samples.filter(s => 
+          !term || 
+          s.id.toLowerCase().includes(term) ||
+          s.articleName.toLowerCase().includes(term) ||
+          s.location.toLowerCase().includes(term) ||
+          s.assignedTo.toLowerCase().includes(term)
+        );
+        
+        dashboardSamplesBody.innerHTML = filtered.map(s => `
           <tr onclick="showSampleDetails('${s.id}')" style="cursor: pointer;">
             <td><strong>${s.id}</strong></td>
             <td>${s.articleName}</td>
@@ -7238,8 +7619,16 @@
 
     function updateNotificationBadge() {
       const currentUser = commentSystem.currentUser;
+      if (!currentUser) return; // Exit if no user is logged in
+      
       const unreadCount = commentSystem.getUnreadNotificationCount(currentUser.id);
       const badge = document.getElementById('notificationCount');
+      
+      // Check if badge element exists before trying to access it
+      if (!badge) {
+        console.warn('Notification badge element not found. Skipping badge update.');
+        return;
+      }
       
       if (unreadCount > 0) {
         badge.style.display = 'flex';
@@ -7287,61 +7676,61 @@
 
     // Start with orders view
     showView('orders');
-  }
 
-  // Handler functions for modal interactions
-  function handleCreateOrder(event) {
-    event.preventDefault();
-    const formData = new FormData(event.target);
-    const newOrder = {
-      orderNumber: 'ORD-' + Date.now(),
-      title: formData.get('title'),
-      priority: formData.get('priority'),
-      brief: formData.get('brief'),
-      status: 'New',
-      createdBy: currentUser.name,
-      createdDate: new Date().toISOString().split('T')[0],
-      deadline: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0] // 7 days from now
-    };
-    
-    allOrders.push(newOrder);
-    saveOrders();
-    event.target.closest('.create-order-modal').remove();
-    showToast('Order created successfully!', 'success');
-    render();
-  }
-  
-  // Assign to window immediately after definition
-  window.handleCreateOrder = handleCreateOrder;
-
-  function useTemplate(templateKey) {
-    const template = templates[templateKey];
-    if (template) {
-      // Create order with template data
+    // Handler functions for modal interactions
+    function handleCreateOrder(event) {
+      event.preventDefault();
+      const formData = new FormData(event.target);
       const newOrder = {
         orderNumber: 'ORD-' + Date.now(),
-        title: template.title,
-        priority: template.priority,
-        brief: template.brief,
-        articles: template.articles,
-        deliverables: template.deliverables,
-        budget: template.budget,
+        title: formData.get('title'),
+        priority: formData.get('priority'),
+        brief: formData.get('brief'),
         status: 'New',
         createdBy: currentUser.name,
         createdDate: new Date().toISOString().split('T')[0],
-        deadline: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString().split('T')[0] // 14 days from now
+        deadline: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0] // 7 days from now
       };
-      
+
       allOrders.push(newOrder);
       saveOrders();
-      document.querySelector('.templates-modal').remove();
-      showToast(`Order created from ${template.title} template!`, 'success');
+      event.target.closest('.create-order-modal').remove();
+      showToast('Order created successfully!', 'success');
       render();
     }
+
+    // Assign to window immediately after definition
+    window.handleCreateOrder = handleCreateOrder;
+
+    function useTemplate(templateKey) {
+      const template = templates[templateKey];
+      if (template) {
+        // Create order with template data
+        const newOrder = {
+          orderNumber: 'ORD-' + Date.now(),
+          title: template.title,
+          priority: template.priority,
+          brief: template.brief,
+          articles: template.articles,
+          deliverables: template.deliverables,
+          budget: template.budget,
+          status: 'New',
+          createdBy: currentUser.name,
+          createdDate: new Date().toISOString().split('T')[0],
+          deadline: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString().split('T')[0] // 14 days from now
+        };
+
+        allOrders.push(newOrder);
+        saveOrders();
+        document.querySelector('.templates-modal').remove();
+        showToast(`Order created from ${template.title} template!`, 'success');
+        render();
+      }
+    }
+
+    // Assign to window immediately after definition
+    window.useTemplate = useTemplate;
   }
-  
-  // Assign to window immediately after definition
-  window.useTemplate = useTemplate;
 
   // Global functions for window object
   console.log('All global functions have been assigned immediately after their definitions');
@@ -7411,7 +7800,7 @@
             <button onclick="location.reload()" style="background: #3b82f6; color: white; border: none; padding: 12px 24px; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; transition: background-color 0.15s;">
               🔄 Reload Application
             </button>
-            <button onclick="window.open('mailto:support@company.com?subject=Photo Order System Error&body=' + encodeURIComponent('Error: ${error.message}\\n\\nPlease describe what you were doing when this error occurred...'), '_blank')" style="background: #6b7280; color: white; border: none; padding: 12px 24px; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; transition: background-color 0.15s;">
+            <button onclick="window.open('mailto:support@company.com?subject=Photo Order System Error&body=' + encodeURIComponent('Error: ' + error.message + '\n\nPlease describe what you were doing when this error occurred...'), '_blank')" style="background: #6b7280; color: white; border: none; padding: 12px 24px; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; transition: background-color 0.15s;">
               📧 Report Issue
             </button>
           </div>
