@@ -1268,7 +1268,7 @@
               <!-- Dashboard View -->
               <div id="dashboardView" style="display: none;">
                 <!-- Dashboard Stats Grid -->
-                <div id="dashboardStats" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 20px;">
+                <div id="dashboardStats" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin-bottom: 20px;">
                   <!-- Stats cards will be populated here -->
                 </div>
 
@@ -2454,60 +2454,60 @@
       if (statsContainer) {
         statsContainer.innerHTML = `
           <!-- Process Flow Order -->
-          <div onclick="filterOrdersByStatus('all')" style="background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); padding: 12px; text-align: center; cursor: pointer; transition: all 0.3s ease; border-left: 4px solid #6b7280;" 
+          <div onclick="filterOrdersByStatus('all')" style="background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); padding: 16px; text-align: center; cursor: pointer; transition: all 0.3s ease; border-left: 4px solid #6b7280;" 
                onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.15)'"
                onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 4px rgba(0,0,0,0.1)'">
-            <div style="font-size: 24px; font-weight: bold; color: #6b7280; margin-bottom: 6px;">${stats.total}</div>
-            <div style="font-size: 11px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px;">📋 All Orders</div>
+            <div style="font-size: 24px; font-weight: bold; color: #6b7280; margin-bottom: 8px;">${stats.total}</div>
+            <div style="font-size: 12px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px;">📋 All Orders</div>
           </div>
           
-          <div onclick="filterOrdersByStatus('draft')" style="background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); padding: 12px; text-align: center; cursor: pointer; transition: all 0.3s ease; border-left: 4px solid #94a3b8;" 
+          <div onclick="filterOrdersByStatus('draft')" style="background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); padding: 16px; text-align: center; cursor: pointer; transition: all 0.3s ease; border-left: 4px solid #94a3b8;" 
                onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.15)'"
                onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 4px rgba(0,0,0,0.1)'">
-            <div style="font-size: 24px; font-weight: bold; color: #94a3b8; margin-bottom: 6px;">${orders.filter(o => o.status === 'Draft' || o.status === 'New Request').length}</div>
-            <div style="font-size: 11px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px;">📝 Draft</div>
+            <div style="font-size: 24px; font-weight: bold; color: #94a3b8; margin-bottom: 8px;">${orders.filter(o => o.status === 'Draft' || o.status === 'New Request').length}</div>
+            <div style="font-size: 12px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px;">📝 Draft</div>
           </div>
           
-          <div onclick="filterOrdersByStatus('pending')" style="background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); padding: 12px; text-align: center; cursor: pointer; transition: all 0.3s ease; border-left: 4px solid #f59e0b;" 
+          <div onclick="filterOrdersByStatus('pending')" style="background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); padding: 16px; text-align: center; cursor: pointer; transition: all 0.3s ease; border-left: 4px solid #f59e0b;" 
                onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.15)'"
                onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 4px rgba(0,0,0,0.1)'">
-            <div style="font-size: 24px; font-weight: bold; color: #f59e0b; margin-bottom: 6px;">${orders.filter(o => o.status === 'Pending Approval' || o.status === 'Pending').length}</div>
-            <div style="font-size: 11px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px;">⏳ Pending</div>
+            <div style="font-size: 24px; font-weight: bold; color: #f59e0b; margin-bottom: 8px;">${orders.filter(o => o.status === 'Pending Approval' || o.status === 'Pending').length}</div>
+            <div style="font-size: 12px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px;">⏳ Pending</div>
           </div>
           
-          <div onclick="filterOrdersByStatus('approved')" style="background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); padding: 12px; text-align: center; cursor: pointer; transition: all 0.3s ease; border-left: 4px solid #06b6d4;" 
+          <div onclick="filterOrdersByStatus('approved')" style="background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); padding: 16px; text-align: center; cursor: pointer; transition: all 0.3s ease; border-left: 4px solid #06b6d4;" 
                onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.15)'"
                onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 4px rgba(0,0,0,0.1)'">
-            <div style="font-size: 24px; font-weight: bold; color: #06b6d4; margin-bottom: 6px;">${orders.filter(o => o.status === 'Approved').length}</div>
-            <div style="font-size: 11px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px;">✅ Approved</div>
+            <div style="font-size: 24px; font-weight: bold; color: #06b6d4; margin-bottom: 8px;">${orders.filter(o => o.status === 'Approved').length}</div>
+            <div style="font-size: 12px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px;">✅ Approved</div>
           </div>
           
-          <div onclick="filterOrdersByStatus('samples')" style="background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); padding: 12px; text-align: center; cursor: pointer; transition: all 0.3s ease; border-left: 4px solid #8b5cf6;" 
+          <div onclick="filterOrdersByStatus('samples')" style="background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); padding: 16px; text-align: center; cursor: pointer; transition: all 0.3s ease; border-left: 4px solid #8b5cf6;" 
                onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.15)'"
                onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 4px rgba(0,0,0,0.1)'">
-            <div style="font-size: 24px; font-weight: bold; color: #8b5cf6; margin-bottom: 6px;">${orders.filter(o => o.status === 'Samples Requested' || o.status === 'Samples in Transit' || o.status === 'Samples Received').length}</div>
-            <div style="font-size: 11px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px;">📦 Samples</div>
+            <div style="font-size: 24px; font-weight: bold; color: #8b5cf6; margin-bottom: 8px;">${orders.filter(o => o.status === 'Samples Requested' || o.status === 'Samples in Transit' || o.status === 'Samples Received').length}</div>
+            <div style="font-size: 12px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px;">📦 Samples</div>
           </div>
           
-          <div onclick="filterOrdersByStatus('In Progress')" style="background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); padding: 12px; text-align: center; cursor: pointer; transition: all 0.3s ease; border-left: 4px solid #3b82f6;" 
+          <div onclick="filterOrdersByStatus('In Progress')" style="background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); padding: 16px; text-align: center; cursor: pointer; transition: all 0.3s ease; border-left: 4px solid #3b82f6;" 
                onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.15)'"
                onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 4px rgba(0,0,0,0.1)'">
-            <div style="font-size: 24px; font-weight: bold; color: #3b82f6; margin-bottom: 6px;">${stats.inProgress}</div>
-            <div style="font-size: 11px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px;">🔄 In Progress</div>
+            <div style="font-size: 24px; font-weight: bold; color: #3b82f6; margin-bottom: 8px;">${stats.inProgress}</div>
+            <div style="font-size: 12px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px;">🔄 In Progress</div>
           </div>
           
-          <div onclick="filterOrdersByStatus('review')" style="background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); padding: 12px; text-align: center; cursor: pointer; transition: all 0.3s ease; border-left: 4px solid #10b981;" 
+          <div onclick="filterOrdersByStatus('review')" style="background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); padding: 16px; text-align: center; cursor: pointer; transition: all 0.3s ease; border-left: 4px solid #10b981;" 
                onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.15)'"
                onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 4px rgba(0,0,0,0.1)'">
-            <div style="font-size: 24px; font-weight: bold; color: #10b981; margin-bottom: 6px;">${orders.filter(o => o.status === 'Review').length}</div>
-            <div style="font-size: 11px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px;">🔍 Review</div>
+            <div style="font-size: 24px; font-weight: bold; color: #10b981; margin-bottom: 8px;">${orders.filter(o => o.status === 'Review').length}</div>
+            <div style="font-size: 12px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px;">🔍 Review</div>
           </div>
           
-          <div onclick="filterOrdersByStatus('completed')" style="background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); padding: 12px; text-align: center; cursor: pointer; transition: all 0.3s ease; border-left: 4px solid #059669;" 
+          <div onclick="filterOrdersByStatus('completed')" style="background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); padding: 16px; text-align: center; cursor: pointer; transition: all 0.3s ease; border-left: 4px solid #059669;" 
                onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.15)'"
                onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 4px rgba(0,0,0,0.1)'">
-            <div style="font-size: 24px; font-weight: bold; color: #059669; margin-bottom: 6px;">${stats.complete}</div>
-            <div style="font-size: 11px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px;">🎉 Complete</div>
+            <div style="font-size: 24px; font-weight: bold; color: #059669; margin-bottom: 8px;">${stats.complete}</div>
+            <div style="font-size: 12px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px;">🎉 Complete</div>
           </div>
         `;
       }
