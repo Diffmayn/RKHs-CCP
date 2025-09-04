@@ -214,6 +214,9 @@
 
   // Initialize auth and check login
   const authSystem = new AuthSystem();
+  
+  // Expose authSystem globally for access from other scopes
+  window.authSystem = authSystem;
 
   // Show login screen if not authenticated
   function showLoginScreen() {
@@ -452,9 +455,9 @@
       status:'In Progress', 
       method:'Photographer',
       photographer:'Mike Rodriguez', 
-      deadline:'2025-08-30', 
+      deadline:'2025-09-06', 
       costCenter:'PG-100',
-      priority:'High',
+      priority:'Critical',
       brief:'Create high-impact product photography for premium dog food line. Focus on hero shots, lifestyle images, and detail macro shots.',
       articles: ['Premium Dog Food 2kg [EAN: 5901234567890]'],
       budget: 5500,
@@ -602,9 +605,9 @@
       status:'Approved', 
       method:'Photographer',
       photographer:'Emily Chen', 
-      deadline:'2025-09-10', 
+      deadline:'2025-09-07', 
       costCenter:'PG-400',
-      priority:'High',
+      priority:'Critical',
       brief:'Dynamic product shots of garden tools. Focus on durability, functionality, and outdoor lifestyle for spring catalog.',
       articles: ['Electric Hedge Trimmer', 'Garden Gloves Set'],
       budget: 6500,
@@ -634,9 +637,9 @@
       status:'Pending Approval', 
       method:'Photo Box',
       photographer:'Emily Chen', 
-      deadline:'2025-09-10', 
+      deadline:'2025-09-04', 
       costCenter:'PG-100',
-      priority:'High',
+      priority:'Critical',
       brief:'Organic pasta product line photography for new health-focused marketing campaign. Clean, fresh styling.',
       articles: ['Organic Penne Pasta 500g', 'Organic Linguine 400g'],
       budget: 3200,
@@ -696,9 +699,9 @@
       status:'Complete', 
       method:'Photographer',
       photographer:'Mike Rodriguez', 
-      deadline:'2025-08-25', 
+      deadline:'2025-09-02', 
       costCenter:'PG-300',
-      priority:'Low',
+      priority:'Medium',
       brief:'Smart home devices photography for holiday campaign preview. Modern, tech-focused styling.',
       articles: ['Smart Thermostat', 'Security Camera Set'],
       budget: 5200,
@@ -754,6 +757,69 @@
     }
   ];
 
+  // Expose allOrders globally for access from other scopes
+  window.allOrders = allOrders;
+
+  // Update quick action badges with real counts
+  function updateQuickActionBadges() {
+    const allOrdersList = window.allOrders || [];
+    const orders = window.authSystem ? window.authSystem.getFilteredOrders(allOrdersList) : allOrdersList;
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    // Helper function to update badge with animation
+    function updateBadgeWithAnimation(badge, newCount) {
+      if (!badge) return;
+      
+      const oldCount = parseInt(badge.textContent) || 0;
+      badge.textContent = newCount;
+      badge.style.display = newCount > 0 ? 'flex' : 'none';
+      
+      // Add animation if value changed
+      if (oldCount !== newCount && newCount > 0) {
+        badge.classList.add('updated');
+        setTimeout(() => badge.classList.remove('updated'), 600);
+      }
+    }
+    
+    // Count urgent orders (high priority)
+    const urgentCount = orders.filter(o => o.priority === 'High' || o.priority === 'Critical').length;
+    const urgentBadge = document.getElementById('urgentBadge');
+    updateBadgeWithAnimation(urgentBadge, urgentCount);
+    
+    // Count samples in transit
+    const samplesCount = orders.filter(o => 
+      o.status === 'Samples Requested' || 
+      o.status === 'Samples in Transit' ||
+      o.status === 'Samples Received'
+    ).length;
+    const samplesBadge = document.getElementById('samplesBadge');
+    updateBadgeWithAnimation(samplesBadge, samplesCount);
+    
+    // Count overdue orders
+    const overdueToday = new Date();
+    overdueToday.setHours(23, 59, 59, 999); // End of today
+    const overdueCount = orders.filter(o => {
+      const deadline = new Date(o.deadline);
+      return deadline < overdueToday && 
+        o.status !== 'Complete' && 
+        o.status !== 'Completed' &&
+        o.status !== 'Delivered' &&
+        o.status !== 'Archived';
+    }).length;
+    const overdueBadge = document.getElementById('overdueBadge');
+    updateBadgeWithAnimation(overdueBadge, overdueCount);
+    
+    // Count today's deadlines
+    const todayStr = new Date().toISOString().split('T')[0];
+    const todayCount = orders.filter(o => o.deadline === todayStr).length;
+    const todayBadge = document.getElementById('todayBadge');
+    updateBadgeWithAnimation(todayBadge, todayCount);
+  }
+
+  // Expose updateQuickActionBadges globally
+  window.updateQuickActionBadges = updateQuickActionBadges;
+
   const samples = [
     {
       id: 'SMP-001',
@@ -795,6 +861,8 @@
     #fallback-app table { border-collapse: collapse; width: 100%; margin-top: 12px; background: white; border-radius: 6px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
     #fallback-app th, #fallback-app td { border-bottom: 1px solid #e5e7eb; padding: 8px 12px; font-size: 13px; text-align: left; }
     #fallback-app th { background: #f8fafc; font-weight: 600; color: #374151; }
+    #fallback-app tbody tr { background: white; color: #374151; }
+    #fallback-app tbody tr td { color: #374151 !important; }
     #fallback-app tbody tr:hover { background: #f9fafb; }
     #fallback-app .status { padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: 500; display: inline-block; }
     #fallback-app .Complete { background: #d1fae5; color: #065f46; }
@@ -830,6 +898,35 @@
     #fallback-app .btn-primary:hover { background: #1d4ed8; }
     #fallback-app input { flex: 1; min-width: 240px; padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 13px; }
     #fallback-app .alert { background: #fef3c7; border: 1px solid #f59e0b; color: #92400e; padding: 12px; border-radius: 6px; margin-bottom: 16px; font-size: 14px; }
+    
+    /* Bulk Actions Panel Responsive Styles */
+    @media (max-width: 768px) {
+      #bulkActionsPanel > div { 
+        padding: 12px !important; 
+      }
+      #bulkActionsPanel > div > div { 
+        flex-direction: column !important; 
+        align-items: stretch !important; 
+        gap: 16px !important; 
+      }
+      #bulkActionsPanel button { 
+        justify-content: center !important; 
+        flex: 1 !important; 
+        min-width: auto !important; 
+      }
+      #bulkActionsPanel .selected-count-info { 
+        text-align: center !important; 
+      }
+    }
+    @media (max-width: 480px) {
+      #bulkActionsPanel button { 
+        padding: 12px 8px !important; 
+        font-size: 12px !important; 
+      }
+      #bulkActionsPanel button span:first-child { 
+        margin-right: 4px !important; 
+      }
+    }
     #confetti-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9999; }
     @keyframes confetti-fall { 0% { transform: translateY(-100vh) rotate(0deg); opacity: 1; } 100% { transform: translateY(100vh) rotate(720deg); opacity: 0; } }
     .confetti { position: fixed; width: 8px; height: 8px; z-index: 9999; pointer-events: none; animation: confetti-fall 3s linear forwards; }
@@ -998,7 +1095,7 @@
             <!-- Core Operations -->
             <div class="nav-section">
               <div class="nav-section-title">Core Operations</div>
-              <div class="nav-item" data-tooltip="Dashboard Overview" onclick="showDashboardModal()">
+              <div class="nav-item" data-tooltip="Dashboard Overview" onclick="showView('dashboard')">
                 <span class="nav-item-icon">🏠</span>
                 <span class="nav-item-text">Dashboard</span>
               </div>
@@ -1008,7 +1105,7 @@
                   <span class="nav-item-text">New Order</span>
                 </div>
               ` : ''}
-              <div class="nav-item" data-tooltip="View All Orders" onclick="showOrdersModal()">
+              <div class="nav-item" data-tooltip="View All Orders" onclick="showView('orders')">
                 <span class="nav-item-icon">📋</span>
                 <span class="nav-item-text">Orders</span>
               </div>
@@ -1047,22 +1144,22 @@
               <div class="nav-item nav-item-urgent" data-tooltip="View Urgent Orders" onclick="filterOrdersByStatus('urgent')">
                 <span class="nav-item-icon">🚨</span>
                 <span class="nav-item-text">Urgent Orders</span>
-                <span class="nav-item-badge" id="urgentBadge" style="background: #ef4444;">0</span>
+                <span class="nav-item-badge" id="urgentBadge">0</span>
               </div>
               <div class="nav-item nav-item-samples" data-tooltip="Samples Ready" onclick="filterOrdersByStatus('samples')">
                 <span class="nav-item-icon">📦</span>
                 <span class="nav-item-text">Samples Ready</span>
-                <span class="nav-item-badge" id="samplesBadge" style="background: #f59e0b;">0</span>
+                <span class="nav-item-badge" id="samplesBadge">0</span>
               </div>
               <div class="nav-item nav-item-overdue" data-tooltip="Overdue Items" onclick="filterOrdersByStatus('overdue')">
                 <span class="nav-item-icon">⏰</span>
                 <span class="nav-item-text">Overdue Items</span>
-                <span class="nav-item-badge" id="overdueBadge" style="background: #dc2626;">0</span>
+                <span class="nav-item-badge" id="overdueBadge">0</span>
               </div>
               <div class="nav-item nav-item-today" data-tooltip="Today's Deadlines" onclick="filterOrdersByStatus('today')">
                 <span class="nav-item-icon">📅</span>
                 <span class="nav-item-text">Today's Deadlines</span>
-                <span class="nav-item-badge" id="todayBadge" style="background: #3b82f6;">0</span>
+                <span class="nav-item-badge" id="todayBadge">0</span>
               </div>
             </div>
 
@@ -1079,11 +1176,11 @@
                   <span class="nav-item-text">Excel Import</span>
                 </div>
               ` : ''}
-              <div class="nav-item" data-tooltip="Digital Asset Management" onclick="window.showDAMIntegrationModal()">
-                <span class="nav-item-icon">🗂️</span>
-                <span class="nav-item-text">DAM Assets</span>
+              <div class="nav-item" data-tooltip="Cloudinary Asset Management" onclick="window.showDAMIntegrationModal()">
+                <span class="nav-item-icon">☁️</span>
+                <span class="nav-item-text">Cloudinary Assets</span>
               </div>
-              <div class="nav-item" data-tooltip="Bulk Operations" onclick="toggleBulkMode()">
+              <div id="toggleBulkMode" class="nav-item" data-tooltip="Bulk Operations">
                 <span class="nav-item-icon">☑️</span>
                 <span class="nav-item-text">Bulk Select</span>
               </div>
@@ -1146,38 +1243,68 @@
           </div>
           
           <div class="content-body">
-            <!-- Stats Overview -->
-            <div class="stats">
-              <div class="stat-card clickable-tile" onclick="filterOrdersByStatus('new')" style="cursor: pointer;" title="Click to view new requests">
-                <div class="stat-number" style="color: #7c3aed">${stats.newRequests}</div>
-                <div class="stat-label">New Requests</div>
-              </div>
-              <div class="stat-card clickable-tile" onclick="filterOrdersByStatus('samples')" style="cursor: pointer;" title="Click to view samples">
-                <div class="stat-number" style="color: #ea580c">${stats.samplesInTransit}</div>
-                <div class="stat-label">Samples in Transit</div>
-              </div>
-              <div class="stat-card clickable-tile" onclick="filterOrdersByStatus('inprogress')" style="cursor: pointer;" title="Click to view in progress orders">
-                <div class="stat-number" style="color: #2563eb">${stats.inProgress}</div>
-                <div class="stat-label">In Progress</div>
-              </div>
-              <div class="stat-card clickable-tile" onclick="filterOrdersByStatus('completed')" style="cursor: pointer;" title="Click to view completed orders">
-                <div class="stat-number" style="color: #059669">${stats.complete}</div>
-                <div class="stat-label">Completed</div>
-              </div>
-              <div class="stat-card clickable-tile" onclick="filterOrdersByStatus('all')" style="cursor: pointer;" title="Click to view all orders">
-                <div class="stat-number">${stats.total}</div>
-                <div class="stat-label">${authSystem.canViewAllOrders() ? 'Total Orders' : 'My Orders'}</div>
-              </div>
-            </div>
-
             <!-- Main Content Area -->
             <div id="mainContent">
+              <!-- Dashboard View -->
+              <div id="dashboardView" style="display: none;">
+                <!-- Dashboard Stats Grid -->
+                <div id="dashboardStats" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px; margin-bottom: 20px;">
+                  <!-- Stats cards will be populated here -->
+                </div>
+
+                <!-- Recent Orders Section -->
+                <div style="background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 20px;">
+                  <div style="padding: 16px; border-bottom: 1px solid #e5e7eb;">
+                    <h3 style="margin: 0; font-size: 18px; color: #1f2937; font-weight: 600;">📋 Recent Orders</h3>
+                  </div>
+                  <div id="recentOrdersContainer" style="max-height: 400px; overflow-y: auto;">
+                    <!-- Recent orders will be populated here -->
+                  </div>
+                </div>
+              </div>
+
               <!-- Orders Table - Default View -->
               <div id="ordersView">
                 <div style="background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 20px;">
                   <div style="padding: 16px; border-bottom: 1px solid #e5e7eb;">
                     <input id="searchBox" placeholder="🔍 Search orders by title, number, or photographer..." 
                            style="width: 100%; padding: 8px 16px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px;" />
+                  </div>
+                  
+                  <!-- Bulk Actions Panel - positioned within orders view -->
+                  <div style="display: none;" id="bulkActionsPanel">
+                    <div style="background: linear-gradient(135deg, #f0f9ff, #e0f2fe); border-top: 1px solid #e5e7eb; padding: 16px; border-bottom: 1px solid #e5e7eb;">
+                      <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
+                        <div class="selected-count-info" style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                          <div style="background: #3b82f6; color: white; padding: 6px 12px; border-radius: 16px; font-size: 13px; font-weight: 600; box-shadow: 0 2px 4px rgba(59, 130, 246, 0.3);">
+                            <span id="selectedCount">0</span> selected
+                          </div>
+                          <span style="color: #6b7280; font-size: 14px; font-weight: 500;">Choose an action to apply to selected items</span>
+                        </div>
+                        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                          <button id="bulkUpdateStatus" style="background: linear-gradient(135deg, #10b981, #059669); color: white; border: none; padding: 10px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; box-shadow: 0 2px 4px rgba(16, 185, 129, 0.3); display: flex; align-items: center; gap: 6px;" 
+                                  onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 12px rgba(16, 185, 129, 0.4)'" 
+                                  onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 4px rgba(16, 185, 129, 0.3)'">
+                            <span>📝</span> Update Status
+                          </button>
+                          <button id="bulkAssign" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed); color: white; border: none; padding: 10px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; box-shadow: 0 2px 4px rgba(139, 92, 246, 0.3); display: flex; align-items: center; gap: 6px;" 
+                                  onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 12px rgba(139, 92, 246, 0.4)'" 
+                                  onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 4px rgba(139, 92, 246, 0.3)'">
+                            <span>👤</span> Assign To
+                          </button>
+                          <button id="bulkExport" style="background: linear-gradient(135deg, #f59e0b, #d97706); color: white; border: none; padding: 10px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; box-shadow: 0 2px 4px rgba(245, 158, 11, 0.3); display: flex; align-items: center; gap: 6px;" 
+                                  onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 12px rgba(245, 158, 11, 0.4)'" 
+                                  onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 4px rgba(245, 158, 11, 0.3)'">
+                            <span>📊</span> Export
+                          </button>
+                          <button id="clearSelection" style="background: linear-gradient(135deg, #6b7280, #4b5563); color: white; border: none; padding: 10px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; box-shadow: 0 2px 4px rgba(107, 114, 128, 0.3); display: flex; align-items: center; gap: 6px;" 
+                                  onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 12px rgba(107, 114, 128, 0.4)'" 
+                                  onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 4px rgba(107, 114, 128, 0.3)'">
+                            <span>✖️</span> Clear
+                          </button>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
 
@@ -1471,6 +1598,78 @@
           display: none; /* Completely hide the text */
         }
 
+        /* Modern Notification Badge Styling */
+        .nav-item-badge {
+          position: absolute;
+          top: 8px;
+          right: 12px;
+          min-width: 18px;
+          height: 18px;
+          border-radius: 12px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 10px;
+          font-weight: 700;
+          color: white;
+          padding: 0 6px;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+          border: 2px solid rgba(255, 255, 255, 0.9);
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          transform: scale(1);
+          backdrop-filter: blur(4px);
+          z-index: 10;
+        }
+
+        .nav-item-badge:empty {
+          display: none;
+        }
+
+        /* Badge hover effects when parent nav-item is hovered */
+        .nav-item:hover .nav-item-badge {
+          transform: scale(1.1);
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+          border-color: rgba(255, 255, 255, 1);
+        }
+
+        /* Badge positioning for collapsed sidebar */
+        .sidebar.collapsed .nav-item-badge {
+          right: 8px;
+          top: 6px;
+          min-width: 16px;
+          height: 16px;
+          font-size: 9px;
+          border-width: 1.5px;
+        }
+
+        /* Specific badge colors with gradients */
+        .nav-item-badge[id="urgentBadge"] {
+          background: linear-gradient(135deg, #ef4444, #dc2626);
+        }
+
+        .nav-item-badge[id="samplesBadge"] {
+          background: linear-gradient(135deg, #f59e0b, #d97706);
+        }
+
+        .nav-item-badge[id="overdueBadge"] {
+          background: linear-gradient(135deg, #dc2626, #b91c1c);
+        }
+
+        .nav-item-badge[id="todayBadge"] {
+          background: linear-gradient(135deg, #3b82f6, #2563eb);
+        }
+
+        /* Animation for badge updates */
+        @keyframes badgePulse {
+          0% { transform: scale(1); }
+          50% { transform: scale(1.2); }
+          100% { transform: scale(1); }
+        }
+
+        .nav-item-badge.updated {
+          animation: badgePulse 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
         /* Tooltip for collapsed sidebar */
         .nav-item::after {
           content: attr(data-tooltip);
@@ -1662,42 +1861,6 @@
           alert('👤 User Profile\\n\\nFeature coming soon! This will include:\\n\\n• Personal information\\n• Role permissions\\n• Activity history\\n• Account settings');
         }
 
-        // Update quick action badges with real counts
-        function updateQuickActionBadges() {
-          const orders = window.allOrders || [];
-          const today = new Date();
-          today.setHours(0, 0, 0, 0);
-          
-          // Count urgent orders (high priority)
-          const urgentCount = orders.filter(o => o.priority === 'High' || o.priority === 'Critical').length;
-          document.getElementById('urgentBadge').textContent = urgentCount;
-          document.getElementById('urgentBadge').style.display = urgentCount > 0 ? 'block' : 'none';
-          
-          // Count samples in transit
-          const samplesCount = orders.filter(o => o.status === 'Samples' || o.status === 'samples').length;
-          document.getElementById('samplesBadge').textContent = samplesCount;
-          document.getElementById('samplesBadge').style.display = samplesCount > 0 ? 'block' : 'none';
-          
-          // Count overdue orders
-          const overdueCount = orders.filter(o => {
-            const deadline = new Date(o.deadline);
-            return deadline < today && o.status !== 'Completed';
-          }).length;
-          document.getElementById('overdueBadge').textContent = overdueCount;
-          document.getElementById('overdueBadge').style.display = overdueCount > 0 ? 'block' : 'none';
-          
-          // Count today's deadlines
-          const todayCount = orders.filter(o => {
-            const deadline = new Date(o.deadline);
-            deadline.setHours(0, 0, 0, 0);
-            return deadline.getTime() === today.getTime() && o.status !== 'Completed';
-          }).length;
-          document.getElementById('todayBadge').textContent = todayCount;
-          document.getElementById('todayBadge').style.display = todayCount > 0 ? 'block' : 'none';
-        }
-
-        // Initialize badge counts after page load
-        setTimeout(updateQuickActionBadges, 1000);
       </script>
 
       <!-- Hidden Views (existing structure) -->
@@ -1875,18 +2038,6 @@
           </div>
         </div>
 
-        <div style="display: none;" id="bulkActionsPanel">
-          <div style="background: #fef3c7; border: 1px solid #f59e0b; border-radius: 6px; padding: 12px; margin: 16px 0;">
-            <span id="selectedCount">0</span> items selected
-            <div style="margin-top: 8px;">
-              <button id="bulkUpdateStatus" class="btn" style="font-size: 12px; padding: 4px 8px; margin-right: 8px;">Update Status</button>
-              <button id="bulkAssign" class="btn" style="font-size: 12px; padding: 4px 8px; margin-right: 8px;">Assign To</button>
-              <button id="bulkExport" class="btn" style="font-size: 12px; padding: 4px 8px; margin-right: 8px;">Export Selected</button>
-              <button id="clearSelection" class="btn" style="font-size: 12px; padding: 4px 8px;">Clear</button>
-            </div>
-          </div>
-        </div>
-
         <table style="display: none;" id="defaultTable">
           <thead>
             <tr>
@@ -1979,25 +2130,31 @@
         brief: 'Create high-impact hero shots for product marketing campaign. Focus on dramatic lighting, clean backgrounds, and compelling product presentation that captures attention and drives sales.',
         articles: 'Product Sample',
         deliverables: 'Hero Product Shots, Marketing Assets, High-Resolution Images',
-        budget: 5000
+        budget: 5000,
+        category: 'Photography',
+        icon: '📸'
       },
       'ecommerce-batch': {
         title: 'E-commerce Product Batch',
         method: 'Photo Box',
         priority: 'Medium',
         brief: 'Automated white background product photography for online store. Consistent lighting, color accuracy, and standardized framing for catalog consistency.',
-        articles: 'Product Batch',
+        articles: 'Product Batch (10-50 items)',
         deliverables: 'E-commerce Photos, Thumbnail Images, Product Catalog',
-        budget: 2000
+        budget: 2000,
+        category: 'Photography',
+        icon: '🛍️'
       },
       'lifestyle-campaign': {
         title: 'Lifestyle Photography Campaign',
         method: 'External Studio',
         priority: 'High',
         brief: 'Professional lifestyle photography featuring products in real-world scenarios with models. Focus on emotional connection and aspirational lifestyle messaging.',
-        articles: 'Product Samples, Props',
+        articles: 'Product Samples, Props, Models',
         deliverables: 'Lifestyle Photography, Social Media Content, Campaign Assets',
-        budget: 8000
+        budget: 8000,
+        category: 'Photography',
+        icon: '🌟'
       },
       'detail-macro': {
         title: 'Detail & Macro Photography',
@@ -2006,71 +2163,270 @@
         brief: 'Close-up detail photography highlighting product features, textures, and craftsmanship. Technical precision with focus on product quality and specifications.',
         articles: 'Product Sample',
         deliverables: 'Macro Detail Shots, Feature Highlights, Technical Documentation',
-        budget: 3000
+        budget: 3000,
+        category: 'Photography',
+        icon: '🔍'
+      },
+      'social-content': {
+        title: 'Social Media Content Package',
+        method: 'Photo Box',
+        priority: 'Medium',
+        brief: 'Create engaging social media content with multiple angles, seasonal themes, and platform-optimized formats. Include stories, posts, and reel-ready content.',
+        articles: 'Product Samples, Seasonal Props',
+        deliverables: 'Social Media Posts, Stories, Reels, Instagram Content',
+        budget: 2500,
+        category: 'Social Media',
+        icon: '📱'
+      },
+      'video-product': {
+        title: 'Product Video Showcase',
+        method: 'External Studio',
+        priority: 'High',
+        brief: 'Professional product video showcasing features, benefits, and usage scenarios. Include 360° rotation, close-ups, and lifestyle integration.',
+        articles: 'Product Sample, Usage Props',
+        deliverables: 'Product Video, 360° Video, Usage Demonstrations, Video Thumbnails',
+        budget: 6500,
+        category: 'Video',
+        icon: '🎥'
+      },
+      'seasonal-campaign': {
+        title: 'Seasonal Campaign Photography',
+        method: 'Photographer',
+        priority: 'Medium',
+        brief: 'Seasonal themed photography for holiday marketing campaigns. Incorporate seasonal elements, colors, and themes relevant to current season.',
+        articles: 'Product Samples, Seasonal Decorations',
+        deliverables: 'Seasonal Photography, Holiday Marketing Assets, Themed Content',
+        budget: 4500,
+        category: 'Photography',
+        icon: '🎄'
+      },
+      'packaging-shots': {
+        title: 'Packaging & Unboxing Photography',
+        method: 'Internal Studio',
+        priority: 'Low',
+        brief: 'Professional packaging photography and unboxing experience documentation. Focus on brand presentation and customer experience journey.',
+        articles: 'Packaged Products, Unboxing Materials',
+        deliverables: 'Packaging Photography, Unboxing Sequence, Brand Assets',
+        budget: 1800,
+        category: 'Photography',
+        icon: '📦'
+      },
+      'comparison-grid': {
+        title: 'Product Comparison Grid',
+        method: 'Photo Box',
+        priority: 'Low',
+        brief: 'Systematic comparison photography for product variants, sizes, or competing products. Maintain consistent lighting and positioning for fair comparison.',
+        articles: 'Product Variants/Competitors',
+        deliverables: 'Comparison Grid, Size Charts, Feature Comparisons',
+        budget: 1500,
+        category: 'Photography',
+        icon: '⚖️'
+      },
+      'influencer-kit': {
+        title: 'Influencer Content Kit',
+        method: 'Photographer',
+        priority: 'Medium',
+        brief: 'Content creation for influencer partnerships and brand collaborations. Include lifestyle shots, product styling, and social-ready formats.',
+        articles: 'Product Samples, Lifestyle Props',
+        deliverables: 'Influencer Photos, Social Content, Brand Guidelines',
+        budget: 3500,
+        category: 'Social Media',
+        icon: '🤳'
+      },
+      'technical-specs': {
+        title: 'Technical Specification Photography',
+        method: 'Internal Studio',
+        priority: 'Low',
+        brief: 'Technical documentation photography for manuals, specifications, and professional documentation. Focus on clarity and instructional value.',
+        articles: 'Product Sample, Technical Components',
+        deliverables: 'Technical Photos, Instruction Images, Specification Documentation',
+        budget: 1200,
+        category: 'Documentation',
+        icon: '📋'
+      },
+      'brand-storytelling': {
+        title: 'Brand Storytelling Campaign',
+        method: 'External Studio',
+        priority: 'High',
+        brief: 'Comprehensive brand storytelling through visual content. Showcase brand values, heritage, and emotional connection with premium artistic approach.',
+        articles: 'Product Range, Brand Elements, Models',
+        deliverables: 'Brand Photography, Storytelling Assets, Premium Content',
+        budget: 12000,
+        category: 'Branding',
+        icon: '📖'
       }
     };
+
+    // Update content title when switching views
+    function updateContentTitle(title) {
+      const contentTitle = document.getElementById('contentTitle');
+      if (contentTitle) {
+        contentTitle.textContent = title;
+      }
+    }
 
     function showView(viewName) {
       console.log('showView called with:', viewName);
       
-      // Simple implementation to get the app working
-      currentView = viewName;
-      
       // Hide all views first
-      const views = ['ordersView', 'samplesView', 'createOrderView', 'templatesView', 'workflowView', 'kanbanView', 'calendarView'];
+      const views = ['ordersView', 'samplesView', 'createOrderView', 'templatesView', 'workflowView', 'kanbanView', 'calendarView', 'dashboardView'];
       views.forEach(viewId => {
         const element = document.getElementById(viewId);
         if (element) {
           element.style.display = 'none';
+          element.classList.remove('view-active');
         }
       });
       
-      // Show the target view
+      // Clear any filter info when switching views
+      const mainContent = document.getElementById('mainContent');
+      const existingFilter = mainContent?.querySelector('.filter-info');
+      if (existingFilter) {
+        existingFilter.remove();
+      }
+      
+      // Show the target view and update content
       let targetView = null;
-      if (viewName === 'orders' || viewName === 'dashboard') {
+      if (viewName === 'dashboard') {
+        targetView = document.getElementById('dashboardView');
+        updateContentTitle('📊 Dashboard');
+        if (targetView) {
+          targetView.style.display = 'block';
+          targetView.classList.add('view-active');
+          populateDashboardContent();
+        }
+      } else if (viewName === 'orders') {
         targetView = document.getElementById('ordersView');
-        // Update content title based on view
-        updateContentTitle(viewName === 'dashboard' ? '📊 Dashboard' : '📋 Orders');
-        // Don't replace innerHTML for orders/dashboard - preserve the existing structure
-        // The drawOrderRows function will populate the existing ordersBody element
+        updateContentTitle('📋 Orders');
+        if (targetView) {
+          targetView.style.display = 'block';
+          targetView.classList.add('view-active');
+          if (typeof drawOrderRows === 'function') drawOrderRows();
+        }
       } else if (viewName === 'samples') {
         targetView = document.getElementById('samplesView');
-        updateContentTitle('📦 Samples');
+        updateContentTitle('� Samples');
         if (targetView) {
-          targetView.innerHTML = '<h2>Samples View</h2><div id="samplesBody">Loading samples...</div>';
+          targetView.style.display = 'block';
+          targetView.classList.add('view-active');
+          if (typeof drawSampleRows === 'function') drawSampleRows();
         }
       } else if (viewName === 'kanban') {
         targetView = document.getElementById('kanbanView');
         updateContentTitle('📊 Kanban Board');
+        if (targetView) {
+          targetView.style.display = 'block';
+          targetView.classList.add('view-active');
+          if (typeof drawKanbanBoard === 'function') drawKanbanBoard();
+        }
       } else if (viewName === 'calendar') {
         targetView = document.getElementById('calendarView');
         updateContentTitle('📅 Calendar View');
+        if (targetView) {
+          targetView.style.display = 'block';
+          targetView.classList.add('view-active');
+          if (typeof drawCalendarView === 'function') drawCalendarView();
+        }
       } else if (viewName === 'workflow') {
         targetView = document.getElementById('workflowView');
         updateContentTitle('🔄 Workflow');
+        if (targetView) {
+          targetView.style.display = 'block';
+          targetView.classList.add('view-active');
+          if (typeof drawWorkflowView === 'function') drawWorkflowView();
+        }
       } else if (viewName === 'create') {
         targetView = document.getElementById('createOrderView');
         updateContentTitle('➕ Create Order');
-      }
-      
-      // Call the appropriate draw function
-      setTimeout(() => {
-        if (viewName === 'orders' || viewName === 'dashboard') {
-          if (typeof drawOrderRows === 'function') drawOrderRows();
-        } else if (viewName === 'samples') {
-          if (typeof drawSampleRows === 'function') drawSampleRows();
-        } else if (viewName === 'kanban') {
-          if (typeof drawKanbanBoard === 'function') drawKanbanBoard();
-        } else if (viewName === 'calendar') {
-          if (typeof drawCalendarView === 'function') drawCalendarView();
-        } else if (viewName === 'workflow') {
-          if (typeof drawWorkflowView === 'function') drawWorkflowView();
+        if (targetView) {
+          targetView.style.display = 'block';
+          targetView.classList.add('view-active');
         }
-      }, 100);
+      }
     }
 
     // Expose showView globally for onclick handlers
     window.showView = showView;
+
+    // Function to populate dashboard content
+    function populateDashboardContent() {
+      if (!window.allOrders || !window.authSystem) {
+        console.error('Dashboard: Required data not available');
+        return;
+      }
+
+      const orders = window.authSystem.getFilteredOrders(window.allOrders);
+      
+      // Calculate stats
+      const stats = {
+        total: orders.length,
+        complete: orders.filter(o => o.status === 'Complete' || o.status === 'Delivered').length,
+        pending: orders.filter(o => o.status === 'Pending' || o.status === 'Draft').length,
+        inProgress: orders.filter(o => o.status === 'In Progress' || o.status === 'Approved').length,
+        newRequests: orders.filter(o => o.status === 'New Request' || o.status === 'Draft').length
+      };
+
+      // Populate stats grid
+      const statsContainer = document.getElementById('dashboardStats');
+      if (statsContainer) {
+        statsContainer.innerHTML = `
+          <div style="background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); padding: 20px; text-align: center;">
+            <div style="font-size: 32px; font-weight: bold; color: #3b82f6; margin-bottom: 8px;">${stats.total}</div>
+            <div style="font-size: 14px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px;">Total Orders</div>
+          </div>
+          <div style="background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); padding: 20px; text-align: center;">
+            <div style="font-size: 32px; font-weight: bold; color: #10b981; margin-bottom: 8px;">${stats.complete}</div>
+            <div style="font-size: 14px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px;">Completed</div>
+          </div>
+          <div style="background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); padding: 20px; text-align: center;">
+            <div style="font-size: 32px; font-weight: bold; color: #f59e0b; margin-bottom: 8px;">${stats.pending}</div>
+            <div style="font-size: 14px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px;">Pending</div>
+          </div>
+          <div style="background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); padding: 20px; text-align: center;">
+            <div style="font-size: 32px; font-weight: bold; color: #8b5cf6; margin-bottom: 8px;">${stats.inProgress}</div>
+            <div style="font-size: 14px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px;">In Progress</div>
+          </div>
+        `;
+      }
+
+      // Populate recent orders
+      const recentOrdersContainer = document.getElementById('recentOrdersContainer');
+      if (recentOrdersContainer) {
+        const recentOrders = orders.slice(0, 10); // Show latest 10 orders
+        recentOrdersContainer.innerHTML = `
+          <table style="width: 100%; border-collapse: collapse;">
+            <thead>
+              <tr style="background: #f8fafc;">
+                <th style="padding: 12px 16px; text-align: left; font-weight: 600; color: #374151; border-bottom: 1px solid #e5e7eb;">Order #</th>
+                <th style="padding: 12px 16px; text-align: left; font-weight: 600; color: #374151; border-bottom: 1px solid #e5e7eb;">Title</th>
+                <th style="padding: 12px 16px; text-align: left; font-weight: 600; color: #374151; border-bottom: 1px solid #e5e7eb;">Status</th>
+                <th style="padding: 12px 16px; text-align: left; font-weight: 600; color: #374151; border-bottom: 1px solid #e5e7eb;">Priority</th>
+                <th style="padding: 12px 16px; text-align: left; font-weight: 600; color: #374151; border-bottom: 1px solid #e5e7eb;">Deadline</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${recentOrders.map(order => `
+                <tr onclick="showOrderDetails('${order.orderNumber}')" style="cursor: pointer; border-bottom: 1px solid #f3f4f6;" onmouseover="this.style.backgroundColor='#f9fafb'" onmouseout="this.style.backgroundColor=''">
+                  <td style="padding: 12px 16px; color: #374151;"><strong>${order.orderNumber}</strong></td>
+                  <td style="padding: 12px 16px; color: #374151;">${order.title}</td>
+                  <td style="padding: 12px 16px;"><span class="status ${order.status.replace(/\s+/g, '')}">${order.status}</span></td>
+                  <td style="padding: 12px 16px;"><span class="status ${order.priority}">${order.priority}</span></td>
+                  <td style="padding: 12px 16px; color: #374151;">${order.deadline}</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        `;
+      }
+      
+      // Update badge counts after populating dashboard
+      if (window.updateQuickActionBadges) {
+        window.updateQuickActionBadges();
+      }
+    }
+
+    // Expose functions globally
+    window.populateDashboardContent = populateDashboardContent;
     
     // Debug workflow button click
     console.log('Workflow functionality initialized');
@@ -2245,6 +2601,17 @@
 
       document.body.appendChild(modal);
 
+      // Add ESC key event listener
+      const escKeyHandler = function(event) {
+        if (event.key === 'Escape') {
+          closeScanArticleRightModal();
+        }
+      };
+      
+      // Store the handler on the modal for later removal
+      modal._escKeyHandler = escKeyHandler;
+      document.addEventListener('keydown', escKeyHandler);
+
       // Animate in
       setTimeout(() => {
         modal.style.transform = 'translateX(0)';
@@ -2267,6 +2634,11 @@
     function closeScanArticleRightModal() {
       const modal = document.getElementById('scanArticleRightModal');
       if (modal) {
+        // Remove ESC key event listener
+        if (modal._escKeyHandler) {
+          document.removeEventListener('keydown', modal._escKeyHandler);
+        }
+        
         modal.style.transform = 'translateX(-100%)';
         setTimeout(() => {
           modal.remove();
@@ -2316,7 +2688,7 @@
     window.showCreateOrderLeftModal = showCreateOrderLeftModal;
     window.closeCreateOrderLeftModal = closeCreateOrderLeftModal;
 
-    // Show new order modal on the right side of sidebar
+    // Show new order modal as large side panel
     function showNewOrderModal() {
       // Check if this modal is already open (toggle behavior)
       const existingModal = document.getElementById('newOrderRightModal');
@@ -2328,14 +2700,14 @@
       // Close any other open right-side modals
       closeAllRightSideModals();
 
-      // Create right-side modal (positioned after sidebar)
+      // Create right-side modal (positioned after sidebar) - made larger for form fields
       const modal = document.createElement('div');
       modal.id = 'newOrderRightModal';
       modal.style.cssText = `
         position: fixed;
         top: 0;
         left: 280px;
-        width: 450px;
+        width: 650px;
         height: 100vh;
         background: rgba(255, 255, 255, 0.98);
         backdrop-filter: blur(20px);
@@ -2345,97 +2717,120 @@
         overflow-y: auto;
         transform: translateX(-100%);
         transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        padding: 20px;
+        padding: 24px;
       `;
 
       modal.innerHTML = `
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 2px solid #e5e7eb;">
-          <h3 style="margin: 0; font-size: 20px; color: #1f2937; font-weight: 600;">➕ Create New Photo Order</h3>
-          <button onclick="closeNewOrderModal()" style="background: #ef4444; color: white; border: none; border-radius: 50%; width: 32px; height: 32px; cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center;">×</button>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 2px solid #e5e7eb;">
+          <h3 style="margin: 0; font-size: 22px; color: #1f2937; font-weight: 600;">➕ Create New Photo Order</h3>
+          <button onclick="closeNewOrderModal()" style="background: #ef4444; color: white; border: none; border-radius: 50%; width: 36px; height: 36px; cursor: pointer; font-size: 18px; display: flex; align-items: center; justify-content: center; transition: all 0.2s ease;" onmouseover="this.style.background='#dc2626'" onmouseout="this.style.background='#ef4444'">×</button>
         </div>
 
-        <div style="background: #f8fafc; padding: 16px; border-radius: 8px; margin-bottom: 16px;">
+        <div style="background: #f8fafc; padding: 20px; border-radius: 12px;">
           <form id="newOrderForm" onsubmit="handleNewOrderSubmit(event)">
-            <div style="margin-bottom: 16px;">
-              <label style="display: block; font-weight: 500; margin-bottom: 4px; color: #374151;">Order Title</label>
-              <input name="title" required style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px;"
-                     placeholder="e.g., Premium Product Photography Session">
+            <div style="margin-bottom: 20px;">
+              <label style="display: block; font-weight: 600; margin-bottom: 6px; color: #374151; font-size: 14px;">Order Title</label>
+              <input name="title" required style="width: 100%; padding: 14px; border: 2px solid #d1d5db; border-radius: 8px; font-size: 16px; transition: border-color 0.2s ease;" 
+                     placeholder="e.g., Premium Product Photography Session"
+                     onfocus="this.style.borderColor='#3b82f6'" onblur="this.style.borderColor='#d1d5db'">
             </div>
 
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px;">
               <div>
-                <label style="display: block; font-weight: 500; margin-bottom: 4px; color: #374151;">Method</label>
-                <select name="method" required style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px;">
+                <label style="display: block; font-weight: 600; margin-bottom: 6px; color: #374151; font-size: 14px;">Method</label>
+                <select name="method" required style="width: 100%; padding: 14px; border: 2px solid #d1d5db; border-radius: 8px; font-size: 16px; transition: border-color 0.2s ease;"
+                        onfocus="this.style.borderColor='#3b82f6'" onblur="this.style.borderColor='#d1d5db'">
                   <option value="">Select method...</option>
                   <option value="Photographer">Photographer</option>
                   <option value="Photo Box">Photo Box</option>
                   <option value="Internal Studio">Internal Studio</option>
                   <option value="External Studio">External Studio</option>
                 </select>
+                </div>
+                <div>
+                  <label style="display: block; font-weight: 600; margin-bottom: 6px; color: #374151; font-size: 14px;">Priority</label>
+                  <select name="priority" required style="width: 100%; padding: 14px; border: 2px solid #d1d5db; border-radius: 8px; font-size: 16px; transition: border-color 0.2s ease;"
+                          onfocus="this.style.borderColor='#3b82f6'" onblur="this.style.borderColor='#d1d5db'">
+                    <option value="Low">Low</option>
+                    <option value="Medium" selected>Medium</option>
+                    <option value="High">High</option>
+                    <option value="Urgent">Urgent</option>
+                  </select>
+                </div>
               </div>
-              <div>
-                <label style="display: block; font-weight: 500; margin-bottom: 4px; color: #374151;">Priority</label>
-                <select name="priority" required style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px;">
-                  <option value="Low">Low</option>
-                  <option value="Medium" selected>Medium</option>
-                  <option value="High">High</option>
-                  <option value="Urgent">Urgent</option>
-                </select>
-              </div>
-            </div>
 
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px;">
-              <div>
-                <label style="display: block; font-weight: 500; margin-bottom: 4px; color: #374151;">Deadline</label>
-                <input name="deadline" type="date" required style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px;">
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px;">
+                <div>
+                  <label style="display: block; font-weight: 600; margin-bottom: 6px; color: #374151; font-size: 14px;">Deadline</label>
+                  <input name="deadline" type="date" required style="width: 100%; padding: 14px; border: 2px solid #d1d5db; border-radius: 8px; font-size: 16px; transition: border-color 0.2s ease;"
+                         onfocus="this.style.borderColor='#3b82f6'" onblur="this.style.borderColor='#d1d5db'">
+                </div>
+                <div>
+                  <label style="display: block; font-weight: 600; margin-bottom: 6px; color: #374151; font-size: 14px;">Budget (SEK)</label>
+                  <input name="budget" type="number" min="0" style="width: 100%; padding: 14px; border: 2px solid #d1d5db; border-radius: 8px; font-size: 16px; transition: border-color 0.2s ease;" placeholder="0"
+                         onfocus="this.style.borderColor='#3b82f6'" onblur="this.style.borderColor='#d1d5db'">
+                </div>
               </div>
-              <div>
-                <label style="display: block; font-weight: 500; margin-bottom: 4px; color: #374151;">Budget (SEK)</label>
-                <input name="budget" type="number" min="0" style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px;" placeholder="0">
-              </div>
-            </div>
 
-            <div style="margin-bottom: 16px;">
-              <label style="display: block; font-weight: 500; margin-bottom: 4px; color: #374151;">Assign To</label>
-              <select name="photographer" style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px;">
+              <div style="margin-bottom: 20px;">
+                <label style="display: block; font-weight: 600; margin-bottom: 6px; color: #374151; font-size: 14px;">Assign To</label>
+                <select name="photographer" style="width: 100%; padding: 14px; border: 2px solid #d1d5db; border-radius: 8px; font-size: 16px; transition: border-color 0.2s ease;"
+                        onfocus="this.style.borderColor='#3b82f6'" onblur="this.style.borderColor='#d1d5db'">
                 <option value="">Select photographer/photo box...</option>
                 <option value="Mike Rodriguez">Mike Rodriguez (Photographer)</option>
+                <option value="Sarah Johnson">Sarah Johnson (Photographer)</option>
                 <option value="Emily Chen">Emily Chen (Photographer)</option>
                 <option value="Alex Turner">Alex Turner (Photo Box)</option>
               </select>
-            </div>
+              </div>
 
-            <div style="margin-bottom: 16px;">
-              <label style="display: block; font-weight: 500; margin-bottom: 4px; color: #374151;">Brief Description</label>
-              <textarea name="brief" required rows="3" style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px; resize: vertical;"
-                        placeholder="Provide detailed instructions for the content creation..."></textarea>
-            </div>
+              <div style="margin-bottom: 20px;">
+                <label style="display: block; font-weight: 600; margin-bottom: 6px; color: #374151; font-size: 14px;">Brief Description</label>
+                <textarea name="brief" required rows="3" style="width: 100%; padding: 14px; border: 2px solid #d1d5db; border-radius: 8px; font-size: 16px; resize: vertical; transition: border-color 0.2s ease;" 
+                          placeholder="Provide detailed instructions for the content creation..."
+                          onfocus="this.style.borderColor='#3b82f6'" onblur="this.style.borderColor='#d1d5db'"></textarea>
+              </div>
 
-            <div style="margin-bottom: 20px;">
-              <label style="display: block; font-weight: 500; margin-bottom: 4px; color: #374151;">Articles</label>
-              <textarea id="newOrderArticles" name="articles" required rows="2" style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px; resize: vertical;"
-                        placeholder="Articles with EAN codes will appear here...&#10;Format: Article Name [EAN: 1234567890123]"></textarea>
-            </div>
+              <div style="margin-bottom: 24px;">
+                <label style="display: block; font-weight: 600; margin-bottom: 6px; color: #374151; font-size: 14px;">Articles</label>
+                <textarea id="newOrderArticles" name="articles" required rows="2" style="width: 100%; padding: 14px; border: 2px solid #d1d5db; border-radius: 8px; font-size: 16px; resize: vertical; transition: border-color 0.2s ease;" 
+                          placeholder="Articles with EAN codes will appear here...&#10;Format: Article Name [EAN: 1234567890123]"
+                          onfocus="this.style.borderColor='#3b82f6'" onblur="this.style.borderColor='#d1d5db'"></textarea>
+              </div>
 
             <div style="display: flex; gap: 12px;">
               <button type="button" onclick="closeNewOrderModal()" style="flex: 1; padding: 12px 16px; border: 1px solid #d1d5db; background: white; border-radius: 6px; cursor: pointer; font-weight: 500;">Cancel</button>
-              <button type="submit" style="flex: 1; padding: 12px 16px; background: linear-gradient(135deg, #059669 0%, #047857 100%); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 500; box-shadow: 0 2px 4px rgba(5, 150, 105, 0.3);">Create Order</button>
-            </div>
-          </form>
+              <div style="display: flex; gap: 12px; justify-content: flex-end;">
+                <button type="button" onclick="closeNewOrderModal()" style="padding: 14px 24px; background: #6b7280; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 500; transition: all 0.2s ease;" onmouseover="this.style.background='#4b5563'" onmouseout="this.style.background='#6b7280'">Cancel</button>
+                <button type="submit" style="padding: 14px 24px; background: linear-gradient(135deg, #059669 0%, #047857 100%); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 500; box-shadow: 0 4px 12px rgba(5, 150, 105, 0.3); transition: all 0.2s ease;" onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform='translateY(0)'">Create Order</button>
+              </div>
+            </form>
+          </div>
         </div>
       `;
 
       document.body.appendChild(modal);
+
+      // Add ESC key event listener
+      const escKeyHandler = function(event) {
+        if (event.key === 'Escape') {
+          closeNewOrderModal();
+        }
+      };
+      
+      // Store the handler on the modal for later removal
+      modal._escKeyHandler = escKeyHandler;
+      document.addEventListener('keydown', escKeyHandler);
 
       // Animate in
       setTimeout(() => {
         modal.style.transform = 'translateX(0)';
       }, 10);
 
-      // Shift main content to the right to make space for modal
+      // Shift main content to the right to make space for the larger modal
       const mainContent = document.querySelector('.main-content');
       if (mainContent) {
-        mainContent.style.marginLeft = '450px';
+        mainContent.style.marginLeft = '650px';
         mainContent.style.transition = 'margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
       }
 
@@ -2448,8 +2843,16 @@
     // Close the new order modal
     function closeNewOrderModal() {
       const modal = document.getElementById('newOrderRightModal');
+      
       if (modal) {
+        // Remove ESC key event listener
+        if (modal._escKeyHandler) {
+          document.removeEventListener('keydown', modal._escKeyHandler);
+        }
+        
+        // Animate out
         modal.style.transform = 'translateX(-100%)';
+        
         setTimeout(() => {
           modal.remove();
         }, 300);
@@ -2764,7 +3167,7 @@
             <button onclick="showNewOrderModal(); closeDashboardModal();" style="padding: 12px; background: linear-gradient(135deg, #059669 0%, #047857 100%); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 500; text-align: center;">
               ➕ New Order
             </button>
-            <button onclick="showOrdersModal(); closeDashboardModal();" style="padding: 12px; background: #3b82f6; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 500; text-align: center;">
+            <button onclick="showView('orders'); closeDashboardModal();" style="padding: 12px; background: #3b82f6; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 500; text-align: center;">
               📋 View All Orders
             </button>
           </div>
@@ -3189,9 +3592,26 @@
     window.showOrderHistory = showOrderHistory;
 
     function drawOrderRows() {
-      const tbody = document.getElementById('ordersBody'); // Get fresh reference each time
-      const searchBox = document.getElementById('searchBox'); // Get fresh reference each time
-      const orders = authSystem.getFilteredOrders(allOrders); // Get filtered orders
+      console.log('drawOrderRows called');
+      const tbody = document.getElementById('ordersBody');
+      const searchBox = document.getElementById('searchBox');
+      console.log('tbody element:', tbody);
+      console.log('searchBox element:', searchBox);
+      console.log('window.allOrders:', window.allOrders);
+      console.log('window.authSystem:', window.authSystem);
+      
+      if (!window.allOrders) {
+        console.error('window.allOrders is not defined!');
+        return;
+      }
+      
+      if (!window.authSystem) {
+        console.error('window.authSystem is not defined!');
+        return;
+      }
+      
+      const orders = window.authSystem.getFilteredOrders(window.allOrders);
+      console.log('filtered orders:', orders);
       const term = searchBox?.value.toLowerCase() || '';
       const filtered = orders.filter(o => 
         !term || 
@@ -3200,46 +3620,50 @@
         o.photographer.toLowerCase().includes(term) ||
         o.status.toLowerCase().includes(term)
       );
+      console.log('search filtered orders:', filtered);
       
       if (tbody) {
         tbody.innerHTML = filtered.map(o => {
-          const progress = calculateProgress(o.status);
+          const progress = window.calculateProgress(o.status);
           const isOverdue = new Date(o.deadline) < new Date() && o.status !== 'Complete' && o.status !== 'Delivered';
           const deadlineStyle = isOverdue ? 'color: #dc2626; font-weight: bold;' : '';
           const commentCount = (o.comments || []).length;
-          const unreadComments = commentSystem.getUnreadCommentCount(o.orderNumber);
+          const unreadComments = window.commentSystem ? window.commentSystem.getUnreadCommentCount(o.orderNumber) : 0;
           
           return `
-          <tr onclick="showOrderDetails('${o.orderNumber}')" style="cursor: pointer;" class="${selectedItems.has(o.orderNumber) ? 'selected-row' : ''}">
+          <tr onclick="showOrderDetails('${o.orderNumber}')" style="cursor: pointer; color: #374151 !important;" class="${window.selectedItems && window.selectedItems.has(o.orderNumber) ? 'selected-row' : ''}">
             <td class="bulk-checkbox" style="display: none;"><input type="checkbox" class="item-checkbox" data-id="${o.orderNumber}" onclick="event.stopPropagation()"></td>
-            <td><strong>${o.orderNumber}</strong></td>
-            <td>${o.title}</td>
+            <td style="color: #374151 !important;"><strong>${o.orderNumber}</strong></td>
+            <td style="color: #374151 !important;">${o.title}</td>
             <td><span class="status ${o.status.replace(/\s+/g, '')}">${o.status}</span></td>
-            <td>${o.method}</td>
-            <td>${o.purchaseGroup ? `${o.purchaseGroup} - ${purchaseGroups[o.purchaseGroup] || 'Unknown'}` : 'N/A'}</td>
-            <td>${o.eventId || 'N/A'}</td>
-            <td>${o.photographer}</td>
+            <td style="color: #374151 !important;">${o.method}</td>
+            <td style="color: #374151 !important;">${o.purchaseGroup || 'N/A'}</td>
+            <td style="color: #374151 !important;">${o.eventId || 'N/A'}</td>
+            <td style="color: #374151 !important;">${o.photographer}</td>
             <td><span class="status ${o.priority}">${o.priority}</span></td>
-            <td style="${deadlineStyle}">${o.deadline}${isOverdue ? ' ⚠️' : ''}</td>
-            <td>
+            <td style="${deadlineStyle}; color: #374151 !important;">${o.deadline}${isOverdue ? ' ⚠️' : ''}</td>
+            <td style="color: #374151 !important;">
               <div class="progress-bar">
                 <div class="progress-fill" style="width: ${progress}%"></div>
               </div>
               <div style="font-size: 10px; color: #6b7280; margin-top: 2px;">${progress}%</div>
             </td>
-            <td style="text-align: center;">
-              <button onclick="event.stopPropagation(); commentSystem.showCommentsModal('${o.orderNumber}')" 
+            <td style="text-align: center; color: #374151 !important;">
+              <button onclick="event.stopPropagation(); window.commentSystem && window.commentSystem.showCommentsModal('${o.orderNumber}')" 
                 style="background: ${commentCount > 0 ? '#3b82f6' : '#6b7280'}; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; position: relative;">
                 💬 ${commentCount}
                 ${unreadComments > 0 ? `<span style="position: absolute; top: -4px; right: -4px; background: #ef4444; color: white; border-radius: 50%; width: 16px; height: 16px; font-size: 10px; display: flex; align-items: center; justify-content: center;">${unreadComments}</span>` : ''}
               </button>
             </td>
-          </tr>
-        `;
+          </tr>`;
         }).join('');
+        
+        console.log('Generated HTML length:', tbody.innerHTML.length);
       }
       
-      updateBulkActionsPanel();
+      if (typeof updateBulkActionsPanel === 'function') {
+        updateBulkActionsPanel();
+      }
     }
 
     // Kanban Board Functions
@@ -3608,6 +4032,12 @@
       return progressMap[status] || 0;
     }
 
+    // Expose calculateProgress globally
+    window.calculateProgress = calculateProgress;
+    
+    // Create global selectedItems set
+    window.selectedItems = new Set();
+
     // Helper function to get order progress (alias for calculateProgress)
     function getOrderProgress(order) {
       return calculateProgress(order.status);
@@ -3681,13 +4111,26 @@
           table.classList.add('bulk-mode');
           document.getElementById('bulkActionsPanel').style.display = 'block';
           document.getElementById('toggleBulkMode').textContent = '✖️ Exit Bulk';
+          updateBulkActionsPanel();
+          
+          // Add ESC key listener for bulk mode
+          document.addEventListener('keydown', handleBulkModeEscape);
         } else {
           table.classList.remove('bulk-mode');
           document.getElementById('bulkActionsPanel').style.display = 'none';
           document.getElementById('toggleBulkMode').textContent = '☑️ Bulk Select';
           selectedItems.clear();
           drawOrderRows();
+          
+          // Remove ESC key listener
+          document.removeEventListener('keydown', handleBulkModeEscape);
         }
+      }
+    }
+
+    function handleBulkModeEscape(e) {
+      if (e.key === 'Escape' && bulkMode) {
+        toggleBulkMode();
       }
     }
 
@@ -3697,19 +4140,34 @@
         selectedCount.textContent = selectedItems.size;
       }
       
+      // Update all checkboxes to reflect current selection
       document.querySelectorAll('.item-checkbox').forEach(checkbox => {
         const id = checkbox.getAttribute('data-id');
         checkbox.checked = selectedItems.has(id);
-        checkbox.addEventListener('change', (e) => {
-          if (e.target.checked) {
-            selectedItems.add(id);
-          } else {
-            selectedItems.delete(id);
-          }
-          updateBulkActionsPanel();
-          drawOrderRows();
-        });
+        
+        // Remove existing event listener to prevent duplicates
+        checkbox.removeEventListener('change', handleCheckboxChange);
+        checkbox.addEventListener('change', handleCheckboxChange);
       });
+      
+      // Update select all checkbox
+      const selectAllCheckbox = document.getElementById('selectAllOrders');
+      if (selectAllCheckbox) {
+        const visibleCheckboxes = document.querySelectorAll('#ordersView tbody tr:not([style*="display: none"]) .item-checkbox');
+        const checkedCount = Array.from(visibleCheckboxes).filter(cb => cb.checked).length;
+        selectAllCheckbox.checked = visibleCheckboxes.length > 0 && checkedCount === visibleCheckboxes.length;
+        selectAllCheckbox.indeterminate = checkedCount > 0 && checkedCount < visibleCheckboxes.length;
+      }
+    }
+
+    function handleCheckboxChange(e) {
+      const id = e.target.getAttribute('data-id');
+      if (e.target.checked) {
+        selectedItems.add(id);
+      } else {
+        selectedItems.delete(id);
+      }
+      updateBulkActionsPanel();
     }
 
     function applyTemplate(templateKey) {
@@ -4382,20 +4840,78 @@
       const modal = document.createElement('div');
       modal.className = 'templates-modal';
       modal.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;z-index:1000';
+      
+      // Group templates by category
+      const templatesByCategory = {};
+      Object.entries(templates || {}).forEach(([key, template]) => {
+        const category = template.category || 'Other';
+        if (!templatesByCategory[category]) {
+          templatesByCategory[category] = [];
+        }
+        templatesByCategory[category].push({ key, ...template });
+      });
+      
       modal.innerHTML = `
-        <div style="background:white;border-radius:12px;padding:32px;max-width:900px;width:95%;max-height:80vh;overflow-y:auto;">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;">
-            <h2 style="margin:0;font-size:24px;color:#1f2937;">⚡ Quick Templates</h2>
-            <button onclick="this.closest('.templates-modal').remove()" style="background:none;border:none;font-size:28px;cursor:pointer;color:#6b7280;">×</button>
+        <div style="background:white;border-radius:16px;padding:32px;max-width:1200px;width:95%;max-height:85vh;overflow-y:auto;box-shadow:0 20px 40px rgba(0,0,0,0.15);">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:32px;">
+            <div>
+              <h2 style="margin:0 0 8px;font-size:28px;color:#1f2937;font-weight:700;">⚡ Quick Templates</h2>
+              <p style="margin:0;color:#6b7280;font-size:16px;">Choose from pre-configured project templates to get started quickly</p>
+            </div>
+            <button onclick="this.closest('.templates-modal').remove()" style="background:none;border:none;font-size:32px;cursor:pointer;color:#6b7280;transition:color 0.2s;" onmouseover="this.style.color='#374151'" onmouseout="this.style.color='#6b7280'">×</button>
           </div>
-          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;">
-            ${Object.entries(templates || {}).map(([key, template]) => `
-              <div style="border:1px solid #e5e7eb;border-radius:8px;padding:16px;cursor:pointer;transition:all 0.2s;" onclick="useTemplate('${key}')">
-                <h3 style="margin:0 0 8px;font-size:16px;color:#1f2937;">${template.title}</h3>
-                <p style="margin:0 0 12px;font-size:14px;color:#6b7280;">${template.brief}</p>
-                <div style="display:flex;justify-content:space-between;align-items:center;">
-                  <span style="background:#f3f4f6;padding:4px 8px;border-radius:4px;font-size:12px;color:#374151;">${template.method}</span>
-                  <span style="font-weight:500;color:#059669;">${template.budget} SEK</span>
+          
+          <!-- Search and Filter Bar -->
+          <div style="margin-bottom:32px;">
+            <div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap;">
+              <input id="templateSearch" type="text" placeholder="🔍 Search templates..." 
+                     style="flex:1;min-width:300px;padding:12px 16px;border:2px solid #e5e7eb;border-radius:12px;font-size:14px;transition:border-color 0.2s;"
+                     onmouseover="this.style.borderColor='#3b82f6'" onmouseout="this.style.borderColor='#e5e7eb'" onfocus="this.style.borderColor='#3b82f6'" onblur="this.style.borderColor='#e5e7eb'" />
+              <select id="categoryFilter" style="padding:12px 16px;border:2px solid #e5e7eb;border-radius:12px;font-size:14px;background:white;">
+                <option value="">All Categories</option>
+                <option value="Photography">📸 Photography</option>
+                <option value="Video">🎥 Video</option>
+                <option value="Social Media">📱 Social Media</option>
+                <option value="Branding">🎨 Branding</option>
+                <option value="Documentation">📋 Documentation</option>
+              </select>
+              <select id="budgetFilter" style="padding:12px 16px;border:2px solid #e5e7eb;border-radius:12px;font-size:14px;background:white;">
+                <option value="">All Budgets</option>
+                <option value="low">💰 Under 3,000 SEK</option>
+                <option value="medium">💰💰 3,000 - 6,000 SEK</option>
+                <option value="high">💰💰💰 Over 6,000 SEK</option>
+              </select>
+            </div>
+          </div>
+          
+          <div id="templatesContainer">
+            ${Object.entries(templatesByCategory).map(([category, categoryTemplates]) => `
+              <div class="template-category" data-category="${category}" style="margin-bottom:40px;">
+                <h3 style="margin:0 0 20px;font-size:20px;color:#374151;font-weight:600;border-bottom:2px solid #e5e7eb;padding-bottom:8px;">
+                  ${category === 'Photography' ? '📸' : category === 'Video' ? '🎥' : category === 'Social Media' ? '📱' : category === 'Branding' ? '🎨' : category === 'Documentation' ? '📋' : '🎯'} ${category}
+                </h3>
+                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:20px;">
+                  ${categoryTemplates.map(template => `
+                    <div class="template-card" data-title="${template.title.toLowerCase()}" data-brief="${template.brief.toLowerCase()}" data-category="${template.category}" data-budget="${template.budget}"
+                         style="border:2px solid #e5e7eb;border-radius:12px;padding:20px;cursor:pointer;transition:all 0.3s ease;background:linear-gradient(135deg, #f9fafb, #ffffff);" 
+                         onclick="useTemplate('${template.key}')"
+                         onmouseover="this.style.borderColor='#3b82f6'; this.style.transform='translateY(-4px)'; this.style.boxShadow='0 8px 25px rgba(59,130,246,0.15)'"
+                         onmouseout="this.style.borderColor='#e5e7eb'; this.style.transform='translateY(0)'; this.style.boxShadow='none'">
+                      <div style="display:flex;align-items:center;margin-bottom:12px;">
+                        <span style="font-size:24px;margin-right:12px;">${template.icon}</span>
+                        <h4 style="margin:0;font-size:18px;color:#1f2937;font-weight:600;">${template.title}</h4>
+                      </div>
+                      <p style="margin:0 0 16px;font-size:14px;color:#6b7280;line-height:1.5;">${template.brief}</p>
+                      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+                        <span style="background:linear-gradient(135deg, #f3f4f6, #e5e7eb);padding:6px 12px;border-radius:20px;font-size:12px;color:#374151;font-weight:500;">${template.method}</span>
+                        <span style="background:linear-gradient(135deg, #10b981, #059669);color:white;padding:6px 12px;border-radius:20px;font-size:12px;font-weight:600;">${template.budget.toLocaleString()} SEK</span>
+                      </div>
+                      <div style="display:flex;justify-content:space-between;align-items:center;">
+                        <span style="font-size:12px;color:#9ca3af;">Priority: <strong style="color:${template.priority === 'High' ? '#dc2626' : template.priority === 'Medium' ? '#f59e0b' : '#10b981'}">${template.priority}</strong></span>
+                        <span style="background:#3b82f6;color:white;padding:4px 8px;border-radius:12px;font-size:11px;font-weight:600;">Use Template →</span>
+                      </div>
+                    </div>
+                  `).join('')}
                 </div>
               </div>
             `).join('')}
@@ -4403,7 +4919,78 @@
         </div>
       `;
       document.body.appendChild(modal);
-      modal.addEventListener('click', (e) => { if(e.target === modal) modal.remove(); });
+      
+      // Add search and filter functionality
+      const searchInput = modal.querySelector('#templateSearch');
+      const categoryFilter = modal.querySelector('#categoryFilter');
+      const budgetFilter = modal.querySelector('#budgetFilter');
+      
+      function filterTemplates() {
+        const searchTerm = searchInput.value.toLowerCase();
+        const selectedCategory = categoryFilter.value;
+        const selectedBudget = budgetFilter.value;
+        
+        const templateCards = modal.querySelectorAll('.template-card');
+        const categories = modal.querySelectorAll('.template-category');
+        
+        categories.forEach(category => {
+          let hasVisibleCards = false;
+          const categoryName = category.dataset.category;
+          
+          // Hide category if not matching filter
+          if (selectedCategory && selectedCategory !== categoryName) {
+            category.style.display = 'none';
+            return;
+          }
+          
+          category.style.display = 'block';
+          
+          // Filter cards within this category
+          const cardsInCategory = category.querySelectorAll('.template-card');
+          cardsInCategory.forEach(card => {
+            const title = card.dataset.title;
+            const brief = card.dataset.brief;
+            const budget = parseInt(card.dataset.budget);
+            
+            let matchesSearch = !searchTerm || title.includes(searchTerm) || brief.includes(searchTerm);
+            let matchesBudget = true;
+            
+            if (selectedBudget === 'low') matchesBudget = budget < 3000;
+            else if (selectedBudget === 'medium') matchesBudget = budget >= 3000 && budget <= 6000;
+            else if (selectedBudget === 'high') matchesBudget = budget > 6000;
+            
+            if (matchesSearch && matchesBudget) {
+              card.style.display = 'block';
+              hasVisibleCards = true;
+            } else {
+              card.style.display = 'none';
+            }
+          });
+          
+          // Hide category if no visible cards
+          if (!hasVisibleCards) {
+            category.style.display = 'none';
+          }
+        });
+      }
+      
+      searchInput.addEventListener('input', filterTemplates);
+      categoryFilter.addEventListener('change', filterTemplates);
+      budgetFilter.addEventListener('change', filterTemplates);
+      
+      // Close on backdrop click
+      modal.addEventListener('click', (e) => { 
+        if(e.target === modal) modal.remove(); 
+      });
+      
+      // Close on ESC key
+      const handleEsc = (e) => {
+        if (e.key === 'Escape') {
+          modal.remove();
+          document.removeEventListener('keydown', handleEsc);
+        }
+      };
+      document.addEventListener('keydown', handleEsc);
     }
     
     // Assign to window immediately after definition
@@ -4582,6 +5169,12 @@
         let filteredOrders = [];
         
         switch(statusFilter) {
+          case 'urgent':
+            filteredOrders = ordersList.filter(o => 
+              o.priority === 'High' || 
+              o.priority === 'Critical'
+            );
+            break;
           case 'new':
             filteredOrders = ordersList.filter(o => 
               o.status === 'New Request' || 
@@ -4610,6 +5203,23 @@
               o.status === 'Completed' ||
               o.status === 'Delivered' ||
               o.status === 'Archived'
+            );
+            break;
+          case 'overdue':
+            const today = new Date();
+            today.setHours(23, 59, 59, 999); // End of today
+            filteredOrders = ordersList.filter(o => 
+              new Date(o.deadline) < today && 
+              o.status !== 'Complete' && 
+              o.status !== 'Completed' &&
+              o.status !== 'Delivered' &&
+              o.status !== 'Archived'
+            );
+            break;
+          case 'today':
+            const todayStr = new Date().toISOString().split('T')[0];
+            filteredOrders = ordersList.filter(o => 
+              o.deadline === todayStr
             );
             break;
           case 'all':
@@ -4797,29 +5407,55 @@
       modal.id = 'excelImportModal';
       modal.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;z-index:1000';
       modal.innerHTML = `
-        <div style="background:white;border-radius:12px;padding:24px;max-width:600px;width:90%;">
-          <h3 style="margin:0 0 16px;">📋 Import Orders from Excel/CSV</h3>
+        <div style="background:white;border-radius:12px;padding:24px;max-width:800px;width:95%;max-height:80vh;overflow-y:auto;">
+          <h3 style="margin:0 0 20px;">📋 Import Orders from Excel/CSV</h3>
           
-          <div style="margin-bottom: 16px; padding: 12px; background: #f0f9ff; border-radius: 6px; border-left: 4px solid #3b82f6;">
-            <strong>Expected Format:</strong><br>
-            Title, Method, Priority, Deadline, Brief, Articles, Deliverables, Photographer
+          <!-- Required Headers Section -->
+          <div id="headersSection" style="margin-bottom: 20px; padding: 16px; background: #f8fafc; border-radius: 8px; border: 1px solid #e2e8f0;">
+            <h4 style="margin: 0 0 12px; color: #1e40af; font-size: 16px;">📋 Required Excel/CSV Headers</h4>
+            <div style="background: white; padding: 12px; border-radius: 6px; border: 1px solid #cbd5e1; margin-bottom: 12px;">
+              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 8px; font-family: monospace; font-size: 12px; font-weight: 600; color: #374151;">
+                <div style="padding: 6px; background: #f1f5f9; border-radius: 4px;">Title</div>
+                <div style="padding: 6px; background: #f1f5f9; border-radius: 4px;">Method</div>
+                <div style="padding: 6px; background: #f1f5f9; border-radius: 4px;">Priority</div>
+                <div style="padding: 6px; background: #f1f5f9; border-radius: 4px;">Deadline</div>
+                <div style="padding: 6px; background: #f1f5f9; border-radius: 4px;">Brief</div>
+                <div style="padding: 6px; background: #f1f5f9; border-radius: 4px;">Articles</div>
+                <div style="padding: 6px; background: #f1f5f9; border-radius: 4px;">Deliverables</div>
+                <div style="padding: 6px; background: #f1f5f9; border-radius: 4px;">Photographer</div>
+              </div>
+            </div>
+            <div style="font-size: 14px; color: #64748b; line-height: 1.5;">
+              <strong>Notes:</strong><br>
+              • <strong>Method:</strong> Photographer, Photo Box, External Studio, Internal Studio<br>
+              • <strong>Priority:</strong> Low, Medium, High, Critical<br>
+              • <strong>Deadline:</strong> YYYY-MM-DD format (e.g., 2025-09-15)<br>
+              • <strong>Articles & Deliverables:</strong> Separate multiple items with semicolons (;)
+            </div>
           </div>
           
-          <div style="margin-bottom: 16px;">
-            <label style="display: block; font-weight: 500; margin-bottom: 4px;">Select File</label>
+          <!-- File Upload Section -->
+          <div style="margin-bottom: 20px;">
+            <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #374151;">Select Excel/CSV File</label>
             <input type="file" id="excelFileInput" accept=".xlsx,.xls,.csv" 
-                   style="width: 100%; padding: 8px; border: 1px solid #d1d5db; border-radius: 4px;">
+                   style="width: 100%; padding: 12px; border: 2px dashed #cbd5e1; border-radius: 8px; background: #f8fafc; cursor: pointer;">
+            <div style="font-size: 12px; color: #64748b; margin-top: 4px;">Supports .xlsx, .xls, and .csv files</div>
           </div>
           
-          <div style="margin-bottom: 16px;">
-            <label style="display: block; font-weight: 500; margin-bottom: 4px;">Or Paste CSV Data</label>
-            <textarea id="csvDataInput" rows="8" placeholder="Paste CSV data here..." 
-                      style="width: 100%; padding: 8px; border: 1px solid #d1d5db; border-radius: 4px; font-family: monospace; font-size: 12px;"></textarea>
+          <!-- Preview Section -->
+          <div id="previewSection" style="display: none; margin-bottom: 20px;">
+            <h4 style="margin: 0 0 12px; color: #059669; font-size: 16px;">📊 Data Preview</h4>
+            <div id="previewContent" style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px; max-height: 300px; overflow: auto;"></div>
+            <div id="previewStats" style="margin-top: 8px; font-size: 14px; color: #64748b;"></div>
           </div>
           
-          <div style="text-align:right;">
-            <button id="cancelExcelImport" style="margin-right:8px;padding:8px 16px;border:1px solid #d1d5db;background:white;border-radius:4px;">Cancel</button>
-            <button id="processExcelImport" style="padding:8px 16px;background:#2563eb;color:white;border:none;border-radius:4px;">Import Orders</button>
+          <!-- Actions -->
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div id="validationMessage" style="color: #dc2626; font-size: 14px; font-weight: 500;"></div>
+            <div>
+              <button id="cancelExcelImport" style="margin-right:12px;padding:10px 20px;border:1px solid #d1d5db;background:white;border-radius:6px;font-weight:500;cursor:pointer;">Cancel</button>
+              <button id="processExcelImport" style="padding:10px 20px;background:#2563eb;color:white;border:none;border-radius:6px;font-weight:500;cursor:pointer;" disabled>Import Orders</button>
+            </div>
           </div>
         </div>
       `;
@@ -4835,58 +5471,219 @@
       });
       
       document.getElementById('excelFileInput').addEventListener('change', (e) => {
-        const file = e.target.files[0];
-        if (file) {
-          const reader = new FileReader();
-          reader.onload = (event) => {
-            document.getElementById('csvDataInput').value = event.target.result;
-          };
-          reader.readAsText(file);
-        }
+        handleFileUpload(e.target.files[0]);
       });
+      
+      // ESC key to close modal
+      const handleEsc = (e) => {
+        if (e.key === 'Escape') {
+          modal.remove();
+          document.removeEventListener('keydown', handleEsc);
+        }
+      };
+      document.addEventListener('keydown', handleEsc);
+    }
+
+    let currentImportData = null;
+
+    function handleFileUpload(file) {
+      if (!file) return;
+      
+      const validationMessage = document.getElementById('validationMessage');
+      const previewSection = document.getElementById('previewSection');
+      const processButton = document.getElementById('processExcelImport');
+      
+      // Reset UI
+      validationMessage.textContent = '';
+      previewSection.style.display = 'none';
+      processButton.disabled = true;
+      
+      const fileName = file.name.toLowerCase();
+      
+      if (fileName.endsWith('.csv')) {
+        // Handle CSV file
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          try {
+            const csvData = e.target.result;
+            const parsedData = parseCSV(csvData);
+            showPreview(parsedData);
+          } catch (error) {
+            validationMessage.textContent = 'Error reading CSV file: ' + error.message;
+          }
+        };
+        reader.readAsText(file);
+      } else if (fileName.endsWith('.xlsx') || fileName.endsWith('.xls')) {
+        // Handle Excel file - basic implementation
+        validationMessage.textContent = 'Excel files need to be saved as CSV format first. Please save your Excel file as .csv and upload again.';
+        validationMessage.style.color = '#f59e0b';
+      } else {
+        validationMessage.textContent = 'Please select a .csv, .xlsx, or .xls file.';
+      }
+    }
+
+    function parseCSV(csvData) {
+      const lines = csvData.trim().split('\n');
+      if (lines.length < 2) {
+        throw new Error('File must contain at least a header row and one data row');
+      }
+      
+      // Parse headers
+      const headers = lines[0].split(',').map(h => h.trim().replace(/"/g, ''));
+      
+      // Required headers
+      const requiredHeaders = ['Title', 'Method', 'Priority', 'Deadline', 'Brief', 'Articles', 'Deliverables', 'Photographer'];
+      const missingHeaders = requiredHeaders.filter(req => !headers.some(h => h.toLowerCase() === req.toLowerCase()));
+      
+      if (missingHeaders.length > 0) {
+        throw new Error(`Missing required headers: ${missingHeaders.join(', ')}`);
+      }
+      
+      // Parse data rows
+      const data = [];
+      for (let i = 1; i < lines.length; i++) {
+        const line = lines[i].trim();
+        if (!line) continue;
+        
+        const values = parseCSVLine(line);
+        if (values.length > 0) {
+          const row = {};
+          headers.forEach((header, index) => {
+            row[header] = values[index] || '';
+          });
+          data.push(row);
+        }
+      }
+      
+      return { headers, data };
+    }
+
+    function parseCSVLine(line) {
+      const result = [];
+      let current = '';
+      let inQuotes = false;
+      
+      for (let i = 0; i < line.length; i++) {
+        const char = line[i];
+        
+        if (char === '"') {
+          inQuotes = !inQuotes;
+        } else if (char === ',' && !inQuotes) {
+          result.push(current.trim());
+          current = '';
+        } else {
+          current += char;
+        }
+      }
+      
+      result.push(current.trim());
+      return result;
+    }
+
+    function showPreview(parsedData) {
+      const { headers, data } = parsedData;
+      const previewSection = document.getElementById('previewSection');
+      const previewContent = document.getElementById('previewContent');
+      const previewStats = document.getElementById('previewStats');
+      const processButton = document.getElementById('processExcelImport');
+      
+      // Store data for processing
+      currentImportData = parsedData;
+      
+      // Create preview table
+      let tableHTML = `
+        <table style="width: 100%; border-collapse: collapse; font-size: 12px;">
+          <thead>
+            <tr style="background: #3b82f6; color: white;">
+              ${headers.map(h => `<th style="padding: 8px; border: 1px solid #cbd5e1; text-align: left;">${h}</th>`).join('')}
+            </tr>
+          </thead>
+          <tbody>
+            ${data.slice(0, 5).map(row => `
+              <tr style="background: white;">
+                ${headers.map(h => `<td style="padding: 8px; border: 1px solid #e5e7eb;">${row[h] || ''}</td>`).join('')}
+              </tr>
+            `).join('')}
+            ${data.length > 5 ? `
+              <tr style="background: #f8fafc;">
+                <td colspan="${headers.length}" style="padding: 12px; text-align: center; color: #64748b; font-style: italic;">
+                  ... and ${data.length - 5} more rows
+                </td>
+              </tr>
+            ` : ''}
+          </tbody>
+        </table>
+      `;
+      
+      previewContent.innerHTML = tableHTML;
+      previewStats.innerHTML = `
+        <strong>${data.length} orders</strong> found in file. 
+        <span style="color: #059669;">✓ Headers validated</span>
+      `;
+      
+      // Show preview and enable import button
+      previewSection.style.display = 'block';
+      processButton.disabled = false;
     }
 
     function processExcelImport() {
-      const csvData = document.getElementById('csvDataInput').value.trim();
-      
-      if (!csvData) {
-        alert('Please select a file or paste CSV data');
+      if (!currentImportData) {
+        document.getElementById('validationMessage').textContent = 'Please select and preview a file first.';
         return;
       }
       
+      const { data } = currentImportData;
+      let importedCount = 0;
+      let errors = [];
+      
       try {
-        const lines = csvData.split('\\n');
-        const headers = lines[0].split(',').map(h => h.trim());
-        let importedCount = 0;
-        
-        for (let i = 1; i < lines.length; i++) {
-          const line = lines[i].trim();
-          if (!line) continue;
+        for (let i = 0; i < data.length; i++) {
+          const row = data[i];
           
-          const values = line.split(',').map(v => v.trim().replace(/"/g, ''));
+          // Validate required fields
+          if (!row.Title || !row.Title.trim()) {
+            errors.push(`Row ${i + 2}: Title is required`);
+            continue;
+          }
           
-          if (values.length < 3) continue; // Skip incomplete rows
+          // Generate unique order number
+          const orderNumber = `ORD-2025-${String(allOrders.length + importedCount + 1).padStart(3, '0')}`;
           
+          // Create new order object
           const newOrder = {
-            orderNumber: `ORD-2025-${String(allOrders.length + importedCount + 1).padStart(3, '0')}`,
-            title: values[0] || `Imported Order ${i}`,
+            orderNumber: orderNumber,
+            title: row.Title.trim(),
             status: 'Draft',
-            method: values[1] || 'Photographer',
-            photographer: values[7] || 'Unassigned',
-            assignedTo: values[7] ? authSystem.getUserIdByName(values[7]) : null,
-            deadline: values[3] || new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+            method: row.Method || 'Photographer',
+            photographer: row.Photographer || 'Unassigned',
+            assignedTo: row.Photographer ? authSystem.getUserIdByName(row.Photographer) : null,
+            deadline: validateDate(row.Deadline) || new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
             costCenter: 'CC-IMPORT',
-            priority: values[2] || 'Medium',
-            brief: values[4] || 'Imported from Excel/CSV',
-            articles: values[5] ? values[5].split(';').map(a => a.trim()).filter(a => a) : [],
+            priority: validatePriority(row.Priority) || 'Medium',
+            brief: row.Brief || 'Imported from Excel/CSV',
+            articles: row.Articles ? row.Articles.split(';').map(a => a.trim()).filter(a => a) : [],
             budget: null,
-            deliverables: values[6] ? values[6].split(';').map(d => d.trim()).filter(d => d) : [],
+            deliverables: row.Deliverables ? row.Deliverables.split(';').map(d => d.trim()).filter(d => d) : [],
+            
+            // SAP PMR fields (auto-generated)
+            eventId: `A${Math.floor(Math.random() * 9000000) + 1000000}`,
+            purchaseGroup: authSystem.getCurrentUser().purchaseGroups ? authSystem.getCurrentUser().purchaseGroups[0] : 100,
+            offerId: `1076${Math.floor(Math.random() * 9000) + 1000}`,
+            articleNumber: `ART-IMP-${String(importedCount + 1).padStart(3, '0')}`,
+            articleName: row.Articles ? row.Articles.split(';')[0] : row.Title,
+            imageRequestId: String(Math.floor(Math.random() * 900000) + 100000),
+            photoStatus: 'New Request',
+            cloudinaryUrl: null,
+            
+            // Creator and assignment fields
             createdBy: authSystem.getCurrentUser().id,
             createdAt: new Date().toISOString(),
+            assignedTo: row.Photographer ? authSystem.getUserIdByName(row.Photographer) : null,
             updatedAt: new Date().toISOString(),
             comments: []
           };
           
+          // Add to orders array
           allOrders.unshift(newOrder);
           importedCount++;
         }
@@ -4894,16 +5691,59 @@
         // Close modal
         document.getElementById('excelImportModal').remove();
         
-        // Refresh view
-        drawOrderRows();
+        // Update global orders and refresh view
+        window.allOrders = allOrders;
+        if (typeof drawOrderRows === 'function') {
+          drawOrderRows();
+        }
+        if (typeof window.updateQuickActionBadges === 'function') {
+          window.updateQuickActionBadges();
+        }
         
         // Show success message
-        showToast(`Successfully imported ${importedCount} orders!`, 'success');
+        let message = `Successfully imported ${importedCount} orders!`;
+        if (errors.length > 0) {
+          message += ` (${errors.length} rows had errors and were skipped)`;
+          console.warn('Import errors:', errors);
+        }
+        showToast(message, 'success');
         
       } catch (error) {
-        alert('Error processing file: ' + error.message);
+        document.getElementById('validationMessage').textContent = 'Error processing data: ' + error.message;
+        console.error('Import error:', error);
       }
     }
+
+    // Helper functions for validation
+    function validateDate(dateStr) {
+      if (!dateStr) return null;
+      
+      // Try to parse various date formats
+      const formats = [
+        /^\d{4}-\d{2}-\d{2}$/, // YYYY-MM-DD
+        /^\d{2}\/\d{2}\/\d{4}$/, // MM/DD/YYYY
+        /^\d{2}-\d{2}-\d{4}$/, // MM-DD-YYYY
+      ];
+      
+      for (let format of formats) {
+        if (format.test(dateStr)) {
+          const date = new Date(dateStr);
+          if (!isNaN(date.getTime())) {
+            return date.toISOString().split('T')[0];
+          }
+        }
+      }
+      
+      return null;
+    }
+
+    function validatePriority(priority) {
+      const validPriorities = ['Low', 'Medium', 'High', 'Critical'];
+      return validPriorities.find(p => p.toLowerCase() === priority?.toLowerCase()) || null;
+    }
+
+    // Expose Excel import function globally
+    window.showExcelImportModal = showExcelImportModal;
 
     function addArticleToOrder(articleName, eanCode) {
       // Open create order view if not already open
@@ -5061,23 +5901,63 @@
       if (selectedItems.size === 0) return;
       
       const modal = document.createElement('div');
+      modal.id = 'bulkStatusModal';
       modal.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;z-index:1000';
       modal.innerHTML = `
-        <div style="background:white;border-radius:12px;padding:24px;max-width:400px;">
-          <h3 style="margin:0 0 16px;">Update Status for ${selectedItems.size} items</h3>
-          <select id="newStatus" style="width:100%;padding:8px;border:1px solid #d1d5db;border-radius:4px;margin-bottom:16px;">
+        <div style="background:white;border-radius:12px;padding:24px;max-width:400px;box-shadow:0 10px 25px rgba(0,0,0,0.2);">
+          <h3 style="margin:0 0 16px;color:#1f2937;font-size:18px;font-weight:600;">Update Status for ${selectedItems.size} items</h3>
+          <select id="newStatus" style="width:100%;padding:12px;border:1px solid #d1d5db;border-radius:8px;margin-bottom:20px;font-size:14px;background:white;">
             <option value="Draft">Draft</option>
             <option value="Approved">Approved</option>
             <option value="In Progress">In Progress</option>
             <option value="Complete">Complete</option>
           </select>
-          <div style="text-align:right;">
-            <button onclick="this.closest('div[style*=\\"position:fixed\\"]').remove()" style="margin-right:8px;padding:8px 16px;border:1px solid #d1d5db;background:white;border-radius:4px;">Cancel</button>
-            <button onclick="updateSelectedStatuses(); this.closest('div[style*=\\"position:fixed\\"]').remove()" style="padding:8px 16px;background:#2563eb;color:white;border:none;border-radius:4px;">Update</button>
+          <div style="display:flex;gap:12px;justify-content:flex-end;">
+            <button id="cancelBulkUpdate" style="padding:10px 20px;border:1px solid #d1d5db;background:white;border-radius:6px;color:#6b7280;font-weight:500;cursor:pointer;transition:all 0.2s;">Cancel</button>
+            <button id="confirmBulkUpdate" style="padding:10px 20px;background:#2563eb;color:white;border:none;border-radius:6px;font-weight:500;cursor:pointer;transition:all 0.2s;">Update</button>
           </div>
         </div>
       `;
       document.body.appendChild(modal);
+      
+      // Add event listeners
+      document.getElementById('cancelBulkUpdate').addEventListener('click', () => {
+        modal.remove();
+      });
+      
+      document.getElementById('confirmBulkUpdate').addEventListener('click', () => {
+        updateSelectedStatuses();
+        modal.remove();
+      });
+      
+      // Close on backdrop click
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+          modal.remove();
+        }
+      });
+      
+      // Close on ESC key
+      const handleEsc = (e) => {
+        if (e.key === 'Escape') {
+          modal.remove();
+          document.removeEventListener('keydown', handleEsc);
+        }
+      };
+      document.addEventListener('keydown', handleEsc);
+      
+      // Clean up event listener when modal is removed
+      const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+          mutation.removedNodes.forEach((node) => {
+            if (node === modal) {
+              document.removeEventListener('keydown', handleEsc);
+              observer.disconnect();
+            }
+          });
+        });
+      });
+      observer.observe(document.body, { childList: true });
     });
     
     window.updateSelectedStatuses = function() {
@@ -5102,6 +5982,7 @@
       
       selectedItems.clear();
       drawOrderRows();
+      updateBulkActionsPanel();
       
       // Show success
       const success = document.createElement('div');
@@ -5110,6 +5991,162 @@
       document.body.appendChild(success);
       setTimeout(() => success.remove(), 3000);
     };
+
+    // Bulk Assign event listener
+    document.getElementById('bulkAssign')?.addEventListener('click', () => {
+      if (selectedItems.size === 0) return;
+      
+      const modal = document.createElement('div');
+      modal.id = 'bulkAssignModal';
+      modal.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;z-index:1000';
+      modal.innerHTML = `
+        <div style="background:white;border-radius:12px;padding:24px;max-width:400px;box-shadow:0 10px 25px rgba(0,0,0,0.2);">
+          <h3 style="margin:0 0 16px;color:#1f2937;font-size:18px;font-weight:600;">Assign ${selectedItems.size} items to:</h3>
+          <select id="newAssignee" style="width:100%;padding:12px;border:1px solid #d1d5db;border-radius:8px;margin-bottom:20px;font-size:14px;background:white;">
+            <option value="">Unassigned</option>
+            <option value="photographer1">John Smith</option>
+            <option value="photographer2">Sarah Johnson</option>
+            <option value="photographer3">Mike Wilson</option>
+            <option value="photographer4">Emily Davis</option>
+          </select>
+          <div style="display:flex;gap:12px;justify-content:flex-end;">
+            <button id="cancelBulkAssign" style="padding:10px 20px;border:1px solid #d1d5db;background:white;border-radius:6px;color:#6b7280;font-weight:500;cursor:pointer;transition:all 0.2s;">Cancel</button>
+            <button id="confirmBulkAssign" style="padding:10px 20px;background:#2563eb;color:white;border:none;border-radius:6px;font-weight:500;cursor:pointer;transition:all 0.2s;">Assign</button>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(modal);
+      
+      // Add event listeners
+      document.getElementById('cancelBulkAssign').addEventListener('click', () => {
+        modal.remove();
+      });
+      
+      document.getElementById('confirmBulkAssign').addEventListener('click', () => {
+        assignSelectedItems();
+        modal.remove();
+      });
+      
+      // Close on backdrop click
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+          modal.remove();
+        }
+      });
+      
+      // Close on ESC key
+      const handleEsc = (e) => {
+        if (e.key === 'Escape') {
+          modal.remove();
+          document.removeEventListener('keydown', handleEsc);
+        }
+      };
+      document.addEventListener('keydown', handleEsc);
+      
+      // Clean up event listener when modal is removed
+      const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+          mutation.removedNodes.forEach((node) => {
+            if (node === modal) {
+              document.removeEventListener('keydown', handleEsc);
+              observer.disconnect();
+            }
+          });
+        });
+      });
+      observer.observe(document.body, { childList: true });
+    });
+
+    // Bulk Export event listener
+    document.getElementById('bulkExport')?.addEventListener('click', () => {
+      if (selectedItems.size === 0) {
+        alert('Please select items to export');
+        return;
+      }
+      
+      const selectedOrders = allOrders.filter(order => selectedItems.has(order.orderNumber));
+      
+      // Create CSV content
+      const headers = ['Order Number', 'Title', 'Status', 'Method', 'Purchase Group', 'Photographer', 'Deadline', 'Cost Center'];
+      const csvContent = [
+        headers.join(','),
+        ...selectedOrders.map(order => [
+          order.orderNumber,
+          `"${order.title || ''}"`,
+          order.status,
+          order.method,
+          order.purchaseGroup,
+          order.photographer || 'Unassigned',
+          order.deadline || '',
+          order.costCenter || ''
+        ].join(','))
+      ].join('\n');
+      
+      // Download CSV
+      const blob = new Blob([csvContent], { type: 'text/csv' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `selected_orders_${new Date().toISOString().split('T')[0]}.csv`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
+      
+      // Show success message
+      const success = document.createElement('div');
+      success.style.cssText = 'position:fixed;top:20px;right:20px;background:#10b981;color:white;padding:12px 16px;border-radius:6px;z-index:1001;';
+      success.textContent = `${selectedItems.size} orders exported successfully!`;
+      document.body.appendChild(success);
+      setTimeout(() => success.remove(), 3000);
+    });
+
+    window.assignSelectedItems = function() {
+      const newAssignee = document.getElementById('newAssignee').value;
+      const assigneeName = newAssignee ? document.getElementById('newAssignee').selectedOptions[0].textContent : 'Unassigned';
+      
+      selectedItems.forEach(orderNumber => {
+        const order = allOrders.find(o => o.orderNumber === orderNumber);
+        if (order) {
+          order.assignedTo = newAssignee;
+          order.photographer = assigneeName;
+          order.updatedAt = new Date().toISOString();
+        }
+      });
+      
+      selectedItems.clear();
+      drawOrderRows();
+      updateBulkActionsPanel();
+      
+      // Show success
+      const success = document.createElement('div');
+      success.style.cssText = 'position:fixed;top:20px;right:20px;background:#10b981;color:white;padding:12px 16px;border-radius:6px;z-index:1001;';
+      success.textContent = 'Items assigned successfully!';
+      document.body.appendChild(success);
+      setTimeout(() => success.remove(), 3000);
+    };
+
+    // Select All checkbox event listener
+    document.getElementById('selectAllOrders')?.addEventListener('change', (e) => {
+      const isChecked = e.target.checked;
+      const visibleRows = document.querySelectorAll('#ordersView tbody tr:not([style*="display: none"])');
+      
+      visibleRows.forEach(row => {
+        const checkbox = row.querySelector('.item-checkbox');
+        if (checkbox) {
+          const orderId = checkbox.getAttribute('data-id');
+          checkbox.checked = isChecked;
+          
+          if (isChecked) {
+            selectedItems.add(orderId);
+          } else {
+            selectedItems.delete(orderId);
+          }
+        }
+      });
+      
+      updateBulkActionsPanel();
+    });
 
     // Create order form handler
     document.getElementById('createOrderForm')?.addEventListener('submit', (e) => {
@@ -6225,36 +7262,26 @@
       modal.innerHTML = `
         <div style="background:white;padding:24px;border-radius:12px;max-width:1200px;width:95%;max-height:90%;overflow-y:auto;">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
-            <h2 style="margin:0;font-size:20px;font-weight:600;">🗂️ Digital Asset Management Integration</h2>
+            <h2 style="margin:0;font-size:20px;font-weight:600;">☁️ Cloudinary Asset Management</h2>
             <button id="closeDAMModal" style="background:none;border:none;font-size:24px;cursor:pointer;">×</button>
           </div>
           
           <div style="margin-bottom:24px;">
             <div style="background:#f0f9ff;padding:16px;border-radius:8px;margin-bottom:16px;">
-              <h3 style="margin:0 0 8px 0;font-size:16px;font-weight:600;color:#1e40af;">🔗 DAM Connection Status</h3>
-              <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;">
-                <div style="display:flex;align-items:center;gap:8px;">
-                  <span style="width:12px;height:12px;background:#10b981;border-radius:50%;"></span>
-                  <span style="font-size:14px;">Cloudinary: Connected</span>
-                </div>
-                <div style="display:flex;align-items:center;gap:8px;">
-                  <span style="width:12px;height:12px;background:#10b981;border-radius:50%;"></span>
-                  <span style="font-size:14px;">Adobe Creative Cloud: Connected</span>
-                </div>
-                <div style="display:flex;align-items:center;gap:8px;">
-                  <span style="width:12px;height:12px;background:#f59e0b;border-radius:50%;"></span>
-                  <span style="font-size:14px;">Bynder: Pending Setup</span>
-                </div>
-                <div style="display:flex;align-items:center;gap:8px;">
-                  <span style="width:12px;height:12px;background:#ef4444;border-radius:50%;"></span>
-                  <span style="font-size:14px;">Widen: Disconnected</span>
-                </div>
+              <h3 style="margin:0 0 8px 0;font-size:16px;font-weight:600;color:#1e40af;">☁️ Cloudinary Connection Status</h3>
+              <div style="display:flex;align-items:center;gap:8px;">
+                <span style="width:12px;height:12px;background:#10b981;border-radius:50%;"></span>
+                <span style="font-size:14px;font-weight:500;">Cloudinary: Connected</span>
+                <span style="background:#dcfce7;color:#166534;padding:2px 8px;border-radius:12px;font-size:12px;margin-left:12px;">Active</span>
+              </div>
+              <div style="margin-top:8px;font-size:12px;color:#64748b;">
+                Connected to demo cloud • Upload, manage, and transform your assets
               </div>
             </div>
             
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;">
               <div style="background:#f3f4f6;padding:16px;border-radius:8px;">
-                <h3 style="margin:0 0 12px 0;font-size:16px;font-weight:600;">📤 Upload Assets</h3>
+                <h3 style="margin:0 0 12px 0;font-size:16px;font-weight:600;">📤 Upload to Cloudinary</h3>
                 <div style="border:2px dashed #d1d5db;border-radius:8px;padding:20px;text-align:center;margin-bottom:12px;">
                   <input type="file" id="damFileInput" multiple accept="image/*,video/*" style="display:none;">
                   <button onclick="document.getElementById('damFileInput').click()" style="padding:8px 16px;background:#3b82f6;color:white;border:none;border-radius:4px;cursor:pointer;">
@@ -6278,12 +7305,12 @@
                 </div>
                 <input id="damTagsInput" placeholder="Tags (comma-separated)" style="width:100%;padding:6px;border:1px solid #d1d5db;border-radius:4px;font-size:12px;margin-bottom:12px;">
                 <button id="uploadToDAMBtn" style="width:100%;padding:8px;background:#10b981;color:white;border:none;border-radius:4px;cursor:pointer;">
-                  ⬆️ Upload to DAM
+                  ⬆️ Upload to Cloudinary
                 </button>
               </div>
               
               <div style="background:#f3f4f6;padding:16px;border-radius:8px;">
-                <h3 style="margin:0 0 12px 0;font-size:16px;font-weight:600;">🔍 Search Assets</h3>
+                <h3 style="margin:0 0 12px 0;font-size:16px;font-weight:600;">🔍 Search Cloudinary Assets</h3>
                 <div style="display:grid;gap:8px;margin-bottom:12px;">
                   <input id="damSearchInput" placeholder="Search by filename, tags, or order number" style="padding:8px;border:1px solid #d1d5db;border-radius:4px;">
                   <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
@@ -6305,14 +7332,14 @@
                   </div>
                 </div>
                 <button id="searchDAMBtn" style="width:100%;padding:8px;background:#3b82f6;color:white;border:none;border-radius:4px;cursor:pointer;">
-                  🔍 Search DAM
+                  🔍 Search Cloudinary
                 </button>
               </div>
             </div>
           </div>
           
           <div>
-            <h3 style="margin:0 0 16px 0;font-size:16px;font-weight:600;">📁 Recent Assets</h3>
+            <h3 style="margin:0 0 16px 0;font-size:16px;font-weight:600;">📁 Recent Cloudinary Assets</h3>
             <div id="damAssetsGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px;">
               ${damAssets.length === 0 ? 
                 '<p style="grid-column:1/-1;color:#6b7280;font-style:italic;text-align:center;padding:40px;">No assets uploaded yet. Upload your first asset using the form above.</p>' :
@@ -6350,14 +7377,14 @@
           </div>
           
           <div style="margin-top:20px;padding:16px;background:#eff6ff;border-radius:8px;">
-            <h4 style="margin:0 0 8px 0;font-size:14px;font-weight:600;color:#1e40af;">💡 DAM Integration Features</h4>
+            <h4 style="margin:0 0 8px 0;font-size:14px;font-weight:600;color:#1e40af;">☁️ Cloudinary Features</h4>
             <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px;font-size:12px;color:#1e40af;">
-              <div>✅ Automatic metadata tagging</div>
+              <div>✅ Automatic image optimization</div>
               <div>✅ Order-asset linking</div>
               <div>✅ Multi-format support</div>
-              <div>✅ Version control</div>
-              <div>✅ Approval workflows</div>
-              <div>✅ Usage rights management</div>
+              <div>✅ AI-powered tagging</div>
+              <div>✅ Real-time transformations</div>
+              <div>✅ CDN delivery</div>
             </div>
           </div>
         </div>
@@ -6396,6 +7423,15 @@
           modal.remove();
         }
       });
+      
+      // ESC key to close modal
+      const handleEsc = (e) => {
+        if (e.key === 'Escape') {
+          modal.remove();
+          document.removeEventListener('keydown', handleEsc);
+        }
+      };
+      document.addEventListener('keydown', handleEsc);
     };
 
     window.getDAMAssets = function() {
@@ -7704,28 +8740,54 @@
 
     function useTemplate(templateKey) {
       const template = templates[templateKey];
-      if (template) {
-        // Create order with template data
-        const newOrder = {
-          orderNumber: 'ORD-' + Date.now(),
-          title: template.title,
-          priority: template.priority,
-          brief: template.brief,
-          articles: template.articles,
-          deliverables: template.deliverables,
-          budget: template.budget,
-          status: 'New',
-          createdBy: currentUser.name,
-          createdDate: new Date().toISOString().split('T')[0],
-          deadline: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString().split('T')[0] // 14 days from now
-        };
-
-        allOrders.push(newOrder);
-        saveOrders();
-        document.querySelector('.templates-modal').remove();
-        showToast(`Order created from ${template.title} template!`, 'success');
-        render();
-      }
+      if (!template) return;
+      
+      // Close templates modal
+      document.querySelector('.templates-modal')?.remove();
+      
+      // Directly open the create order modal with pre-filled template data
+      showNewOrderModal();
+      
+      // Wait for modal to be rendered, then fill it with template data
+      setTimeout(() => {
+        const form = document.getElementById('newOrderForm');
+        if (form) {
+          // Fill form fields with template data
+          const titleField = form.querySelector('input[name="title"]');
+          const methodField = form.querySelector('select[name="method"]');
+          const priorityField = form.querySelector('select[name="priority"]');
+          const briefField = form.querySelector('textarea[name="brief"]');
+          const articlesField = form.querySelector('textarea[name="articles"]');
+          const budgetField = form.querySelector('input[name="budget"]');
+          const deadlineField = form.querySelector('input[name="deadline"]');
+          
+          if (titleField) titleField.value = template.title;
+          if (methodField) methodField.value = template.method;
+          if (priorityField) priorityField.value = template.priority;
+          if (briefField) briefField.value = template.brief;
+          if (articlesField) articlesField.value = template.articles;
+          if (budgetField) budgetField.value = template.budget;
+          
+          // Set deadline to 14 days from now
+          if (deadlineField) {
+            const deadline = new Date();
+            deadline.setDate(deadline.getDate() + 14);
+            deadlineField.value = deadline.toISOString().split('T')[0];
+          }
+          
+          // Show success message
+          showToast(`📝 Template "${template.title}" loaded into create order form!`, 'success');
+          
+          // Highlight the form briefly
+          form.style.background = 'linear-gradient(135deg, #f0f9ff, #e0f2fe)';
+          form.style.transform = 'scale(1.01)';
+          form.style.transition = 'all 0.3s ease';
+          setTimeout(() => {
+            form.style.background = '';
+            form.style.transform = '';
+          }, 2000);
+        }
+      }, 300);
     }
 
     // Assign to window immediately after definition
@@ -7739,45 +8801,34 @@
   setTimeout(() => {
     render(); // This will now check authentication first
     
+    // Update badges after initial render
+    setTimeout(() => {
+      if (window.updateQuickActionBadges && window.authSystem && window.authSystem.isAuthenticated()) {
+        window.updateQuickActionBadges();
+      }
+    }, 500);
+    
     // Add keyboard shortcut for sidebar toggle (Ctrl/Cmd + B)
     document.addEventListener('keydown', (e) => {
       if ((e.ctrlKey || e.metaKey) && e.key === 'b') {
         e.preventDefault();
-        toggleSidebar();
+        const sidebar = document.getElementById('sidebar');
+        if (sidebar) {
+          sidebar.classList.toggle('collapsed');
+        }
       }
     });
-    
-    const app = document.getElementById('fallback-app');
-    if (app) {
-      app.style.opacity = '0';
-      app.style.transform = 'translateY(20px)';
-      app.style.transition = 'all 0.5s ease-out';
-      setTimeout(() => {
-        app.style.opacity = '1';
-        app.style.transform = 'translateY(0)';
-      }, 50);
-    }
-  }, 100);
-  
-  // Global error handler for debugging
-  window.addEventListener('error', function(e) {
-    console.error('[Fallback] Global error caught:', e.error);
-    console.error('[Fallback] Error details:', {
-      message: e.message,
-      filename: e.filename,
-      lineno: e.lineno,
-      colno: e.colno,
-      error: e.error
-    });
-  });
-  
-  // Unhandled promise rejection handler
-  window.addEventListener('unhandledrejection', function(e) {
-    console.error('[Fallback] Unhandled promise rejection:', e.reason);
-    e.preventDefault(); // Prevent the default browser behavior
-  });
-  
-  console.log('[Fallback] Initialization complete');
+  }, 300);
+
+  // Hide loading screen if visible
+  const loadingScreenElement = document.getElementById('loadingScreen');
+  if (loadingScreenElement) {
+    loadingScreenElement.style.opacity = '0';
+    setTimeout(() => {
+      loadingScreenElement.style.display = 'none';
+    }, 300);
+  }
+
 } catch (error) {
   console.error('[Fallback] Critical initialization error:', error);
   
@@ -7800,7 +8851,7 @@
             <button onclick="location.reload()" style="background: #3b82f6; color: white; border: none; padding: 12px 24px; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; transition: background-color 0.15s;">
               🔄 Reload Application
             </button>
-            <button onclick="window.open('mailto:support@company.com?subject=Photo Order System Error&body=' + encodeURIComponent('Error: ' + error.message + '\n\nPlease describe what you were doing when this error occurred...'), '_blank')" style="background: #6b7280; color: white; border: none; padding: 12px 24px; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; transition: background-color 0.15s;">
+            <button onclick="window.open('mailto:support@company.com?subject=Photo Order System Error&body=' + encodeURIComponent('Error: ' + error.message + '\\n\\nPlease describe what you were doing when this error occurred...'), '_blank')" style="background: #6b7280; color: white; border: none; padding: 12px 24px; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; transition: background-color 0.15s;">
               📧 Report Issue
             </button>
           </div>
@@ -7819,4 +8870,6 @@
     loadingScreen.style.display = 'none';
   }
 }
-})();
+
+})(); // End of IIFE
+
