@@ -1133,24 +1133,24 @@
             <!-- Quick Actions -->
             <div class="nav-section">
               <div class="nav-section-title">Quick Actions</div>
-              <div class="nav-item nav-item-urgent" data-tooltip="View Urgent Orders" onclick="filterOrdersByStatus('urgent')">
+              <div class="nav-item nav-item-urgent" data-tooltip="View High & Critical Priority Orders" onclick="filterOrdersByStatus('urgent')">
                 <span class="nav-item-icon">🚨</span>
                 <span class="nav-item-text">Urgent Orders</span>
                 <span class="nav-item-badge" id="urgentBadge">0</span>
               </div>
-              <div class="nav-item nav-item-samples" data-tooltip="Samples Ready" onclick="filterOrdersByStatus('samples')">
+              <div class="nav-item nav-item-samples" data-tooltip="View Orders with Samples Requested/In Transit/Received" onclick="filterOrdersByStatus('samples')">
                 <span class="nav-item-icon">📦</span>
                 <span class="nav-item-text">Samples Ready</span>
                 <span class="nav-item-badge" id="samplesBadge">0</span>
               </div>
-              <div class="nav-item nav-item-overdue" data-tooltip="Overdue Items" onclick="filterOrdersByStatus('overdue')">
+              <div class="nav-item nav-item-overdue" data-tooltip="View Orders Past Their Deadline" onclick="filterOrdersByStatus('overdue')">
                 <span class="nav-item-icon">⏰</span>
-                <span class="nav-item-text">Overdue Items</span>
+                <span class="nav-item-text">Overdue Orders</span>
                 <span class="nav-item-badge" id="overdueBadge">0</span>
               </div>
-              <div class="nav-item nav-item-today" data-tooltip="Today's Deadlines" onclick="filterOrdersByStatus('today')">
+              <div class="nav-item nav-item-today" data-tooltip="View Orders Due Today" onclick="filterOrdersByStatus('today')">
                 <span class="nav-item-icon">📅</span>
-                <span class="nav-item-text">Today's Deadlines</span>
+                <span class="nav-item-text">Due Today</span>
                 <span class="nav-item-badge" id="todayBadge">0</span>
               </div>
             </div>
@@ -5280,6 +5280,32 @@
             filteredOrders = ordersList;
             filterTitle = 'All Orders';
             break;
+          case 'urgent':
+            filteredOrders = ordersList.filter(o => 
+              o.priority === 'High' || 
+              o.priority === 'Critical' ||
+              o.priority === 'Urgent'
+            );
+            filterTitle = 'Urgent Orders';
+            break;
+          case 'overdue':
+            const overdueToday = new Date();
+            overdueToday.setHours(23, 59, 59, 999);
+            filteredOrders = ordersList.filter(o => {
+              const deadline = new Date(o.deadline);
+              return deadline < overdueToday && 
+                o.status !== 'Complete' && 
+                o.status !== 'Completed' &&
+                o.status !== 'Delivered' &&
+                o.status !== 'Archived';
+            });
+            filterTitle = 'Overdue Orders';
+            break;
+          case 'today':
+            const todayStr = new Date().toISOString().split('T')[0];
+            filteredOrders = ordersList.filter(o => o.deadline === todayStr);
+            filterTitle = "Today's Deadlines";
+            break;
           case 'draft':
             filteredOrders = ordersList.filter(o => 
               o.status === 'Draft' || 
@@ -5306,7 +5332,7 @@
               o.status === 'Samples in Transit' ||
               o.status === 'Samples Received'
             );
-            filterTitle = 'Sample Orders';
+            filterTitle = 'Samples Ready';
             break;
           case 'inprogress':
           case 'In Progress':
