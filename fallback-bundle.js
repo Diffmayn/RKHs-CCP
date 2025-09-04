@@ -1,15 +1,14 @@
-// Enhanced Fallback Runtime with better UX and debugging
+// Enhanced Fallback Runtime with better UX
 (function(){
-  console.log('[DEBUG] Fallback script loaded and executing');
   
   try {
     const root = document.getElementById('app');
     if(!root || window.__APP_STARTED__) {
-      console.log('[DEBUG] Early exit - root exists:', !!root, 'app started:', !!window.__APP_STARTED__);
       return;
     }
 
-    console.log('[Fallback] Activating fallback runtime');
+    // Mark fallback as active
+    window.__FALLBACK_ACTIVE__ = true;
 
     // Hide loading screen and show app
     const loadingScreen = document.getElementById('loading-screen');
@@ -865,44 +864,17 @@
     #fallback-app tbody tr td { color: #374151 !important; }
     #fallback-app tbody tr:hover { background: #f9fafb; }
     #fallback-app .status { padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: 500; display: inline-block; }
-    #fallback-app .Complete { background: #d1fae5; color: #065f46; }
-    #fallback-app .Delivered { background: #d1fae5; color: #065f46; }
-    #fallback-app .Pending { background: #fef3c7; color: #92400e; }
-    #fallback-app .Draft { background: #f3f4f6; color: #374151; }
-    #fallback-app .NewRequest { background: #e0f2fe; color: #075985; }
-    #fallback-app .Received { background: #e0f2fe; color: #075985; }
-    #fallback-app .InProgress { background: #dbeafe; color: #1e40af; }
-    #fallback-app .Approved { background: #dcfce7; color: #166534; }
-    #fallback-app .SamplesRequested { background: #fef3c7; color: #92400e; }
-    #fallback-app .High { background: #fee2e2; color: #991b1b; }
+    #fallback-app .Complete, #fallback-app .Delivered, #fallback-app .status-complete { background: #d1fae5; color: #065f46; }
+    #fallback-app .Pending, #fallback-app .status-pending { background: #fef3c7; color: #92400e; }
+    #fallback-app .Draft, #fallback-app .Created, #fallback-app .status-draft { background: #f3f4f6; color: #374151; }
+    #fallback-app .NewRequest, #fallback-app .Received, #fallback-app .status-samples { background: #e0f2fe; color: #075985; }
+    #fallback-app .InProgress, #fallback-app .AtPhotographer, #fallback-app .status-in-progress { background: #dbeafe; color: #1e40af; }
+    #fallback-app .Approved, #fallback-app .status-approved { background: #dcfce7; color: #166534; }
+    #fallback-app .SamplesRequested, #fallback-app .InTransittoPhotographer, #fallback-app .InTransittoPhotoBox, #fallback-app .status-review { background: #fef3c7; color: #92400e; }
+    #fallback-app .AtPhotoBox { background: #e0e7ff; color: #3730a3; }
+    #fallback-app .High, #fallback-app .Urgent { background: #fee2e2; color: #991b1b; }
     #fallback-app .Medium { background: #fef3c7; color: #92400e; }
     #fallback-app .Low { background: #dcfce7; color: #166534; }
-    #fallback-app .Urgent { background: #fecaca; color: #7f1d1d; }
-    
-    /* Status badge styling */
-    #fallback-app .status-badge { 
-      display: inline-block; 
-      padding: 4px 8px; 
-      border-radius: 12px; 
-      font-size: 12px; 
-      font-weight: 600; 
-      text-transform: uppercase; 
-      letter-spacing: 0.025em; 
-    }
-    
-    /* Additional status colors for our process flow */
-    #fallback-app .status-draft { background: #f3f4f6; color: #374151; }
-    #fallback-app .status-pending { background: #fef3c7; color: #92400e; }
-    #fallback-app .status-approved { background: #dcfce7; color: #166534; }
-    #fallback-app .status-samples { background: #e0f2fe; color: #075985; }
-    #fallback-app .status-in-progress { background: #dbeafe; color: #1e40af; }
-    #fallback-app .status-review { background: #fef3c7; color: #92400e; }
-    #fallback-app .status-complete { background: #d1fae5; color: #065f46; }
-    #fallback-app .AtPhotographer { background: #dbeafe; color: #1e40af; }
-    #fallback-app .InTransittoPhotographer { background: #fef3c7; color: #92400e; }
-    #fallback-app .InTransittoPhotoBox { background: #fef3c7; color: #92400e; }
-    #fallback-app .AtPhotoBox { background: #e0e7ff; color: #3730a3; }
-    #fallback-app .Created { background: #f3f4f6; color: #374151; }
     #fallback-app .template-card:hover { border-color: #2563eb; box-shadow: 0 2px 8px rgba(37, 99, 235, 0.1); }
     #fallback-app .kanban-items { min-height: 100px; }
     #fallback-app .kanban-item { background: white; border: 1px solid #e5e7eb; border-radius: 6px; padding: 8px; margin-bottom: 8px; cursor: pointer; font-size: 12px; }
@@ -1146,7 +1118,7 @@
                 <span class="nav-item-icon">📅</span>
                 <span class="nav-item-text">Calendar</span>
               </div>
-              <div class="nav-item" data-tooltip="Workflow View" onclick="console.log('Workflow button clicked'); showView('workflow')">
+              <div class="nav-item" data-tooltip="Workflow View" onclick="showView('workflow')">
                 <span class="nav-item-icon">🔄</span>
                 <span class="nav-item-text">Workflow</span>
               </div>
@@ -2349,7 +2321,6 @@
     }
 
     function showView(viewName) {
-      console.log('showView called with:', viewName);
       
       // Hide all views first
       const views = ['ordersView', 'samplesView', 'createOrderView', 'templatesView', 'workflowView', 'kanbanView', 'calendarView', 'dashboardView'];
@@ -3715,26 +3686,18 @@
     window.showOrderHistory = showOrderHistory;
 
     function drawOrderRows() {
-      console.log('drawOrderRows called');
       const tbody = document.getElementById('ordersBody');
       const searchBox = document.getElementById('searchBox');
-      console.log('tbody element:', tbody);
-      console.log('searchBox element:', searchBox);
-      console.log('window.allOrders:', window.allOrders);
-      console.log('window.authSystem:', window.authSystem);
       
       if (!window.allOrders) {
-        console.error('window.allOrders is not defined!');
         return;
       }
       
       if (!window.authSystem) {
-        console.error('window.authSystem is not defined!');
         return;
       }
       
       const orders = window.authSystem.getFilteredOrders(window.allOrders);
-      console.log('filtered orders:', orders);
       const term = searchBox?.value.toLowerCase() || '';
       const filtered = orders.filter(o => 
         !term || 
@@ -3743,7 +3706,6 @@
         o.photographer.toLowerCase().includes(term) ||
         o.status.toLowerCase().includes(term)
       );
-      console.log('search filtered orders:', filtered);
       
       if (tbody) {
         tbody.innerHTML = filtered.map(o => {
@@ -3780,8 +3742,6 @@
             </td>
           </tr>`;
         }).join('');
-        
-        console.log('Generated HTML length:', tbody.innerHTML.length);
       }
       
       if (typeof updateBulkActionsPanel === 'function') {
@@ -3824,7 +3784,6 @@
 
       board.innerHTML = statuses.map(status => {
         const statusOrders = orders.filter(o => o.status === status.name);
-        console.log(`Status ${status.name}: ${statusOrders.length} orders`);
         
         return `
           <div class="kanban-column" data-status="${status.name}" 
@@ -5288,17 +5247,12 @@
 
     // Filter orders by status from dashboard tiles and order view tiles
     window.filterOrdersByStatus = function(statusFilter) {
-      console.log('Filter clicked:', statusFilter);
-      console.log('allOrders available:', !!window.allOrders);
-      console.log('authSystem available:', !!window.authSystem);
-      
       // Show orders view with filter applied
       showView('orders');
       
       // Apply the filter after a short delay to ensure the view is loaded
       setTimeout(() => {
         if (!window.allOrders) {
-          console.error('allOrders not available - creating sample data');
           // Create some sample data if allOrders is not available
           window.allOrders = [
             { orderNumber: 'ORD001', title: 'Sample Order 1', status: 'Draft', priority: 'Medium', photographer: 'John Doe', method: 'Digital', deadline: '2025-09-10', purchaseGroup: 'PG1', eventId: 'E001' },
@@ -5310,7 +5264,6 @@
         }
         
         if (!window.authSystem) {
-          console.error('authSystem not available - creating basic filter');
           window.authSystem = {
             getFilteredOrders: function(orders) {
               return orders || [];
@@ -5321,8 +5274,6 @@
         const ordersList = window.authSystem.getFilteredOrders(window.allOrders);
         let filteredOrders = [];
         let filterTitle = '';
-        
-        console.log('Total orders before filtering:', ordersList.length);
         
         switch(statusFilter) {
           case 'all':
@@ -5387,12 +5338,8 @@
             break;
         }
         
-        console.log('Filtered orders count:', filteredOrders.length);
-        console.log('Filter title:', filterTitle);
-        
         // Update the orders table with filtered results
         const ordersBody = document.getElementById('ordersBody');
-        console.log('ordersBody element found:', !!ordersBody);
         
         if (ordersBody) {
           // Create a temporary selectedItems for this view
@@ -5440,9 +5387,8 @@
           }).join('');
           
           ordersBody.innerHTML = tableHTML;
-          console.log('Table updated with', filteredOrders.length, 'rows');
         } else {
-          console.error('ordersBody element not found!');
+          // ordersBody element not found
         }
         
         // Show filter info
@@ -5481,31 +5427,7 @@
           window.updateFilterTileCounts();
         }
         
-        console.log('Filter operation completed successfully');
       }, 150);
-    };
-
-    // Test function to verify filtering is working
-    window.testFilter = function() {
-      console.log('Test filter function called');
-      console.log('filterOrdersByStatus available:', typeof window.filterOrdersByStatus);
-      if (typeof window.filterOrdersByStatus === 'function') {
-        console.log('Calling filterOrdersByStatus with "draft"');
-        window.filterOrdersByStatus('draft');
-      } else {
-        console.error('filterOrdersByStatus is not a function!');
-      }
-    };
-
-    // Debug function
-    window.debugFilterSystem = function() {
-      console.log('=== Filter System Debug ===');
-      console.log('allOrders:', window.allOrders);
-      console.log('authSystem:', window.authSystem);
-      console.log('filterOrdersByStatus type:', typeof window.filterOrdersByStatus);
-      console.log('ordersBody element:', document.getElementById('ordersBody'));
-      console.log('ordersView element:', document.getElementById('ordersView'));
-      console.log('mainContent element:', document.getElementById('mainContent'));
     };
 
     // Function to update filter tile counts
@@ -5572,11 +5494,8 @@
     }
 
     function processScanResult() {
-      console.log('processScanResult called');
       const articleName = document.getElementById('scannedArticleName').value.trim();
       const eanCode = document.getElementById('scannedEAN').value.trim();
-      
-      console.log('Article:', articleName, 'EAN:', eanCode);
       
       if (!articleName || !eanCode) {
         alert('Please enter both article name and EAN code');
