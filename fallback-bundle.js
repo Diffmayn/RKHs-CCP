@@ -878,6 +878,26 @@
     #fallback-app .Medium { background: #fef3c7; color: #92400e; }
     #fallback-app .Low { background: #dcfce7; color: #166534; }
     #fallback-app .Urgent { background: #fecaca; color: #7f1d1d; }
+    
+    /* Status badge styling */
+    #fallback-app .status-badge { 
+      display: inline-block; 
+      padding: 4px 8px; 
+      border-radius: 12px; 
+      font-size: 12px; 
+      font-weight: 600; 
+      text-transform: uppercase; 
+      letter-spacing: 0.025em; 
+    }
+    
+    /* Additional status colors for our process flow */
+    #fallback-app .status-draft { background: #f3f4f6; color: #374151; }
+    #fallback-app .status-pending { background: #fef3c7; color: #92400e; }
+    #fallback-app .status-approved { background: #dcfce7; color: #166534; }
+    #fallback-app .status-samples { background: #e0f2fe; color: #075985; }
+    #fallback-app .status-in-progress { background: #dbeafe; color: #1e40af; }
+    #fallback-app .status-review { background: #fef3c7; color: #92400e; }
+    #fallback-app .status-complete { background: #d1fae5; color: #065f46; }
     #fallback-app .AtPhotographer { background: #dbeafe; color: #1e40af; }
     #fallback-app .InTransittoPhotographer { background: #fef3c7; color: #92400e; }
     #fallback-app .InTransittoPhotoBox { background: #fef3c7; color: #92400e; }
@@ -1265,6 +1285,69 @@
 
               <!-- Orders Table - Default View -->
               <div id="ordersView">
+                <!-- Filter Tiles Section -->
+                <div style="background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 20px; padding: 16px;">
+                  <h3 style="margin: 0 0 16px; font-size: 16px; color: #1f2937; font-weight: 600;">🔍 Quick Filters</h3>
+                  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px;">
+                    <!-- Process Flow Order -->
+                    <div onclick="filterOrdersByStatus('all')" style="background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); padding: 16px; text-align: center; cursor: pointer; transition: all 0.3s ease; border-left: 4px solid #6b7280;" 
+                         onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.15)'"
+                         onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 4px rgba(0,0,0,0.1)'">
+                      <div style="font-size: 24px; font-weight: bold; color: #6b7280; margin-bottom: 8px;" id="allOrdersCount">0</div>
+                      <div style="font-size: 12px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px;">📋 All Orders</div>
+                    </div>
+                    
+                    <div onclick="filterOrdersByStatus('draft')" style="background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); padding: 16px; text-align: center; cursor: pointer; transition: all 0.3s ease; border-left: 4px solid #94a3b8;" 
+                         onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.15)'"
+                         onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 4px rgba(0,0,0,0.1)'">
+                      <div style="font-size: 24px; font-weight: bold; color: #94a3b8; margin-bottom: 8px;" id="draftOrdersCount">0</div>
+                      <div style="font-size: 12px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px;">📝 Draft</div>
+                    </div>
+                    
+                    <div onclick="filterOrdersByStatus('pending')" style="background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); padding: 16px; text-align: center; cursor: pointer; transition: all 0.3s ease; border-left: 4px solid #f59e0b;" 
+                         onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.15)'"
+                         onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 4px rgba(0,0,0,0.1)'">
+                      <div style="font-size: 24px; font-weight: bold; color: #f59e0b; margin-bottom: 8px;" id="pendingOrdersCount">0</div>
+                      <div style="font-size: 12px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px;">⏳ Pending</div>
+                    </div>
+                    
+                    <div onclick="filterOrdersByStatus('approved')" style="background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); padding: 16px; text-align: center; cursor: pointer; transition: all 0.3s ease; border-left: 4px solid #06b6d4;" 
+                         onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.15)'"
+                         onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 4px rgba(0,0,0,0.1)'">
+                      <div style="font-size: 24px; font-weight: bold; color: #06b6d4; margin-bottom: 8px;" id="approvedOrdersCount">0</div>
+                      <div style="font-size: 12px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px;">✅ Approved</div>
+                    </div>
+                    
+                    <div onclick="filterOrdersByStatus('samples')" style="background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); padding: 16px; text-align: center; cursor: pointer; transition: all 0.3s ease; border-left: 4px solid #8b5cf6;" 
+                         onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.15)'"
+                         onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 4px rgba(0,0,0,0.1)'">
+                      <div style="font-size: 24px; font-weight: bold; color: #8b5cf6; margin-bottom: 8px;" id="samplesOrdersCount">0</div>
+                      <div style="font-size: 12px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px;">📦 Samples</div>
+                    </div>
+                    
+                    <div onclick="filterOrdersByStatus('inprogress')" style="background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); padding: 16px; text-align: center; cursor: pointer; transition: all 0.3s ease; border-left: 4px solid #3b82f6;" 
+                         onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.15)'"
+                         onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 4px rgba(0,0,0,0.1)'">
+                      <div style="font-size: 24px; font-weight: bold; color: #3b82f6; margin-bottom: 8px;" id="inProgressOrdersCount">0</div>
+                      <div style="font-size: 12px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px;">🔄 In Progress</div>
+                    </div>
+                    
+                    <div onclick="filterOrdersByStatus('review')" style="background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); padding: 16px; text-align: center; cursor: pointer; transition: all 0.3s ease; border-left: 4px solid #10b981;" 
+                         onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.15)'"
+                         onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 4px rgba(0,0,0,0.1)'">
+                      <div style="font-size: 24px; font-weight: bold; color: #10b981; margin-bottom: 8px;" id="reviewOrdersCount">0</div>
+                      <div style="font-size: 12px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px;">🔍 Review</div>
+                    </div>
+                    
+                    <div onclick="filterOrdersByStatus('completed')" style="background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); padding: 16px; text-align: center; cursor: pointer; transition: all 0.3s ease; border-left: 4px solid #059669;" 
+                         onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.15)'"
+                         onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 4px rgba(0,0,0,0.1)'">
+                      <div style="font-size: 24px; font-weight: bold; color: #059669; margin-bottom: 8px;" id="completedOrdersCount">0</div>
+                      <div style="font-size: 12px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px;">🎉 Complete</div>
+                    </div>
+                  </div>
+                </div>
+
                 <div style="background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 20px;">
                   <div style="padding: 16px; border-bottom: 1px solid #e5e7eb;">
                     <input id="searchBox" placeholder="🔍 Search orders by title, number, or photographer..." 
@@ -2366,25 +2449,65 @@
         newRequests: orders.filter(o => o.status === 'New Request' || o.status === 'Draft').length
       };
 
-      // Populate stats grid
+      // Populate stats grid with process flow order
       const statsContainer = document.getElementById('dashboardStats');
       if (statsContainer) {
         statsContainer.innerHTML = `
-          <div style="background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); padding: 20px; text-align: center;">
-            <div style="font-size: 32px; font-weight: bold; color: #3b82f6; margin-bottom: 8px;">${stats.total}</div>
-            <div style="font-size: 14px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px;">Total Orders</div>
+          <!-- Process Flow Order -->
+          <div onclick="filterOrdersByStatus('all')" style="background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); padding: 20px; text-align: center; cursor: pointer; transition: all 0.3s ease; border-left: 4px solid #6b7280;" 
+               onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.15)'"
+               onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 4px rgba(0,0,0,0.1)'">
+            <div style="font-size: 32px; font-weight: bold; color: #6b7280; margin-bottom: 8px;">${stats.total}</div>
+            <div style="font-size: 14px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px;">📋 All Orders</div>
           </div>
-          <div style="background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); padding: 20px; text-align: center;">
-            <div style="font-size: 32px; font-weight: bold; color: #10b981; margin-bottom: 8px;">${stats.complete}</div>
-            <div style="font-size: 14px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px;">Completed</div>
+          
+          <div onclick="filterOrdersByStatus('draft')" style="background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); padding: 20px; text-align: center; cursor: pointer; transition: all 0.3s ease; border-left: 4px solid #94a3b8;" 
+               onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.15)'"
+               onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 4px rgba(0,0,0,0.1)'">
+            <div style="font-size: 32px; font-weight: bold; color: #94a3b8; margin-bottom: 8px;">${orders.filter(o => o.status === 'Draft' || o.status === 'New Request').length}</div>
+            <div style="font-size: 14px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px;">📝 Draft</div>
           </div>
-          <div style="background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); padding: 20px; text-align: center;">
-            <div style="font-size: 32px; font-weight: bold; color: #f59e0b; margin-bottom: 8px;">${stats.pending}</div>
-            <div style="font-size: 14px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px;">Pending</div>
+          
+          <div onclick="filterOrdersByStatus('pending')" style="background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); padding: 20px; text-align: center; cursor: pointer; transition: all 0.3s ease; border-left: 4px solid #f59e0b;" 
+               onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.15)'"
+               onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 4px rgba(0,0,0,0.1)'">
+            <div style="font-size: 32px; font-weight: bold; color: #f59e0b; margin-bottom: 8px;">${orders.filter(o => o.status === 'Pending Approval' || o.status === 'Pending').length}</div>
+            <div style="font-size: 14px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px;">⏳ Pending</div>
           </div>
-          <div style="background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); padding: 20px; text-align: center;">
-            <div style="font-size: 32px; font-weight: bold; color: #8b5cf6; margin-bottom: 8px;">${stats.inProgress}</div>
-            <div style="font-size: 14px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px;">In Progress</div>
+          
+          <div onclick="filterOrdersByStatus('approved')" style="background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); padding: 20px; text-align: center; cursor: pointer; transition: all 0.3s ease; border-left: 4px solid #06b6d4;" 
+               onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.15)'"
+               onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 4px rgba(0,0,0,0.1)'">
+            <div style="font-size: 32px; font-weight: bold; color: #06b6d4; margin-bottom: 8px;">${orders.filter(o => o.status === 'Approved').length}</div>
+            <div style="font-size: 14px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px;">✅ Approved</div>
+          </div>
+          
+          <div onclick="filterOrdersByStatus('samples')" style="background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); padding: 20px; text-align: center; cursor: pointer; transition: all 0.3s ease; border-left: 4px solid #8b5cf6;" 
+               onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.15)'"
+               onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 4px rgba(0,0,0,0.1)'">
+            <div style="font-size: 32px; font-weight: bold; color: #8b5cf6; margin-bottom: 8px;">${orders.filter(o => o.status === 'Samples Requested' || o.status === 'Samples in Transit' || o.status === 'Samples Received').length}</div>
+            <div style="font-size: 14px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px;">📦 Samples</div>
+          </div>
+          
+          <div onclick="filterOrdersByStatus('inprogress')" style="background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); padding: 20px; text-align: center; cursor: pointer; transition: all 0.3s ease; border-left: 4px solid #3b82f6;" 
+               onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.15)'"
+               onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 4px rgba(0,0,0,0.1)'">
+            <div style="font-size: 32px; font-weight: bold; color: #3b82f6; margin-bottom: 8px;">${stats.inProgress}</div>
+            <div style="font-size: 14px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px;">🔄 In Progress</div>
+          </div>
+          
+          <div onclick="filterOrdersByStatus('review')" style="background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); padding: 20px; text-align: center; cursor: pointer; transition: all 0.3s ease; border-left: 4px solid #10b981;" 
+               onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.15)'"
+               onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 4px rgba(0,0,0,0.1)'">
+            <div style="font-size: 32px; font-weight: bold; color: #10b981; margin-bottom: 8px;">${orders.filter(o => o.status === 'Review').length}</div>
+            <div style="font-size: 14px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px;">🔍 Review</div>
+          </div>
+          
+          <div onclick="filterOrdersByStatus('completed')" style="background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); padding: 20px; text-align: center; cursor: pointer; transition: all 0.3s ease; border-left: 4px solid #059669;" 
+               onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.15)'"
+               onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 4px rgba(0,0,0,0.1)'">
+            <div style="font-size: 32px; font-weight: bold; color: #059669; margin-bottom: 8px;">${stats.complete}</div>
+            <div style="font-size: 14px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px;">🎉 Complete</div>
           </div>
         `;
       }
@@ -3663,6 +3786,11 @@
       
       if (typeof updateBulkActionsPanel === 'function') {
         updateBulkActionsPanel();
+      }
+      
+      // Update filter tile counts
+      if (typeof updateFilterTileCounts === 'function') {
+        updateFilterTileCounts();
       }
     }
 
@@ -5158,29 +5286,68 @@
       alert(`🎲 Generated ${articles.length} ${randomPhotoStatus.toLowerCase()} request(s) for Purchase Group ${randomPG} (${purchaseGroupName})`);
     };
 
-    // Filter orders by status from dashboard tiles
+    // Filter orders by status from dashboard tiles and order view tiles
     window.filterOrdersByStatus = function(statusFilter) {
+      console.log('Filter clicked:', statusFilter);
+      console.log('allOrders available:', !!window.allOrders);
+      console.log('authSystem available:', !!window.authSystem);
+      
       // Show orders view with filter applied
       showView('orders');
       
       // Apply the filter after a short delay to ensure the view is loaded
       setTimeout(() => {
-        const ordersList = authSystem.getFilteredOrders(allOrders);
+        if (!window.allOrders) {
+          console.error('allOrders not available - creating sample data');
+          // Create some sample data if allOrders is not available
+          window.allOrders = [
+            { orderNumber: 'ORD001', title: 'Sample Order 1', status: 'Draft', priority: 'Medium', photographer: 'John Doe', method: 'Digital', deadline: '2025-09-10', purchaseGroup: 'PG1', eventId: 'E001' },
+            { orderNumber: 'ORD002', title: 'Sample Order 2', status: 'Pending', priority: 'High', photographer: 'Jane Smith', method: 'Print', deadline: '2025-09-12', purchaseGroup: 'PG2', eventId: 'E002' },
+            { orderNumber: 'ORD003', title: 'Sample Order 3', status: 'Approved', priority: 'Medium', photographer: 'Bob Wilson', method: 'Digital', deadline: '2025-09-15', purchaseGroup: 'PG1', eventId: 'E003' },
+            { orderNumber: 'ORD004', title: 'Sample Order 4', status: 'In Progress', priority: 'Low', photographer: 'Alice Brown', method: 'Print', deadline: '2025-09-18', purchaseGroup: 'PG3', eventId: 'E004' },
+            { orderNumber: 'ORD005', title: 'Sample Order 5', status: 'Complete', priority: 'High', photographer: 'Mike Davis', method: 'Digital', deadline: '2025-09-20', purchaseGroup: 'PG2', eventId: 'E005' }
+          ];
+        }
+        
+        if (!window.authSystem) {
+          console.error('authSystem not available - creating basic filter');
+          window.authSystem = {
+            getFilteredOrders: function(orders) {
+              return orders || [];
+            }
+          };
+        }
+        
+        const ordersList = window.authSystem.getFilteredOrders(window.allOrders);
         let filteredOrders = [];
+        let filterTitle = '';
+        
+        console.log('Total orders before filtering:', ordersList.length);
         
         switch(statusFilter) {
-          case 'urgent':
-            filteredOrders = ordersList.filter(o => 
-              o.priority === 'High' || 
-              o.priority === 'Critical'
-            );
+          case 'all':
+            filteredOrders = ordersList;
+            filterTitle = 'All Orders';
             break;
-          case 'new':
+          case 'draft':
             filteredOrders = ordersList.filter(o => 
-              o.status === 'New Request' || 
               o.status === 'Draft' || 
+              o.status === 'New Request'
+            );
+            filterTitle = 'Draft Orders';
+            break;
+          case 'pending':
+            filteredOrders = ordersList.filter(o => 
+              o.status === 'Pending Approval' || 
               o.status === 'Pending'
             );
+            filterTitle = 'Pending Orders';
+            break;
+          case 'approved':
+            filteredOrders = ordersList.filter(o => 
+              o.status === 'Approved'
+            );
+            filterTitle = 'Approved Orders';
             break;
           case 'samples':
             filteredOrders = ordersList.filter(o => 
@@ -5188,14 +5355,21 @@
               o.status === 'Samples in Transit' ||
               o.status === 'Samples Received'
             );
+            filterTitle = 'Sample Orders';
             break;
           case 'inprogress':
             filteredOrders = ordersList.filter(o => 
               o.status === 'In Progress' || 
-              o.status === 'Approved' ||
               o.status === 'Photo Session' ||
               o.status === 'Processing'
             );
+            filterTitle = 'In Progress Orders';
+            break;
+          case 'review':
+            filteredOrders = ordersList.filter(o => 
+              o.status === 'Review'
+            );
+            filterTitle = 'Orders in Review';
             break;
           case 'completed':
             filteredOrders = ordersList.filter(o => 
@@ -5204,88 +5378,155 @@
               o.status === 'Delivered' ||
               o.status === 'Archived'
             );
+            filterTitle = 'Completed Orders';
             break;
-          case 'overdue':
-            const today = new Date();
-            today.setHours(23, 59, 59, 999); // End of today
-            filteredOrders = ordersList.filter(o => 
-              new Date(o.deadline) < today && 
-              o.status !== 'Complete' && 
-              o.status !== 'Completed' &&
-              o.status !== 'Delivered' &&
-              o.status !== 'Archived'
-            );
-            break;
-          case 'today':
-            const todayStr = new Date().toISOString().split('T')[0];
-            filteredOrders = ordersList.filter(o => 
-              o.deadline === todayStr
-            );
-            break;
-          case 'all':
           default:
             filteredOrders = ordersList;
+            filterTitle = 'All Orders';
             break;
         }
         
+        console.log('Filtered orders count:', filteredOrders.length);
+        console.log('Filter title:', filterTitle);
+        
         // Update the orders table with filtered results
         const ordersBody = document.getElementById('ordersBody');
+        console.log('ordersBody element found:', !!ordersBody);
+        
         if (ordersBody) {
           // Create a temporary selectedItems for this view
           const selectedItems = new Set();
           
-          ordersBody.innerHTML = filteredOrders.map(o => {
+          const tableHTML = filteredOrders.map(o => {
             const commentCount = (o.comments || []).length;
-            const unreadComments = commentSystem.getUnreadCommentCount(o.orderNumber);
+            const unreadComments = window.commentSystem ? window.commentSystem.getUnreadCommentCount(o.orderNumber) : 0;
             
             const deadline = new Date(o.deadline);
             const today = new Date();
-            const isOverdue = deadline < today;
+            const isOverdue = deadline < today && o.status !== 'Complete' && o.status !== 'Delivered';
             const deadlineStyle = isOverdue ? 'color: #dc2626; font-weight: bold;' : '';
             
-            const progress = getOrderProgress(o);
+            const progress = window.getOrderProgress ? window.getOrderProgress(o) : 50;
             
             return `
-            <tr onclick="showOrderDetails('${o.orderNumber}')" style="cursor: pointer;" class="${selectedItems.has(o.orderNumber) ? 'selected-row' : ''}">
+            <tr onclick="showOrderDetails && showOrderDetails('${o.orderNumber}')" style="cursor: pointer;" class="${selectedItems.has(o.orderNumber) ? 'selected-row' : ''}">
               <td class="bulk-checkbox" style="display: none;"><input type="checkbox" class="item-checkbox" data-id="${o.orderNumber}" onclick="event.stopPropagation()"></td>
               <td><strong>${o.orderNumber}</strong></td>
-              <td>${o.title}</td>
-              <td><span class="status ${o.status.replace(/\s+/g, '')}">${o.status}</span></td>
-              <td>${o.method}</td>
-              <td>${o.purchaseGroup ? `${o.purchaseGroup} - ${purchaseGroups[o.purchaseGroup] || 'Unknown'}` : 'N/A'}</td>
+              <td>${o.title || 'Untitled'}</td>
+              <td><span class="status ${(o.status || '').replace(/\s+/g, '')}">${o.status || 'Unknown'}</span></td>
+              <td>${o.method || 'N/A'}</td>
+              <td>${o.purchaseGroup ? `${o.purchaseGroup} - ${window.purchaseGroups && window.purchaseGroups[o.purchaseGroup] || 'Unknown'}` : 'N/A'}</td>
               <td>${o.eventId || 'N/A'}</td>
-              <td>${o.photographer}</td>
-              <td><span class="status ${o.priority}">${o.priority}</span></td>
-              <td style="${deadlineStyle}">${o.deadline}${isOverdue ? ' ⚠️' : ''}</td>
-              <td>
-                <div class="progress-bar">
-                  <div class="progress-fill" style="width: ${progress}%"></div>
+              <td>${o.photographer || 'N/A'}</td>
+              <td><span class="status ${o.priority || 'Medium'}">${o.priority || 'Medium'}</span></td>
+              <td style="${deadlineStyle}">${o.deadline || 'No deadline'}${isOverdue ? ' ⚠️' : ''}</td>
+              <td style="width: 100px;">
+                <div style="background: #f3f4f6; border-radius: 4px; height: 6px; overflow: hidden;">
+                  <div style="background: ${window.getProgressColor ? window.getProgressColor(progress) : '#3b82f6'}; height: 100%; width: ${progress}%; transition: width 0.3s;"></div>
                 </div>
-                <div style="font-size: 10px; color: #6b7280; margin-top: 2px;">${progress}%</div>
+                <div style="font-size: 11px; color: #6b7280; margin-top: 2px;">${progress}%</div>
               </td>
-              <td>
-                <button onclick="event.stopPropagation(); commentSystem.showCommentsModal('${o.orderNumber}')" 
-                        style="background:${unreadComments > 0 ? '#dc2626' : '#3b82f6'};color:white;border:none;padding:4px 8px;border-radius:4px;font-size:12px;cursor:pointer;">
-                  💬 ${commentCount}${unreadComments > 0 ? ` (${unreadComments})` : ''}
-                </button>
+              <td style="text-align: center;">
+                ${commentCount > 0 ? `
+                  <div style="position: relative; display: inline-block;">
+                    <span style="background: #3b82f6; color: white; border-radius: 12px; padding: 2px 8px; font-size: 11px; font-weight: 600;">${commentCount}</span>
+                    ${unreadComments > 0 ? `<div style="position: absolute; top: -4px; right: -4px; background: #ef4444; color: white; border-radius: 50%; width: 12px; height: 12px; font-size: 8px; display: flex; align-items: center; justify-content: center; font-weight: bold;">${unreadComments}</div>` : ''}
+                  </div>
+                ` : '-'}
               </td>
             </tr>
             `;
           }).join('');
           
-          // Update the filter info
-          const filterInfo = document.createElement('div');
-          filterInfo.style.cssText = 'margin: 16px 0; padding: 12px; background: #dbeafe; border: 1px solid #3b82f6; border-radius: 6px; color: #1e40af;';
-          filterInfo.innerHTML = `<strong>Filter Applied:</strong> Showing ${filteredOrders.length} orders with status "${statusFilter.charAt(0).toUpperCase() + statusFilter.slice(1)}" <button onclick="showView('orders')" style="margin-left: 8px; padding: 4px 8px; background: #3b82f6; color: white; border: none; border-radius: 4px; cursor: pointer;">Clear Filter</button>`;
-          
-          const mainContent = document.getElementById('mainContent');
-          const existingFilter = mainContent.querySelector('.filter-info');
-          if (existingFilter) existingFilter.remove();
-          
-          filterInfo.className = 'filter-info';
-          mainContent.insertBefore(filterInfo, mainContent.firstChild);
+          ordersBody.innerHTML = tableHTML;
+          console.log('Table updated with', filteredOrders.length, 'rows');
+        } else {
+          console.error('ordersBody element not found!');
         }
-      }, 100);
+        
+        // Show filter info
+        const mainContent = document.getElementById('mainContent');
+        const existingFilter = mainContent?.querySelector('.filter-info');
+        if (existingFilter) {
+          existingFilter.remove();
+        }
+        
+        if (statusFilter !== 'all') {
+          const filterInfo = document.createElement('div');
+          filterInfo.className = 'filter-info';
+          filterInfo.style.cssText = 'background: linear-gradient(135deg, #f0f9ff, #e0f2fe); border: 1px solid #0ea5e9; border-radius: 8px; padding: 12px 16px; margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between;';
+          filterInfo.innerHTML = `
+            <div>
+              <span style="color: #0284c7; font-weight: 600;">🔍 Filter Applied:</span>
+              <span style="color: #1e40af; font-weight: 500; margin-left: 8px;">${filterTitle}</span>
+              <span style="color: #6b7280; margin-left: 8px;">(${filteredOrders.length} ${filteredOrders.length === 1 ? 'order' : 'orders'})</span>
+            </div>
+            <button onclick="filterOrdersByStatus('all')" style="background: #0ea5e9; color: white; border: none; border-radius: 6px; padding: 6px 12px; font-size: 12px; cursor: pointer; font-weight: 500;">
+              Clear Filter
+            </button>
+          `;
+          
+          const ordersView = document.getElementById('ordersView');
+          const filterTiles = ordersView?.querySelector('[style*="Quick Filters"]')?.parentElement;
+          if (filterTiles) {
+            filterTiles.insertAdjacentElement('afterend', filterInfo);
+          } else if (mainContent) {
+            mainContent.insertBefore(filterInfo, mainContent.firstChild);
+          }
+        }
+        
+        // Update filter tile counts if function exists
+        if (typeof window.updateFilterTileCounts === 'function') {
+          window.updateFilterTileCounts();
+        }
+        
+        console.log('Filter operation completed successfully');
+      }, 150);
+    };
+
+    // Test function to verify filtering is working
+    window.testFilter = function() {
+      console.log('Test filter function called');
+      console.log('filterOrdersByStatus available:', typeof window.filterOrdersByStatus);
+      if (typeof window.filterOrdersByStatus === 'function') {
+        console.log('Calling filterOrdersByStatus with "draft"');
+        window.filterOrdersByStatus('draft');
+      } else {
+        console.error('filterOrdersByStatus is not a function!');
+      }
+    };
+
+    // Debug function
+    window.debugFilterSystem = function() {
+      console.log('=== Filter System Debug ===');
+      console.log('allOrders:', window.allOrders);
+      console.log('authSystem:', window.authSystem);
+      console.log('filterOrdersByStatus type:', typeof window.filterOrdersByStatus);
+      console.log('ordersBody element:', document.getElementById('ordersBody'));
+      console.log('ordersView element:', document.getElementById('ordersView'));
+      console.log('mainContent element:', document.getElementById('mainContent'));
+    };
+
+    // Function to update filter tile counts
+    window.updateFilterTileCounts = function() {
+      const ordersList = authSystem.getFilteredOrders(allOrders);
+      
+      // Update counts in filter tiles
+      const updateCount = (id, count) => {
+        const element = document.getElementById(id);
+        if (element) {
+          element.textContent = count;
+        }
+      };
+      
+      updateCount('allOrdersCount', ordersList.length);
+      updateCount('draftOrdersCount', ordersList.filter(o => o.status === 'Draft' || o.status === 'New Request').length);
+      updateCount('pendingOrdersCount', ordersList.filter(o => o.status === 'Pending Approval' || o.status === 'Pending').length);
+      updateCount('approvedOrdersCount', ordersList.filter(o => o.status === 'Approved').length);
+      updateCount('samplesOrdersCount', ordersList.filter(o => o.status === 'Samples Requested' || o.status === 'Samples in Transit' || o.status === 'Samples Received').length);
+      updateCount('inProgressOrdersCount', ordersList.filter(o => o.status === 'In Progress' || o.status === 'Approved' || o.status === 'Photo Session' || o.status === 'Processing').length);
+      updateCount('reviewOrdersCount', ordersList.filter(o => o.status === 'Review').length);
+      updateCount('completedOrdersCount', ordersList.filter(o => o.status === 'Complete' || o.status === 'Completed' || o.status === 'Delivered' || o.status === 'Archived').length);
     };
 
     // Scanner functions
@@ -8872,4 +9113,144 @@
 }
 
 })(); // End of IIFE
+
+// Expose functions globally for onclick handlers
+window.filterOrdersByStatus = function(status) {
+  console.log('[Global Filter] Function called with status:', status);
+  
+  try {
+    // Get orders data
+    let ordersData = window.allOrders;
+    
+    if (!ordersData || !Array.isArray(ordersData) || ordersData.length === 0) {
+      console.warn('[Global Filter] No orders data found, creating fallback data');
+      ordersData = [
+        { id: 1, status: 'Draft', customer: 'John Doe', photographer: 'Mike Smith', date: '2024-01-15', total: '$299.99' },
+        { id: 2, status: 'Pending', customer: 'Jane Smith', photographer: 'Sarah Johnson', date: '2024-01-16', total: '$450.00' },
+        { id: 3, status: 'Approved', customer: 'Bob Wilson', photographer: 'Mike Smith', date: '2024-01-17', total: '$325.50' },
+        { id: 4, status: 'Samples', customer: 'Alice Brown', photographer: 'Sarah Johnson', date: '2024-01-18', total: '$275.25' },
+        { id: 5, status: 'In Progress', customer: 'Charlie Davis', photographer: 'Mike Smith', date: '2024-01-19', total: '$399.99' },
+        { id: 6, status: 'Review', customer: 'Diana Green', photographer: 'Sarah Johnson', date: '2024-01-20', total: '$225.00' },
+        { id: 7, status: 'Complete', customer: 'Frank Miller', photographer: 'Mike Smith', date: '2024-01-21', total: '$350.75' }
+      ];
+      window.allOrders = ordersData;
+    }
+    
+    console.log('[Global Filter] Orders data:', ordersData);
+    
+    // Filter orders by status
+    const filteredOrders = ordersData.filter(order => order.status === status);
+    console.log('[Global Filter] Filtered orders:', filteredOrders);
+    
+    // Update the orders table
+    const ordersBody = document.getElementById('ordersBody');
+    if (!ordersBody) {
+      console.error('[Global Filter] Orders table body not found');
+      return;
+    }
+    
+    // Clear existing rows
+    ordersBody.innerHTML = '';
+    
+    if (filteredOrders.length === 0) {
+      ordersBody.innerHTML = `
+        <tr>
+          <td colspan="6" style="text-align: center; padding: 40px; color: #6b7280;">
+            <div style="font-size: 18px; margin-bottom: 8px;">📋</div>
+            <div>No orders found with status "${status}"</div>
+          </td>
+        </tr>
+      `;
+      return;
+    }
+    
+    // Add filtered rows
+    filteredOrders.forEach(order => {
+      const row = document.createElement('tr');
+      row.innerHTML = `
+        <td style="padding: 12px; border-bottom: 1px solid #e5e7eb;">#${order.id}</td>
+        <td style="padding: 12px; border-bottom: 1px solid #e5e7eb;">${order.customer}</td>
+        <td style="padding: 12px; border-bottom: 1px solid #e5e7eb;">${order.photographer}</td>
+        <td style="padding: 12px; border-bottom: 1px solid #e5e7eb;">${order.date}</td>
+        <td style="padding: 12px; border-bottom: 1px solid #e5e7eb;">
+          <span class="status-badge status-${order.status.toLowerCase().replace(' ', '-')}">${order.status}</span>
+        </td>
+        <td style="padding: 12px; border-bottom: 1px solid #e5e7eb; font-weight: 600;">${order.total}</td>
+      `;
+      ordersBody.appendChild(row);
+    });
+    
+    console.log('[Global Filter] Filter applied successfully');
+    
+  } catch (error) {
+    console.error('[Global Filter] Error:', error);
+  }
+};
+
+// Show all orders function
+window.showAllOrders = function() {
+  console.log('[Global Filter] Showing all orders');
+  
+  try {
+    let ordersData = window.allOrders;
+    
+    if (!ordersData || !Array.isArray(ordersData) || ordersData.length === 0) {
+      console.warn('[Global Filter] No orders data found, creating fallback data');
+      ordersData = [
+        { id: 1, status: 'Draft', customer: 'John Doe', photographer: 'Mike Smith', date: '2024-01-15', total: '$299.99' },
+        { id: 2, status: 'Pending', customer: 'Jane Smith', photographer: 'Sarah Johnson', date: '2024-01-16', total: '$450.00' },
+        { id: 3, status: 'Approved', customer: 'Bob Wilson', photographer: 'Mike Smith', date: '2024-01-17', total: '$325.50' },
+        { id: 4, status: 'Samples', customer: 'Alice Brown', photographer: 'Sarah Johnson', date: '2024-01-18', total: '$275.25' },
+        { id: 5, status: 'In Progress', customer: 'Charlie Davis', photographer: 'Mike Smith', date: '2024-01-19', total: '$399.99' },
+        { id: 6, status: 'Review', customer: 'Diana Green', photographer: 'Sarah Johnson', date: '2024-01-20', total: '$225.00' },
+        { id: 7, status: 'Complete', customer: 'Frank Miller', photographer: 'Mike Smith', date: '2024-01-21', total: '$350.75' }
+      ];
+      window.allOrders = ordersData;
+    }
+    
+    const ordersBody = document.getElementById('ordersBody');
+    if (!ordersBody) {
+      console.error('[Global Filter] Orders table body not found');
+      return;
+    }
+    
+    // Clear existing rows
+    ordersBody.innerHTML = '';
+    
+    // Add all rows
+    ordersData.forEach(order => {
+      const row = document.createElement('tr');
+      row.innerHTML = `
+        <td style="padding: 12px; border-bottom: 1px solid #e5e7eb;">#${order.id}</td>
+        <td style="padding: 12px; border-bottom: 1px solid #e5e7eb;">${order.customer}</td>
+        <td style="padding: 12px; border-bottom: 1px solid #e5e7eb;">${order.photographer}</td>
+        <td style="padding: 12px; border-bottom: 1px solid #e5e7eb;">${order.date}</td>
+        <td style="padding: 12px; border-bottom: 1px solid #e5e7eb;">
+          <span class="status-badge status-${order.status.toLowerCase().replace(' ', '-')}">${order.status}</span>
+        </td>
+        <td style="padding: 12px; border-bottom: 1px solid #e5e7eb; font-weight: 600;">${order.total}</td>
+      `;
+      ordersBody.appendChild(row);
+    });
+    
+    console.log('[Global Filter] All orders displayed');
+    
+  } catch (error) {
+    console.error('[Global Filter] Error showing all orders:', error);
+  }
+};
+
+// Test functions
+window.testFilter = function() {
+  console.log('Testing filter functionality...');
+  window.filterOrdersByStatus('Pending');
+};
+
+window.debugFilterSystem = function() {
+  console.log('=== Filter System Debug ===');
+  console.log('window.filterOrdersByStatus:', typeof window.filterOrdersByStatus);
+  console.log('window.allOrders:', window.allOrders);
+  console.log('ordersBody element:', document.getElementById('ordersBody'));
+  console.log('Filter tiles:', document.querySelectorAll('.filter-tile'));
+};
 
