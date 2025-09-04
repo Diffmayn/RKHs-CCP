@@ -963,7 +963,7 @@
     const total = ordersList.length;
     const complete = ordersList.filter(o => o.status === 'Complete' || o.status === 'Delivered').length;
     const pending = ordersList.filter(o => o.status === 'Pending' || o.status === 'Draft').length;
-    const inProgress = ordersList.filter(o => o.status === 'In Progress' || o.status === 'Approved').length;
+    const inProgress = ordersList.filter(o => o.status === 'In Progress').length;
     const newRequests = ordersList.filter(o => o.status === 'New Request' || o.status === 'Draft').length;
     const totalSamples = samples.length;
     const samplesInTransit = samples.filter(s => s.status.includes('Transit')).length;
@@ -1325,7 +1325,7 @@
                       <div style="font-size: 12px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px;">📦 Samples</div>
                     </div>
                     
-                    <div onclick="filterOrdersByStatus('inprogress')" style="background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); padding: 16px; text-align: center; cursor: pointer; transition: all 0.3s ease; border-left: 4px solid #3b82f6;" 
+                    <div onclick="filterOrdersByStatus('In Progress')" style="background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); padding: 16px; text-align: center; cursor: pointer; transition: all 0.3s ease; border-left: 4px solid #3b82f6;" 
                          onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.15)'"
                          onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 4px rgba(0,0,0,0.1)'">
                       <div style="font-size: 24px; font-weight: bold; color: #3b82f6; margin-bottom: 8px;" id="inProgressOrdersCount">0</div>
@@ -2445,7 +2445,7 @@
         total: orders.length,
         complete: orders.filter(o => o.status === 'Complete' || o.status === 'Delivered').length,
         pending: orders.filter(o => o.status === 'Pending' || o.status === 'Draft').length,
-        inProgress: orders.filter(o => o.status === 'In Progress' || o.status === 'Approved').length,
+        inProgress: orders.filter(o => o.status === 'In Progress').length,
         newRequests: orders.filter(o => o.status === 'New Request' || o.status === 'Draft').length
       };
 
@@ -2489,7 +2489,7 @@
             <div style="font-size: 14px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px;">📦 Samples</div>
           </div>
           
-          <div onclick="filterOrdersByStatus('inprogress')" style="background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); padding: 20px; text-align: center; cursor: pointer; transition: all 0.3s ease; border-left: 4px solid #3b82f6;" 
+          <div onclick="filterOrdersByStatus('In Progress')" style="background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); padding: 20px; text-align: center; cursor: pointer; transition: all 0.3s ease; border-left: 4px solid #3b82f6;" 
                onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.15)'"
                onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 4px rgba(0,0,0,0.1)'">
             <div style="font-size: 32px; font-weight: bold; color: #3b82f6; margin-bottom: 8px;">${stats.inProgress}</div>
@@ -3222,7 +3222,7 @@
       const orders = authSystem.getFilteredOrders(allOrders);
       const totalOrders = orders.length;
       const newOrders = orders.filter(o => o.status === 'New Request' || o.status === 'Draft').length;
-      const inProgressOrders = orders.filter(o => o.status === 'In Progress' || o.status === 'Approved').length;
+      const inProgressOrders = orders.filter(o => o.status === 'In Progress').length;
       const completedOrders = orders.filter(o => o.status === 'Complete' || o.status === 'Delivered').length;
       const overdueOrders = orders.filter(o => new Date(o.deadline) < new Date() && o.status !== 'Complete' && o.status !== 'Delivered').length;
 
@@ -9119,6 +9119,16 @@ window.filterOrdersByStatus = function(status) {
   console.log('[Global Filter] Function called with status:', status);
   
   try {
+    // Normalize status input - handle different case variations
+    let normalizedStatus = status;
+    if (status.toLowerCase() === 'inprogress') {
+      normalizedStatus = 'In Progress';
+    } else if (status.toLowerCase() === 'newrequest') {
+      normalizedStatus = 'New Request';
+    }
+    
+    console.log('[Global Filter] Normalized status:', normalizedStatus);
+    
     // Get orders data
     let ordersData = window.allOrders;
     
@@ -9138,8 +9148,8 @@ window.filterOrdersByStatus = function(status) {
     
     console.log('[Global Filter] Orders data:', ordersData);
     
-    // Filter orders by status
-    const filteredOrders = ordersData.filter(order => order.status === status);
+    // Filter orders by status using normalized status
+    const filteredOrders = ordersData.filter(order => order.status === normalizedStatus);
     console.log('[Global Filter] Filtered orders:', filteredOrders);
     
     // Update the orders table
@@ -9157,7 +9167,7 @@ window.filterOrdersByStatus = function(status) {
         <tr>
           <td colspan="6" style="text-align: center; padding: 40px; color: #6b7280;">
             <div style="font-size: 18px; margin-bottom: 8px;">📋</div>
-            <div>No orders found with status "${status}"</div>
+            <div>No orders found with status "${normalizedStatus}"</div>
           </td>
         </tr>
       `;
