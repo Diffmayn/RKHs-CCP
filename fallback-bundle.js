@@ -3153,11 +3153,102 @@
 
         // Quick action functions
         function refreshData() {
-          location.reload();
+          // Show loading indicator
+          showToast('🔄 Refreshing data...', 'info');
+          
+          // Refresh the current view data
+          if (typeof drawRows === 'function') {
+            drawRows();
+          }
+          
+          // Update dashboard if it's the current view
+          if (currentView === 'dashboard' && typeof window.populateDashboardContent === 'function') {
+            window.populateDashboardContent();
+          }
+          
+          // Update quick action badges
+          if (typeof window.updateQuickActionBadges === 'function') {
+            window.updateQuickActionBadges();
+          }
+          
+          // Show success message
+          setTimeout(() => {
+            showToast('✅ Data refreshed successfully!', 'success');
+          }, 500);
         }
 
         function exportToCsv() {
-          document.getElementById('exportCsv')?.click();
+          try {
+            if (currentView === 'orders') {
+              const orders = window.authSystem ? window.authSystem.getFilteredOrders(window.allOrders || []) : (window.allOrders || []);
+              
+              if (orders.length === 0) {
+                showToast('⚠️ No orders to export', 'warning');
+                return;
+              }
+              
+              const header = 'Order Number,Title,Status,Method,Purchase Group,Event ID,Photographer,Priority,Deadline,Budget,Created By,Assigned To';
+              const rows = orders.map(o => [
+                o.orderNumber || '', 
+                o.title || '', 
+                o.status || '', 
+                o.method || '', 
+                o.purchaseGroup ? (o.purchaseGroup + ' - ' + (purchaseGroups[o.purchaseGroup] || 'Unknown')) : 'N/A', 
+                o.eventId || 'N/A', 
+                o.photographer || '', 
+                o.priority || '', 
+                o.deadline || '',
+                o.budget || '',
+                o.createdBy || '',
+                o.assignedTo || ''
+              ].map(v => '"' + String(v).replace(/"/g, '""') + '"').join(',')).join('\\n');
+              
+              const blob = new Blob(['\\uFEFF' + header + '\\n' + rows], {type: 'text/csv;charset=utf-8'});
+              const a = document.createElement('a');
+              a.href = URL.createObjectURL(blob);
+              a.download = 'photo_orders_' + new Date().toISOString().slice(0,10) + '.csv';
+              document.body.appendChild(a);
+              a.click();
+              document.body.removeChild(a);
+              URL.revokeObjectURL(a.href);
+              
+              showToast('📊 Exported ' + orders.length + ' orders to CSV', 'success');
+              
+            } else if (currentView === 'samples') {
+              if (!window.samples || window.samples.length === 0) {
+                showToast('⚠️ No samples to export', 'warning');
+                return;
+              }
+              
+              const header = 'Sample ID,Article Name,Status,Location,Assigned To,Transit History,Last Update';
+              const rows = window.samples.map(s => [
+                s.id || '', 
+                s.articleName || '', 
+                s.status || '', 
+                s.location || '', 
+                s.assignedTo || '', 
+                s.transitHistory || '', 
+                s.lastUpdate || ''
+              ].map(v => '"' + String(v).replace(/"/g, '""') + '"').join(',')).join('\\n');
+              
+              const blob = new Blob(['\\uFEFF' + header + '\\n' + rows], {type: 'text/csv;charset=utf-8'});
+              const a = document.createElement('a');
+              a.href = URL.createObjectURL(blob);
+              a.download = 'samples_tracking_' + new Date().toISOString().slice(0,10) + '.csv';
+              document.body.appendChild(a);
+              a.click();
+              document.body.removeChild(a);
+              URL.revokeObjectURL(a.href);
+              
+              showToast('📊 Exported ' + window.samples.length + ' samples to CSV', 'success');
+              
+            } else {
+              showToast('⚠️ Export not available for current view', 'warning');
+            }
+          } catch (error) {
+            console.error('Export error:', error);
+            showToast('❌ Export failed. Please try again.', 'error');
+          }
         }
 
         function showSettings() {
@@ -3167,6 +3258,10 @@
         function showProfile() {
           alert('👤 User Profile\\n\\nFeature coming soon! This will include:\\n\\n• Personal information\\n• Role permissions\\n• Activity history\\n• Account settings');
         }
+
+        // Expose functions globally for button access
+        window.refreshData = refreshData;
+        window.exportToCsv = exportToCsv;
 
       </script>
 
