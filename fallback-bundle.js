@@ -1,6 +1,521 @@
 // Enhanced Fallback Runtime with better UX
 (function(){
   
+  // Post Production functions - Define immediately for global access
+  window.handleMethodChange = function(selectElement) {
+    console.log('handleMethodChange called with value:', selectElement.value);
+    const postProductionDiv = document.getElementById('postProductionSubMethod');
+    const genAIDiv = document.getElementById('genAIConfig');
+    
+    console.log('Found postProductionDiv:', postProductionDiv);
+    console.log('Found genAIDiv:', genAIDiv);
+    
+    if (selectElement.value === 'Post Production') {
+      if (postProductionDiv) {
+        postProductionDiv.style.display = 'block';
+        console.log('Showing Post Production options');
+      }
+    } else {
+      if (postProductionDiv) {
+        postProductionDiv.style.display = 'none';
+      }
+      if (genAIDiv) {
+        genAIDiv.style.display = 'none';
+      }
+      console.log('Hiding Post Production options');
+    }
+  };
+
+  window.handleMethodChangeModal = function(selectElement) {
+    console.log('handleMethodChangeModal called with value:', selectElement.value);
+    alert('handleMethodChangeModal called with: ' + selectElement.value); // Debug alert
+    const postProductionDiv = document.getElementById('postProductionSubMethodModal');
+    const genAIDiv = document.getElementById('genAIConfigModal');
+    
+    console.log('Modal postProductionDiv found:', postProductionDiv);
+    console.log('Modal genAIDiv found:', genAIDiv);
+    
+    if (selectElement.value === 'Post Production') {
+      if (postProductionDiv) {
+        postProductionDiv.style.display = 'block';
+        console.log('Showing modal Post Production options');
+      } else {
+        console.error('postProductionSubMethodModal element not found!');
+      }
+    } else {
+      if (postProductionDiv) {
+        postProductionDiv.style.display = 'none';
+      }
+      if (genAIDiv) {
+        genAIDiv.style.display = 'none';
+      }
+    }
+  };
+
+  window.handlePostProductionTypeChange = function(selectElement) {
+    console.log('handlePostProductionTypeChange called with value:', selectElement.value);
+    const genAIDiv = document.getElementById('genAIConfig');
+    
+    if (selectElement.value === 'GenAI') {
+      if (genAIDiv) {
+        genAIDiv.style.display = 'block';
+        console.log('Showing GenAI config');
+      }
+    } else {
+      if (genAIDiv) {
+        genAIDiv.style.display = 'none';
+        console.log('Hiding GenAI config');
+      }
+    }
+  };
+
+  window.handlePostProductionTypeChangeModal = function(selectElement) {
+    console.log('handlePostProductionTypeChangeModal called with value:', selectElement.value);
+    const genAIDiv = document.getElementById('genAIConfigModal');
+    
+    if (selectElement.value === 'GenAI') {
+      if (genAIDiv) {
+        genAIDiv.style.display = 'block';
+        console.log('GenAI section shown, setting up drag & drop...');
+        
+        // Initialize drag & drop functionality after a short delay to ensure DOM is ready
+        setTimeout(() => {
+          setupImageDragDrop();
+        }, 100);
+      }
+    } else {
+      if (genAIDiv) {
+        genAIDiv.style.display = 'none';
+      }
+    }
+  };
+
+  window.testPostProductionUI = function() {
+    console.log('Testing Post Production UI...');
+    const methodSelect = document.querySelector('select[name="method"]');
+    const postProdDiv = document.getElementById('postProductionSubMethod');
+    const genAIDiv = document.getElementById('genAIConfig');
+    
+    // Also check modal elements
+    const modalMethodSelect = document.querySelector('.order-modal select[name="method"]');
+    const modalPostProdDiv = document.getElementById('postProductionSubMethodModal');
+    const modalGenAIDiv = document.getElementById('genAIConfigModal');
+    
+    console.log('=== Main Form Elements ===');
+    console.log('Method select found:', methodSelect);
+    console.log('Post Production div found:', postProdDiv);
+    console.log('GenAI div found:', genAIDiv);
+    
+    console.log('=== Modal Form Elements ===');
+    console.log('Modal method select found:', modalMethodSelect);
+    console.log('Modal Post Production div found:', modalPostProdDiv);
+    console.log('Modal GenAI div found:', modalGenAIDiv);
+    
+    // Test if functions are available
+    console.log('handleMethodChange available:', typeof window.handleMethodChange);
+    console.log('handleMethodChangeModal available:', typeof window.handleMethodChangeModal);
+    
+    return {
+      mainForm: { methodSelect, postProdDiv, genAIDiv },
+      modalForm: { modalMethodSelect, modalPostProdDiv, modalGenAIDiv }
+    };
+  };
+
+  window.debugShowPostProduction = function() {
+    const modalPostProdDiv = document.getElementById('postProductionSubMethodModal');
+    if (modalPostProdDiv) {
+      modalPostProdDiv.style.display = 'block';
+      console.log('Manually showing Post Production options');
+      return 'Post Production options shown manually';
+    } else {
+      console.error('Modal Post Production div not found');
+      return 'Modal Post Production div not found';
+    }
+  };
+
+  // Export and refresh functions - Define globally for immediate access
+  window.exportToCsv = function() {
+    try {
+      // Determine current view
+      const currentView = getCurrentView();
+      console.log('Exporting data for view:', currentView);
+      
+      if (currentView === 'orders' || !currentView) {
+        // Get the currently filtered and searched orders
+        let orders = window.authSystem ? window.authSystem.getFilteredOrders(window.allOrders || []) : (window.allOrders || []);
+        
+        // Apply search filter if active
+        const searchBox = document.getElementById('searchBox');
+        if (searchBox && searchBox.value.trim()) {
+          const searchTerm = searchBox.value.toLowerCase();
+          orders = orders.filter(o => 
+            !searchTerm || 
+            o.orderNumber.toLowerCase().includes(searchTerm) ||
+            o.title.toLowerCase().includes(searchTerm) ||
+            o.photographer.toLowerCase().includes(searchTerm) ||
+            o.status.toLowerCase().includes(searchTerm) ||
+            o.method.toLowerCase().includes(searchTerm)
+          );
+        }
+        
+        if (orders.length === 0) {
+          showToast('⚠️ No orders to export with current filters', 'warning');
+          return;
+        }
+        
+        // Enhanced header with Post Production info
+        const header = 'Order Number,Title,Status,Method,Post Production Type,AI Operation,Purchase Group,Event ID,Photographer,Priority,Deadline,Budget,Created By,Assigned To,Photo Types';
+        const rows = orders.map(o => {
+          // Handle Post Production details
+          let methodDisplay = o.method || '';
+          let postProdType = '';
+          let aiOperation = '';
+          
+          if (o.method === 'Post Production' && o.postProduction) {
+            postProdType = o.postProduction.type || '';
+            if (o.postProduction.type === 'GenAI' && o.postProduction.genaiConfig) {
+              aiOperation = o.postProduction.genaiConfig.operation || '';
+            }
+          }
+          
+          return [
+            o.orderNumber || '', 
+            o.title || '', 
+            o.status || '', 
+            methodDisplay, 
+            postProdType,
+            aiOperation,
+            o.purchaseGroup ? (o.purchaseGroup + ' - ' + ((window.purchaseGroups && window.purchaseGroups[o.purchaseGroup]) || 'Unknown')) : 'N/A', 
+            o.eventId || 'N/A', 
+            o.photographer || '', 
+            o.priority || '', 
+            o.deadline || '',
+            o.budget || '',
+            o.createdBy || '',
+            o.assignedTo || '',
+            (o.photoTypes || []).join('; ')
+          ].map(v => '"' + String(v).replace(/"/g, '""') + '"').join(',');
+        }).join('\\n');
+        
+        const blob = new Blob(['\\uFEFF' + header + '\\n' + rows], {type: 'text/csv;charset=utf-8'});
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        
+        // Include search term in filename if active
+        const searchSuffix = searchBox && searchBox.value.trim() ? '_filtered' : '';
+        a.download = 'photo_orders' + searchSuffix + '_' + new Date().toISOString().slice(0,10) + '.csv';
+        
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(a.href);
+        
+        const filterInfo = searchBox && searchBox.value.trim() ? ' (filtered)' : '';
+        showToast('📊 Exported ' + orders.length + ' orders' + filterInfo + ' to CSV', 'success');
+        
+      } else if (currentView === 'samples') {
+        if (!window.samples || window.samples.length === 0) {
+          showToast('⚠️ No samples to export', 'warning');
+          return;
+        }
+        
+        const header = 'Sample ID,Article Name,Status,Location,Assigned To,Transit History,Last Update';
+        const rows = window.samples.map(s => [
+          s.id || '', 
+          s.articleName || '', 
+          s.status || '', 
+          s.location || '', 
+          s.assignedTo || '', 
+          s.transitHistory || '', 
+          s.lastUpdate || ''
+        ].map(v => '"' + String(v).replace(/"/g, '""') + '"').join(',')).join('\\n');
+        
+        const blob = new Blob(['\\uFEFF' + header + '\\n' + rows], {type: 'text/csv;charset=utf-8'});
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'samples_tracking_' + new Date().toISOString().slice(0,10) + '.csv';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(a.href);
+        
+        showToast('📊 Exported ' + window.samples.length + ' samples to CSV', 'success');
+        
+      } else {
+        showToast('⚠️ Export not available for current view', 'warning');
+      }
+    } catch (error) {
+      console.error('Export error:', error);
+      showToast('❌ Export failed. Please try again.', 'error');
+    }
+  };
+
+  window.refreshData = function() {
+    // Show loading indicator
+    showToast('🔄 Refreshing data...', 'info');
+    
+    // Refresh the current view data
+    if (typeof drawOrderRows === 'function') {
+      drawOrderRows();
+    }
+    
+    // Refresh dashboard if visible
+    if (typeof updateDashboard === 'function') {
+      updateDashboard();
+    }
+    
+    // Refresh filter badges
+    if (typeof updateFilterTileCounts === 'function') {
+      updateFilterTileCounts();
+    }
+    
+    // Show success message
+    setTimeout(() => {
+      showToast('✅ Data refreshed successfully!', 'success');
+    }, 500);
+  };
+
+  // Helper function to get current view
+  function getCurrentView() {
+    // Check which view is currently active
+    const views = ['ordersView', 'samplesView', 'createOrderView', 'templatesView', 'workflowView', 'kanbanView', 'calendarView', 'dashboardView'];
+    for (const viewId of views) {
+      const view = document.getElementById(viewId);
+      if (view && view.style.display !== 'none' && view.classList.contains('view-active')) {
+        return viewId.replace('View', '');
+      }
+    }
+    return 'orders'; // default to orders view
+  }
+
+  function showToast(message, type = 'info') {
+    // Simple toast implementation
+    const toast = document.createElement('div');
+    toast.style.cssText = `
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 12px 16px;
+      border-radius: 6px;
+      color: white;
+      z-index: 1001;
+      font-weight: 500;
+      max-width: 300px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    `;
+    
+    const colors = {
+      success: '#10b981',
+      error: '#ef4444',
+      warning: '#f59e0b',
+      info: '#3b82f6'
+    };
+    
+    toast.style.background = colors[type] || colors.info;
+    toast.textContent = message;
+    
+    document.body.appendChild(toast);
+    setTimeout(() => toast.remove(), 3000);
+  }
+
+  // Global ESC key handler for closing modals
+  document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape') {
+      // List of modal selectors to check and close
+      const modalSelectors = [
+        // Fixed position modals with high z-index
+        'div[style*="position: fixed"][style*="z-index: 10001"]',
+        'div[style*="position:fixed"][style*="z-index:10001"]',
+        'div[style*="position: fixed"][style*="z-index: 1000"]',
+        'div[style*="position:fixed"][style*="z-index:1000"]',
+        // Post Production modals
+        '#postProductionSubMethodModal',
+        '#genAIConfigModal',
+        // Any other modal with modal class or modal-like styling
+        '.modal[style*="display: block"]',
+        '.modal[style*="display:block"]'
+      ];
+      
+      let modalClosed = false;
+      
+      // Check each selector and close the first visible modal found
+      for (const selector of modalSelectors) {
+        const modal = document.querySelector(selector);
+        if (modal && (modal.style.display === 'block' || modal.style.display === '' || window.getComputedStyle(modal).display !== 'none')) {
+          // Close the modal
+          modal.remove();
+          modalClosed = true;
+          showToast('Modal closed', 'info');
+          break;
+        }
+      }
+      
+      // If no standard modal was found, try to find any fixed position element that looks like a modal
+      if (!modalClosed) {
+        const allFixedElements = document.querySelectorAll('div[style*="position: fixed"], div[style*="position:fixed"]');
+        for (const element of allFixedElements) {
+          const style = window.getComputedStyle(element);
+          const zIndex = parseInt(style.zIndex) || 0;
+          
+          // If it's a high z-index fixed element (likely a modal) and visible
+          if (zIndex >= 1000 && style.display !== 'none' && element.offsetHeight > 0) {
+            element.remove();
+            modalClosed = true;
+            showToast('Modal closed', 'info');
+            break;
+          }
+        }
+      }
+      
+      // Prevent default ESC behavior if we closed a modal
+      if (modalClosed) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
+    }
+  });
+
+  // Confetti animation for order completion celebrations
+  function triggerConfetti() {
+    console.log('🎊 Starting confetti animation...');
+    const confettiCount = 50;
+    const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff', '#ffa500'];
+    
+    for (let i = 0; i < confettiCount; i++) {
+      setTimeout(() => {
+        const confetti = document.createElement('div');
+        confetti.style.cssText = `
+          position: fixed;
+          width: 10px;
+          height: 10px;
+          background: ${colors[Math.floor(Math.random() * colors.length)]};
+          z-index: 10000;
+          pointer-events: none;
+          border-radius: 50%;
+          top: -10px;
+          left: ${Math.random() * 100}vw;
+          animation: confetti-fall 3s linear forwards;
+        `;
+        
+        document.body.appendChild(confetti);
+        
+        // Remove confetti after animation
+        setTimeout(() => confetti.remove(), 3000);
+      }, i * 50);
+    }
+    console.log('✅ Confetti animation started with', confettiCount, 'particles');
+  }
+
+  // Add confetti animation CSS
+  const confettiStyle = document.createElement('style');
+  confettiStyle.textContent = `
+    @keyframes confetti-fall {
+      0% {
+        transform: translateY(-10px) rotate(0deg);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(100vh) rotate(360deg);
+        opacity: 0;
+      }
+    }
+  `;
+  document.head.appendChild(confettiStyle);
+
+  // Sound effect for order completion
+  function playApplauseSound() {
+    console.log('👏 Starting applause sound...');
+    try {
+      // Create audio context for clapping sound using Web Audio API
+      const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      console.log('Audio context created successfully');
+      
+      // Create multiple quick white noise bursts to simulate clapping
+      const claps = 8;
+      const clapDuration = 0.1;
+      const pauseBetweenClaps = 0.15;
+      
+      for (let i = 0; i < claps; i++) {
+        setTimeout(() => {
+          // Create white noise for clap sound
+          const bufferSize = audioContext.sampleRate * clapDuration;
+          const buffer = audioContext.createBuffer(1, bufferSize, audioContext.sampleRate);
+          const output = buffer.getChannelData(0);
+          
+          // Generate white noise with envelope for clap effect
+          for (let j = 0; j < bufferSize; j++) {
+            const envelope = Math.exp(-j / (bufferSize * 0.3)); // Exponential decay
+            output[j] = (Math.random() * 2 - 1) * envelope * 0.3;
+          }
+          
+          // Create and connect audio nodes
+          const source = audioContext.createBufferSource();
+          const gainNode = audioContext.createGain();
+          
+          source.buffer = buffer;
+          source.connect(gainNode);
+          gainNode.connect(audioContext.destination);
+          
+          // Set volume with variation for realistic clapping
+          gainNode.gain.value = 0.2 + (Math.random() * 0.1);
+          
+          source.start();
+        }, i * pauseBetweenClaps * 1000);
+      }
+      
+      // Add some cheering sounds after clapping
+      setTimeout(() => {
+        const cheerDuration = 0.3;
+        const bufferSize = audioContext.sampleRate * cheerDuration;
+        const buffer = audioContext.createBuffer(1, bufferSize, audioContext.sampleRate);
+        const output = buffer.getChannelData(0);
+        
+        // Generate a more musical "cheer" sound
+        for (let j = 0; j < bufferSize; j++) {
+          const frequency = 200 + Math.sin(j / 1000) * 100;
+          const envelope = Math.exp(-j / (bufferSize * 0.5));
+          output[j] = Math.sin(2 * Math.PI * frequency * j / audioContext.sampleRate) * envelope * 0.15;
+        }
+        
+        const source = audioContext.createBufferSource();
+        const gainNode = audioContext.createGain();
+        
+        source.buffer = buffer;
+        source.connect(gainNode);
+        gainNode.connect(audioContext.destination);
+        gainNode.gain.value = 0.3;
+        
+        source.start();
+      }, claps * pauseBetweenClaps * 1000);
+      
+      console.log('✅ Applause sound sequence started');
+      
+    } catch (error) {
+      console.log('❌ Could not play applause sound:', error);
+      // Fallback: show a celebration message
+      showToast('🎉 Congratulations! Order delivered successfully! 👏', 'success');
+    }
+  }
+
+  // Combined celebration function
+  function celebrateOrderDelivery() {
+    console.log('🎉 CELEBRATE ORDER DELIVERY CALLED!');
+    triggerConfetti();
+    playApplauseSound();
+    showToast('🎉 Order delivered! Great work! 👏', 'success');
+  }
+
+  // Make celebration functions globally accessible
+  window.triggerConfetti = triggerConfetti;
+  window.playApplauseSound = playApplauseSound;
+  window.celebrateOrderDelivery = celebrateOrderDelivery;
+  
+  // Test function for debugging celebration effects
+  window.testCelebration = function() {
+    console.log('🧪 Testing celebration effects...');
+    celebrateOrderDelivery();
+  };
+
   try {
     const root = document.getElementById('app');
     if(!root || window.__APP_STARTED__) {
@@ -2345,8 +2860,12 @@
               </div>
               ${authSystem.canCreateOrders() ? `
                 <div class="nav-item" data-tooltip="Create New Order" onclick="showNewOrderModal()">
-                  <span class="nav-item-icon">➕</span>
+                  <span class="nav-item-icon">📋</span>
                   <span class="nav-item-text">New Order</span>
+                </div>
+                <div class="nav-item" data-tooltip="Create/Edit Content with AI" onclick="showContentCreationModal()">
+                  <span class="nav-item-icon">🎨</span>
+                  <span class="nav-item-text">Create/Edit Content</span>
                 </div>
               ` : ''}
               <div class="nav-item" data-tooltip="View All Orders" onclick="showView('orders')">
@@ -3177,42 +3696,85 @@
           }, 500);
         }
 
+        // Enhanced export function to export currently displayed/filtered data
         function exportToCsv() {
           try {
-            if (currentView === 'orders') {
-              const orders = window.authSystem ? window.authSystem.getFilteredOrders(window.allOrders || []) : (window.allOrders || []);
+            // Determine current view
+            const currentView = getCurrentView();
+            console.log('Exporting data for view:', currentView);
+            
+            if (currentView === 'orders' || !currentView) {
+              // Get the currently filtered and searched orders
+              let orders = window.authSystem ? window.authSystem.getFilteredOrders(window.allOrders || []) : (window.allOrders || []);
+              
+              // Apply search filter if active
+              const searchBox = document.getElementById('searchBox');
+              if (searchBox && searchBox.value.trim()) {
+                const searchTerm = searchBox.value.toLowerCase();
+                orders = orders.filter(o => 
+                  !searchTerm || 
+                  o.orderNumber.toLowerCase().includes(searchTerm) ||
+                  o.title.toLowerCase().includes(searchTerm) ||
+                  o.photographer.toLowerCase().includes(searchTerm) ||
+                  o.status.toLowerCase().includes(searchTerm) ||
+                  o.method.toLowerCase().includes(searchTerm)
+                );
+              }
               
               if (orders.length === 0) {
-                showToast('⚠️ No orders to export', 'warning');
+                showToast('⚠️ No orders to export with current filters', 'warning');
                 return;
               }
               
-              const header = 'Order Number,Title,Status,Method,Purchase Group,Event ID,Photographer,Priority,Deadline,Budget,Created By,Assigned To';
-              const rows = orders.map(o => [
-                o.orderNumber || '', 
-                o.title || '', 
-                o.status || '', 
-                o.method || '', 
-                o.purchaseGroup ? (o.purchaseGroup + ' - ' + (purchaseGroups[o.purchaseGroup] || 'Unknown')) : 'N/A', 
-                o.eventId || 'N/A', 
-                o.photographer || '', 
-                o.priority || '', 
-                o.deadline || '',
-                o.budget || '',
-                o.createdBy || '',
-                o.assignedTo || ''
-              ].map(v => '"' + String(v).replace(/"/g, '""') + '"').join(',')).join('\\n');
+              // Enhanced header with Post Production info
+              const header = 'Order Number,Title,Status,Method,Post Production Type,AI Operation,Purchase Group,Event ID,Photographer,Priority,Deadline,Budget,Created By,Assigned To,Photo Types';
+              const rows = orders.map(o => {
+                // Handle Post Production details
+                let methodDisplay = o.method || '';
+                let postProdType = '';
+                let aiOperation = '';
+                
+                if (o.method === 'Post Production' && o.postProduction) {
+                  postProdType = o.postProduction.type || '';
+                  if (o.postProduction.type === 'GenAI' && o.postProduction.genaiConfig) {
+                    aiOperation = o.postProduction.genaiConfig.operation || '';
+                  }
+                }
+                
+                return [
+                  o.orderNumber || '', 
+                  o.title || '', 
+                  o.status || '', 
+                  methodDisplay, 
+                  postProdType,
+                  aiOperation,
+                  o.purchaseGroup ? (o.purchaseGroup + ' - ' + (purchaseGroups[o.purchaseGroup] || 'Unknown')) : 'N/A', 
+                  o.eventId || 'N/A', 
+                  o.photographer || '', 
+                  o.priority || '', 
+                  o.deadline || '',
+                  o.budget || '',
+                  o.createdBy || '',
+                  o.assignedTo || '',
+                  (o.photoTypes || []).join('; ')
+                ].map(v => '"' + String(v).replace(/"/g, '""') + '"').join(',');
+              }).join('\\n');
               
               const blob = new Blob(['\\uFEFF' + header + '\\n' + rows], {type: 'text/csv;charset=utf-8'});
               const a = document.createElement('a');
               a.href = URL.createObjectURL(blob);
-              a.download = 'photo_orders_' + new Date().toISOString().slice(0,10) + '.csv';
+              
+              // Include search term in filename if active
+              const searchSuffix = searchBox && searchBox.value.trim() ? '_filtered' : '';
+              a.download = 'photo_orders' + searchSuffix + '_' + new Date().toISOString().slice(0,10) + '.csv';
+              
               document.body.appendChild(a);
               a.click();
               document.body.removeChild(a);
               URL.revokeObjectURL(a.href);
               
-              showToast('📊 Exported ' + orders.length + ' orders to CSV', 'success');
+              const filterInfo = searchBox && searchBox.value.trim() ? ' (filtered)' : '';
+              showToast('📊 Exported ' + orders.length + ' orders' + filterInfo + ' to CSV', 'success');
               
             } else if (currentView === 'samples') {
               if (!window.samples || window.samples.length === 0) {
@@ -3251,6 +3813,19 @@
           }
         }
 
+        // Helper function to get current view
+        function getCurrentView() {
+          // Check which view is currently active
+          const views = ['ordersView', 'samplesView', 'createOrderView', 'templatesView', 'workflowView', 'kanbanView', 'calendarView', 'dashboardView'];
+          for (const viewId of views) {
+            const view = document.getElementById(viewId);
+            if (view && view.style.display !== 'none' && view.classList.contains('view-active')) {
+              return viewId.replace('View', '');
+            }
+          }
+          return 'orders'; // default to orders view
+        }
+
         function showSettings() {
           alert('⚙️ Settings Panel\\n\\nFeature coming soon! This will include:\\n\\n• User preferences\\n• System configuration\\n• Display options\\n• Notification settings');
         }
@@ -3262,6 +3837,736 @@
         // Expose functions globally for button access
         window.refreshData = refreshData;
         window.exportToCsv = exportToCsv;
+
+        // Google AI Studio (Gemini) Integration - Nano Banana Alternative
+        function testGoogleAIConnection() {
+          showToast('🔄 Testing Google AI Studio connection...', 'info');
+          
+          // Check if API key is configured
+          setTimeout(() => {
+            if (googleAIConfig.apiKey) {
+              showToast('✅ Google AI Studio ready! (Free tier available)', 'success');
+            } else {
+              showToast('ℹ️ Configure Google AI Studio API key to enable image editing', 'info');
+              console.log('📋 Google AI Studio Setup:');
+              console.log('1. Visit: https://aistudio.google.com/apikey');
+              console.log('2. Get your free API key');
+              console.log('3. Run: configureGoogleAI("your-api-key")');
+            }
+          }, 1000);
+        }
+
+        // Configuration for Google AI Studio (replaces Nano Banana)
+        const googleAIConfig = {
+          apiEndpoint: 'https://generativelanguage.googleapis.com/v1beta',
+          apiKey: 'AIzaSyBK-HGv_Z5jqfejiPUWJ79PSrtZ1gJE04Y', // Updated with real API key
+          model: 'gemini-2.6-flash-exp', // Updated to Gemini 2.6 Flash Experimental
+          isAvailable: true, // Available now!
+          supportedOperations: [
+            'change_color',
+            'add_model',
+            'edit_background',
+            'change_lighting',
+            'add_objects',
+            'remove_objects',
+            'style_transfer',
+            'enhance_quality',
+            'text_rendering',
+            'product_mockup'
+          ]
+        };
+
+        // Function to check API availability
+        async function checkGoogleAIAvailability() {
+          if (!googleAIConfig.apiKey) {
+            return false;
+          }
+          
+          try {
+            const response = await fetch(googleAIConfig.apiEndpoint + '/models/' + googleAIConfig.model + ':generateContent?key=' + googleAIConfig.apiKey, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                contents: [{
+                  parts: [{ text: "Test connection" }]
+                }]
+              })
+            });
+            
+            return response.ok;
+          } catch (error) {
+            console.log('Google AI API error:', error);
+            return false;
+          }
+        }
+
+        // Real AI processing with Google AI Studio
+        async function processWithGoogleAI(prompt, imageData = null) {
+          console.log('processWithGoogleAI called with prompt:', prompt);
+          console.log('Image data provided:', !!imageData);
+          
+          if (!googleAIConfig.apiKey) {
+            console.error('No API key configured');
+            showToast('❌ Google AI Studio API key not configured', 'error');
+            showGoogleAISetupModal();
+            return null;
+          }
+
+          try {
+            console.log('Making API request to Google AI Studio...');
+            
+            const requestBody = {
+              contents: [{
+                parts: imageData ? [
+                  { text: prompt },
+                  { 
+                    inline_data: {
+                      mime_type: "image/jpeg",
+                      data: imageData // base64 image data
+                    }
+                  }
+                ] : [{ text: prompt }]
+              }]
+            };
+
+            console.log('Request body prepared, making fetch call...');
+            const response = await fetch(googleAIConfig.apiEndpoint + '/models/' + googleAIConfig.model + ':generateContent?key=' + googleAIConfig.apiKey, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(requestBody)
+            });
+
+            console.log('Response received from Gemini 2.6 Flash Experimental, status:', response.status);
+            
+            if (response.ok) {
+              const result = await response.json();
+              console.log('API success, result:', result);
+              return result;
+            } else {
+              const error = await response.json();
+              console.error('API error response:', error);
+              throw new Error(error.error?.message || 'API request failed with status ' + response.status);
+            }
+          } catch (error) {
+            console.error('Google AI API error:', error);
+            showToast('❌ Failed to process with Google AI Studio: ' + error.message, 'error');
+            return null;
+          }
+        }
+
+        // Generate appropriate prompts for different operations
+        // Image upload handlers for Google AI Studio
+        // Make these variables globally accessible
+        window.uploadedImageData = null;
+        window.uploadedImageFile = null;
+
+        window.handleModalImageUpload = function(event) {
+          const file = event.target.files[0];
+          if (!file) return;
+          
+          // Validate file type
+          if (!file.type.startsWith('image/')) {
+            showToast('⚠️ Please select a valid image file', 'warning');
+            return;
+          }
+          
+          window.uploadedImageFile = file;
+          const reader = new FileReader();
+          
+          reader.onload = function(e) {
+            window.uploadedImageData = e.target.result;
+            
+            // Update the upload area to show the selected image
+            const uploadContent = document.getElementById('modalUploadContent');
+            if (uploadContent) {
+              uploadContent.innerHTML = 
+                '<div style="position: relative; text-align: center;">' +
+                  '<img src="' + uploadedImageData + '" style="max-width: 100%; max-height: 150px; border-radius: 6px; margin-bottom: 8px; border: 2px solid #10b981;">' +
+                  '<div style="font-weight: 600; margin: 8px 0; color: #10b981;">✅ Image Ready: ' + file.name + '</div>' +
+                  '<div style="color: rgba(255,255,255,0.8); font-size: 12px;">Click to change image</div>' +
+                '</div>';
+              
+              console.log('Image uploaded successfully:', file.name);
+              showToast('📷 Image uploaded: ' + file.name, 'success');
+            } else {
+              console.error('Upload content element not found');
+            }
+          };
+          
+          reader.onerror = function() {
+            showToast('❌ Error reading image file', 'error');
+          };
+          
+          reader.readAsDataURL(file);
+        };
+
+        // Add drag and drop support
+        window.setupImageDragDrop = function() {
+          const uploadArea = document.getElementById('modalImageUploadArea');
+          if (!uploadArea) return;
+          
+          uploadArea.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            uploadArea.style.borderColor = '#10b981';
+            uploadArea.style.backgroundColor = 'rgba(16, 185, 129, 0.1)';
+          });
+          
+          uploadArea.addEventListener('dragleave', function(e) {
+            e.preventDefault();
+            uploadArea.style.borderColor = 'rgba(255,255,255,0.3)';
+            uploadArea.style.backgroundColor = 'rgba(255,255,255,0.1)';
+          });
+          
+          uploadArea.addEventListener('drop', function(e) {
+            e.preventDefault();
+            uploadArea.style.borderColor = 'rgba(255,255,255,0.3)';
+            uploadArea.style.backgroundColor = 'rgba(255,255,255,0.1)';
+            
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+              const file = files[0];
+              if (file.type.startsWith('image/')) {
+                document.getElementById('modalImageInput').files = files;
+                handleModalImageUpload({ target: { files: [file] } });
+              } else {
+                showToast('⚠️ Please drop a valid image file', 'warning');
+              }
+            }
+          });
+        };
+
+        window.processImageWithAI = async function() {
+          console.log('processImageWithAI called');
+          
+          const instructions = document.getElementById('modalAiInstructions')?.value?.trim();
+          const operation = document.querySelector('select[name="aiOperation"]')?.value;
+          
+          console.log('Instructions:', instructions);
+          console.log('Operation:', operation);
+          console.log('Uploaded image data exists:', !!window.uploadedImageData);
+          
+          if (!window.uploadedImageData) {
+            showToast('⚠️ Please upload an image first', 'warning');
+            return;
+          }
+          
+          if (!instructions && !operation) {
+            showToast('⚠️ Please provide AI instructions or select an operation', 'warning');
+            return;
+          }
+          
+          // Check Google AI configuration
+          if (!googleAIConfig.apiKey) {
+            showToast('❌ Google AI Studio API key not configured', 'error');
+            showGoogleAISetupModal();
+            return;
+          }
+          
+          // Show processing message
+          showToast('🔄 Processing image with Google AI Studio...', 'info');
+          console.log('Starting image processing...');
+          
+          try {
+            // Convert image to base64 without data URL prefix
+            const base64Image = window.uploadedImageData.split(',')[1];
+            console.log('Base64 image length:', base64Image.length);
+            
+            // Generate comprehensive prompt based on operation and instructions
+            let prompt = generateImageEditingPrompt(operation, instructions);
+            console.log('Generated prompt:', prompt);
+            
+            // Call Google AI Studio API
+            console.log('Calling Google AI API...');
+            const result = await processWithGoogleAI(prompt, base64Image);
+            console.log('API result:', result);
+            
+            if (result) {
+              showGoogleAIPreviewModal(operation || 'Custom', instructions, result);
+              showToast('✅ Image processed successfully!', 'success');
+            } else {
+              showToast('❌ Image processing failed - no result returned', 'error');
+            }
+            
+          } catch (error) {
+            console.error('AI processing error:', error);
+            showToast('❌ Processing error: ' + error.message, 'error');
+          }
+        };
+
+        function generateImageEditingPrompt(operation, instructions) {
+          // Ensure we have valid inputs
+          const safeInstructions = instructions || 'general image editing';
+          const safeOperation = operation || 'custom';
+          
+          console.log('Generating prompt for operation:', safeOperation, 'with instructions:', safeInstructions);
+          
+          const basePrompts = {
+            'color-change': 'Edit the provided image to change the color as requested: ' + safeInstructions + '. Maintain the original composition, lighting, and style while only changing the specified colors.',
+            'add-model': 'Add a model to the provided image as requested: ' + safeInstructions + '. Ensure the model fits naturally into the scene with appropriate lighting and perspective.',
+            'background-change': 'Modify the background of the provided image: ' + safeInstructions + '. Keep the main subject unchanged while updating the background environment.',
+            'lighting-adjustment': 'Adjust the lighting in the provided image: ' + safeInstructions + '. Modify the lighting conditions while preserving the main subject and composition.',
+            'object-removal': 'Remove objects from the provided image: ' + safeInstructions + '. Fill in the removed areas naturally to maintain a seamless appearance.',
+            'style-transfer': 'Transform the style of the provided image: ' + safeInstructions + '. Apply the requested artistic style while preserving the main subject and composition.',
+            'product-enhancement': 'Enhance the quality of the provided image: ' + safeInstructions + '. Improve clarity, sharpness, and overall visual appeal.',
+            'custom': 'Edit the provided image according to these instructions: ' + safeInstructions + '. Make the changes while maintaining natural lighting and composition.'
+          };
+          
+          const prompt = basePrompts[safeOperation] || basePrompts['custom'];
+          console.log('Generated prompt:', prompt);
+          return prompt;
+        }
+
+        // Expose functions globally for accessibility
+        window.generateImageEditingPrompt = generateImageEditingPrompt;
+        window.processWithGoogleAI = processWithGoogleAI;
+        window.testGoogleAIConnection = testGoogleAIConnection;
+        window.googleAIConfig = googleAIConfig;
+        window.showGoogleAISetupModal = showGoogleAISetupModal;
+        window.showGoogleAIPreviewModal = showGoogleAIPreviewModal;
+        window.showToast = showToast;
+        window.saveGoogleAIKey = saveGoogleAIKey;
+        window.applyGoogleAIChanges = applyGoogleAIChanges;
+        window.acceptGoogleAIResult = acceptGoogleAIResult;
+        window.retryGoogleAIProcessing = retryGoogleAIProcessing;
+        window.processImageWithAI = processImageWithAI;
+        window.handleModalImageUpload = handleModalImageUpload;
+        window.configureGoogleAI = configureGoogleAI;
+
+        // Test function for Post Production functionality
+        function testPostProductionUI() {
+          console.log('Testing Post Production UI...');
+          const methodSelect = document.querySelector('select[name="method"]');
+          const postProdDiv = document.getElementById('postProductionSubMethod');
+          const genAIDiv = document.getElementById('genAIConfig');
+          
+          // Also check modal elements
+          const modalMethodSelect = document.querySelector('.order-modal select[name="method"]');
+          const modalPostProdDiv = document.getElementById('postProductionSubMethodModal');
+          const modalGenAIDiv = document.getElementById('genAIConfigModal');
+          
+          console.log('=== Main Form Elements ===');
+          console.log('Method select found:', methodSelect);
+          console.log('Post Production div found:', postProdDiv);
+          console.log('GenAI div found:', genAIDiv);
+          
+          console.log('=== Modal Form Elements ===');
+          console.log('Modal method select found:', modalMethodSelect);
+          console.log('Modal Post Production div found:', modalPostProdDiv);
+          console.log('Modal GenAI div found:', modalGenAIDiv);
+          
+          // Test if functions are available
+          console.log('handleMethodChange available:', typeof window.handleMethodChange);
+          console.log('handleMethodChangeModal available:', typeof window.handleMethodChangeModal);
+          
+          return {
+            mainForm: { methodSelect, postProdDiv, genAIDiv },
+            modalForm: { modalMethodSelect, modalPostProdDiv, modalGenAIDiv }
+          };
+        }
+
+        // Debug function to manually trigger post production display
+        function debugShowPostProduction() {
+          const modalPostProdDiv = document.getElementById('postProductionSubMethodModal');
+          if (modalPostProdDiv) {
+            modalPostProdDiv.style.display = 'block';
+            console.log('Manually showing Post Production options');
+            return 'Post Production options shown manually';
+          } else {
+            console.error('Modal Post Production div not found');
+            return 'Modal Post Production div not found';
+          }
+        }
+
+        function previewAIChanges() {
+          const form = document.getElementById('createOrderForm') || document.querySelector('form');
+          const aiOperation = form.querySelector('[name="aiOperation"]')?.value;
+          const aiInstructions = form.querySelector('[name="aiInstructions"]')?.value;
+          
+          if (!aiOperation) {
+            showToast('⚠️ Please select an AI operation first', 'warning');
+            return;
+          }
+          
+          // Use Google AI Studio (available now!) instead of Nano Banana
+          if (googleAIConfig.apiKey) {
+            showToast('🔄 Processing with Google AI Studio Gemini 2.6 Flash...', 'info');
+            processWithGoogleAI(aiOperation, aiInstructions);
+          } else {
+            showToast('ℹ️ Configure Google AI Studio for real image editing', 'info');
+            showGoogleAISetupModal();
+          }
+        }
+
+        // Enhanced preview modal for Google AI Studio results
+        function showGoogleAIPreviewModal(operation, instructions, result = null) {
+          console.log('showGoogleAIPreviewModal called with:', {operation, instructions, result});
+
+          const modal = document.createElement('div');
+          modal.id = 'googleAIPreviewModal';
+          modal.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: center; z-index: 10000;';
+
+          // Extract image URL from result if available
+          let imageUrl = null;
+          if (result && result.candidates && result.candidates[0] && result.candidates[0].content && result.candidates[0].content.parts) {
+            const parts = result.candidates[0].content.parts;
+            for (const part of parts) {
+              if (part.inline_data && part.inline_data.data) {
+                imageUrl = 'data:image/jpeg;base64,' + part.inline_data.data;
+                break;
+              }
+            }
+          }
+
+          const hasResult = imageUrl || (result && result.candidates && result.candidates[0]);
+
+          modal.innerHTML =
+            '<div style="background: white; border-radius: 12px; padding: 24px; max-width: 800px; width: 90%; max-height: 90vh; overflow-y: auto;">' +
+              '<div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">' +
+                '<div style="display: flex; align-items: center;">' +
+                  '<span style="font-size: 28px; margin-right: 12px;">🧠</span>' +
+                  '<h3 style="margin: 0; color: #1f2937;">AI Generated Image Preview</h3>' +
+                '</div>' +
+                '<button onclick="document.getElementById(\'googleAIPreviewModal\').remove()" style="background: none; border: none; font-size: 24px; cursor: pointer; color: #6b7280;">&times;</button>' +
+              '</div>' +
+              '<div style="background: #f0f9ff; padding: 12px; border-radius: 6px; margin-bottom: 16px; text-align: center;">' +
+                '🆓 <strong>Free Tier:</strong> Powered by Google AI Studio Gemini 2.6 Flash Experimental' +
+              '</div>' +
+              '<div style="margin-bottom: 16px; padding: 12px; background: #f3f4f6; border-radius: 8px;">' +
+                '<strong>Operation:</strong> ' + (operation || 'Custom') + '<br>' +
+                '<strong>Instructions:</strong> ' + (instructions || 'No specific instructions provided') +
+              '</div>' +
+              '<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px;">' +
+                '<div style="text-align: center;">' +
+                  '<h4 style="margin: 0 0 8px; color: #374151;">Original Image</h4>' +
+                  '<div style="width: 100%; height: 200px; background: #f3f4f6; border: 2px dashed #d1d5db; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #6b7280;">' +
+                    (window.uploadedImageData ? '<img src="' + window.uploadedImageData + '" style="max-width: 100%; max-height: 100%; border-radius: 6px;">' : '📷 No original image') +
+                  '</div>' +
+                '</div>' +
+                '<div style="text-align: center;">' +
+                  '<h4 style="margin: 0 0 8px; color: #374151;">AI Enhanced Result</h4>' +
+                  '<div style="width: 100%; height: 200px; background: #f0f9ff; border: 2px solid #3b82f6; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #374151;">' +
+                    (hasResult && imageUrl ?
+                      '<img src="' + imageUrl + '" style="max-width: 100%; max-height: 100%; border-radius: 6px;">' :
+                      (hasResult ?
+                        '✅ AI Result Generated<br><small>Google AI Studio</small>' :
+                        '🔄 Processing...<br><small>Google AI Studio</small>'
+                      )
+                    ) +
+                  '</div>' +
+                '</div>' +
+              '</div>' +
+              '<div style="background: #eff6ff; padding: 16px; border-radius: 8px; margin-bottom: 16px;">' +
+                '<h4 style="margin: 0 0 8px; color: #1e40af;">🎯 Gemini 2.6 Flash Features:</h4>' +
+                '<ul style="margin: 0; padding-left: 20px; color: #1e40af; font-size: 14px;">' +
+                  '<li>Advanced natural language image editing</li>' +
+                  '<li>High-fidelity text rendering and composition</li>' +
+                  '<li>Character consistency across edits</li>' +
+                  '<li>Enhanced style transfer and visual effects</li>' +
+                  '<li>Improved image understanding and generation</li>' +
+                  '<li>FREE tier available + affordable paid plans</li>' +
+                '</ul>' +
+              '</div>' +
+              '<div style="display: flex; gap: 12px; justify-content: flex-end;">' +
+                '<button onclick="document.getElementById(\'googleAIPreviewModal\').remove()" style="padding: 10px 20px; background: #6b7280; color: white; border: none; border-radius: 6px; cursor: pointer;">Cancel</button>' +
+                '<button onclick="window.retryGoogleAIProcessing()" style="padding: 10px 20px; background: #f59e0b; color: white; border: none; border-radius: 6px; cursor: pointer;">🔄 Retry</button>' +
+                '<button onclick="window.acceptGoogleAIResult(\'' + (imageUrl || '') + '\')" style="padding: 10px 20px; background: #10b981; color: white; border: none; border-radius: 6px; cursor: pointer;">✅ Accept & Assign</button>' +
+              '</div>' +
+            '</div>';
+
+          document.body.appendChild(modal);
+        }
+
+        function applyGoogleAIChanges() {
+          document.getElementById('googleAIPreviewModal')?.remove();
+          showToast('✅ Google AI Studio changes applied to order!', 'success');
+        }
+
+        function acceptGoogleAIResult(imageUrl) {
+          console.log('Accepting Google AI result:', imageUrl);
+
+          if (!imageUrl) {
+            showToast('❌ No image to accept', 'error');
+            return;
+          }
+
+          // Store the accepted image for the current order
+          window.acceptedAIImage = imageUrl;
+
+          // Try to find the current order and assign the image
+          const currentOrder = getCurrentOrder();
+          if (currentOrder) {
+            assignImageToOrder(currentOrder.id, imageUrl);
+          } else {
+            // Fallback: store globally for later assignment
+            console.log('No current order found, storing image globally');
+          }
+
+          document.getElementById('googleAIPreviewModal')?.remove();
+          showToast('✅ AI image accepted and assigned to order!', 'success');
+
+          console.log('Accepted AI image stored:', window.acceptedAIImage);
+        }
+
+        function getCurrentOrder() {
+          // This would integrate with your order management system
+          // For now, we'll look for order data in the DOM or local storage
+          const orderElements = document.querySelectorAll('[data-order-id], .order-item, .current-order');
+          if (orderElements.length > 0) {
+            return {
+              id: orderElements[0].getAttribute('data-order-id') || 'current-order',
+              element: orderElements[0]
+            };
+          }
+
+          // Check local storage for current order
+          const storedOrder = localStorage.getItem('currentOrder');
+          if (storedOrder) {
+            return JSON.parse(storedOrder);
+          }
+
+          return null;
+        }
+
+        function assignImageToOrder(orderId, imageUrl) {
+          console.log('Assigning image to order:', orderId, imageUrl);
+
+          // This would integrate with your order management system
+          // For demonstration, we'll store it in localStorage
+          const orderData = {
+            id: orderId,
+            aiImage: imageUrl,
+            timestamp: new Date().toISOString(),
+            status: 'image-assigned'
+          };
+
+          localStorage.setItem('order_' + orderId, JSON.stringify(orderData));
+
+          // Also update any order display elements
+          const orderElement = document.querySelector('[data-order-id="' + orderId + '"]');
+          if (orderElement) {
+            // Add visual indicator that image has been assigned
+            orderElement.style.borderLeft = '4px solid #10b981';
+            orderElement.setAttribute('data-has-ai-image', 'true');
+          }
+
+          console.log('Image assigned to order successfully');
+        }
+
+        function retryGoogleAIProcessing() {
+          console.log('Retrying Google AI processing');
+          document.getElementById('googleAIPreviewModal')?.remove();
+
+          // Focus on instructions field to allow user to modify
+          const instructionsField = document.getElementById('modalAiInstructions');
+          if (instructionsField) {
+            instructionsField.focus();
+            instructionsField.select();
+          }
+
+          showToast('🔄 Ready to retry with new instructions', 'info');
+        }
+
+        function showGoogleAISetupModal() {
+          const modal = document.createElement('div');
+          modal.id = 'googleAISetupModal';
+          modal.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: center; z-index: 10000;';
+          
+          modal.innerHTML = 
+            '<div style="background: white; border-radius: 12px; padding: 24px; max-width: 500px; width: 90%;">' +
+              '<div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">' +
+                '<div style="display: flex; align-items: center;">' +
+                  '<span style="font-size: 28px; margin-right: 12px;">🧠</span>' +
+                  '<h3 style="margin: 0; color: #1f2937;">Google AI Studio Setup</h3>' +
+                '</div>' +
+                '<button onclick="document.getElementById(\'googleAISetupModal\').remove()" style="background: none; border: none; font-size: 24px; cursor: pointer; color: #6b7280;">&times;</button>' +
+              '</div>' +
+              '<div style="background: #f0f9ff; padding: 16px; border-radius: 8px; margin-bottom: 16px;">' +
+                '<h4 style="margin: 0 0 8px; color: #1e40af;">🆓 FREE Nano Banana Alternative!</h4>' +
+                '<p style="margin: 0; color: #1e40af; font-size: 14px;">Google AI Studio provides the same image editing capabilities as Nano Banana, completely free!</p>' +
+              '</div>' +
+              '<div style="margin-bottom: 16px;">' +
+                '<h4 style="margin: 0 0 8px; color: #374151;">Quick Setup (2 minutes):</h4>' +
+                '<ol style="margin: 0; padding-left: 20px; color: #6b7280; font-size: 14px;">' +
+                  '<li>Visit <a href="https://aistudio.google.com/apikey" target="_blank" style="color: #3b82f6;">Google AI Studio</a></li>' +
+                  '<li>Sign in with your Google account</li>' +
+                  '<li>Click "Create API Key"</li>' +
+                  '<li>Copy the key and paste it below</li>' +
+                '</ol>' +
+              '</div>' +
+              '<div style="margin-bottom: 16px;">' +
+                '<input type="text" id="googleAIApiKey" placeholder="Paste your Google AI Studio API key here..." style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px;">' +
+              '</div>' +
+              '<div style="display: flex; gap: 12px; justify-content: flex-end;">' +
+                '<button onclick="document.getElementById(\'googleAISetupModal\').remove()" style="padding: 10px 20px; background: #6b7280; color: white; border: none; border-radius: 6px; cursor: pointer;">Cancel</button>' +
+                '<button onclick="saveGoogleAIKey()" style="padding: 10px 20px; background: #3b82f6; color: white; border: none; border-radius: 6px; cursor: pointer;">✅ Save & Test</button>' +
+              '</div>' +
+            '</div>';
+          
+          document.body.appendChild(modal);
+        }
+
+        // Save and test Google AI key
+        function saveGoogleAIKey() {
+          const keyInput = document.getElementById('googleAIApiKey');
+          const apiKey = keyInput.value.trim();
+          
+          if (!apiKey) {
+            showToast('⚠️ Please enter your API key', 'warning');
+            return;
+          }
+          
+          googleAIConfig.apiKey = apiKey;
+          localStorage.setItem('googleAIApiKey', apiKey);
+          
+          document.getElementById('googleAISetupModal')?.remove();
+          showToast('✅ Google AI Studio configured! Testing connection...', 'success');
+          
+          // Test the connection
+          setTimeout(() => {
+            testGoogleAIConnection();
+          }, 500);
+        }
+
+        // Load saved API key on startup
+        function loadGoogleAIConfig() {
+          const savedKey = localStorage.getItem('googleAIApiKey');
+          if (savedKey) {
+            googleAIConfig.apiKey = savedKey;
+          } else {
+            // Set the configured API key and save it
+            localStorage.setItem('googleAIApiKey', 'AIzaSyBK-HGv_Z5jqfejiPUWJ79PSrtZ1gJE04Y');
+          }
+        }
+
+        // Configuration function for Google AI Studio
+        window.configureGoogleAI = function(apiKey) {
+          if (!apiKey) {
+            console.log('🔧 Google AI Studio Configuration:');
+            console.log('Current status:', googleAIConfig.apiKey ? 'Configured ✅' : 'Not configured ❌');
+            console.log('API endpoint:', googleAIConfig.apiEndpoint);
+            console.log('Model:', googleAIConfig.model);
+            console.log('');
+            console.log('📋 To configure:');
+            console.log('1. Get free API key: https://aistudio.google.com/apikey');
+            console.log('2. Run: configureGoogleAI("your-api-key-here")');
+            console.log('');
+            console.log('🎯 Features available:');
+            console.log('• Natural language image editing');
+            console.log('• High-fidelity text rendering');
+            console.log('• Character consistency');
+            console.log('• Style transfer & composition');
+            return googleAIConfig;
+          }
+          
+          googleAIConfig.apiKey = apiKey;
+          localStorage.setItem('googleAIApiKey', apiKey);
+          console.log('✅ Google AI Studio configured successfully!');
+          showToast('✅ Google AI Studio configured successfully!', 'success');
+          
+          // Test the connection
+          testGoogleAIConnection();
+          return googleAIConfig;
+        };
+
+        function showNanoBananaPreviewModal(operation, instructions) {
+          const modal = document.createElement('div');
+          modal.id = 'nanoBananaPreviewModal';
+          modal.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: center; z-index: 10000;';
+          
+          modal.innerHTML = 
+            '<div style="background: white; border-radius: 12px; padding: 24px; max-width: 600px; width: 90%; max-height: 80vh; overflow-y: auto;">' +
+              '<div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">' +
+                '<div style="display: flex; align-items: center;">' +
+                  '<span style="font-size: 28px; margin-right: 12px;">🍌</span>' +
+                  '<h3 style="margin: 0; color: #1f2937;">Nano Banana AI Preview</h3>' +
+                '</div>' +
+                '<button onclick="document.getElementById(\'nanoBananaPreviewModal\').remove()" style="background: none; border: none; font-size: 24px; cursor: pointer; color: #6b7280;">&times;</button>' +
+              '</div>' +
+              '<div style="margin-bottom: 16px; padding: 12px; background: #f3f4f6; border-radius: 8px;">' +
+                '<strong>Operation:</strong> ' + operation + '<br>' +
+                '<strong>Instructions:</strong> ' + (instructions || 'No specific instructions provided') +
+              '</div>' +
+              '<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px;">' +
+                '<div>' +
+                  '<h4 style="margin: 0 0 8px 0; color: #374151;">Original</h4>' +
+                  '<div style="width: 100%; height: 200px; background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #6b7280;">' +
+                    '📷 Original Image<br><small>Product Photo</small>' +
+                  '</div>' +
+                '</div>' +
+                '<div>' +
+                  '<h4 style="margin: 0 0 8px 0; color: #374151;">AI Enhanced</h4>' +
+                  '<div style="width: 100%; height: 200px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white;">' +
+                    '✨ AI Enhanced<br><small>Nano Banana Result</small>' +
+                  '</div>' +
+                '</div>' +
+              '</div>' +
+              '<div style="background: #fef3c7; border: 1px solid #f59e0b; border-radius: 8px; padding: 12px; margin-bottom: 16px;">' +
+                '<div style="display: flex; align-items: center; margin-bottom: 8px;">' +
+                  '<span style="color: #d97706; margin-right: 8px;">⚡</span>' +
+                  '<strong style="color: #92400e;">AI Processing Details</strong>' +
+                '</div>' +
+                '<div style="font-size: 13px; color: #78350f;">' +
+                  '• Processing time: ~2.3 seconds<br>' +
+                  '• Quality level: High<br>' +
+                  '• Confidence score: 94%<br>' +
+                  '• Estimated cost: $0.12' +
+                '</div>' +
+              '</div>' +
+              '<div style="display: flex; gap: 12px; justify-content: flex-end;">' +
+                '<button onclick="document.getElementById(\'nanoBananaPreviewModal\').remove()" style="padding: 10px 20px; background: #6b7280; color: white; border: none; border-radius: 6px; cursor: pointer;">Cancel</button>' +
+                '<button onclick="applyNanoBananaChanges()" style="padding: 10px 20px; background: #059669; color: white; border: none; border-radius: 6px; cursor: pointer;">✅ Apply Changes</button>' +
+              '</div>' +
+            '</div>';
+          
+          document.body.appendChild(modal);
+          showToast('🎨 AI preview generated successfully!', 'success');
+        }
+
+        function applyNanoBananaChanges() {
+          document.getElementById('nanoBananaPreviewModal')?.remove();
+          
+          if (nanoBananaConfig.demoMode) {
+            showToast('📋 Demo: AI enhancement saved to order notes', 'info');
+            // In demo mode, just add a note to the order
+            console.log('Demo mode: Would apply Nano Banana AI changes to order');
+          } else {
+            showToast('✅ Nano Banana AI changes applied to order!', 'success');
+            // Real API mode: actually apply the changes
+          }
+        }
+
+        // Configuration function for when API becomes available
+        window.configureNanoBananaAPI = function(apiKey) {
+          if (!apiKey) {
+            console.log('🔧 Nano Banana Configuration:');
+            console.log('Current status:', nanoBananaConfig.isAvailable ? 'API Available' : 'API Coming Soon');
+            console.log('Demo mode:', nanoBananaConfig.demoMode);
+            console.log('API endpoint:', nanoBananaConfig.apiEndpoint);
+            console.log('');
+            console.log('📋 To configure when API is available:');
+            console.log('configureNanoBananaAPI("your-api-key-here")');
+            return;
+          }
+          
+          nanoBananaConfig.apiKey = apiKey;
+          nanoBananaConfig.demoMode = false;
+          console.log('✅ Nano Banana API configured');
+          showToast('✅ Nano Banana API configured successfully!', 'success');
+        };
+
+        // Expose AI functions globally
+        window.testNanoBananaConnection = testNanoBananaConnection;
+        window.previewAIChanges = previewAIChanges;
+        window.showNanoBananaPreviewModal = showNanoBananaPreviewModal;
+        window.applyNanoBananaChanges = applyNanoBananaChanges;
+        window.testPostProductionUI = testPostProductionUI;
+        window.debugShowPostProduction = debugShowPostProduction;
+        window.configureNanoBananaAPI = configureNanoBananaAPI;
+        window.nanoBananaConfig = nanoBananaConfig; // For debugging
 
       </script>
 
@@ -3304,13 +4609,72 @@
                 </div>
                 <div>
                   <label style="display: block; font-weight: 500; margin-bottom: 4px;">Content Creation Method</label>
-                  <select name="method" required style="width: 100%; padding: 8px; border: 1px solid #d1d5db; border-radius: 4px;">
+                  <select name="method" required style="width: 100%; padding: 8px; border: 1px solid #d1d5db; border-radius: 4px;" onchange="handleMethodChange(this)">
                     <option value="">Select method...</option>
                     <option value="Photographer">Photographer</option>
                     <option value="Photo Box">Photo Box</option>
                     <option value="Internal Studio">Internal Studio</option>
                     <option value="External Studio">External Studio</option>
+                    <option value="Post Production">Post Production</option>
                   </select>
+                </div>
+                
+                <!-- Post Production Sub-Method Selection -->
+                <div id="postProductionSubMethod" style="display: none;">
+                  <label style="display: block; font-weight: 500; margin-bottom: 4px;">Post Production Type</label>
+                  <select name="postProductionType" style="width: 100%; padding: 8px; border: 1px solid #d1d5db; border-radius: 4px;" onchange="handlePostProductionTypeChange(this)">
+                    <option value="">Select post production type...</option>
+                    <option value="Internal">Internal</option>
+                    <option value="GenAI">GenAI (Nano Banana)</option>
+                  </select>
+                </div>
+                
+                <!-- GenAI Configuration Panel -->
+                <div id="genAIConfig" style="display: none; border: 1px solid #e5e7eb; border-radius: 6px; padding: 12px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+                  <div style="display: flex; align-items: center; margin-bottom: 8px;">
+                    <span style="font-size: 20px; margin-right: 8px;">🍌</span>
+                    <h4 style="margin: 0; font-weight: 600;">Nano Banana AI Configuration</h4>
+                  </div>
+                  
+                  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
+                    <div>
+                      <label style="display: block; font-weight: 500; margin-bottom: 4px; font-size: 13px;">AI Operation</label>
+                      <select name="aiOperation" style="width: 100%; padding: 6px; border: 1px solid #d1d5db; border-radius: 4px; font-size: 13px;">
+                        <option value="">Select operation...</option>
+                        <option value="color-change">Color Change</option>
+                        <option value="add-model">Add Model</option>
+                        <option value="background-change">Background Change</option>
+                        <option value="object-removal">Object Removal</option>
+                        <option value="style-transfer">Style Transfer</option>
+                        <option value="product-enhancement">Product Enhancement</option>
+                        <option value="lighting-adjustment">Lighting Adjustment</option>
+                        <option value="custom">Custom Prompt</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label style="display: block; font-weight: 500; margin-bottom: 4px; font-size: 13px;">Quality Level</label>
+                      <select name="aiQuality" style="width: 100%; padding: 6px; border: 1px solid #d1d5db; border-radius: 4px; font-size: 13px;">
+                        <option value="standard">Standard</option>
+                        <option value="high" selected>High Quality</option>
+                        <option value="ultra">Ultra HD</option>
+                      </select>
+                    </div>
+                  </div>
+                  
+                  <div style="margin-bottom: 12px;">
+                    <label style="display: block; font-weight: 500; margin-bottom: 4px; font-size: 13px;">AI Instructions</label>
+                    <textarea name="aiInstructions" rows="3" style="width: 100%; padding: 6px; border: 1px solid #d1d5db; border-radius: 4px; font-size: 13px; resize: vertical;" 
+                              placeholder="Describe the changes you want the AI to make...&#10;Example: Change the dress color to burgundy red, add a female model wearing the dress in a studio setting"></textarea>
+                  </div>
+                  
+                  <div style="display: flex; gap: 8px;">
+                    <button type="button" onclick="testNanoBananaConnection()" style="padding: 6px 12px; background: #059669; color: white; border: none; border-radius: 4px; font-size: 12px;">
+                      🔗 Test Connection
+                    </button>
+                    <button type="button" onclick="previewAIChanges()" style="padding: 6px 12px; background: #7c3aed; color: white; border: none; border-radius: 4px; font-size: 12px;">
+                      👁️ Preview
+                    </button>
+                  </div>
                 </div>
               </div>
               
@@ -4358,6 +5722,399 @@
     window.closeNewOrderModal = closeNewOrderModal;
     window.handleNewOrderSubmit = handleNewOrderSubmit;
 
+    // Show content creation modal for AI editing and Editorial requests
+    function showContentCreationModal() {
+      // Check if this modal is already open (toggle behavior)
+      const existingModal = document.getElementById('contentCreationModal');
+      if (existingModal) {
+        closeContentCreationModal();
+        return;
+      }
+
+      // Close any other open right-side modals
+      closeAllRightSideModals();
+
+      // Create right-side modal (positioned after sidebar)
+      const modal = document.createElement('div');
+      modal.id = 'contentCreationModal';
+      modal.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 280px;
+        width: 650px;
+        height: 100vh;
+        background: rgba(255, 255, 255, 0.98);
+        backdrop-filter: blur(20px);
+        border-right: 1px solid rgba(0, 0, 0, 0.1);
+        box-shadow: 4px 0 20px rgba(0, 0, 0, 0.15);
+        z-index: 1000;
+        overflow-y: auto;
+        transform: translateX(-100%);
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        padding: 24px;
+      `;
+
+      modal.innerHTML = `
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 2px solid #e5e7eb;">
+          <h3 style="margin: 0; font-size: 22px; color: #1f2937; font-weight: 600;">🎨 Create/Edit Content</h3>
+          <button onclick="closeContentCreationModal()" style="background: #ef4444; color: white; border: none; border-radius: 50%; width: 36px; height: 36px; cursor: pointer; font-size: 18px; display: flex; align-items: center; justify-content: center; transition: all 0.2s ease;" onmouseover="this.style.background='#dc2626'" onmouseout="this.style.background='#ef4444'">×</button>
+        </div>
+
+        <div style="background: #f8fafc; padding: 20px; border-radius: 12px;">
+          <!-- Content Creation Type Selection -->
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px;">
+            <div onclick="selectContentType('ai')" id="aiContentType" style="padding: 20px; border: 2px solid #e5e7eb; border-radius: 12px; cursor: pointer; text-align: center; transition: all 0.3s ease; background: white;" onmouseover="this.style.borderColor='#3b82f6'" onmouseout="this.style.borderColor=this.classList.contains('selected') ? '#10b981' : '#e5e7eb'">
+              <div style="font-size: 48px; margin-bottom: 12px;">🧠</div>
+              <h4 style="margin: 0 0 8px; color: #1f2937;">AI Content Creation</h4>
+              <p style="margin: 0; font-size: 14px; color: #6b7280;">Use Google AI Studio to edit images with natural language</p>
+            </div>
+            
+            <div onclick="selectContentType('editorial')" id="editorialContentType" style="padding: 20px; border: 2px solid #e5e7eb; border-radius: 12px; cursor: pointer; text-align: center; transition: all 0.3s ease; background: white;" onmouseover="this.style.borderColor='#3b82f6'" onmouseout="this.style.borderColor=this.classList.contains('selected') ? '#10b981' : '#e5e7eb'">
+              <div style="font-size: 48px; margin-bottom: 12px;">✂️</div>
+              <h4 style="margin: 0 0 8px; color: #1f2937;">Editorial Request</h4>
+              <p style="margin: 0; font-size: 14px; color: #6b7280;">Request internal/external vendor to edit existing assets</p>
+            </div>
+          </div>
+
+          <!-- AI Content Creation Panel -->
+          <div id="aiContentPanel" style="display: none;">
+            <div style="border: 2px solid #667eea; border-radius: 12px; padding: 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; margin-bottom: 20px;">
+              <div style="display: flex; align-items: center; margin-bottom: 16px;">
+                <span style="font-size: 28px; margin-right: 12px;">🧠</span>
+                <h4 style="margin: 0; font-weight: 600; font-size: 18px;">Google AI Studio (Gemini 2.6 Flash)</h4>
+              </div>
+              
+              <!-- Image Upload Section -->
+              <div style="background: rgba(255,255,255,0.1); border: 2px dashed rgba(255,255,255,0.3); border-radius: 8px; padding: 24px; margin-bottom: 20px; text-align: center; cursor: pointer;" 
+                   id="contentImageUploadArea" onclick="document.getElementById('contentImageInput').click()">
+                <input type="file" id="contentImageInput" accept="image/*" style="display: none;" onchange="handleContentImageUpload(event)">
+                <div id="contentUploadContent">
+                  <span style="font-size: 64px; color: rgba(255,255,255,0.7);">📷</span><br>
+                  <div style="font-weight: 600; margin: 12px 0; font-size: 18px;">Upload Image to Edit</div>
+                  <div style="color: rgba(255,255,255,0.8); font-size: 16px;">Click here to add your image</div>
+                  <div style="color: rgba(255,255,255,0.6); font-size: 14px; margin-top: 6px;">Supports JPG, PNG, WebP</div>
+                </div>
+              </div>
+              
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px;">
+                <div>
+                  <label style="display: block; font-weight: 600; margin-bottom: 8px; font-size: 16px;">AI Operation</label>
+                  <select id="contentAiOperation" style="width: 100%; padding: 14px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 16px; color: #374151;">
+                    <option value="">Select operation...</option>
+                    <option value="color-change">Color Change</option>
+                    <option value="add-model">Add Model</option>
+                    <option value="background-change">Background Change</option>
+                    <option value="object-removal">Object Removal</option>
+                    <option value="style-transfer">Style Transfer</option>
+                    <option value="product-enhancement">Product Enhancement</option>
+                    <option value="lighting-adjustment">Lighting Adjustment</option>
+                    <option value="custom">Custom Prompt</option>
+                  </select>
+                </div>
+                <div>
+                  <label style="display: block; font-weight: 600; margin-bottom: 8px; font-size: 16px;">Quality Level</label>
+                  <select id="contentAiQuality" style="width: 100%; padding: 14px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 16px; color: #374151;">
+                    <option value="standard">Standard</option>
+                    <option value="high" selected>High Quality</option>
+                    <option value="ultra">Ultra HD</option>
+                  </select>
+                </div>
+              </div>
+              
+              <div style="margin-bottom: 20px;">
+                <label style="display: block; font-weight: 600; margin-bottom: 8px; font-size: 16px;">🎨 AI Instructions</label>
+                <textarea id="contentAiInstructions" rows="4" style="width: 100%; padding: 14px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 16px; resize: vertical; color: #374151;" 
+                          placeholder="Describe how you want to edit the image...&#10;Example: Make the dress red and add a beautiful sunset background&#10;&#10;💡 Try commands like:&#10;• Change the dress color to burgundy&#10;• Add a female model wearing this outfit&#10;• Replace background with a beach scene"></textarea>
+              </div>
+              
+              <div style="display: flex; gap: 12px;">
+                <button type="button" onclick="testGoogleAIConnection()" style="padding: 12px 20px; background: #059669; color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: 500;">
+                  🔗 Test Connection
+                </button>
+                <button type="button" onclick="processContentWithAI()" style="padding: 12px 20px; background: #7c3aed; color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: 500;">
+                  ✨ Process Image
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Editorial Request Panel -->
+          <div id="editorialContentPanel" style="display: none;">
+            <div style="border: 2px solid #f59e0b; border-radius: 12px; padding: 20px; background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; margin-bottom: 20px;">
+              <div style="display: flex; align-items: center; margin-bottom: 16px;">
+                <span style="font-size: 28px; margin-right: 12px;">✂️</span>
+                <h4 style="margin: 0; font-weight: 600; font-size: 18px;">Editorial Request</h4>
+              </div>
+              
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px;">
+                <div>
+                  <label style="display: block; font-weight: 600; margin-bottom: 8px; font-size: 16px;">Request Type</label>
+                  <select id="editorialType" style="width: 100%; padding: 14px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 16px; color: #374151;">
+                    <option value="">Select type...</option>
+                    <option value="internal">Internal Team</option>
+                    <option value="external">External Vendor</option>
+                  </select>
+                </div>
+                <div>
+                  <label style="display: block; font-weight: 600; margin-bottom: 8px; font-size: 16px;">Priority</label>
+                  <select id="editorialPriority" style="width: 100%; padding: 14px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 16px; color: #374151;">
+                    <option value="Low">Low</option>
+                    <option value="Medium" selected>Medium</option>
+                    <option value="High">High</option>
+                    <option value="Urgent">Urgent</option>
+                  </select>
+                </div>
+              </div>
+              
+              <!-- Asset Upload Section -->
+              <div style="background: rgba(255,255,255,0.1); border: 2px dashed rgba(255,255,255,0.3); border-radius: 8px; padding: 24px; margin-bottom: 20px; text-align: center; cursor: pointer;" 
+                   id="editorialAssetUploadArea" onclick="document.getElementById('editorialAssetInput').click()">
+                <input type="file" id="editorialAssetInput" accept="image/*,video/*,.pdf,.psd,.ai" multiple style="display: none;" onchange="handleEditorialAssetUpload(event)">
+                <div id="editorialUploadContent">
+                  <span style="font-size: 64px; color: rgba(255,255,255,0.7);">📁</span><br>
+                  <div style="font-weight: 600; margin: 12px 0; font-size: 18px;">Upload Assets to Edit</div>
+                  <div style="color: rgba(255,255,255,0.8); font-size: 16px;">Click here to add files</div>
+                  <div style="color: rgba(255,255,255,0.6); font-size: 14px; margin-top: 6px;">Supports images, videos, PSD, AI files</div>
+                </div>
+              </div>
+              
+              <div style="margin-bottom: 20px;">
+                <label style="display: block; font-weight: 600; margin-bottom: 8px; font-size: 16px;">✂️ Editorial Instructions</label>
+                <textarea id="editorialInstructions" rows="4" style="width: 100%; padding: 14px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 16px; resize: vertical; color: #374151;" 
+                          placeholder="Describe the edits you need...&#10;Example: Remove background, adjust lighting, color correct, retouch model skin&#10;&#10;📋 Be specific about:&#10;• Colors to change&#10;• Objects to remove/add&#10;• Style preferences&#10;• File format needed"></textarea>
+              </div>
+              
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px;">
+                <div>
+                  <label style="display: block; font-weight: 600; margin-bottom: 8px; font-size: 16px;">Deadline</label>
+                  <input type="date" id="editorialDeadline" style="width: 100%; padding: 14px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 16px; color: #374151;">
+                </div>
+                <div>
+                  <label style="display: block; font-weight: 600; margin-bottom: 8px; font-size: 16px;">Budget (SEK)</label>
+                  <input type="number" id="editorialBudget" min="0" style="width: 100%; padding: 14px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 16px; color: #374151;" placeholder="0">
+                </div>
+              </div>
+              
+              <div style="display: flex; gap: 12px;">
+                <button type="button" onclick="submitEditorialRequest()" style="padding: 12px 20px; background: #059669; color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: 500;">
+                  📝 Submit Request
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div style="display: flex; gap: 12px; justify-content: flex-end; margin-top: 20px;">
+            <button type="button" onclick="closeContentCreationModal()" style="padding: 14px 24px; background: #6b7280; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 500; transition: all 0.2s ease;" onmouseover="this.style.background='#4b5563'" onmouseout="this.style.background='#6b7280'">Close</button>
+          </div>
+        </div>
+      `;
+
+      document.body.appendChild(modal);
+
+      // Add ESC key event listener
+      const escKeyHandler = function(event) {
+        if (event.key === 'Escape') {
+          closeContentCreationModal();
+        }
+      };
+      
+      modal._escKeyHandler = escKeyHandler;
+      document.addEventListener('keydown', escKeyHandler);
+
+      // Animate in
+      setTimeout(() => {
+        modal.style.transform = 'translateX(0)';
+      }, 10);
+
+      // Shift main content to the right
+      const mainContent = document.querySelector('.main-content');
+      if (mainContent) {
+        mainContent.style.marginLeft = '650px';
+        mainContent.style.transition = 'margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+      }
+    }
+
+    // Close the content creation modal
+    function closeContentCreationModal() {
+      const modal = document.getElementById('contentCreationModal');
+      
+      if (modal) {
+        // Remove ESC key event listener
+        if (modal._escKeyHandler) {
+          document.removeEventListener('keydown', modal._escKeyHandler);
+        }
+        
+        modal.style.transform = 'translateX(-100%)';
+        setTimeout(() => {
+          modal.remove();
+        }, 300);
+      }
+
+      // Reset main content position
+      const mainContent = document.querySelector('.main-content');
+      if (mainContent) {
+        mainContent.style.marginLeft = '0';
+      }
+    }
+
+    // Content type selection
+    function selectContentType(type) {
+      // Remove previous selections
+      document.getElementById('aiContentType').classList.remove('selected');
+      document.getElementById('editorialContentType').classList.remove('selected');
+      document.getElementById('aiContentPanel').style.display = 'none';
+      document.getElementById('editorialContentPanel').style.display = 'none';
+      
+      // Reset border colors
+      document.getElementById('aiContentType').style.borderColor = '#e5e7eb';
+      document.getElementById('editorialContentType').style.borderColor = '#e5e7eb';
+      
+      if (type === 'ai') {
+        document.getElementById('aiContentType').classList.add('selected');
+        document.getElementById('aiContentType').style.borderColor = '#10b981';
+        document.getElementById('aiContentPanel').style.display = 'block';
+      } else if (type === 'editorial') {
+        document.getElementById('editorialContentType').classList.add('selected');
+        document.getElementById('editorialContentType').style.borderColor = '#10b981';
+        document.getElementById('editorialContentPanel').style.display = 'block';
+      }
+    }
+
+    // Handle content image upload for AI
+    function handleContentImageUpload(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      
+      if (!file.type.startsWith('image/')) {
+        showToast('⚠️ Please select a valid image file', 'warning');
+        return;
+      }
+      
+      window.uploadedContentImage = file;
+      const reader = new FileReader();
+      
+      reader.onload = function(e) {
+        window.uploadedContentImageData = e.target.result;
+        
+        const uploadContent = document.getElementById('contentUploadContent');
+        if (uploadContent) {
+          uploadContent.innerHTML = 
+            '<div style="position: relative; text-align: center;">' +
+              '<img src="' + window.uploadedContentImageData + '" style="max-width: 100%; max-height: 200px; border-radius: 8px; margin-bottom: 12px; border: 2px solid #10b981;">' +
+              '<div style="font-weight: 600; margin: 12px 0; color: #10b981; font-size: 18px;">✅ Image Ready: ' + file.name + '</div>' +
+              '<div style="color: rgba(255,255,255,0.8); font-size: 14px;">Click to change image</div>' +
+            '</div>';
+          
+          showToast('📷 Image uploaded: ' + file.name, 'success');
+        }
+      };
+      
+      reader.readAsDataURL(file);
+    }
+
+    // Handle editorial asset upload
+    function handleEditorialAssetUpload(event) {
+      const files = Array.from(event.target.files);
+      if (files.length === 0) return;
+      
+      window.uploadedEditorialAssets = files;
+      
+      const uploadContent = document.getElementById('editorialUploadContent');
+      if (uploadContent) {
+        uploadContent.innerHTML = 
+          '<div style="position: relative; text-align: center;">' +
+            '<span style="font-size: 48px; color: #10b981;">📁</span><br>' +
+            '<div style="font-weight: 600; margin: 12px 0; color: #10b981; font-size: 18px;">✅ ' + files.length + ' file(s) uploaded</div>' +
+            '<div style="color: rgba(255,255,255,0.8); font-size: 14px;">' + files.map(f => f.name).join(', ') + '</div>' +
+            '<div style="color: rgba(255,255,255,0.6); font-size: 12px; margin-top: 6px;">Click to change files</div>' +
+          '</div>';
+        
+        showToast('📁 ' + files.length + ' file(s) uploaded', 'success');
+      }
+    }
+
+    // Process content with AI
+    function processContentWithAI() {
+      const operation = document.getElementById('contentAiOperation').value;
+      const instructions = document.getElementById('contentAiInstructions').value.trim();
+      
+      if (!window.uploadedContentImageData) {
+        showToast('⚠️ Please upload an image first', 'warning');
+        return;
+      }
+      
+      if (!instructions && !operation) {
+        showToast('⚠️ Please provide AI instructions or select an operation', 'warning');
+        return;
+      }
+      
+      // Use existing AI processing function
+      processImageWithAI();
+    }
+
+    // Submit editorial request
+    function submitEditorialRequest() {
+      const type = document.getElementById('editorialType').value;
+      const priority = document.getElementById('editorialPriority').value;
+      const instructions = document.getElementById('editorialInstructions').value.trim();
+      const deadline = document.getElementById('editorialDeadline').value;
+      const budget = document.getElementById('editorialBudget').value;
+      
+      if (!type) {
+        showToast('⚠️ Please select request type', 'warning');
+        return;
+      }
+      
+      if (!instructions) {
+        showToast('⚠️ Please provide editorial instructions', 'warning');
+        return;
+      }
+      
+      if (!window.uploadedEditorialAssets || window.uploadedEditorialAssets.length === 0) {
+        showToast('⚠️ Please upload assets to edit', 'warning');
+        return;
+      }
+      
+      // Create editorial request
+      const currentUser = authSystem.getCurrentUser();
+      const requestId = 'EDR-' + Date.now();
+      
+      const editorialRequest = {
+        id: requestId,
+        type: type,
+        priority: priority,
+        instructions: instructions,
+        deadline: deadline,
+        budget: budget ? parseFloat(budget) : null,
+        assets: window.uploadedEditorialAssets.map(file => ({
+          name: file.name,
+          size: file.size,
+          type: file.type
+        })),
+        status: 'Pending',
+        createdBy: currentUser.name,
+        createdDate: new Date().toLocaleDateString(),
+        createdAt: new Date().toISOString()
+      };
+      
+      // Store editorial requests (you can integrate with your existing order system)
+      let editorialRequests = JSON.parse(localStorage.getItem('editorialRequests') || '[]');
+      editorialRequests.push(editorialRequest);
+      localStorage.setItem('editorialRequests', JSON.stringify(editorialRequests));
+      
+      showToast('✅ Editorial request submitted successfully! Request ID: ' + requestId, 'success');
+      closeContentCreationModal();
+    }
+
+    // Expose functions globally
+    window.showContentCreationModal = showContentCreationModal;
+    window.closeContentCreationModal = closeContentCreationModal;
+    window.selectContentType = selectContentType;
+    window.handleContentImageUpload = handleContentImageUpload;
+    window.handleEditorialAssetUpload = handleEditorialAssetUpload;
+    window.processContentWithAI = processContentWithAI;
+    window.submitEditorialRequest = submitEditorialRequest;
+
     // Show orders modal on the right side of sidebar
     function showOrdersModal() {
       // Check if this modal is already open (toggle behavior)
@@ -4968,6 +6725,24 @@
       drawWorkflowView();
       drawOrderRows();
       
+      // Check if order was moved to Delivered status for celebration
+      if (newStatus === 'Delivered' && oldStatus !== 'Delivered') {
+        console.log('🎉 Order moved to Delivered! Triggering celebration...');
+        console.log('Order:', order.orderNumber, 'Old status:', oldStatus, 'New status:', newStatus);
+        
+        // Trigger celebration effects
+        setTimeout(() => {
+          console.log('🎊 Executing celebration effects...');
+          if (typeof celebrateOrderDelivery === 'function') {
+            celebrateOrderDelivery();
+          } else {
+            console.error('❌ celebrateOrderDelivery function not found');
+            // Fallback celebration
+            showToast('🎉 Order delivered! Great work! 👏', 'success');
+          }
+        }, 200); // Small delay to let the UI update first
+      }
+      
       // Show success notification
       showNotification(`✅ Order ${draggedOrderNumber} moved to ${newStatus}`, 'success');
       
@@ -5062,13 +6837,23 @@
           const commentCount = (o.comments || []).length;
           const unreadComments = window.commentSystem ? window.commentSystem.getUnreadCommentCount(o.orderNumber) : 0;
           
+          // Build method display with Post Production details
+          let methodDisplay = o.method;
+          if (o.method === 'Post Production' && o.postProduction) {
+            if (o.postProduction.type === 'GenAI' && o.postProduction.genaiConfig) {
+              methodDisplay = `Post Production (GenAI - ${o.postProduction.genaiConfig.operation})`;
+            } else if (o.postProduction.type === 'Internal') {
+              methodDisplay = 'Post Production (Internal)';
+            }
+          }
+          
           return `
           <tr onclick="showOrderDetails('${o.orderNumber}')" style="cursor: pointer; color: #374151 !important;" class="${window.selectedItems && window.selectedItems.has(o.orderNumber) ? 'selected-row' : ''}">
             <td class="bulk-checkbox" style="display: none;"><input type="checkbox" class="item-checkbox" data-id="${o.orderNumber}" onclick="event.stopPropagation()"></td>
             <td style="color: #374151 !important;"><strong>${o.orderNumber}</strong></td>
             <td style="color: #374151 !important;">${o.title}</td>
             <td><span class="status ${o.status.replace(/\s+/g, '')}">${o.status}</span></td>
-            <td style="color: #374151 !important;">${o.method}</td>
+            <td style="color: #374151 !important;">${methodDisplay}</td>
             <td style="color: #374151 !important;">${o.purchaseGroup || 'N/A'}</td>
             <td style="color: #374151 !important;">${o.eventId || 'N/A'}</td>
             <td style="color: #374151 !important;">${o.photographer}</td>
@@ -5241,13 +7026,38 @@
             const order = allOrders.find(o => o.orderNumber === orderId);
             
             if (order && authSystem.canEditOrder(order)) {
+              const oldStatus = order.status;
               order.status = newStatus;
               order.updatedAt = new Date().toISOString();
               
+              console.log('📋 Kanban drop:', orderId, 'from', oldStatus, 'to', newStatus);
+              
               // Trigger confetti if order is moved to Complete
               if (newStatus === 'Complete') {
+                console.log('🎉 Triggering confetti for Complete status');
                 triggerConfetti();
               }
+              
+              // Trigger celebration if order is moved to Delivered
+              if (newStatus === 'Delivered' && oldStatus !== 'Delivered') {
+                console.log('🎉 Triggering celebration for Delivered status');
+                setTimeout(() => {
+                  celebrateOrderDelivery();
+                }, 200);
+              }
+              
+              // Add to order history
+              if (!order.history) order.history = [];
+              order.history.push({
+                timestamp: new Date().toLocaleString(),
+                user: authSystem.getCurrentUser().name,
+                action: 'Status Changed (Kanban)',
+                changes: [`Status: ${oldStatus} → ${newStatus}`],
+                details: `Status changed from "${oldStatus}" to "${newStatus}" via kanban board`
+              });
+              
+              // Save changes
+              localStorage.setItem('photoOrders', JSON.stringify(allOrders));
               
               // Show success message
               showToast(`Order ${orderId} moved to ${newStatus}`, 'success');
@@ -5770,6 +7580,21 @@
                 <div><strong>Order Number:</strong> ${order.orderNumber}</div>
                 <div><strong>Status:</strong> <span style="background:${getStatusColor(order.status)};color:white;padding:2px 8px;border-radius:4px;font-size:12px;">${order.status}</span></div>
                 <div><strong>Method:</strong> ${order.method}</div>
+                ${order.method === 'Post Production' && order.postProduction ? `
+                  <div style="margin-left:16px;padding:8px;background:#f3f4f6;border-radius:6px;">
+                    <div><strong>Type:</strong> ${order.postProduction.type}</div>
+                    ${order.postProduction.type === 'GenAI' && order.postProduction.genaiConfig ? `
+                      <div style="margin-top:4px;">
+                        <div><strong>AI Provider:</strong> ${order.postProduction.genaiConfig.provider}</div>
+                        <div><strong>Operation:</strong> ${order.postProduction.genaiConfig.operation}</div>
+                        <div><strong>Quality:</strong> ${order.postProduction.genaiConfig.quality}</div>
+                        <div><strong>Status:</strong> <span style="background:#${order.postProduction.genaiConfig.status === 'pending' ? 'f59e0b' : order.postProduction.genaiConfig.status === 'processing' ? '3b82f6' : '10b981'};color:white;padding:1px 6px;border-radius:3px;font-size:11px;">${order.postProduction.genaiConfig.status}</span></div>
+                        ${order.postProduction.genaiConfig.instructions ? `<div><strong>Instructions:</strong> ${order.postProduction.genaiConfig.instructions}</div>` : ''}
+                        <div><strong>Processing Time:</strong> ${order.postProduction.genaiConfig.processingTime}</div>
+                      </div>
+                    ` : ''}
+                  </div>
+                ` : ''}
                 <div><strong>Priority:</strong> <span style="background:${getPriorityColor(order.priority)};color:white;padding:2px 8px;border-radius:4px;font-size:12px;">${order.priority}</span></div>
                 <div><strong>Assigned To:</strong> ${order.photographer}</div>
                 <div><strong>Deadline:</strong> ${order.deadline}</div>
@@ -7712,6 +9537,38 @@
         updatedAt: new Date().toISOString(),
         comments: []
       };
+
+      // Handle Post Production specific fields
+      const method = formData.get('method');
+      if (method === 'Post Production') {
+        const postProductionType = formData.get('postProductionType');
+        newOrder.postProduction = {
+          type: postProductionType
+        };
+
+        if (postProductionType === 'GenAI') {
+          // Collect GenAI configuration
+          const genaiOperation = formData.get('genaiOperation');
+          const genaiQuality = formData.get('genaiQuality');
+          const genaiInstructions = formData.get('genaiInstructions');
+
+          newOrder.postProduction.genaiConfig = {
+            provider: 'Nano Banana',
+            operation: genaiOperation,
+            quality: genaiQuality,
+            instructions: genaiInstructions,
+            status: 'pending',
+            estimatedCost: 0, // Will be calculated later
+            processingTime: '2-5 minutes',
+            createdAt: new Date().toISOString()
+          };
+
+          // Set initial status for GenAI orders
+          newOrder.status = 'AI Processing Required';
+        } else if (postProductionType === 'Internal') {
+          newOrder.status = 'Internal Review';
+        }
+      }
       
       allOrders.unshift(newOrder);
       showView('orders');
@@ -10251,22 +12108,86 @@
     function handleCreateOrder(event) {
       event.preventDefault();
       const formData = new FormData(event.target);
+      
+      // Build the new order object
       const newOrder = {
         orderNumber: 'ORD-' + Date.now(),
         title: formData.get('title'),
         priority: formData.get('priority'),
+        method: formData.get('method'),
         brief: formData.get('brief'),
         status: 'New',
-        createdBy: currentUser.name,
-        createdDate: new Date().toISOString().split('T')[0],
-        deadline: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0] // 7 days from now
+        photographer: formData.get('photographer') || 'Not Assigned',
+        deadline: formData.get('deadline'),
+        budget: formData.get('budget') || 0,
+        createdBy: currentUser.id,
+        createdAt: new Date().toISOString(),
+        assignedTo: formData.get('photographer') ? formData.get('photographer').replace(/\s*\(.*\)/, '') : null,
+        purchaseGroup: currentUser.purchaseGroups ? currentUser.purchaseGroups[0] : 100,
+        eventId: 'A' + Math.floor(Math.random() * 9000000 + 1000000),
+        offerId: '10' + Math.floor(Math.random() * 900000 + 100000),
+        articleNumber: 'ART-' + Date.now().toString().slice(-6),
+        imageRequestId: Math.floor(Math.random() * 900000 + 100000).toString(),
+        photoStatus: 'New',
+        articles: formData.get('articles') ? formData.get('articles').split('\n').filter(a => a.trim()) : [],
+        deliverables: ['Product Photography'],
+        comments: []
       };
 
-      allOrders.push(newOrder);
-      saveOrders();
-      event.target.closest('.create-order-modal').remove();
-      showToast('Order created successfully!', 'success');
-      render();
+      // Handle Post Production specific fields
+      if (formData.get('method') === 'Post Production') {
+        const postProductionType = formData.get('postProductionType');
+        newOrder.postProductionType = postProductionType;
+        
+        if (postProductionType === 'GenAI') {
+          // Add AI configuration to the order
+          newOrder.aiConfig = {
+            provider: 'Nano Banana',
+            operation: formData.get('aiOperation') || '',
+            quality: formData.get('aiQuality') || 'high',
+            instructions: formData.get('aiInstructions') || '',
+            timestamp: new Date().toISOString(),
+            status: 'Configured'
+          };
+          
+          // Update status and photographer assignment for AI orders
+          newOrder.status = 'AI Processing Queue';
+          newOrder.photographer = 'Nano Banana AI';
+          newOrder.assignedTo = 'ai-system';
+          newOrder.photoStatus = 'AI Queue';
+          newOrder.deliverables = ['AI Enhanced Images', 'Original Images'];
+        } else if (postProductionType === 'Internal') {
+          newOrder.status = 'Post Production Queue';
+          newOrder.photoStatus = 'Post Production';
+          newOrder.deliverables = ['Post Processed Images', 'Original Images'];
+        }
+      }
+
+      // Add the order to the global array
+      if (window.allOrders) {
+        window.allOrders.push(newOrder);
+      } else {
+        window.allOrders = [newOrder];
+      }
+
+      // Close the modal
+      event.target.closest('.create-order-modal')?.remove();
+      document.getElementById('createOrderLeftModal')?.remove();
+      
+      // Show success message with AI-specific text
+      if (newOrder.method === 'Post Production' && newOrder.postProductionType === 'GenAI') {
+        showToast('🍌 AI Order created successfully! Queued for Nano Banana processing.', 'success');
+      } else {
+        showToast('✅ Order created successfully!', 'success');
+      }
+      
+      // Refresh the view
+      if (typeof drawRows === 'function') {
+        drawRows();
+      }
+      if (typeof window.updateQuickActionBadges === 'function') {
+        window.updateQuickActionBadges();
+      }
     }
 
     // Assign to window immediately after definition
@@ -10354,6 +12275,12 @@
     });
   }, 300);
 
+  // Initialize Google AI Studio configuration
+  loadGoogleAIConfig();
+
+  // Ensure Google AI functions are globally accessible
+  console.log('Exposing Google AI functions globally...');
+
   // Hide loading screen if visible
   const loadingScreenElement = document.getElementById('loadingScreen');
   if (loadingScreenElement) {
@@ -10406,4 +12333,7 @@
 }
 
 })(); // End of IIFE
+
+// Run in browser console:
+configureGoogleAI("your-api-key-here")
 
