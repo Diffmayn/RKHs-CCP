@@ -1,0 +1,153 @@
+{
+  "name": "rkhs-photo-order-management",
+  "productName": "RKH's Photo Order Management System",
+  "version": "1.0.0",
+  "description": "Professional Photo Order Management System with AI Integration",
+  "main": "src/main.js",
+  "homepage": "https://github.com/Diffmayn/RKHs-CCP",
+  "author": {
+    "name": "RKH's CCP",
+    "email": "support@rkhs.com"
+  },
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron . --dev",
+    "build": "electron-builder",
+    "build:win": "electron-builder --win",
+    "build:mac": "electron-builder --mac",
+    "build:linux": "electron-builder --linux",
+    "dist": "npm run build",
+    "pack": "electron-builder --dir",
+    "postinstall": "electron-builder install-app-deps",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "clean": "rimraf dist build",
+    "rebuild": "electron-rebuild"
+  },
+  "build": {
+    "appId": "com.rkhs.photo-order-management",
+    "productName": "RKH's Photo Order Management",
+    "directories": {
+      "output": "dist",
+      "buildResources": "assets"
+    },
+    "files": [
+      "src/**/*",
+      "fallback-bundle.js",
+      "package.json",
+      "!**/*.md",
+      "!.git/**/*",
+      "!test/**/*",
+      "!documentation/**/*"
+    ],
+    "extraResources": [
+      {
+        "from": "assets/",
+        "to": "assets/",
+        "filter": ["**/*"]
+      }
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": ["x64", "ia32"]
+        },
+        {
+          "target": "portable",
+          "arch": ["x64"]
+        },
+        {
+          "target": "msi",
+          "arch": ["x64"]
+        }
+      ],
+      "icon": "assets/icon.ico",
+      "publisherName": "RKH's CCP",
+      "verifyUpdateCodeSignature": false,
+      "requestedExecutionLevel": "asInvoker"
+    },
+    "mac": {
+      "target": [
+        {
+          "target": "dmg",
+          "arch": ["x64", "arm64"]
+        },
+        {
+          "target": "zip",
+          "arch": ["x64", "arm64"]
+        }
+      ],
+      "icon": "assets/icon.icns",
+      "category": "public.app-category.business"
+    },
+    "linux": {
+      "target": [
+        {
+          "target": "AppImage",
+          "arch": ["x64"]
+        },
+        {
+          "target": "deb",
+          "arch": ["x64"]
+        },
+        {
+          "target": "rpm",
+          "arch": ["x64"]
+        }
+      ],
+      "icon": "assets/icon.png",
+      "category": "Office"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "installerIcon": "assets/icon.ico",
+      "uninstallerIcon": "assets/icon.ico",
+      "installerHeaderIcon": "assets/icon.ico",
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "RKH's Photo Orders",
+      "include": "assets/installer.nsh"
+    },
+    "publish": {
+      "provider": "github",
+      "owner": "Diffmayn",
+      "repo": "RKHs-CCP",
+      "private": false
+    },
+    "afterSign": "scripts/notarize.js"
+  },
+  "dependencies": {
+    "electron-updater": "^6.1.4",
+    "electron-store": "^8.1.0",
+    "node-fetch": "^3.3.2",
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "ws": "^8.14.2",
+    "archiver": "^6.0.1",
+    "uuid": "^9.0.1",
+    "moment": "^2.29.4"
+  },
+  "devDependencies": {
+    "electron": "^27.0.0",
+    "electron-builder": "^24.6.4",
+    "electron-rebuild": "^3.2.9",
+    "rimraf": "^5.0.5"
+  },
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=8.0.0"
+  },
+  "keywords": [
+    "photo",
+    "order",
+    "management",
+    "ai",
+    "workflow",
+    "citrix",
+    "desktop",
+    "electron"
+  ]
+}
