@@ -167,6 +167,19 @@
               console.log('[Fallback] Script loaded successfully');
               updateLoadingProgress('Initializing...');
               
+              // Load Gemini configuration after fallback is ready
+              setTimeout(() => {
+                const configScript = document.createElement('script');
+                configScript.src = './configure_gemini_aq.js';
+                configScript.onload = () => {
+                  console.log('[Config] Gemini AQ configuration loaded');
+                };
+                configScript.onerror = (e) => {
+                  console.warn('[Config] Failed to load Gemini configuration:', e);
+                };
+                document.head.appendChild(configScript);
+              }, 500);
+              
               // Add a small delay to ensure initialization completes
               setTimeout(() => {
                 if (!window.__FALLBACK_ACTIVE__) {

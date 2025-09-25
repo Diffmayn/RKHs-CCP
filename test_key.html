@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>API Key Test</title>
+</head>
+<body>
+    <h1>Testing API Key Formats</h1>
+    <div id="results"></div>
+
+    <script>
+        async function testAPIKey(apiKey, label) {
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML += `<h3>Testing ${label}:</h3>`;
+            resultsDiv.innerHTML += `<p>Key: ${apiKey}</p>`;
+            resultsDiv.innerHTML += `<p>Length: ${apiKey.length}</p>`;
+
+            try {
+                const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        contents: [{
+                            parts: [{
+                                text: 'Hello, test connection.'
+                            }]
+                        }]
+                    })
+                });
+
+                resultsDiv.innerHTML += `<p>Status: ${response.status}</p>`;
+
+                if (response.ok) {
+                    resultsDiv.innerHTML += `<p style="color: green;">✅ SUCCESS: Valid Google Gemini API key!</p>`;
+                    const result = await response.json();
+                    resultsDiv.innerHTML += `<p>Response: ${JSON.stringify(result).substring(0, 200)}...</p>`;
+                } else {
+                    const error = await response.json();
+                    resultsDiv.innerHTML += `<p style="color: red;">❌ FAILED: ${error.error?.message || 'Unknown error'}</p>`;
+                }
+            } catch (error) {
+                resultsDiv.innerHTML += `<p style="color: red;">❌ ERROR: ${error.message}</p>`;
+            }
+
+            resultsDiv.innerHTML += '<hr>';
+        }
+
+        // Test both formats
+        setTimeout(async () => {
+            await testAPIKey('AQ.Ab8RN6L49YFh_xtDngaJ8ZcU39K_CAGNXyQytmiu-6lhMfobFg', 'Original (with AQ)');
+            await testAPIKey('Ab8RN6L49YFh_xtDngaJ8ZcU39K_CAGNXyQytmiu-6lhMfobFg', 'Without AQ prefix');
+        }, 1000);
+    </script>
+</body>
+</html>
