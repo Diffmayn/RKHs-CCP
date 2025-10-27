@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RKH's Content Creation Program</title>
+  
+  <!-- Enhanced favicon for desktop app -->
+  <link rel="icon" type="image/png" href="./CCP Logog.png">
+  
+  <!-- Electron & Citrix optimizations -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' 'unsafe-eval' data: blob: https:; img-src 'self' data: blob: https:; media-src 'self' data: blob:; script-src 'self' 'unsafe-inline' 'unsafe-eval'; connect-src 'self' https: wss: ws:;">
+  <meta name="application-name" content="RKH's Content Creation Program">
+  <meta name="msapplication-TileColor" content="#2563eb">
+  <meta name="theme-color" content="#2563eb">
+  
+  <!-- Performance optimizations for virtual environments -->
+  <style id="virtual-env-optimizations">
+    /* Citrix/Virtual environment optimizations */
+    * {
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    
+    /* Reduce motion for better virtual performance */
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+    
+    /* High contrast mode support */
+    @media (prefers-contrast: high) {
+      body {
+        filter: contrast(1.2);
+      }
+    }
+    
+    /* Desktop app specific styles */
+    .desktop-app .drag-region {
+      -webkit-app-region: drag;
+    }
+    
+    .desktop-app .no-drag {
+      -webkit-app-region: no-drag;
+    }
+  </style>
+</head>
+<body class="h-full m-0 p-0">
+
+
+  <div id="loading-screen" class="fixed inset-0 bg-white z-50 flex items-center justify-center" style="display: none;">
+    <div class="text-center">
+      <div class="relative">
+        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+        <div class="absolute inset-0 rounded-full h-12 w-12 border-t-2 border-blue-300 mx-auto animate-pulse"></div>
+      </div>
+      <p class="mt-4 text-gray-600 font-medium">Loading Content Creation Program...</p>
+      <div class="mt-2 text-xs text-gray-400" id="loading-progress">Initializing...</div>
+      
+      <!-- Desktop-specific loading info -->
+      <div id="desktop-loading-info" class="hidden mt-4 text-xs text-gray-500 space-y-1">
+        <div id="platform-info"></div>
+        <div id="version-info"></div>
+        <div id="update-status"></div>
+        <div id="network-check" class="text-blue-600"></div>
+      </div>
+    </div>
+  </div>
+  
+  <div id="app" class="h-full bg-gray-50">
+    <!-- Application will be mounted here -->
+  </div>
+  
+  <script>
+    /* Browser Compatibility Polyfills */
+    if (typeof process === 'undefined') {
+      window.process = { env: {} };
+    }
+
+    /* Enhanced Environment Detection with Electron Support */
+    (async function(){
+      const isFile = location.protocol === 'file:';
+      const isElectron = typeof window !== 'undefined' && window.electronAPI;
+      const isCitrix = !!(
+        (typeof process !== 'undefined' && process?.env?.CITRIX_CLIENT) ||
+        (typeof process !== 'undefined' && process?.env?.SESSIONNAME) ||
+        navigator.userAgent.includes('Citrix') ||
+        window.location.href.includes('citrix')
+      );
+      
+      console.log('[Init] Environment:', { 
+        protocol: location.protocol, 
+        isFile, 
+        isElectron, 
+        isCitrix,
+        userAgent: navigator.userAgent
+      });
+
+      // Configure desktop app features
+      if (isElectron) {
+        document.body.classList.add('desktop-app');
+        
+        // Show desktop header
+        const desktopHeader = document.getElementById('desktop-header');
+        const desktopLoadingInfo = document.getElementById('desktop-loading-info');
+        
+        if (desktopHeader) {
+          desktopHeader.classList.remove('hidden');
+        }
+        
+        if (desktopLoadingInfo) {
+          desktopLoadingInfo.classList.remove('hidden');
+        }
+
+        // Setup window controls
+        setupWindowControls();
+        
+        // Setup app info listener
+        window.electronAPI.onAppInfo((event, appInfo) => {
+          console.log('[Electron] App info received:', appInfo);
+          updateAppInfo(appInfo);
+        });
+
+        // Setup menu action listener
+        window.electronAPI.onMenuAction((event, action) => {
+          console.log('[Electron] Menu action:', action);
+          handleMenuAction(action);
+        });
+
+        // Check for updates
+        checkForUpdates();
+      }
+
+      // Configure Citrix optimizations
+      if (isCitrix) {
+        applyCitrixOptimizations();
+      }
+
+      // Enhanced loading with network check
+      updateLoadingProgress('Checking environment...');
+      
+      if (isElectron) {
+        try {
+          const networkStatus = await window.electronAPI.getNetworkStatus();
+          updateNetworkStatus(networkStatus);
+        } catch (error) {
+          console.warn('[Network] Status check failed:', error);
+        }
+      }
+      
+      // For file:// protocol or production use, load fallback immediately
+      const timeout = isFile ? 100 : 300;
+      
+      setTimeout(async () => {
+        if(!(window).__APP_STARTED__) {
+          console.warn('[Fallback] Activating fallback runtime.');
+          updateLoadingProgress('Loading application...');
+          
+          try { 
+            // Use script tag for better file:// protocol compatibility
+            const script = document.createElement('script');
+            script.src = './fallback-bundle.js';
+            script.onload = () => {
+              console.log('[Fallback] Script loaded successfully');
+              updateLoadingProgress('Initializing...');
+              
+              // Load Tactics configuration first (needed for Event ID/Tactic features)
+              setTimeout(() => {
+                const tacticsScript = document.createElement('script');
+                tacticsScript.src = './src/config/tactics.js';
+                tacticsScript.onload = () => {
+                  console.log('[Config] Tactics configuration loaded');
+                };
+                tacticsScript.onerror = (e) => {
+                  console.warn('[Config] Failed to load Tactics configuration:', e);
+                };
+                document.head.appendChild(tacticsScript);
+              }, 200);
+              
+              // Load Gemini configuration after fallback is ready
+              setTimeout(() => {
+                const configScript = document.createElement('script');
+                configScript.src = './configure_gemini_aq.js';
+                configScript.onload = () => {
+                  console.log('[Config] Gemini AQ configuration loaded');
+                };
+                configScript.onerror = (e) => {
+                  console.warn('[Config] Failed to load Gemini configuration:', e);
+                };
+                document.head.appendChild(configScript);
+              }, 500);
+              
+              // Add a small delay to ensure initialization completes
+              setTimeout(() => {
+                if (!window.__FALLBACK_ACTIVE__) {
+                  console.error('[Fallback] Fallback did not initialize properly');
+                  updateLoadingProgress('Initialization failed', true);
+                } else {
+                  updateLoadingProgress('Ready');
+                }
+              }, 100);
+            };
+            script.onerror = (e) => {
+              console.error('[Fallback] Script failed to load:', e);
+              updateLoadingProgress('Error: Failed to load application. Please check console for details.', true);
+            };
+            document.head.appendChild(script);
+          } catch(e){ 
+            console.error('[Fallback] Load failed with exception:', e);
+            updateLoadingProgress('Error: Application failed to start. Please refresh the page.', true);
+          }
+        }
+      }, timeout);
+
+      // Helper functions
+      function updateLoadingProgress(message, isError = false) {
+        const loadingProgress = document.getElementById('loading-progress');
+        if (loadingProgress) {
+          loadingProgress.textContent = message;
+          loadingProgress.style.color = isError ? '#ef4444' : '#6b7280';
+        }
+      }
+
+      function updateAppInfo(appInfo) {
+        const versionEl = document.getElementById('app-version');
+        const platformEl = document.getElementById('platform-info');
+        const versionInfoEl = document.getElementById('version-info');
+        const citrixIndicator = document.getElementById('citrix-indicator');
+
+        if (versionEl) {
+          versionEl.textContent = `v${appInfo.version}`;
+        }
+        
+        if (platformEl) {
+          platformEl.textContent = `Platform: ${appInfo.platform}`;
+        }
+        
+        if (versionInfoEl) {
+          versionInfoEl.textContent = `Version: ${appInfo.version} ${appInfo.isDev ? '(Development)' : ''}`;
+        }
+
+        if (citrixIndicator && (isCitrix || appInfo.isPortable)) {
+          citrixIndicator.classList.remove('hidden');
+        }
+      }
+
+      function updateNetworkStatus(networkStatus) {
+        const statusEl = document.getElementById('network-status');
+        const networkCheckEl = document.getElementById('network-check');
+        
+        if (statusEl) {
+          const status = networkStatus.isOnline ? '🌐 Online' : '🔴 Offline';
+          statusEl.textContent = status;
+        }
+
+        if (networkCheckEl) {
+          networkCheckEl.textContent = networkStatus.localServer ? '✅ Local server running' : '⚠️ Local server offline';
+        }
+      }
+
+      function setupWindowControls() {
+        const minimizeBtn = document.getElementById('minimize-btn');
+        const maximizeBtn = document.getElementById('maximize-btn');
+        const closeBtn = document.getElementById('close-btn');
+
+        if (minimizeBtn) {
+          minimizeBtn.addEventListener('click', () => {
+            window.electronAPI.minimize();
+          });
+        }
+
+        if (maximizeBtn) {
+          maximizeBtn.addEventListener('click', () => {
+            window.electronAPI.maximize();
+          });
+        }
+
+        if (closeBtn) {
+          closeBtn.addEventListener('click', () => {
+            if (confirm('Are you sure you want to close RKH\'s Content Creation Program?')) {
+              window.electronAPI.quit();
+            }
+          });
+        }
+      }
+
+      function handleMenuAction(action) {
+        // This will be handled by the main application once loaded
+        if (window.handleMenuAction) {
+          window.handleMenuAction(action);
+        } else {
+          // Queue the action for when the app is ready
+          window.pendingMenuActions = window.pendingMenuActions || [];
+          window.pendingMenuActions.push(action);
+        }
+      }
+
+      async function checkForUpdates() {
+        if (isElectron) {
+          try {
+            const updateInfo = await window.electronAPI.checkForUpdates();
+            const updateStatusEl = document.getElementById('update-status');
+            if (updateStatusEl) {
+              updateStatusEl.textContent = updateInfo.checking ? 'Checking for updates...' : 'Up to date';
+            }
+          } catch (error) {
+            console.warn('[Updates] Check failed:', error);
+          }
+        }
+      }
+
+      function applyCitrixOptimizations() {
+        console.log('[Citrix] Applying optimizations...');
+        
+        // Reduce animations for better performance
+        const style = document.createElement('style');
+        style.textContent = `
+          .citrix-optimized * {
+            transition-duration: 0.1s !important;
+            animation-duration: 0.1s !important;
+          }
+        `;
+        document.head.appendChild(style);
+        document.body.classList.add('citrix-optimized');
+
+        // Optimize for virtual environment
+        if (window.citrixAPI?.optimizeForVirtual) {
+          window.citrixAPI.optimizeForVirtual();
+        }
+      }
+
+      // Global error handler
+      window.addEventListener('error', (event) => {
+        // Suppress chrome extension errors that aren't related to our app
+        if (event.filename && event.filename.includes('chrome-extension://')) {
+          console.debug('[Ignored Chrome Extension Error]:', event.filename);
+          return;
+        }
+        
+        console.error('[Global Error]:', event.error);
+        if (isElectron) {
+          // Could send error to main process for logging
+        }
+      });
+
+      // Unhandled promise rejection handler
+      window.addEventListener('unhandledrejection', (event) => {
+        // Suppress chrome extension related rejections
+        if (event.reason && event.reason.message && 
+            (event.reason.message.includes('chrome-extension') || 
+             event.reason.message.includes('message port closed'))) {
+          console.debug('[Ignored Chrome Extension Promise Rejection]:', event.reason.message);
+          event.preventDefault();
+          return;
+        }
+        
+        console.error('[Unhandled Promise Rejection]:', event.reason);
+        if (isElectron) {
+          // Could send error to main process for logging
+        }
+      });
+
+    })();
+  </script>
+  <style id="fallback-min-styles">
+    /* Minimal styles for fallback when Tailwind not processed */
+    body { font-family: system-ui, Arial, sans-serif; margin:0; background:#f3f4f6; }
+    .btn-primary { background:#2563eb;color:#fff;padding:8px 14px;border-radius:6px;border:none;cursor:pointer; }
+    .btn-secondary { background:#4b5563;color:#fff;padding:8px 14px;border-radius:6px;border:none;cursor:pointer; }
+  </style>
+  <noscript><div style="padding:1rem;font-family:Arial">Enable JavaScript to use the application.</div></noscript>
+</body>
+</html>
