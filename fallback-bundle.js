@@ -107,18 +107,18 @@
         '<div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">' +
           '<div style="display: flex; align-items: center;">' +
             '<span style="font-size: 28px; margin-right: 12px;">🚀</span>' +
-            '<h3 style="margin: 0; color: #1f2937;">Runware API Setup</h3>' +
+            '<h3 style="margin: 0; color: #4b3b2a;">Runware API Setup</h3>' +
           '</div>' +
-          '<button onclick="document.getElementById(\'googleAISetupModal\').remove()" style="background: none; border: none; font-size: 24px; cursor: pointer; color: #6b7280;">&times;</button>' +
+          '<button onclick="document.getElementById(\'googleAISetupModal\').remove()" style="background: none; border: none; font-size: 24px; cursor: pointer; color: #6b5440;">&times;</button>' +
         '</div>' +
-        '<div style="background: #f0f9ff; padding: 16px; border-radius: 8px; margin-bottom: 16px;">' +
-          '<h4 style="margin: 0 0 8px; color: #1e40af;">🚀 ADVANCED AI READY!</h4>' +
-          '<p style="margin: 0; color: #1e40af; font-size: 14px;">Runware API provides advanced AI image generation and editing with <strong>Nano Banana</strong> (Google Gemini Flash Image 2.5) model!</p>' +
+        '<div style="background: #fdf4e6; padding: 16px; border-radius: 8px; margin-bottom: 16px;">' +
+          '<h4 style="margin: 0 0 8px; color: #a66b38;">🚀 ADVANCED AI READY!</h4>' +
+          '<p style="margin: 0; color: #a66b38; font-size: 14px;">Runware API provides advanced AI image generation and editing with <strong>Nano Banana</strong> (Google Gemini Flash Image 2.5) model!</p>' +
         '</div>' +
         '<div style="margin-bottom: 16px;">' +
-          '<h4 style="margin: 0 0 8px; color: #374151;">Quick Setup (2 minutes):</h4>' +
-          '<ol style="margin: 0; padding-left: 20px; color: #6b7280; font-size: 14px;">' +
-            '<li>Visit <a href="https://runware.ai" target="_blank" style="color: #3b82f6;">Runware.ai</a></li>' +
+          '<h4 style="margin: 0 0 8px; color: #4b3b2a;">Quick Setup (2 minutes):</h4>' +
+          '<ol style="margin: 0; padding-left: 20px; color: #6b5440; font-size: 14px;">' +
+            '<li>Visit <a href="https://runware.ai" target="_blank" style="color: #c48b5a;">Runware.ai</a></li>' +
             '<li>Sign up for an account</li>' +
             '<li>Get your API key from dashboard</li>' +
             '<li>Copy the key and paste it below</li>' +
@@ -128,8 +128,8 @@
           '<input type="text" id="googleAIApiKey" placeholder="Paste your Runware API key here..." style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px;">' +
         '</div>' +
         '<div style="display: flex; gap: 12px; justify-content: flex-end;">' +
-          '<button onclick="document.getElementById(\'googleAISetupModal\').remove()" style="padding: 10px 20px; background: #6b7280; color: white; border: none; border-radius: 6px; cursor: pointer;">Cancel</button>' +
-          '<button onclick="saveGoogleAIKey()" style="padding: 10px 20px; background: #3b82f6; color: white; border: none; border-radius: 6px; cursor: pointer;">✅ Save & Test</button>' +
+          '<button onclick="document.getElementById(\'googleAISetupModal\').remove()" style="padding: 10px 20px; background: #6b5440; color: white; border: none; border-radius: 6px; cursor: pointer;">Cancel</button>' +
+          '<button onclick="saveGoogleAIKey()" style="padding: 10px 20px; background: #c48b5a; color: white; border: none; border-radius: 6px; cursor: pointer;">✅ Save & Test</button>' +
         '</div>' +
       '</div>';
     
@@ -219,11 +219,11 @@
           '<div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">' +
             '<div style="display: flex; align-items: center;">' +
               '<span style="font-size: 28px; margin-right: 12px;">🔮</span>' +
-              '<h3 style="margin: 0; color: #1f2937;">Gemini AI Response</h3>' +
+              '<h3 style="margin: 0; color: #4b3b2a;">Gemini AI Response</h3>' +
             '</div>' +
-            '<button onclick="document.getElementById(\'googleAIPreviewModal\').remove()" style="background: none; border: none; font-size: 24px; cursor: pointer; color: #6b7280;">&times;</button>' +
+            '<button onclick="document.getElementById(\'googleAIPreviewModal\').remove()" style="background: none; border: none; font-size: 24px; cursor: pointer; color: #6b5440;">&times;</button>' +
           '</div>' +
-          '<div style="margin-bottom: 16px; padding: 12px; background: #f3f4f6; border-radius: 8px;">' +
+          '<div style="margin-bottom: 16px; padding: 12px; background: #f1e8dc; border-radius: 8px;">' +
             '<strong>Operation:</strong> ' + operation + '<br>' +
             '<strong>Instructions:</strong> ' + (instructions || 'No specific instructions provided') +
           '</div>' +
@@ -247,7 +247,7 @@
       imageUrl = 'data:image/jpeg;base64,' + result.candidates[0].content.parts[0].inline_data.data;
     } else {
       // Fallback: create a simple colored div if no image using URL encoding instead of btoa
-      const svg = '<svg width="400" height="300" xmlns="http://www.w3.org/2000/svg"><rect width="400" height="300" fill="#10b981"/><text x="200" y="150" text-anchor="middle" fill="white" font-family="Arial" font-size="24">Processed</text></svg>';
+      const svg = '<svg width="400" height="300" xmlns="http://www.w3.org/2000/svg"><rect width="400" height="300" fill="#7fa284"/><text x="200" y="150" text-anchor="middle" fill="white" font-family="Arial" font-size="24">Processed</text></svg>';
       imageUrl = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
     }
     
@@ -256,22 +256,22 @@
         '<div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">' +
           '<div style="display: flex; align-items: center;">' +
             '<span style="font-size: 28px; margin-right: 12px;">🚀</span>' +
-            '<h3 style="margin: 0; color: #1f2937;">Runware AI Result</h3>' +
+            '<h3 style="margin: 0; color: #4b3b2a;">Runware AI Result</h3>' +
           '</div>' +
-          '<button onclick="document.getElementById(\'googleAIPreviewModal\').remove()" style="background: none; border: none; font-size: 24px; cursor: pointer; color: #6b7280;">&times;</button>' +
+          '<button onclick="document.getElementById(\'googleAIPreviewModal\').remove()" style="background: none; border: none; font-size: 24px; cursor: pointer; color: #6b5440;">&times;</button>' +
         '</div>' +
-        '<div style="margin-bottom: 16px; padding: 12px; background: #f3f4f6; border-radius: 8px;">' +
+        '<div style="margin-bottom: 16px; padding: 12px; background: #f1e8dc; border-radius: 8px;">' +
           '<strong>Operation:</strong> ' + operation + '<br>' +
           '<strong>Instructions:</strong> ' + (instructions || 'No specific instructions provided') + '<br>' +
           '<strong>Processing Time:</strong> ' + (result?.processingTime || 'N/A') + '<br>' +
           '<strong>Cost:</strong> ' + (result?.cost || 'N/A') +
         '</div>' +
         '<div style="text-align: center; margin-bottom: 20px;">' +
-          '<img src="' + imageUrl + '" style="max-width: 100%; max-height: 400px; border-radius: 8px; border: 2px solid #10b981;" onload="console.log(\'Image loaded successfully\')" onerror="console.error(\'Image failed to load\', this.src)">' +
+          '<img src="' + imageUrl + '" style="max-width: 100%; max-height: 400px; border-radius: 8px; border: 2px solid #7fa284;" onload="console.log(\'Image loaded successfully\')" onerror="console.error(\'Image failed to load\', this.src)">' +
         '</div>' +
         '<div style="background: #eff6ff; padding: 16px; border-radius: 8px; margin-bottom: 16px;">' +
-          '<h4 style="margin: 0 0 8px; color: #1e40af;">🚀 Google Gemini Flash Image 2.5 Features:</h4>' +
-          '<ul style="margin: 0; padding-left: 20px; color: #1e40af; font-size: 14px;">' +
+          '<h4 style="margin: 0 0 8px; color: #a66b38;">🚀 Google Gemini Flash Image 2.5 Features:</h4>' +
+          '<ul style="margin: 0; padding-left: 20px; color: #a66b38; font-size: 14px;">' +
             '<li>Advanced AI image generation and editing</li>' +
             '<li>High-fidelity image processing with WebSocket</li>' +
             '<li>Real-time image inference capabilities</li>' +
@@ -281,9 +281,9 @@
           '</ul>' +
         '</div>' +
         '<div style="display: flex; gap: 12px; justify-content: flex-end;">' +
-          '<button onclick="document.getElementById(\'googleAIPreviewModal\').remove()" style="padding: 10px 20px; background: #6b7280; color: white; border: none; border-radius: 6px; cursor: pointer;">Close</button>' +
-          '<button onclick="window.saveProcessedImage(\'' + imageUrl + '\', \'' + operation + '\')" style="padding: 10px 20px; background: #3b82f6; color: white; border: none; border-radius: 6px; cursor: pointer;">💾 Save Image</button>' +
-          '<button onclick="alert(\'✅ Result saved successfully!\'); document.getElementById(\'googleAIPreviewModal\').remove();" style="padding: 10px 20px; background: #059669; color: white; border: none; border-radius: 6px; cursor: pointer;">✅ Use Result</button>' +
+          '<button onclick="document.getElementById(\'googleAIPreviewModal\').remove()" style="padding: 10px 20px; background: #6b5440; color: white; border: none; border-radius: 6px; cursor: pointer;">Close</button>' +
+          '<button onclick="window.saveProcessedImage(\'' + imageUrl + '\', \'' + operation + '\')" style="padding: 10px 20px; background: #c48b5a; color: white; border: none; border-radius: 6px; cursor: pointer;">💾 Save Image</button>' +
+          '<button onclick="alert(\'✅ Result saved successfully!\'); document.getElementById(\'googleAIPreviewModal\').remove();" style="padding: 10px 20px; background: #7fa284; color: white; border: none; border-radius: 6px; cursor: pointer;">✅ Use Result</button>' +
         '</div>' +
       '</div>';
     
@@ -601,7 +601,7 @@
     
     if (value && isValid) {
       // Valid Event ID format
-      input.style.borderColor = '#10b981';
+      input.style.borderColor = '#7fa284';
       input.style.backgroundColor = '#f0fdf4';
       input.setCustomValidity('');
     } else if (value && !isValid) {
@@ -649,53 +649,29 @@
   };
 
   // Event ID filter functions
-  window.filterByEventId = function() {
+  window.filterByEventId = function(manualValue) {
     const filterSelect = document.getElementById('eventIdFilter');
-    if (!filterSelect) return;
-    
-    const eventIdValue = filterSelect.value.trim();
-    const ordersList = window.authSystem ? window.authSystem.getFilteredOrders(window.allOrders || []) : (window.allOrders || []);
-    
-    let filteredOrders = ordersList;
-    if (eventIdValue) {
-      filteredOrders = ordersList.filter(order => {
-        return order.eventId && order.eventId.toUpperCase() === eventIdValue.toUpperCase();
-      });
+    const rawValue = typeof manualValue === 'string' ? manualValue : (filterSelect ? filterSelect.value : '');
+
+    if (filterSelect && filterSelect.value !== rawValue) {
+      filterSelect.value = rawValue;
     }
-    
-    // Update count display
-    const countElement = document.getElementById('eventIdOrderCount');
-    if (countElement) {
-      if (eventIdValue) {
-        countElement.textContent = `${filteredOrders.length} order(s) for ${eventIdValue}`;
-        if (filteredOrders.length > 100) {
-          countElement.innerHTML += ` <span style="color: #dc2626; font-weight: 700;">⚠️</span>`;
-        }
-      } else {
-        countElement.textContent = `Showing all orders`;
-      }
-    }
-    
-    // Store current Event ID filter
-    window.currentEventIdFilter = eventIdValue;
-    
-    // Re-render the orders table with filtered data
-    if (window.renderOrdersTable) {
-      window.renderOrdersTable(filteredOrders);
-    }
+
+    window.currentEventIdFilter = rawValue;
+    handleEventFilterChange(rawValue);
   };
 
   window.clearEventIdFilter = function() {
     const filterSelect = document.getElementById('eventIdFilter');
     if (filterSelect) {
       filterSelect.value = '';
-      filterByEventId();
     }
+    handleEventFilterChange('');
   };
 
   // Populate Event ID dropdown based on orders from PMR integration
   window.populateEventIdSuggestions = function() {
-    const ordersList = window.allOrders || [];
+  const ordersList = window.rkhOrders || [];
     const eventIds = [...new Set(ordersList.map(order => order.eventId).filter(id => id))];
     
     const filterSelect = document.getElementById('eventIdFilter');
@@ -840,7 +816,7 @@
       top: 20px;
       right: 20px;
       background: white;
-      color: #1f2937;
+  color: #4b3b2a;
       border: none;
       padding: 10px 20px;
       border-radius: 8px;
@@ -867,7 +843,7 @@
       
       if (currentView === 'orders' || !currentView) {
         // Get the currently filtered and searched orders
-        let orders = window.authSystem ? window.authSystem.getFilteredOrders(window.allOrders || []) : (window.allOrders || []);
+  let orders = window.authSystem ? window.authSystem.getFilteredOrders(window.rkhOrders || []) : (window.rkhOrders || []);
         
         // Apply search filter if active
         const searchBox = document.getElementById('searchBox');
@@ -1030,10 +1006,10 @@
     `;
     
     const colors = {
-      success: '#10b981',
+      success: '#7fa284',
       error: '#ef4444',
       warning: '#f59e0b',
-      info: '#3b82f6'
+      info: '#c48b5a'
     };
     
     toast.style.background = colors[type] || colors.info;
@@ -1475,85 +1451,85 @@
   // Show login screen if not authenticated
   function showLoginScreen() {
     root.innerHTML = `
-      <div style="min-height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 20px; box-sizing: border-box;">
-        <div style="background: white; padding: 48px; border-radius: 16px; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); max-width: 420px; width: 100%; max-height: 90vh; overflow-y: auto;">
+      <div style="min-height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #f4e8d8 0%, #e7d2b8 100%); padding: 20px; box-sizing: border-box;">
+        <div style="background: #fffaf3; padding: 48px; border-radius: 16px; box-shadow: 0 30px 60px rgba(79, 59, 37, 0.18); max-width: 420px; width: 100%; max-height: 90vh; overflow-y: auto; border: 1px solid rgba(196, 139, 90, 0.2);">
           <div style="text-align: center; margin-bottom: 32px;">
             <div style="margin: 0 0 20px 0; text-align: center;">
               <div style="margin-bottom: 8px;">
                 <img src="/CCP_Logog.png" alt="CCP Logo" style="width: 200px; height: 200px; object-fit: contain; display: inline-block;" />
               </div>
-              <h1 style="margin: 0 0 4px 0; font-size: 32px; font-weight: 700; color: #1f2937;">Content Creation Program</h1>
-              <p style="margin: 0; font-size: 14px; color: #6b7280; font-weight: 500;">RKH's Professional Creative Suite</p>
+              <h1 style="margin: 0 0 4px 0; font-size: 32px; font-weight: 700; color: #4b3b2a;">Content Creation Program</h1>
+              <p style="margin: 0; font-size: 14px; color: #6b5440; font-weight: 500; letter-spacing: 0.3px;">RKH's Professional Creative Suite</p>
             </div>
-            <p style="margin: 0; color: #6b7280; font-size: 16px;">Management System</p>
+            <p style="margin: 0; color: #6b5440; font-size: 16px;">Management System</p>
             <p style="margin: 8px 0 0 0; color: #9ca3af; font-size: 14px;">Role-based access control</p>
           </div>
 
           <form id="loginForm" style="margin-bottom: 32px;">
             <div style="margin-bottom: 24px;">
-              <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #374151;">Username</label>
+              <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #4b3b2a;">Username</label>
               <input type="text" id="username" required 
-                style="width: 100%; padding: 12px 16px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 16px; transition: border-color 0.15s;" 
+                style="width: 100%; padding: 12px 16px; border: 1px solid rgba(196, 139, 90, 0.35); border-radius: 8px; font-size: 16px; transition: border-color 0.15s; background: #fffaf3; color: #4b3b2a;" 
                 placeholder="Enter your username">
             </div>
 
             <div style="margin-bottom: 32px;">
-              <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #374151;">Password</label>
+              <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #4b3b2a;">Password</label>
               <input type="password" id="password" required 
-                style="width: 100%; padding: 12px 16px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 16px; transition: border-color 0.15s;" 
+                style="width: 100%; padding: 12px 16px; border: 1px solid rgba(196, 139, 90, 0.35); border-radius: 8px; font-size: 16px; transition: border-color 0.15s; background: #fffaf3; color: #4b3b2a;" 
                 placeholder="Enter your password">
             </div>
 
             <button type="submit" 
-              style="width: 100%; background: #3b82f6; color: white; border: none; padding: 14px; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; transition: background-color 0.15s; margin-bottom: 16px;">
+              style="width: 100%; background: linear-gradient(135deg, #dfb37d, #c48b5a); color: white; border: none; padding: 14px; border-radius: 10px; font-size: 16px; font-weight: 600; cursor: pointer; transition: transform 0.2s; margin-bottom: 16px; box-shadow: 0 12px 24px rgba(196, 139, 90, 0.35);">
               Sign In
             </button>
           </form>
 
           <div id="loginError" style="margin-bottom: 24px; padding: 12px; background: #fef2f2; border: 1px solid #fecaca; border-radius: 8px; color: #dc2626; display: none;"></div>
 
-          <div style="padding-top: 24px; border-top: 1px solid #e5e7eb;">
-            <p style="margin: 0 0 16px 0; font-size: 14px; color: #6b7280; text-align: center; font-weight: 600;">Test Credentials - Click to use:</p>
+          <div style="padding-top: 24px; border-top: 1px solid rgba(196, 139, 90, 0.2);">
+            <p style="margin: 0 0 16px 0; font-size: 14px; color: #6b5440; text-align: center; font-weight: 600; letter-spacing: 0.3px;">Test Credentials - Click to use:</p>
             <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; font-size: 12px;">
-              <div style="background: #f9fafb; padding: 12px; border-radius: 6px; cursor: pointer; border: 1px solid #e5e7eb; transition: all 0.15s;" 
+              <div style="background: #fff6ea; padding: 12px; border-radius: 8px; cursor: pointer; border: 1px solid rgba(196, 139, 90, 0.2); transition: all 0.15s;" 
                    onclick="document.getElementById('username').value='promo1'; document.getElementById('password').value='promo123';">
-                <div style="font-weight: 600; color: #374151; margin-bottom: 4px;">📊 Promo Coordinator</div>
-                <div style="color: #374151; font-weight: 500;">Sarah Johnson</div>
-                <div style="color: #6b7280; font-family: monospace;">promo1</div>
-                <div style="color: #059669; font-size: 10px; margin-top: 4px;">PG: 100 (Groceries), 200 (Fresh)</div>
+                <div style="font-weight: 600; color: #4b3b2a; margin-bottom: 4px;">📊 Promo Coordinator</div>
+                <div style="color: #4b3b2a; font-weight: 500;">Sarah Johnson</div>
+                <div style="color: #6b5440; font-family: monospace;">promo1</div>
+                <div style="color: #7fa284; font-size: 10px; margin-top: 4px;">PG: 100 (Groceries), 200 (Fresh)</div>
               </div>
-              <div style="background: #f9fafb; padding: 12px; border-radius: 6px; cursor: pointer; border: 1px solid #e5e7eb; transition: all 0.15s;" 
+              <div style="background: #fff6ea; padding: 12px; border-radius: 8px; cursor: pointer; border: 1px solid rgba(196, 139, 90, 0.2); transition: all 0.15s;" 
                    onclick="document.getElementById('username').value='promo2'; document.getElementById('password').value='promo123';">
-                <div style="font-weight: 600; color: #374151; margin-bottom: 4px;">📊 Promo Coordinator</div>
-                <div style="color: #374151; font-weight: 500;">Lars Nielsen</div>
-                <div style="color: #6b7280; font-family: monospace;">promo2</div>
-                <div style="color: #059669; font-size: 10px; margin-top: 4px;">PG: 300 (Electronics), 400 (Home&Garden)</div>
+                <div style="font-weight: 600; color: #4b3b2a; margin-bottom: 4px;">📊 Promo Coordinator</div>
+                <div style="color: #4b3b2a; font-weight: 500;">Lars Nielsen</div>
+                <div style="color: #6b5440; font-family: monospace;">promo2</div>
+                <div style="color: #7fa284; font-size: 10px; margin-top: 4px;">PG: 300 (Electronics), 400 (Home&Garden)</div>
               </div>
-              <div style="background: #f9fafb; padding: 12px; border-radius: 6px; cursor: pointer; border: 1px solid #e5e7eb; transition: all 0.15s;" 
+              <div style="background: #f6f0ff; padding: 12px; border-radius: 8px; cursor: pointer; border: 1px solid rgba(191, 163, 214, 0.25); transition: all 0.15s;" 
                    onclick="document.getElementById('username').value='photo1'; document.getElementById('password').value='photo123';">
-                <div style="font-weight: 600; color: #374151; margin-bottom: 4px;">📷 Photographer</div>
-                <div style="color: #374151; font-weight: 500;">Mike Rodriguez</div>
-                <div style="color: #6b7280; font-family: monospace;">photo1</div>
-                <div style="color: #7c3aed; font-size: 10px; margin-top: 4px;">Studio & Location Photography</div>
+                <div style="font-weight: 600; color: #4b3b2a; margin-bottom: 4px;">📷 Photographer</div>
+                <div style="color: #4b3b2a; font-weight: 500;">Mike Rodriguez</div>
+                <div style="color: #6b5440; font-family: monospace;">photo1</div>
+                <div style="color: #b48fc7; font-size: 10px; margin-top: 4px;">Studio & Location Photography</div>
               </div>
-              <div style="background: #f9fafb; padding: 12px; border-radius: 6px; cursor: pointer; border: 1px solid #e5e7eb; transition: all 0.15s;" 
+              <div style="background: #f6f0ff; padding: 12px; border-radius: 8px; cursor: pointer; border: 1px solid rgba(191, 163, 214, 0.25); transition: all 0.15s;" 
                    onclick="document.getElementById('username').value='photobox1'; document.getElementById('password').value='photobox123';">
-                <div style="font-weight: 600; color: #374151; margin-bottom: 4px;">📦 Photo Box</div>
-                <div style="color: #374151; font-weight: 500;">Alex Turner</div>
-                <div style="color: #6b7280; font-family: monospace;">photobox1</div>
-                <div style="color: #059669; font-size: 10px; margin-top: 4px;">Product Photography Specialist</div>
+                <div style="font-weight: 600; color: #4b3b2a; margin-bottom: 4px;">📦 Photo Box</div>
+                <div style="color: #4b3b2a; font-weight: 500;">Alex Turner</div>
+                <div style="color: #6b5440; font-family: monospace;">photobox1</div>
+                <div style="color: #c76f5c; font-size: 10px; margin-top: 4px;">Product Photography Specialist</div>
               </div>
-              <div style="background: #f9fafb; padding: 12px; border-radius: 6px; cursor: pointer; border: 1px solid #e5e7eb; transition: all 0.15s;" 
+              <div style="background: #f0f8f4; padding: 12px; border-radius: 8px; cursor: pointer; border: 1px solid rgba(143, 162, 148, 0.25); transition: all 0.15s;" 
                    onclick="document.getElementById('username').value='marketing1'; document.getElementById('password').value='marketing123';">
-                <div style="font-weight: 600; color: #374151; margin-bottom: 4px;">🎯 Marketing Manager</div>
-                <div style="color: #374151; font-weight: 500;">Manager Access</div>
-                <div style="color: #6b7280; font-family: monospace;">marketing1</div>
-                <div style="color: #2563eb; font-size: 10px; margin-top: 4px;">All Purchase Groups</div>
+                <div style="font-weight: 600; color: #4b3b2a; margin-bottom: 4px;">🎯 Marketing Manager</div>
+                <div style="color: #4b3b2a; font-weight: 500;">Manager Access</div>
+                <div style="color: #6b5440; font-family: monospace;">marketing1</div>
+                <div style="color: #a66b38; font-size: 10px; margin-top: 4px;">All Purchase Groups</div>
               </div>
-              <div style="background: #f9fafb; padding: 12px; border-radius: 6px; cursor: pointer; border: 1px solid #e5e7eb; transition: all 0.15s;" 
+              <div style="background: #f0f8f4; padding: 12px; border-radius: 8px; cursor: pointer; border: 1px solid rgba(143, 162, 148, 0.25); transition: all 0.15s;" 
                    onclick="document.getElementById('username').value='admin1'; document.getElementById('password').value='admin123';">
-                <div style="font-weight: 600; color: #374151; margin-bottom: 4px;">Admin</div>
-                <div style="color: #6b7280; font-family: monospace;">admin1</div>
+                <div style="font-weight: 600; color: #4b3b2a; margin-bottom: 4px;">Admin</div>
+                <div style="color: #6b5440; font-family: monospace;">admin1</div>
                 <div style="color: #9ca3af; font-family: monospace;">••••••</div>
               </div>
             </div>
@@ -1597,6 +1573,145 @@
     800: 'Automotive',
     900: 'Baby & Kids'
   };
+
+  function createNormalizedArticle({ name, ean, articleNumber, variant, quantity, status, notes, raw }) {
+    const cleanName = (name || '').toString().trim();
+    const cleanEAN = (ean || '').toString().replace(/\s+/g, '');
+    const cleanArticleNumber = (articleNumber || '').toString().trim();
+    const cleanVariant = (variant || '').toString().trim();
+    const cleanQuantity = quantity === 0 || quantity ? quantity : '';
+    const cleanStatus = (status || '').toString().trim();
+    const cleanNotes = (notes || '').toString().trim();
+
+    const primaryLabel = cleanName || cleanArticleNumber || cleanEAN || 'Article';
+    const detailParts = [];
+    if (cleanArticleNumber) detailParts.push(`Article ${cleanArticleNumber}`);
+    if (cleanEAN) detailParts.push(`EAN ${cleanEAN}`);
+    if (cleanVariant) detailParts.push(cleanVariant);
+    if (cleanQuantity !== '' && cleanQuantity !== null) detailParts.push(`Qty ${cleanQuantity}`);
+    const displayText = detailParts.length ? `${primaryLabel} (${detailParts.join(' • ')})` : primaryLabel;
+
+    return {
+      name: cleanName,
+      ean: cleanEAN,
+      articleNumber: cleanArticleNumber,
+      variant: cleanVariant,
+      quantity: cleanQuantity,
+      status: cleanStatus,
+      notes: cleanNotes,
+      displayText,
+      raw
+    };
+  }
+
+  function normalizeArticles(articles) {
+    if (!articles) {
+      return [];
+    }
+
+    const source = Array.isArray(articles) ? articles : [articles];
+
+    return source
+      .map((item) => {
+        if (item && typeof item === 'object' && !Array.isArray(item)) {
+          const name = item.name || item.articleName || item.title || item.description || '';
+          const ean = item.ean || item.EAN || item.barcode || item.gtin || '';
+          const articleNumber = item.articleNumber || item.articleNo || item.sku || item.id || '';
+          const variant = item.variant || item.variantName || '';
+          const quantity = item.quantity ?? item.qty ?? '';
+          const status = item.status || '';
+          const notes = item.notes || item.comment || item.details || '';
+
+          return createNormalizedArticle({
+            name,
+            ean,
+            articleNumber,
+            variant,
+            quantity,
+            status,
+            notes,
+            raw: item
+          });
+        }
+
+        const text = String(item || '').trim();
+        if (!text) {
+          return null;
+        }
+
+        const eanMatch = text.match(/\[EAN:\s*([^\]]+)\]/i);
+        const articleMatch = text.match(/\[Article(?: Number)?:\s*([^\]]+)\]/i);
+        const cleanedName = text
+          .replace(/\[EAN:[^\]]+\]/i, '')
+          .replace(/\[Article(?: Number)?:[^\]]+\]/i, '')
+          .replace(/\s{2,}/g, ' ')
+          .trim();
+
+        return createNormalizedArticle({
+          name: cleanedName,
+          ean: eanMatch ? eanMatch[1].trim() : '',
+          articleNumber: articleMatch ? articleMatch[1].trim() : '',
+          raw: text
+        });
+      })
+      .filter(Boolean);
+  }
+
+  function getArticleTextList(articles) {
+    return normalizeArticles(articles).map((article) => article.displayText).filter(Boolean);
+  }
+
+  function formatArticlesAsPlainText(articles) {
+    const list = getArticleTextList(articles);
+    return list.length ? list.join(', ') : '';
+  }
+
+  function renderArticleChips(articles, limit = 2) {
+    const normalized = normalizeArticles(articles);
+    if (!normalized.length) {
+      return '<div style="margin-top:6px;font-size:12px;color:#9ca3af;">No articles linked</div>';
+    }
+
+    const chips = normalized.slice(0, limit).map((article) => `
+      <span style="display:inline-flex;align-items:center;padding:3px 10px;background:rgba(196, 139, 90, 0.12);color:#6b5440;border-radius:999px;font-size:11px;font-weight:600;">
+        ${article.name || article.articleNumber || article.ean || 'Article'}
+      </span>
+    `).join('');
+
+    const extra = normalized.length > limit
+      ? `<span style="display:inline-flex;align-items:center;padding:3px 10px;background:rgba(196, 139, 90, 0.12);color:#a66b38;border-radius:999px;font-size:11px;font-weight:600;">+${normalized.length - limit} more</span>`
+      : '';
+
+    return `<div style="margin-top:6px;display:flex;flex-wrap:wrap;gap:6px;">${chips}${extra}</div>`;
+  }
+
+  function renderArticleCards(articles) {
+    const normalized = normalizeArticles(articles);
+    if (!normalized.length) {
+      return '<div style="padding:16px;background:rgba(255, 250, 243, 0.8);border:1px dashed rgba(196, 139, 90, 0.4);border-radius:12px;color:#6b5440;font-size:13px;">No article details available for this order.</div>';
+    }
+
+    return `
+      <div style="background:white;border:1px solid rgba(196, 139, 90, 0.25);border-radius:10px;overflow:hidden;">
+        ${normalized.map((article, index) => {
+          const descriptor = article.name || article.displayText || `Article ${index + 1}`;
+          const details = [];
+          if (article.articleNumber) details.push(`#${article.articleNumber}`);
+          if (article.ean) details.push(`EAN ${article.ean}`);
+          if (article.variant) details.push(article.variant);
+          if (article.quantity !== '' && article.quantity !== null) details.push(`Qty ${article.quantity}`);
+          const baseText = [descriptor, ...details].join(' • ');
+          const noteText = article.notes ? ` – ${article.notes}` : '';
+          return `
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:6px 12px;${index < normalized.length - 1 ? 'border-bottom:1px solid rgba(196, 139, 90, 0.18);' : ''}background:${index % 2 === 0 ? 'transparent' : 'rgba(253, 244, 230, 0.55)'};">
+              <div style="font-size:11px;color:#4b3b2a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${baseText}${noteText}</div>
+              ${article.status ? `<span style="margin-left:12px;background:rgba(127, 162, 132, 0.18);color:#54735d;border-radius:999px;padding:2px 8px;font-size:10px;font-weight:600;white-space:nowrap;">${article.status}</span>` : ''}
+            </div>
+          `;
+        }).join('')}
+      </div>
+    `;
+  }
 
   // Runware API Configuration (already initialized at top). Ensure defaults remain consistent.
   runwareConfig.apiKey = runwareConfig.apiKey || '';
@@ -1956,7 +2071,8 @@
       const sapData = typeof jsonData === 'string' ? JSON.parse(jsonData) : jsonData;
       
       // Convert SAP data to our order format
-      const newOrders = sapData.map(item => ({
+      const newOrders = sapData.map((item, index) => {
+        const order = {
         orderNumber: item.imageRequestId || `IMG-${Date.now()}-${Math.random().toString(36).substr(2, 5)}`,
         title: `${item.articleName || 'Product Photography'}`,
         status: item.photoStatus === 'Archive' ? 'Completed' : 'New Request',
@@ -1987,10 +2103,15 @@
         samples: [],
         comments: [],
         uploadedContent: []
-      }));
+      };
+
+        assignSalesOrgToOrder(order, allOrders.length + index);
+        return order;
+      });
       
       // Add new orders to existing orders
       allOrders.push(...newOrders);
+      assignSalesOrgMetadata(allOrders);
       
       // Refresh the current view
       if (window.currentView) {
@@ -3588,13 +3709,13 @@
     }
   ];
 
-  // Expose allOrders globally for access from other scopes
-  window.allOrders = allOrders;
+  // Expose orders globally for access from other scopes
+  window.rkhOrders = allOrders;
 
   // Update quick action badges with real counts
   function updateQuickActionBadges() {
-    const allOrdersList = window.allOrders || [];
-    const orders = window.authSystem ? window.authSystem.getFilteredOrders(allOrdersList) : allOrdersList;
+  const allOrdersList = window.rkhOrders || [];
+  const orders = window.authSystem ? window.authSystem.getFilteredOrders(allOrdersList) : allOrdersList;
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     
@@ -3682,46 +3803,47 @@
   ];
 
   const css = `
-    #fallback-app { font-family: system-ui, 'Segoe UI', Arial, sans-serif; line-height: 1.5; }
-    #fallback-app h1 { margin: 0 0 8px; font-size: 22px; color: #1f2937; font-weight: 600; }
+    #fallback-app { font-family: system-ui, 'Segoe UI', Arial, sans-serif; line-height: 1.5; color: #4b3b2a; }
+    #fallback-app h1 { margin: 0 0 8px; font-size: 22px; color: #4b3b2a; font-weight: 600; }
     #fallback-app .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin: 16px 0; }
-    #fallback-app .stat-card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px; text-align: center; }
-    #fallback-app .stat-card.clickable-tile:hover { background: #e2e8f0; border-color: #3b82f6; transform: translateY(-2px); transition: all 0.2s ease; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
-    #fallback-app .stat-number { font-size: 24px; font-weight: bold; color: #2563eb; }
-    #fallback-app .stat-label { font-size: 12px; color: #64748b; text-transform: uppercase; }
-    #fallback-app table { border-collapse: collapse; width: 100%; margin-top: 12px; background: white; border-radius: 6px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
-    #fallback-app th, #fallback-app td { border-bottom: 1px solid #e5e7eb; padding: 8px 12px; font-size: 13px; text-align: left; }
-    #fallback-app th { background: #f8fafc; font-weight: 600; color: #374151; }
-    #fallback-app tbody tr { background: white; color: #374151; }
-    #fallback-app tbody tr td { color: #374151 !important; }
-    #fallback-app tbody tr:hover { background: #f9fafb; }
-    #fallback-app .status { padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: 500; display: inline-block; }
-    #fallback-app .Complete, #fallback-app .Delivered, #fallback-app .status-complete { background: #d1fae5; color: #065f46; }
-    #fallback-app .Pending, #fallback-app .status-pending { background: #fef3c7; color: #92400e; }
-    #fallback-app .Draft, #fallback-app .Created, #fallback-app .status-draft { background: #f3f4f6; color: #374151; }
-    #fallback-app .NewRequest, #fallback-app .Received, #fallback-app .status-samples { background: #e0f2fe; color: #075985; }
-    #fallback-app .InProgress, #fallback-app .AtPhotographer, #fallback-app .status-in-progress { background: #dbeafe; color: #1e40af; }
-    #fallback-app .Approved, #fallback-app .status-approved { background: #dcfce7; color: #166534; }
-    #fallback-app .SamplesRequested, #fallback-app .InTransittoPhotographer, #fallback-app .InTransittoPhotoBox, #fallback-app .status-review { background: #fef3c7; color: #92400e; }
-    #fallback-app .AtPhotoBox { background: #e0e7ff; color: #3730a3; }
-    #fallback-app .High, #fallback-app .Urgent { background: #fee2e2; color: #991b1b; }
-    #fallback-app .Medium { background: #fef3c7; color: #92400e; }
-    #fallback-app .Low { background: #dcfce7; color: #166534; }
-    #fallback-app .template-card:hover { border-color: #2563eb; box-shadow: 0 2px 8px rgba(37, 99, 235, 0.1); }
+    #fallback-app .stat-card { background: rgba(255, 248, 237, 0.92); border: 1px solid rgba(196, 139, 90, 0.25); border-radius: 12px; padding: 14px; text-align: center; box-shadow: 0 10px 30px rgba(102, 79, 49, 0.08); transition: transform 0.2s ease, box-shadow 0.2s ease; }
+    #fallback-app .stat-card.clickable-tile:hover { background: rgba(244, 220, 188, 0.85); border-color: #c48b5a; transform: translateY(-3px); box-shadow: 0 16px 40px rgba(142, 102, 64, 0.18); }
+    #fallback-app .stat-number { font-size: 24px; font-weight: 700; color: #b67740; }
+    #fallback-app .stat-label { font-size: 12px; color: #8d765b; text-transform: uppercase; letter-spacing: 0.6px; }
+    #fallback-app table { border-collapse: collapse; width: 100%; margin-top: 12px; background: rgba(255, 250, 242, 0.92); border-radius: 12px; overflow: hidden; box-shadow: 0 14px 44px rgba(82, 60, 35, 0.12); }
+    #fallback-app th, #fallback-app td { border-bottom: 1px solid rgba(196, 139, 90, 0.2); padding: 10px 14px; font-size: 13px; text-align: left; }
+    #fallback-app th { background: rgba(238, 219, 196, 0.85); font-weight: 600; color: #543d28; text-transform: uppercase; letter-spacing: 0.4px; }
+    #fallback-app tbody tr { background: rgba(255, 248, 237, 0.86); color: #4f3a25; transition: background 0.2s ease-in-out; }
+    #fallback-app tbody tr td { color: #4f3a25 !important; }
+    #fallback-app tbody tr:hover { background: rgba(237, 214, 186, 0.65); }
+    #fallback-app .status { padding: 3px 10px; border-radius: 14px; font-size: 11px; font-weight: 600; display: inline-block; background: rgba(210, 187, 161, 0.35); color: #4b3927; }
+    #fallback-app .Complete, #fallback-app .Delivered, #fallback-app .status-complete { background: rgba(193, 219, 196, 0.8); color: #315839; }
+    #fallback-app .Pending, #fallback-app .status-pending { background: rgba(240, 200, 157, 0.8); color: #8a5324; }
+    #fallback-app .Draft, #fallback-app .Created, #fallback-app .status-draft { background: rgba(232, 216, 194, 0.8); color: #655038; }
+    #fallback-app .NewRequest, #fallback-app .Received, #fallback-app .status-samples { background: rgba(210, 226, 221, 0.85); color: #2f5f52; }
+    #fallback-app .InProgress, #fallback-app .AtPhotographer, #fallback-app .status-in-progress { background: rgba(241, 208, 165, 0.85); color: #8d5822; }
+    #fallback-app .Approved, #fallback-app .status-approved { background: rgba(204, 223, 198, 0.9); color: #375d3b; }
+    #fallback-app .SamplesRequested, #fallback-app .InTransittoPhotographer, #fallback-app .InTransittoPhotoBox, #fallback-app .status-review { background: rgba(243, 214, 174, 0.8); color: #7d4f1b; }
+    #fallback-app .AtPhotoBox { background: rgba(215, 210, 236, 0.8); color: #4f3d85; }
+    #fallback-app .High, #fallback-app .Urgent { background: rgba(230, 182, 175, 0.85); color: #8f2f28; }
+    #fallback-app .Medium { background: rgba(243, 214, 174, 0.8); color: #7d4f1b; }
+    #fallback-app .Low { background: rgba(204, 223, 198, 0.9); color: #375d3b; }
+    #fallback-app .template-card:hover { border-color: #c48b5a; box-shadow: 0 10px 24px rgba(160, 108, 60, 0.18); }
     #fallback-app .kanban-items { min-height: 100px; }
-    #fallback-app .kanban-item { background: white; border: 1px solid #e5e7eb; border-radius: 6px; padding: 8px; margin-bottom: 8px; cursor: pointer; font-size: 12px; }
-    #fallback-app .kanban-item:hover { border-color: #3b82f6; }
-    #fallback-app .progress-bar { width: 100%; height: 6px; background: #e5e7eb; border-radius: 3px; overflow: hidden; }
-    #fallback-app .progress-fill { height: 100%; background: #3b82f6; transition: width 0.3s ease; }
+    #fallback-app .kanban-item { background: rgba(255, 248, 237, 0.95); border: 1px solid rgba(196, 139, 90, 0.28); border-radius: 10px; padding: 10px; margin-bottom: 10px; cursor: pointer; font-size: 12px; box-shadow: 0 8px 18px rgba(90, 63, 34, 0.12); transition: transform 0.2s ease, box-shadow 0.2s ease; }
+    #fallback-app .kanban-item:hover { border-color: #c48b5a; box-shadow: 0 12px 28px rgba(114, 80, 44, 0.2); transform: translateY(-2px); }
+    #fallback-app .progress-bar { width: 100%; height: 6px; background: rgba(205, 176, 144, 0.28); border-radius: 3px; overflow: hidden; }
+    #fallback-app .progress-fill { height: 100%; background: linear-gradient(90deg, #c48b5a, #b07442); transition: width 0.3s ease; }
     #fallback-app .bulk-mode .bulk-checkbox { display: table-cell !important; }
-    #fallback-app .selected-row { background: #fef3c7 !important; }
+    #fallback-app .selected-row { background: rgba(235, 207, 174, 0.7) !important; }
     #fallback-app .toolbar { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; align-items: center; }
-    #fallback-app .btn { background: #4b5563; color: white; border: none; padding: 8px 14px; border-radius: 6px; cursor: pointer; font-size: 13px; transition: background 0.2s; }
-    #fallback-app .btn:hover { background: #374151; }
-    #fallback-app .btn-primary { background: #2563eb; }
-    #fallback-app .btn-primary:hover { background: #1d4ed8; }
-    #fallback-app input { flex: 1; min-width: 240px; padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 13px; }
-    #fallback-app .alert { background: #fef3c7; border: 1px solid #f59e0b; color: #92400e; padding: 12px; border-radius: 6px; margin-bottom: 16px; font-size: 14px; }
+    #fallback-app .btn { background: linear-gradient(135deg, #be8b5e, #a8703f); color: #fffaf2; border: none; padding: 9px 16px; border-radius: 8px; cursor: pointer; font-size: 13px; transition: transform 0.2s ease, box-shadow 0.2s ease; box-shadow: 0 8px 18px rgba(111, 78, 40, 0.18); }
+    #fallback-app .btn:hover { transform: translateY(-1px); box-shadow: 0 12px 26px rgba(111, 78, 40, 0.24); }
+    #fallback-app .btn-primary { background: linear-gradient(135deg, #c48b5a, #a8703f); }
+    #fallback-app .btn-primary:hover { box-shadow: 0 12px 28px rgba(150, 96, 45, 0.3); }
+    #fallback-app input { flex: 1; min-width: 240px; padding: 9px 13px; border: 1px solid rgba(196, 139, 90, 0.35); border-radius: 8px; font-size: 13px; background: rgba(255, 250, 242, 0.9); color: #4b3b2a; transition: border-color 0.2s ease; }
+    #fallback-app input:focus { border-color: #c48b5a; outline: none; box-shadow: 0 0 0 3px rgba(196, 139, 90, 0.25); }
+    #fallback-app .alert { background: rgba(244, 214, 174, 0.9); border: 1px solid rgba(180, 120, 66, 0.6); color: #71461c; padding: 12px; border-radius: 10px; margin-bottom: 16px; font-size: 14px; box-shadow: 0 10px 22px rgba(122, 86, 48, 0.12); }
     
     /* Bulk Actions Panel Responsive Styles */
     @media (max-width: 768px) {
@@ -3881,18 +4003,15 @@
     
     root.innerHTML = `
       <!-- Enhanced Sidebar Layout -->
-      <div id="fallback-app" style="min-height: 100vh; margin: 0; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex;">
+  <div id="fallback-app" style="min-height: 100vh; margin: 0; background: linear-gradient(135deg, #f4e8d8 0%, #e6d3bd 100%); display: flex;">
         
         <!-- Modern Sidebar -->
         <div class="sidebar" id="sidebar">
           <div class="sidebar-header">
-            <div class="sidebar-title-container" style="display: flex; align-items: center; margin-bottom: 24px;">
-              <img src="/CCP_Logog.png" alt="CCP Logo" style="width: 64px; height: 64px; object-fit: contain; margin-right: 16px; flex-shrink: 0;" />
-              <div>
-                <h1 class="sidebar-title" style="margin: 0; font-size: 18px; font-weight: 700; color: #1f2937;">Content Creation</h1>
-                <p style="margin: 0; font-size: 12px; color: #6b7280;">Professional Suite</p>
+            <div class="sidebar-title-container">
+                <img src="/CCP_Logog.png" alt="CCP Logo" class="sidebar-logo" />
+                <h1 class="sidebar-title">Content Creation Program</h1>
               </div>
-            </div>
             <button class="sidebar-toggle" onclick="toggleSidebar()" title="Toggle Sidebar (Ctrl+B)" aria-label="Toggle Sidebar">
               <span id="sidebarToggleIcon">◀</span>
             </button>
@@ -4040,13 +4159,13 @@
           <div class="content-header">
             <h1 class="content-title" id="contentTitle">Dashboard Overview</h1>
             <div class="content-actions">
-              <button class="btn btn-secondary" onclick="exportToCsv()" style="padding: 8px 16px; font-size: 14px;">📊 Export</button>
-              <button class="btn btn-secondary" onclick="refreshData()" style="padding: 8px 16px; font-size: 14px;">🔄 Refresh</button>
+              <button class="btn btn-secondary" onclick="exportToCsv()" style="padding: 8px 16px; font-size: 14px; background: linear-gradient(135deg, #dfb37d, #c48b5a); color: white; border: none;">📊 Export</button>
+              <button class="btn btn-secondary" onclick="refreshData()" style="padding: 8px 16px; font-size: 14px; background: linear-gradient(135deg, #b4a392, #8f7b63); color: white; border: none;">🔄 Refresh</button>
               <div style="position: relative; display: flex; align-items: center; gap: 12px;">
-                <span style="color: #059669; font-weight: 500; font-size: 14px;">
+                <span style="color: #6b5440; font-weight: 500; font-size: 14px;">
                   ${currentUser.name} (${currentUser.role})
                 </span>
-                <button onclick="logout()" class="btn btn-sm" style="background: #ef4444; color: white; padding: 6px 12px; font-size: 12px; border-radius: 6px;">
+                <button onclick="logout()" class="btn btn-sm" style="background: linear-gradient(135deg, #c76f5c, #a85544); color: white; padding: 6px 12px; font-size: 12px; border-radius: 6px; border: none; box-shadow: 0 6px 12px rgba(167, 85, 68, 0.3);">
                   Logout
                 </button>
               </div>
@@ -4064,11 +4183,11 @@
                 </div>
 
                 <!-- Recent Orders Section -->
-                <div style="background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 20px;">
-                  <div style="padding: 16px; border-bottom: 1px solid #e5e7eb;">
-                    <h3 style="margin: 0; font-size: 18px; color: #1f2937; font-weight: 600;">📋 Recent Orders</h3>
+                <div style="background: #fffaf3; border-radius: 12px; box-shadow: 0 10px 24px rgba(79, 59, 37, 0.1); margin-bottom: 24px; border: 1px solid rgba(196, 139, 90, 0.18);">
+                  <div style="padding: 16px; border-bottom: 1px solid rgba(196, 139, 90, 0.2); background: linear-gradient(135deg, #f7eedf, #efe0cf);">
+                    <h3 style="margin: 0; font-size: 18px; color: #4b3b2a; font-weight: 600;">📋 Recent Orders</h3>
                   </div>
-                  <div id="recentOrdersContainer" style="max-height: 400px; overflow-y: auto;">
+                  <div id="recentOrdersContainer" style="max-height: 400px; overflow-y: auto; background: #fffaf3;">
                     <!-- Recent orders will be populated here -->
                   </div>
                 </div>
@@ -4077,114 +4196,126 @@
               <!-- Orders Table - Default View -->
               <div id="ordersView">
                 <!-- Compact Filter Row: Event ID + Search -->
-                <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px; padding: 10px 12px; background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px; padding: 12px 14px; background: #fdf8f1; border-radius: 12px; box-shadow: 0 8px 18px rgba(79, 59, 37, 0.08); border: 1px solid rgba(196, 139, 90, 0.18); flex-wrap: wrap; position: relative;">
                   <span style="font-size: 18px;">🏢</span>
+                  <select id="salesOrgFilter"
+                          onchange="handleSalesOrgFilterChange(this.value)"
+                          style="padding: 6px 10px; border: 1px solid rgba(216, 164, 88, 0.65); border-radius: 8px; font-size: 13px; font-family: monospace; font-weight: 500; background: #fffaf3; cursor: pointer; min-width: 140px; color: #6b5440; flex: 0 0 auto;">
+                    <option value="">All Sales Orgs</option>
+                    <!-- Sales org options populated on load -->
+                  </select>
+                  <select id="tacticTypeFilter"
+                          onchange="handleTacticTypeFilterChange(this.value)"
+                          style="padding: 6px 10px; border: 1px solid rgba(216, 164, 88, 0.65); border-radius: 8px; font-size: 13px; font-family: monospace; font-weight: 500; background: #fffaf3; cursor: pointer; min-width: 160px; color: #6b5440; flex: 0 0 auto;">
+                    <option value="">All Tactic Types</option>
+                    <!-- Tactic types populated dynamically -->
+                  </select>
+                  <select id="tacticFilter"
+                          onchange="handleTacticFilterChange(this.value)"
+                          style="padding: 6px 10px; border: 1px solid rgba(216, 164, 88, 0.65); border-radius: 8px; font-size: 13px; font-family: monospace; font-weight: 500; background: #fffaf3; cursor: pointer; min-width: 150px; color: #6b5440; flex: 0 0 auto;">
+                    <option value="">All Tactics</option>
+                    <!-- Tactics populated dynamically -->
+                  </select>
                   <select id="eventIdFilter" 
-                          onchange="filterByEventId()" 
-                          style="padding: 6px 10px; border: 1px solid #f59e0b; border-radius: 6px; font-size: 13px; font-family: monospace; font-weight: 500; background: white; cursor: pointer; min-width: 150px;">
+                          onchange="handleEventFilterChange(this.value)" 
+                          style="padding: 6px 10px; border: 1px solid rgba(216, 164, 88, 0.65); border-radius: 8px; font-size: 13px; font-family: monospace; font-weight: 500; background: #fffaf3; cursor: pointer; min-width: 150px; color: #6b5440; flex: 0 0 auto;">
                     <option value="">All Events</option>
                     <!-- Event IDs from PMR will be populated here -->
                   </select>
-                  <div id="eventIdOrderCount" style="font-size: 12px; color: #78350f; font-weight: 600; white-space: nowrap;">
-                    All orders
+                  <div id="eventIdOrderCount" style="font-size: 12px; color: #78350f; font-weight: 600; white-space: nowrap; flex: 0 0 auto;">
+                    Select a Sales Org, Event, Status, Tactic Type, or Tactic to view orders
                   </div>
-                  <div style="width: 1px; height: 24px; background: #e5e7eb; margin: 0 4px;"></div>
+                  <div style="width: 1px; height: 24px; background: rgba(196, 139, 90, 0.25); margin: 0 4px; flex: 0 0 auto;"></div>
                   <input id="searchBox" placeholder="🔍 Search orders..." 
-                         style="flex: 1; padding: 6px 12px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 13px;" />
-                </div>
-
-                <!-- Filter Tiles Section -->
-                <div style="background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 20px; padding: 16px;">
-                  <h3 style="margin: 0 0 16px; font-size: 16px; color: #1f2937; font-weight: 600;">🔍 Quick Filters</h3>
-                  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px;">
-                    <!-- Process Flow Order -->
-                    <div onclick="filterOrdersByStatus('all')" style="background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); padding: 16px; text-align: center; cursor: pointer; transition: all 0.3s ease; border-left: 4px solid #6b7280;" 
-                         onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.15)'"
-                         onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 4px rgba(0,0,0,0.1)'">
-                      <div style="font-size: 24px; font-weight: bold; color: #6b7280; margin-bottom: 8px;" id="allOrdersCount">0</div>
-                      <div style="font-size: 12px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px;">📋 All Orders</div>
-                    </div>
-                    
-                    <div onclick="filterOrdersByStatus('draft')" style="background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); padding: 16px; text-align: center; cursor: pointer; transition: all 0.3s ease; border-left: 4px solid #94a3b8;" 
-                         onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.15)'"
-                         onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 4px rgba(0,0,0,0.1)'">
-                      <div style="font-size: 24px; font-weight: bold; color: #94a3b8; margin-bottom: 8px;" id="draftOrdersCount">0</div>
-                      <div style="font-size: 12px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px;">📝 Draft</div>
-                    </div>
-                    
-                    <div onclick="filterOrdersByStatus('pending')" style="background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); padding: 16px; text-align: center; cursor: pointer; transition: all 0.3s ease; border-left: 4px solid #f59e0b;" 
-                         onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.15)'"
-                         onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 4px rgba(0,0,0,0.1)'">
-                      <div style="font-size: 24px; font-weight: bold; color: #f59e0b; margin-bottom: 8px;" id="pendingOrdersCount">0</div>
-                      <div style="font-size: 12px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px;">⏳ Pending</div>
-                    </div>
-                    
-                    <div onclick="filterOrdersByStatus('approved')" style="background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); padding: 16px; text-align: center; cursor: pointer; transition: all 0.3s ease; border-left: 4px solid #06b6d4;" 
-                         onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.15)'"
-                         onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 4px rgba(0,0,0,0.1)'">
-                      <div style="font-size: 24px; font-weight: bold; color: #06b6d4; margin-bottom: 8px;" id="approvedOrdersCount">0</div>
-                      <div style="font-size: 12px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px;">✅ Approved</div>
-                    </div>
-                    
-                    <div onclick="filterOrdersByStatus('samples')" style="background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); padding: 16px; text-align: center; cursor: pointer; transition: all 0.3s ease; border-left: 4px solid #8b5cf6;" 
-                         onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.15)'"
-                         onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 4px rgba(0,0,0,0.1)'">
-                      <div style="font-size: 24px; font-weight: bold; color: #8b5cf6; margin-bottom: 8px;" id="samplesOrdersCount">0</div>
-                      <div style="font-size: 12px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px;">📦 Samples</div>
-                    </div>
-                    
-                    <div onclick="filterOrdersByStatus('In Progress')" style="background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); padding: 16px; text-align: center; cursor: pointer; transition: all 0.3s ease; border-left: 4px solid #3b82f6;" 
-                         onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.15)'"
-                         onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 4px rgba(0,0,0,0.1)'">
-                      <div style="font-size: 24px; font-weight: bold; color: #3b82f6; margin-bottom: 8px;" id="inProgressOrdersCount">0</div>
-                      <div style="font-size: 12px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px;">🔄 In Progress</div>
-                    </div>
-                    
-                    <div onclick="filterOrdersByStatus('review')" style="background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); padding: 16px; text-align: center; cursor: pointer; transition: all 0.3s ease; border-left: 4px solid #10b981;" 
-                         onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.15)'"
-                         onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 4px rgba(0,0,0,0.1)'">
-                      <div style="font-size: 24px; font-weight: bold; color: #10b981; margin-bottom: 8px;" id="reviewOrdersCount">0</div>
-                      <div style="font-size: 12px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px;">🔍 Review</div>
-                    </div>
-                    
-                    <div onclick="filterOrdersByStatus('completed')" style="background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); padding: 16px; text-align: center; cursor: pointer; transition: all 0.3s ease; border-left: 4px solid #059669;" 
-                         onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.15)'"
-                         onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 4px rgba(0,0,0,0.1)'">
-                      <div style="font-size: 24px; font-weight: bold; color: #059669; margin-bottom: 8px;" id="completedOrdersCount">0</div>
-                      <div style="font-size: 12px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px;">🎉 Complete</div>
+                         style="flex: 1 1 220px; padding: 6px 12px; border: 1px solid rgba(196, 139, 90, 0.35); border-radius: 8px; font-size: 13px; background: #fffaf3; color: #4b3b2a;" />
+                  <button id="quickFiltersToggle" onclick="toggleQuickFilters()" 
+                          style="padding: 6px 12px; border: 1px solid rgba(196, 139, 90, 0.35); border-radius: 8px; background: linear-gradient(135deg, #fff0db, #f7e1c3); color: #7b5a3d; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 10px rgba(123, 90, 61, 0.18); flex: 0 0 auto;">
+                    Quick Filters ▾
+                  </button>
+                  <div id="quickFiltersPanel" style="display: none; position: absolute; top: calc(100% + 8px); left: 0; right: 0; z-index: 40; background: #fffaf3; border-radius: 12px; box-shadow: 0 12px 24px rgba(79, 59, 37, 0.18); border: 1px solid rgba(196, 139, 90, 0.22); padding: 18px; max-height: 320px; overflow-y: auto;">
+                    <h3 style="margin: 0 0 12px; font-size: 14px; color: #4b3b2a; font-weight: 600; letter-spacing: 0.2px; text-transform: uppercase;">🔍 Quick Filters</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px;">
+                      <div onclick="filterOrdersByStatus('all')" style="background: linear-gradient(135deg, #fffaf3, #f4e8d8); border-radius: 10px; box-shadow: 0 6px 14px rgba(79, 59, 37, 0.12); padding: 14px; text-align: center; cursor: pointer; transition: all 0.3s ease; border-left: 4px solid #bfa079;" 
+                           onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 10px 20px rgba(79, 59, 37, 0.18)'"
+                           onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 6px 14px rgba(79, 59, 37, 0.12)';">
+                        <div style="font-size: 20px; font-weight: 700; color: #6b5440; margin-bottom: 6px;" id="allOrdersCount">0</div>
+                        <div style="font-size: 11px; color: #6b5440; text-transform: uppercase; letter-spacing: 0.4px;">📋 All Orders</div>
+                      </div>
+                      <div onclick="filterOrdersByStatus('draft')" style="background: linear-gradient(135deg, #fff6ea, #f2e0c6); border-radius: 10px; box-shadow: 0 6px 14px rgba(79, 59, 37, 0.12); padding: 14px; text-align: center; cursor: pointer; transition: all 0.3s ease; border-left: 4px solid #d0b48c;" 
+                           onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 10px 20px rgba(79, 59, 37, 0.18)'"
+                           onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 6px 14px rgba(79, 59, 37, 0.12)';">
+                        <div style="font-size: 20px; font-weight: 700; color: #7b5a3d; margin-bottom: 6px;" id="draftOrdersCount">0</div>
+                        <div style="font-size: 11px; color: #6b5440; text-transform: uppercase; letter-spacing: 0.4px;">📝 Draft</div>
+                      </div>
+                      <div onclick="filterOrdersByStatus('pending')" style="background: linear-gradient(135deg, #fff3df, #f0d3a7); border-radius: 10px; box-shadow: 0 6px 14px rgba(79, 59, 37, 0.12); padding: 14px; text-align: center; cursor: pointer; transition: all 0.3s ease; border-left: 4px solid #d8a458;" 
+                           onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 10px 20px rgba(79, 59, 37, 0.18)'"
+                           onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 6px 14px rgba(79, 59, 37, 0.12)';">
+                        <div style="font-size: 20px; font-weight: 700; color: #b0722e; margin-bottom: 6px;" id="pendingOrdersCount">0</div>
+                        <div style="font-size: 11px; color: #6b5440; text-transform: uppercase; letter-spacing: 0.4px;">⏳ Pending</div>
+                      </div>
+                      <div onclick="filterOrdersByStatus('approved')" style="background: linear-gradient(135deg, #f0f8f4, #dcebe3); border-radius: 10px; box-shadow: 0 6px 14px rgba(79, 59, 37, 0.12); padding: 14px; text-align: center; cursor: pointer; transition: all 0.3s ease; border-left: 4px solid #8fb0a3;" 
+                           onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 10px 20px rgba(79, 59, 37, 0.18)'"
+                           onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 6px 14px rgba(79, 59, 37, 0.12)';">
+                        <div style="font-size: 20px; font-weight: 700; color: #5f7f74; margin-bottom: 6px;" id="approvedOrdersCount">0</div>
+                        <div style="font-size: 11px; color: #6b5440; text-transform: uppercase; letter-spacing: 0.4px;">✅ Approved</div>
+                      </div>
+                      <div onclick="filterOrdersByStatus('samples')" style="background: linear-gradient(135deg, #f6f0ff, #e6dbf5); border-radius: 10px; box-shadow: 0 6px 14px rgba(79, 59, 37, 0.12); padding: 14px; text-align: center; cursor: pointer; transition: all 0.3s ease; border-left: 4px solid #bfa3d6;" 
+                           onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 10px 20px rgba(79, 59, 37, 0.18)'"
+                           onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 6px 14px rgba(79, 59, 37, 0.12)';">
+                        <div style="font-size: 20px; font-weight: 700; color: #8767b2; margin-bottom: 6px;" id="samplesOrdersCount">0</div>
+                        <div style="font-size: 11px; color: #6b5440; text-transform: uppercase; letter-spacing: 0.4px;">📦 Samples</div>
+                      </div>
+                      <div onclick="filterOrdersByStatus('In Progress')" style="background: linear-gradient(135deg, #fff1e6, #f0d3bb); border-radius: 10px; box-shadow: 0 6px 14px rgba(79, 59, 37, 0.12); padding: 14px; text-align: center; cursor: pointer; transition: all 0.3s ease; border-left: 4px solid #c48b5a;" 
+                           onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 10px 20px rgba(79, 59, 37, 0.18)'"
+                           onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 6px 14px rgba(79, 59, 37, 0.12)';">
+                        <div style="font-size: 20px; font-weight: 700; color: #a66b38; margin-bottom: 6px;" id="inProgressOrdersCount">0</div>
+                        <div style="font-size: 11px; color: #6b5440; text-transform: uppercase; letter-spacing: 0.4px;">🔄 In Progress</div>
+                      </div>
+                      <div onclick="filterOrdersByStatus('review')" style="background: linear-gradient(135deg, #f3f9ef, #e3eed8); border-radius: 10px; box-shadow: 0 6px 14px rgba(79, 59, 37, 0.12); padding: 14px; text-align: center; cursor: pointer; transition: all 0.3s ease; border-left: 4px solid #a5b68f;" 
+                           onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 10px 20px rgba(79, 59, 37, 0.18)'"
+                           onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 6px 14px rgba(79, 59, 37, 0.12)';">
+                        <div style="font-size: 20px; font-weight: 700; color: #6f7f5a; margin-bottom: 6px;" id="reviewOrdersCount">0</div>
+                        <div style="font-size: 11px; color: #6b5440; text-transform: uppercase; letter-spacing: 0.4px;">🔍 Review</div>
+                      </div>
+                      <div onclick="filterOrdersByStatus('completed')" style="background: linear-gradient(135deg, #eff7f2, #dcebdc); border-radius: 10px; box-shadow: 0 6px 14px rgba(79, 59, 37, 0.12); padding: 14px; text-align: center; cursor: pointer; transition: all 0.3s ease; border-left: 4px solid #7fa284;" 
+                           onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 10px 20px rgba(79, 59, 37, 0.18)'"
+                           onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 6px 14px rgba(79, 59, 37, 0.12)';">
+                        <div style="font-size: 20px; font-weight: 700; color: #54735d; margin-bottom: 6px;" id="completedOrdersCount">0</div>
+                        <div style="font-size: 11px; color: #6b5440; text-transform: uppercase; letter-spacing: 0.4px;">🎉 Complete</div>
+                      </div>
                     </div>
                   </div>
                 </div>
 
                 <!-- Bulk Actions Panel -->
-                <div style="display: none; background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 20px;" id="bulkActionsPanel">
-                  <div style="background: linear-gradient(135deg, #f0f9ff, #e0f2fe); padding: 16px;">
+                <div style="display: none; background: #fdf8f1; border-radius: 12px; box-shadow: 0 10px 22px rgba(79, 59, 37, 0.1); margin-bottom: 24px; border: 1px solid rgba(196, 139, 90, 0.18);" id="bulkActionsPanel">
+                  <div style="background: linear-gradient(135deg, #f6ede0, #efe2d0); padding: 18px; border-radius: 12px 12px 0 0;">
                     <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
                       <div class="selected-count-info" style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
-                        <div style="background: #3b82f6; color: white; padding: 6px 12px; border-radius: 16px; font-size: 13px; font-weight: 600; box-shadow: 0 2px 4px rgba(59, 130, 246, 0.3);">
+                        <div style="background: #c48b5a; color: white; padding: 6px 12px; border-radius: 16px; font-size: 13px; font-weight: 600; box-shadow: 0 4px 12px rgba(196, 139, 90, 0.35);">
                           <span id="selectedCount">0</span> selected
                         </div>
-                        <span style="color: #6b7280; font-size: 14px; font-weight: 500;">Choose an action to apply to selected items</span>
+                        <span style="color: #6b5440; font-size: 14px; font-weight: 500;">Choose an action to apply to selected items</span>
                       </div>
                       <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-                        <button id="bulkUpdateStatus" style="background: linear-gradient(135deg, #10b981, #059669); color: white; border: none; padding: 10px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; box-shadow: 0 2px 4px rgba(16, 185, 129, 0.3); display: flex; align-items: center; gap: 6px;" 
-                                onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 12px rgba(16, 185, 129, 0.4)'" 
-                                onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 4px rgba(16, 185, 129, 0.3)'">
+                        <button id="bulkUpdateStatus" style="background: linear-gradient(135deg, #9cb89f, #7fa284); color: white; border: none; padding: 10px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; box-shadow: 0 6px 12px rgba(127, 162, 132, 0.35); display: flex; align-items: center; gap: 6px;" 
+                                onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 10px 20px rgba(127, 162, 132, 0.45)'" 
+                                onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 6px 12px rgba(127, 162, 132, 0.35)'">
                           <span>📝</span> Update Status
                         </button>
-                        <button id="bulkAssign" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed); color: white; border: none; padding: 10px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; box-shadow: 0 2px 4px rgba(139, 92, 246, 0.3); display: flex; align-items: center; gap: 6px;" 
-                                onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 12px rgba(139, 92, 246, 0.4)'" 
-                                onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 4px rgba(139, 92, 246, 0.3)'">
+                        <button id="bulkAssign" style="background: linear-gradient(135deg, #c8a6d9, #b48fc7); color: white; border: none; padding: 10px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; box-shadow: 0 6px 12px rgba(180, 143, 199, 0.35); display: flex; align-items: center; gap: 6px;" 
+                                onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 10px 20px rgba(180, 143, 199, 0.45)'" 
+                                onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 6px 12px rgba(180, 143, 199, 0.35)'">
                           <span>👤</span> Assign To
                         </button>
-                        <button id="bulkExport" style="background: linear-gradient(135deg, #f59e0b, #d97706); color: white; border: none; padding: 10px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; box-shadow: 0 2px 4px rgba(245, 158, 11, 0.3); display: flex; align-items: center; gap: 6px;" 
-                                onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 12px rgba(245, 158, 11, 0.4)'" 
-                                onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 4px rgba(245, 158, 11, 0.3)'">
+                        <button id="bulkExport" style="background: linear-gradient(135deg, #dfb37d, #c48b5a); color: white; border: none; padding: 10px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; box-shadow: 0 6px 12px rgba(196, 139, 90, 0.35); display: flex; align-items: center; gap: 6px;" 
+                                onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 10px 20px rgba(196, 139, 90, 0.45)'" 
+                                onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 6px 12px rgba(196, 139, 90, 0.35)'">
                           <span>📊</span> Export
                         </button>
-                        <button id="clearSelection" style="background: linear-gradient(135deg, #6b7280, #4b5563); color: white; border: none; padding: 10px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; box-shadow: 0 2px 4px rgba(107, 114, 128, 0.3); display: flex; align-items: center; gap: 6px;" 
-                                onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 12px rgba(107, 114, 128, 0.4)'" 
-                                onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 4px rgba(107, 114, 128, 0.3)'">
+                        <button id="clearSelection" style="background: linear-gradient(135deg, #b4a392, #8f7b63); color: white; border: none; padding: 10px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; box-shadow: 0 6px 12px rgba(143, 123, 99, 0.35); display: flex; align-items: center; gap: 6px;" 
+                                onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 10px 20px rgba(143, 123, 99, 0.45)'" 
+                                onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 6px 12px rgba(143, 123, 99, 0.35)'">
                           <span>✖️</span> Clear
                         </button>
                       </div>
@@ -4192,25 +4323,27 @@
                   </div>
                 </div>
 
-                <div style="background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); overflow: hidden;">
+                <div style="background: #fffaf3; border-radius: 12px; box-shadow: 0 10px 24px rgba(79, 59, 37, 0.1); overflow: hidden; border: 1px solid rgba(196, 139, 90, 0.18);">
                   <table style="width: 100%; border-collapse: collapse;">
                     <thead>
-                      <tr style="background: linear-gradient(135deg, #f8fafc, #f1f5f9);">
+                      <tr style="background: linear-gradient(135deg, #f7eedf, #efe0cf);">
                         <th style="width: 40px; display: none;" class="bulk-checkbox"><input type="checkbox" id="selectAllOrders"></th>
-                        <th style="padding: 12px 16px; text-align: left; font-weight: 600; color: #374151; border-bottom: 1px solid #e5e7eb;">Order Number</th>
-                        <th style="padding: 12px 16px; text-align: left; font-weight: 600; color: #374151; border-bottom: 1px solid #e5e7eb;">Title</th>
-                        <th style="padding: 12px 16px; text-align: left; font-weight: 600; color: #374151; border-bottom: 1px solid #e5e7eb;">Status</th>
-                        <th style="padding: 12px 16px; text-align: left; font-weight: 600; color: #374151; border-bottom: 1px solid #e5e7eb;">Method</th>
-                        <th style="padding: 12px 16px; text-align: left; font-weight: 600; color: #374151; border-bottom: 1px solid #e5e7eb;">Purchase Group</th>
-                        <th style="padding: 12px 16px; text-align: left; font-weight: 600; color: #374151; border-bottom: 1px solid #e5e7eb;">Event ID</th>
-                        <th style="padding: 12px 16px; text-align: left; font-weight: 600; color: #374151; border-bottom: 1px solid #e5e7eb;">Photographer</th>
-                        <th style="padding: 12px 16px; text-align: left; font-weight: 600; color: #374151; border-bottom: 1px solid #e5e7eb;">Priority</th>
-                        <th style="padding: 12px 16px; text-align: left; font-weight: 600; color: #374151; border-bottom: 1px solid #e5e7eb;">Deadline</th>
-                        <th style="padding: 12px 16px; text-align: left; font-weight: 600; color: #374151; border-bottom: 1px solid #e5e7eb;">Progress</th>
-                        <th style="padding: 12px 16px; text-align: left; font-weight: 600; color: #374151; border-bottom: 1px solid #e5e7eb; width: 100px;">Comments</th>
+                        <th style="padding: 10px 10px; text-align: center; font-weight: 600; color: #4b3b2a; border-bottom: 1px solid rgba(196, 139, 90, 0.25); width: 44px;">Details</th>
+                        <th style="padding: 10px 12px; text-align: left; font-weight: 600; color: #4b3b2a; border-bottom: 1px solid rgba(196, 139, 90, 0.25);">Order Number</th>
+                        <th style="padding: 10px 12px; text-align: left; font-weight: 600; color: #4b3b2a; border-bottom: 1px solid rgba(196, 139, 90, 0.25);">Offer ID</th>
+                        <th style="padding: 10px 12px; text-align: left; font-weight: 600; color: #4b3b2a; border-bottom: 1px solid rgba(196, 139, 90, 0.25);">Group</th>
+                        <th style="padding: 10px 12px; text-align: left; font-weight: 600; color: #4b3b2a; border-bottom: 1px solid rgba(196, 139, 90, 0.25);">Offer Name</th>
+                        <th style="padding: 10px 12px; text-align: left; font-weight: 600; color: #4b3b2a; border-bottom: 1px solid rgba(196, 139, 90, 0.25);">Shot Type</th>
+                        <th style="padding: 10px 12px; text-align: left; font-weight: 600; color: #4b3b2a; border-bottom: 1px solid rgba(196, 139, 90, 0.25);">Photo Ref.</th>
+                        <th style="padding: 10px 12px; text-align: left; font-weight: 600; color: #4b3b2a; border-bottom: 1px solid rgba(196, 139, 90, 0.25);">Production Method / Photographer</th>
+                        <th style="padding: 10px 12px; text-align: left; font-weight: 600; color: #4b3b2a; border-bottom: 1px solid rgba(196, 139, 90, 0.25);">Principle</th>
+                        <th style="padding: 10px 12px; text-align: left; font-weight: 600; color: #4b3b2a; border-bottom: 1px solid rgba(196, 139, 90, 0.25);">Preview Image</th>
+                        <th style="padding: 10px 12px; text-align: left; font-weight: 600; color: #4b3b2a; border-bottom: 1px solid rgba(196, 139, 90, 0.25); width: 92px;">Comments</th>
+                        <th style="padding: 10px 12px; text-align: left; font-weight: 600; color: #4b3b2a; border-bottom: 1px solid rgba(196, 139, 90, 0.25);">Status</th>
+                        <th style="padding: 10px 12px; text-align: left; font-weight: 600; color: #4b3b2a; border-bottom: 1px solid rgba(196, 139, 90, 0.25);">Deadline</th>
                       </tr>
                     </thead>
-                    <tbody id="ordersBody" style="background: white;">
+                    <tbody id="ordersBody" style="background: #fffaf3;">
                       <!-- Orders will be populated here -->
                     </tbody>
                   </table>
@@ -4219,8 +4352,8 @@
 
               <!-- Kanban Board View -->
               <div style="display: none;" id="kanbanView">
-                <h3 style="margin: 16px 0 8px; font-size: 18px; color: #1f2937;">📊 Kanban Board</h3>
-                <p style="margin: 0 0 16px; color: #6b7280; font-size: 14px;">Drag and drop orders to update their status</p>
+                <h3 style="margin: 16px 0 8px; font-size: 18px; color: #4b3b2a;">📊 Kanban Board</h3>
+                <p style="margin: 0 0 16px; color: #6b5440; font-size: 14px;">Drag and drop orders to update their status</p>
                 
                 <div id="kanbanBoard" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin: 16px 0; overflow-x: auto;">
                   <!-- Kanban columns will be populated here -->
@@ -4229,8 +4362,8 @@
 
               <!-- Calendar View -->
               <div style="display: none;" id="calendarView">
-                <h3 style="margin: 16px 0 8px; font-size: 18px; color: #1f2937;">📅 Calendar View</h3>
-                <p style="margin: 0 0 16px; color: #6b7280; font-size: 14px;">View order deadlines and production schedule</p>
+                <h3 style="margin: 16px 0 8px; font-size: 18px; color: #4b3b2a;">📅 Calendar View</h3>
+                <p style="margin: 0 0 16px; color: #6b5440; font-size: 14px;">View order deadlines and production schedule</p>
                 
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
                   <div style="display: flex; gap: 8px;">
@@ -4239,11 +4372,11 @@
                     <button id="calendarYear" class="btn btn-secondary">Year</button>
                   </div>
                   <div style="display: flex; align-items: center; gap: 12px;">
-                    <h4 id="calendarTitle" style="margin: 0; font-size: 16px; color: #374151;">August 2025</h4>
+                    <h4 id="calendarTitle" style="margin: 0; font-size: 16px; color: #4b3b2a;">August 2025</h4>
                     <button id="calendarPrev" class="btn">‹ Prev</button>
                     <button id="calendarNext" class="btn">Next ›</button>
                   </div>
-                  <button id="calendarToday" class="btn" style="background: #3b82f6; color: white;">Today</button>
+                  <button id="calendarToday" class="btn" style="background: #c48b5a; color: white;">Today</button>
                 </div>
                 
                 <div id="calendarContainer" style="background: white; border-radius: 8px; overflow: hidden; border: 1px solid #e5e7eb;">
@@ -4253,36 +4386,36 @@
 
               <!-- Workflow View -->
               <div style="display: none;" id="workflowView">
-                <h3 style="margin: 16px 0 8px; font-size: 18px; color: #1f2937;">🔄 Workflow Overview</h3>
-                <p style="margin: 0 0 16px; color: #6b7280; font-size: 14px;">Track order progression through workflow stages</p>
+                <h3 style="margin: 16px 0 8px; font-size: 18px; color: #4b3b2a;">🔄 Workflow Overview</h3>
+                <p style="margin: 0 0 16px; color: #6b5440; font-size: 14px;">Track order progression through workflow stages</p>
                 
                 <div id="workflowKanban" style="display: flex; gap: 16px; overflow-x: auto; padding-bottom: 16px;">
-                  <div class="kanban-column" 
-                       style="min-width: 250px; background: #f8fafc; border-radius: 8px; padding: 12px;"
+            <div class="kanban-column" 
+                style="min-width: 250px; background: #f9efe0; border-radius: 10px; padding: 14px; border: 1px solid rgba(196, 139, 90, 0.15);"
                        ondrop="handleDrop(event, 'Draft')" 
                        ondragover="handleDragOver(event)">
-                    <h4 style="margin: 0 0 12px; font-size: 14px; color: #374151; font-weight: 600;">📝 Draft Orders</h4>
+              <h4 style="margin: 0 0 12px; font-size: 14px; color: #4b3b2a; font-weight: 600;">📝 Draft Orders</h4>
                     <div id="draftOrders" class="kanban-items"></div>
                   </div>
                   <div class="kanban-column" 
-                       style="min-width: 250px; background: #fef3c7; border-radius: 8px; padding: 12px;"
+                style="min-width: 250px; background: #fcefdc; border-radius: 10px; padding: 14px; border: 1px solid rgba(216, 164, 88, 0.25);"
                        ondrop="handleDrop(event, 'Samples Requested')" 
                        ondragover="handleDragOver(event)">
                     <h4 style="margin: 0 0 12px; font-size: 14px; color: #92400e; font-weight: 600;">⏳ Samples Requested</h4>
                     <div id="samplesRequestedOrders" class="kanban-items"></div>
                   </div>
                   <div class="kanban-column" 
-                       style="min-width: 250px; background: #dbeafe; border-radius: 8px; padding: 12px;"
+                style="min-width: 250px; background: #f2e5d4; border-radius: 10px; padding: 14px; border: 1px solid rgba(196, 139, 90, 0.2);"
                        ondrop="handleDrop(event, 'In Progress')" 
                        ondragover="handleDragOver(event)">
-                    <h4 style="margin: 0 0 12px; font-size: 14px; color: #1e40af; font-weight: 600;">🎯 In Progress</h4>
+              <h4 style="margin: 0 0 12px; font-size: 14px; color: #a66b38; font-weight: 600;">🎯 In Progress</h4>
                     <div id="inProgressOrders" class="kanban-items"></div>
                   </div>
                   <div class="kanban-column" 
-                       style="min-width: 250px; background: #dcfce7; border-radius: 8px; padding: 12px;"
+                style="min-width: 250px; background: #e6efe6; border-radius: 10px; padding: 14px; border: 1px solid rgba(127, 162, 132, 0.25);"
                        ondrop="handleDrop(event, 'Complete')" 
                        ondragover="handleDragOver(event)">
-                    <h4 style="margin: 0 0 12px; font-size: 14px; color: #166534; font-weight: 600;">✅ Completed</h4>
+              <h4 style="margin: 0 0 12px; font-size: 14px; color: #54735d; font-weight: 600;">✅ Completed</h4>
                     <div id="completedOrders" class="kanban-items"></div>
                   </div>
                 </div>
@@ -4295,17 +4428,19 @@
       <style>
         /* Enhanced Sidebar Styles */
         .sidebar {
-          width: 280px;
-          background: rgba(255, 255, 255, 0.95);
+          width: 260px;
+          background: rgba(255, 248, 237, 0.92);
           backdrop-filter: blur(20px);
-          border-right: 1px solid rgba(0, 0, 0, 0.1);
-          box-shadow: 4px 0 20px rgba(0, 0, 0, 0.1);
+          border: 1px solid rgba(156, 110, 60, 0.25);
+          box-shadow: 10px 0 32px rgba(112, 82, 50, 0.15);
           transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
           position: relative;
           z-index: 100;
           display: flex;
           flex-direction: column;
-          min-height: 100vh;
+          border-radius: 16px;
+          margin: 20px 0 20px 20px;
+          min-height: calc(100vh - 40px);
         }
 
         .sidebar.collapsed {
@@ -4327,23 +4462,65 @@
         .sidebar-header {
           padding: 20px;
           padding-right: 50px;
-          border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+          border-bottom: 1px solid rgba(156, 110, 60, 0.22);
           display: flex;
           align-items: center;
-          justify-content: flex-start;
-          background: rgba(255, 255, 255, 0.8);
+          justify-content: center;
+          background: rgba(250, 236, 217, 0.85);
           position: relative;
           height: 80px; /* Fixed height to maintain consistent header size */
           min-height: 80px; /* Ensure minimum height */
           box-sizing: border-box; /* Include padding in height calculation */
+          border-radius: 16px 16px 0 0;
+        }
+
+        .sidebar-title-container {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          gap: 10px;
+          margin-bottom: 0;
+          text-align: center;
+        }
+
+        .sidebar-logo {
+          width: 32px;
+          height: 32px;
+          object-fit: contain;
+          flex-shrink: 0;
+          border-radius: 12px;
+          background: rgba(255, 252, 245, 0.85);
+          padding: 2px;
+          box-shadow: 0 10px 24px rgba(112, 82, 50, 0.18);
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .sidebar-meta {
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+        }
+
+        .sidebar-subtitle {
+          margin: 0;
+          font-size: 12px;
+          color: #6b5440;
         }
 
         .sidebar-title {
-          font-size: 18px;
+          font-size: 10px;
           font-weight: 600;
-          color: #1f2937;
+          color: #4b3b2a;
           margin: 0;
           transition: opacity 0.2s ease;
+        }
+
+        #fallback-app .sidebar-title {
+          font-size: 14px;
+          line-height: 1.1;
+          letter-spacing: -0.01em;
+          white-space: nowrap;
         }
 
         .sidebar.collapsed .sidebar-title {
@@ -4357,6 +4534,25 @@
           box-sizing: border-box; /* Include padding in height calculation */
         }
 
+        .sidebar.collapsed .sidebar-title-container {
+          margin-bottom: 0;
+        }
+
+        .sidebar.collapsed .sidebar-logo {
+          width: 32px;
+          height: 32px;
+          padding: 2px;
+          box-shadow: 0 8px 18px rgba(112, 82, 50, 0.16);
+        }
+
+        .sidebar.collapsed .sidebar-meta {
+          display: none;
+        }
+
+        .sidebar.collapsed .sidebar-title {
+          font-size: 0;
+        }
+
         .sidebar-toggle {
           background: none;
           border: none;
@@ -4364,41 +4560,47 @@
           padding: 8px;
           border-radius: 6px;
           transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-          color: #6b7280;
+          color: #8d765b;
           font-size: 16px;
           display: flex;
           align-items: center;
           justify-content: center;
           position: absolute;
           right: 8px;
-          top: 12px;
+          top: 50%;
           width: 32px;
           height: 32px;
           z-index: 10;
+          transform: translateY(-50%);
         }
 
         .sidebar.collapsed .sidebar-toggle {
           right: 20px; /* Move button 6px further right to compensate */
-          background: rgba(255, 255, 255, 0.9);
-          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-          border: 1px solid rgba(0, 0, 0, 0.1);
-          transform: translateX(-6px); /* Move the entire button with background 6px left */
+          top: 56px; /* Keep the arrow tucked just below the logo */
+          background: transparent;
+          box-shadow: none;
+          border: none;
+          transform: translate(-6px, -50%); /* Maintain horizontal shift while aligning vertically */
         }
 
         .sidebar-toggle:hover {
-          background: rgba(0, 0, 0, 0.1);
-          color: #374151;
-          transform: scale(1.1);
+          background: rgba(196, 139, 90, 0.16);
+          color: #a8703f;
+          transform: translateY(-50%) scale(1.1);
         }
 
         .sidebar.collapsed .sidebar-toggle:hover {
-          background: rgba(255, 255, 255, 1);
-          color: #374151;
-          transform: translateX(-6px) scale(1.1); /* Maintain left shift and add scale */
+          background: transparent;
+          color: #a8703f;
+          transform: translate(-6px, -50%) scale(1.1); /* Maintain left shift and consistent vertical alignment */
         }
 
         .sidebar-toggle:active {
-          transform: scale(0.95);
+          transform: translateY(-50%) scale(0.95);
+        }
+
+        .sidebar.collapsed .sidebar-toggle:active {
+          transform: translate(-6px, -50%) scale(0.95);
         }
 
         #sidebarToggleIcon {
@@ -4424,7 +4626,7 @@
           font-weight: 600;
           text-transform: uppercase;
           letter-spacing: 0.5px;
-          color: #9ca3af;
+          color: #b49877;
           transition: opacity 0.2s ease;
         }
 
@@ -4441,20 +4643,20 @@
           cursor: pointer;
           transition: all 0.2s ease;
           text-decoration: none;
-          color: #374151;
+          color: #5c4a32;
           position: relative;
         }
 
         .nav-item:hover {
-          background: rgba(99, 102, 241, 0.1);
-          color: #4f46e5;
+          background: rgba(196, 139, 90, 0.18);
+          color: #a8703f;
           transform: translateX(2px);
         }
 
         .nav-item.active {
-          background: linear-gradient(135deg, #4f46e5, #7c3aed);
-          color: white;
-          box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+          background: linear-gradient(135deg, #c99363, #b37847);
+          color: #fff9f1;
+          box-shadow: 0 12px 28px rgba(168, 112, 63, 0.32);
         }
 
         .nav-item-icon {
@@ -4528,19 +4730,19 @@
 
         /* Specific badge colors with gradients */
         .nav-item-badge[id="urgentBadge"] {
-          background: linear-gradient(135deg, #ef4444, #dc2626);
+          background: linear-gradient(135deg, #d96b5f, #b85045);
         }
 
         .nav-item-badge[id="samplesBadge"] {
-          background: linear-gradient(135deg, #f59e0b, #d97706);
+          background: linear-gradient(135deg, #e0a45c, #c3843b);
         }
 
         .nav-item-badge[id="overdueBadge"] {
-          background: linear-gradient(135deg, #dc2626, #b91c1c);
+          background: linear-gradient(135deg, #c65a4f, #a9453d);
         }
 
         .nav-item-badge[id="todayBadge"] {
-          background: linear-gradient(135deg, #3b82f6, #2563eb);
+          background: linear-gradient(135deg, #c48b5a, #a8703f);
         }
 
         /* Animation for badge updates */
@@ -4580,34 +4782,34 @@
 
         /* Enhanced Quick Action Styling */
         .nav-item-urgent:hover {
-          background: rgba(239, 68, 68, 0.1) !important;
-          color: #dc2626 !important;
+          background: rgba(217, 107, 95, 0.12) !important;
+          color: #b85045 !important;
         }
 
         .nav-item-samples:hover {
-          background: rgba(245, 158, 11, 0.1) !important;
-          color: #d97706 !important;
+          background: rgba(224, 164, 92, 0.12) !important;
+          color: #c3843b !important;
         }
 
         .nav-item-overdue:hover {
-          background: rgba(220, 38, 38, 0.1) !important;
-          color: #b91c1c !important;
+          background: rgba(198, 90, 79, 0.12) !important;
+          color: #a9453d !important;
         }
 
         .nav-item-today:hover {
-          background: rgba(59, 130, 246, 0.1) !important;
-          color: #2563eb !important;
+          background: rgba(196, 139, 90, 0.18) !important;
+          color: #a8703f !important;
         }
 
         /* Main content area */
         .main-content {
           flex: 1;
-          background: rgba(255, 255, 255, 0.95);
+          background: rgba(255, 250, 242, 0.88);
           backdrop-filter: blur(20px);
           margin: 20px;
           margin-left: 20px;
           border-radius: 16px;
-          box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+          box-shadow: 0 20px 46px rgba(114, 84, 52, 0.18);
           overflow: hidden;
           display: flex;
           flex-direction: column;
@@ -4615,9 +4817,9 @@
         }
 
         .content-header {
-          background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+          background: linear-gradient(135deg, rgba(248, 232, 212, 0.95), rgba(237, 209, 179, 0.9));
           padding: 24px 32px;
-          border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+          border-bottom: 1px solid rgba(156, 110, 60, 0.18);
           display: flex;
           justify-content: space-between;
           align-items: center;
@@ -4626,7 +4828,7 @@
         .content-title {
           font-size: 24px;
           font-weight: 700;
-          color: #1f2937;
+          color: #4b3b2a;
           margin: 0;
         }
 
@@ -4652,8 +4854,11 @@
         @media (max-width: 768px) {
           .sidebar {
             position: fixed;
-            left: -280px;
+            left: -260px;
             z-index: 1000;
+            margin: 0;
+            min-height: 100vh;
+            border-radius: 0;
           }
           
           .sidebar.open {
@@ -4717,6 +4922,51 @@
           filter: blur(1px);
           transition: filter 0.2s ease;
         }
+
+        .order-expand-button {
+          width: 26px;
+          height: 26px;
+          border: none;
+          background: transparent;
+          color: #a66b38;
+          border-radius: 6px;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 0;
+          transition: background-color 0.2s ease;
+        }
+
+        .order-expand-button:hover,
+        .order-expand-button:focus-visible,
+        #ordersBody tr:hover .order-expand-button {
+          background: rgba(196, 139, 90, 0.12);
+        }
+
+        .order-expand-button:focus-visible {
+          outline: 2px solid rgba(196, 139, 90, 0.45);
+          outline-offset: 2px;
+        }
+
+        .order-expand-arrow {
+          display: inline-block;
+          font-size: 12px;
+          line-height: 1;
+          transform: rotate(180deg);
+          opacity: 0;
+          transition: transform 0.2s ease, opacity 0.2s ease;
+        }
+
+        .order-expand-button:hover .order-expand-arrow,
+        .order-expand-button:focus-visible .order-expand-arrow,
+        #ordersBody tr:hover .order-expand-arrow {
+          opacity: 1;
+        }
+
+        .order-expand-arrow.is-open {
+          transform: rotate(90deg);
+        }
       </style>
 
       <script>
@@ -4763,7 +5013,7 @@
             
             if (currentView === 'orders' || !currentView) {
               // Get the currently filtered and searched orders
-              let orders = window.authSystem ? window.authSystem.getFilteredOrders(window.allOrders || []) : (window.allOrders || []);
+              let orders = window.authSystem ? window.authSystem.getFilteredOrders(window.rkhOrders || []) : (window.rkhOrders || []);
               
               // Apply search filter if active
               const searchBox = document.getElementById('searchBox');
@@ -5296,8 +5546,8 @@
             if (uploadContent) {
               uploadContent.innerHTML = 
                 '<div style="position: relative; text-align: center;">' +
-                  '<img src="' + uploadedImageData + '" style="max-width: 100%; max-height: 150px; border-radius: 6px; margin-bottom: 8px; border: 2px solid #10b981;">' +
-                  '<div style="font-weight: 600; margin: 8px 0; color: #10b981;">✅ Image Ready: ' + file.name + '</div>' +
+                  '<img src="' + uploadedImageData + '" style="max-width: 100%; max-height: 150px; border-radius: 6px; margin-bottom: 8px; border: 2px solid #7fa284;">' +
+                  '<div style="font-weight: 600; margin: 8px 0; color: #7fa284;">✅ Image Ready: ' + file.name + '</div>' +
                   '<div style="color: rgba(255,255,255,0.8); font-size: 12px;">Click to change image</div>' +
                 '</div>';
               
@@ -5322,7 +5572,7 @@
           
           uploadArea.addEventListener('dragover', function(e) {
             e.preventDefault();
-            uploadArea.style.borderColor = '#10b981';
+            uploadArea.style.borderColor = '#7fa284';
             uploadArea.style.backgroundColor = 'rgba(16, 185, 129, 0.1)';
           });
           
@@ -5480,27 +5730,27 @@
               '<div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">' +
                 '<div style="display: flex; align-items: center;">' +
                   '<span style="font-size: 28px; margin-right: 12px;">🚀</span>' +
-                  '<h3 style="margin: 0; color: #1f2937;">Runware AI Generated Image Preview</h3>' +
+                  '<h3 style="margin: 0; color: #4b3b2a;">Runware AI Generated Image Preview</h3>' +
                 '</div>' +
-                '<button onclick="document.getElementById(\'googleAIPreviewModal\').remove()" style="background: none; border: none; font-size: 24px; cursor: pointer; color: #6b7280;">&times;</button>' +
+                '<button onclick="document.getElementById(\'googleAIPreviewModal\').remove()" style="background: none; border: none; font-size: 24px; cursor: pointer; color: #6b5440;">&times;</button>' +
               '</div>' +
-              '<div style="background: #f0f9ff; padding: 12px; border-radius: 6px; margin-bottom: 16px; text-align: center;">' +
+              '<div style="background: #fdf4e6; padding: 12px; border-radius: 6px; margin-bottom: 16px; text-align: center;">' +
                 '🚀 <strong>Advanced AI:</strong> Powered by Runware API with Google Gemini Flash Image 2.5 model' +
               '</div>' +
-              '<div style="margin-bottom: 16px; padding: 12px; background: #f3f4f6; border-radius: 8px;">' +
+              '<div style="margin-bottom: 16px; padding: 12px; background: #f1e8dc; border-radius: 8px;">' +
                 '<strong>Operation:</strong> ' + (operation || 'Custom') + '<br>' +
                 '<strong>Instructions:</strong> ' + (instructions || 'No specific instructions provided') +
               '</div>' +
               '<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px;">' +
                 '<div style="text-align: center;">' +
-                  '<h4 style="margin: 0 0 8px; color: #374151;">Original Image</h4>' +
-                  '<div style="width: 100%; height: 200px; background: #f3f4f6; border: 2px dashed #d1d5db; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #6b7280;">' +
+                  '<h4 style="margin: 0 0 8px; color: #4b3b2a;">Original Image</h4>' +
+                  '<div style="width: 100%; height: 200px; background: #f1e8dc; border: 2px dashed #d1d5db; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #6b5440;">' +
                     (window.uploadedImageData ? '<img src="' + window.uploadedImageData + '" style="max-width: 100%; max-height: 100%; border-radius: 6px;">' : '📷 No original image') +
                   '</div>' +
                 '</div>' +
                 '<div style="text-align: center;">' +
-                  '<h4 style="margin: 0 0 8px; color: #374151;">AI Enhanced Result</h4>' +
-                  '<div style="width: 100%; height: 200px; background: #f0f9ff; border: 2px solid #3b82f6; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #374151;">' +
+                  '<h4 style="margin: 0 0 8px; color: #4b3b2a;">AI Enhanced Result</h4>' +
+                  '<div style="width: 100%; height: 200px; background: #fdf4e6; border: 2px solid #c48b5a; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #4b3b2a;">' +
                     (hasResult && imageUrl ?
                       '<img src="' + imageUrl + '" style="max-width: 100%; max-height: 100%; border-radius: 6px;">' :
                       (hasResult ?
@@ -5512,8 +5762,8 @@
                 '</div>' +
               '</div>' +
               '<div style="background: #eff6ff; padding: 16px; border-radius: 8px; margin-bottom: 16px;">' +
-                '<h4 style="margin: 0 0 8px; color: #1e40af;">🚀 Google Gemini Flash Image 2.5 Features:</h4>' +
-                '<ul style="margin: 0; padding-left: 20px; color: #1e40af; font-size: 14px;">' +
+                '<h4 style="margin: 0 0 8px; color: #a66b38;">🚀 Google Gemini Flash Image 2.5 Features:</h4>' +
+                '<ul style="margin: 0; padding-left: 20px; color: #a66b38; font-size: 14px;">' +
                   '<li>Advanced AI image generation and editing</li>' +
                   '<li>High-fidelity image processing with WebSocket</li>' +
                   '<li>Real-time image inference capabilities</li>' +
@@ -5523,9 +5773,9 @@
                 '</ul>' +
               '</div>' +
               '<div style="display: flex; gap: 12px; justify-content: flex-end;">' +
-                '<button onclick="document.getElementById(\'googleAIPreviewModal\').remove()" style="padding: 10px 20px; background: #6b7280; color: white; border: none; border-radius: 6px; cursor: pointer;">Cancel</button>' +
+                '<button onclick="document.getElementById(\'googleAIPreviewModal\').remove()" style="padding: 10px 20px; background: #6b5440; color: white; border: none; border-radius: 6px; cursor: pointer;">Cancel</button>' +
                 '<button onclick="window.retryGoogleAIProcessing()" style="padding: 10px 20px; background: #f59e0b; color: white; border: none; border-radius: 6px; cursor: pointer;">🔄 Retry</button>' +
-                '<button onclick="window.acceptGoogleAIResult(\'' + (imageUrl || '') + '\')" style="padding: 10px 20px; background: #10b981; color: white; border: none; border-radius: 6px; cursor: pointer;">✅ Accept & Assign</button>' +
+                '<button onclick="window.acceptGoogleAIResult(\'' + (imageUrl || '') + '\')" style="padding: 10px 20px; background: #7fa284; color: white; border: none; border-radius: 6px; cursor: pointer;">✅ Accept & Assign</button>' +
               '</div>' +
             '</div>';
 
@@ -5601,7 +5851,7 @@
           const orderElement = document.querySelector('[data-order-id="' + orderId + '"]');
           if (orderElement) {
             // Add visual indicator that image has been assigned
-            orderElement.style.borderLeft = '4px solid #10b981';
+            orderElement.style.borderLeft = '4px solid #7fa284';
             orderElement.setAttribute('data-has-ai-image', 'true');
           }
 
@@ -5634,24 +5884,24 @@
               '<div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">' +
                 '<div style="display: flex; align-items: center;">' +
                   '<span style="font-size: 28px; margin-right: 12px;">🍌</span>' +
-                  '<h3 style="margin: 0; color: #1f2937;">Nano Banana AI Preview</h3>' +
+                  '<h3 style="margin: 0; color: #4b3b2a;">Nano Banana AI Preview</h3>' +
                 '</div>' +
-                '<button onclick="document.getElementById(\'nanoBananaPreviewModal\').remove()" style="background: none; border: none; font-size: 24px; cursor: pointer; color: #6b7280;">&times;</button>' +
+                '<button onclick="document.getElementById(\'nanoBananaPreviewModal\').remove()" style="background: none; border: none; font-size: 24px; cursor: pointer; color: #6b5440;">&times;</button>' +
               '</div>' +
-              '<div style="margin-bottom: 16px; padding: 12px; background: #f3f4f6; border-radius: 8px;">' +
+              '<div style="margin-bottom: 16px; padding: 12px; background: #f1e8dc; border-radius: 8px;">' +
                 '<strong>Operation:</strong> ' + operation + '<br>' +
                 '<strong>Instructions:</strong> ' + (instructions || 'No specific instructions provided') +
               '</div>' +
               '<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px;">' +
                 '<div>' +
-                  '<h4 style="margin: 0 0 8px 0; color: #374151;">Original</h4>' +
-                  '<div style="width: 100%; height: 200px; background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #6b7280;">' +
+                  '<h4 style="margin: 0 0 8px 0; color: #4b3b2a;">Original</h4>' +
+                  '<div style="width: 100%; height: 200px; background: linear-gradient(135deg, #f1e8dc 0%, #e5e7eb 100%); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #6b5440;">' +
                     '📷 Original Image<br><small>Product Photo</small>' +
                   '</div>' +
                 '</div>' +
                 '<div>' +
-                  '<h4 style="margin: 0 0 8px 0; color: #374151;">AI Enhanced</h4>' +
-                  '<div style="width: 100%; height: 200px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white;">' +
+                  '<h4 style="margin: 0 0 8px 0; color: #4b3b2a;">AI Enhanced</h4>' +
+                  '<div style="width: 100%; height: 200px; background: linear-gradient(135deg, #f4e8d8 0%, #e7d2b8 100%); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white;">' +
                     '✨ AI Enhanced<br><small>Nano Banana Result</small>' +
                   '</div>' +
                 '</div>' +
@@ -5669,8 +5919,8 @@
                 '</div>' +
               '</div>' +
               '<div style="display: flex; gap: 12px; justify-content: flex-end;">' +
-                '<button onclick="document.getElementById(\'nanoBananaPreviewModal\').remove()" style="padding: 10px 20px; background: #6b7280; color: white; border: none; border-radius: 6px; cursor: pointer;">Cancel</button>' +
-                '<button onclick="applyNanoBananaChanges()" style="padding: 10px 20px; background: #059669; color: white; border: none; border-radius: 6px; cursor: pointer;">✅ Apply Changes</button>' +
+                '<button onclick="document.getElementById(\'nanoBananaPreviewModal\').remove()" style="padding: 10px 20px; background: #6b5440; color: white; border: none; border-radius: 6px; cursor: pointer;">Cancel</button>' +
+                '<button onclick="applyNanoBananaChanges()" style="padding: 10px 20px; background: #7fa284; color: white; border: none; border-radius: 6px; cursor: pointer;">✅ Apply Changes</button>' +
               '</div>' +
             '</div>';
           
@@ -5731,7 +5981,7 @@
           
           <!-- Samples View (moved inside mainContent for proper positioning) -->
           <div style="display: none;" id="samplesView">
-            <h3 style="margin: 16px 0 8px; font-size: 18px; color: #1f2937;">📦 Sample Management</h3>
+            <h3 style="margin: 16px 0 8px; font-size: 18px; color: #4b3b2a;">📦 Sample Management</h3>
             <table>
               <thead>
                 <tr>
@@ -5750,7 +6000,7 @@
         </div>
 
         <div style="display: none;" id="createOrderView">
-          <h3 style="margin: 16px 0 8px; font-size: 18px; color: #1f2937;">🎨 Create New Content Project</h3>
+          <h3 style="margin: 16px 0 8px; font-size: 18px; color: #4b3b2a;">🎨 Create New Content Project</h3>
           <div style="background: #f8fafc; padding: 16px; border-radius: 8px; margin-bottom: 16px;">
             <form id="createOrderForm" style="display: grid; gap: 12px;">
               <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
@@ -5825,7 +6075,7 @@
                 </div>
                 
                 <!-- GenAI Configuration Panel -->
-                <div id="genAIConfig" style="display: none; border: 1px solid #e5e7eb; border-radius: 6px; padding: 12px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+                <div id="genAIConfig" style="display: none; border: 1px solid #e5e7eb; border-radius: 6px; padding: 12px; background: linear-gradient(135deg, #f4e8d8 0%, #e7d2b8 100%); color: white;">
                   <div style="display: flex; align-items: center; margin-bottom: 8px;">
                     <span style="font-size: 20px; margin-right: 8px;">🍌</span>
                     <h4 style="margin: 0; font-weight: 600;">Nano Banana AI Configuration</h4>
@@ -5863,10 +6113,10 @@
                   </div>
                   
                   <div style="display: flex; gap: 8px;">
-                    <button type="button" onclick="testNanoBananaConnection()" style="padding: 6px 12px; background: #059669; color: white; border: none; border-radius: 4px; font-size: 12px;">
+                    <button type="button" onclick="testNanoBananaConnection()" style="padding: 6px 12px; background: #7fa284; color: white; border: none; border-radius: 4px; font-size: 12px;">
                       🔗 Test Connection
                     </button>
-                    <button type="button" onclick="previewAIChanges()" style="padding: 6px 12px; background: #7c3aed; color: white; border: none; border-radius: 4px; font-size: 12px;">
+                    <button type="button" onclick="previewAIChanges()" style="padding: 6px 12px; background: #b48fc7; color: white; border: none; border-radius: 4px; font-size: 12px;">
                       👁️ Preview
                     </button>
                   </div>
@@ -5911,7 +6161,7 @@
                     <input type="text" class="buyer-items" placeholder="Items for this buyer (comma-separated)" style="padding: 6px; border: 1px solid #d1d5db; border-radius: 4px; font-size: 12px;">
                     <button type="button" onclick="removeBuyer(this)" style="padding: 4px 8px; background: #ef4444; color: white; border: none; border-radius: 4px; font-size: 12px;">✕</button>
                   </div>
-                  <button type="button" id="addBuyerBtn" style="padding: 6px 12px; background: #059669; color: white; border: none; border-radius: 4px; font-size: 12px;">+ Add Buyer</button>
+                  <button type="button" id="addBuyerBtn" style="padding: 6px 12px; background: #7fa284; color: white; border: none; border-radius: 4px; font-size: 12px;">+ Add Buyer</button>
                 </div>
               </div>
 
@@ -5928,7 +6178,7 @@
                     <textarea id="articlesTextarea" name="articles" required rows="3" style="width: 100%; padding: 8px; border: 1px solid #d1d5db; border-radius: 4px;" 
                               placeholder="Articles with EAN codes will appear here...&#10;Format: Article Name [EAN: 1234567890123]"></textarea>
                   </div>
-                  <button type="button" id="scanArticleBtn" style="padding: 8px 12px; background: #2563eb; color: white; border: none; border-radius: 4px; cursor: pointer; height: 44px; white-space: nowrap;">
+                  <button type="button" id="scanArticleBtn" style="padding: 8px 12px; background: #a66b38; color: white; border: none; border-radius: 4px; cursor: pointer; height: 44px; white-space: nowrap;">
                     📷 Scan Article
                   </button>
                 </div>
@@ -5950,7 +6200,7 @@
                     <label style="display: flex; align-items: center; gap: 4px;"><input type="checkbox" name="photoTypes" value="Package"> Packaging</label>
                     <label style="display: flex; align-items: center; gap: 4px;"><input type="checkbox" name="photoTypes" value="Group"> Group Shot</label>
                   </div>
-                  <div id="appliedRulesInfo" style="font-size: 11px; color: #6b7280; margin-top: 8px; display: none;">
+                  <div id="appliedRulesInfo" style="font-size: 11px; color: #6b5440; margin-top: 8px; display: none;">
                     Applied rules will be shown here...
                   </div>
                 </div>
@@ -5971,26 +6221,26 @@
         </div>
 
         <div style="display: none;" id="templatesView">
-          <h3 style="margin: 16px 0 8px; font-size: 18px; color: #1f2937;">⚡ Quick Templates</h3>
+          <h3 style="margin: 16px 0 8px; font-size: 18px; color: #4b3b2a;">⚡ Quick Templates</h3>
           <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; margin-bottom: 16px;">
             <div class="template-card" data-template="product-hero" style="background: white; border: 1px solid #e5e7eb; border-radius: 8px; padding: 16px; cursor: pointer; transition: all 0.2s;">
-              <h4 style="margin: 0 0 8px; color: #1f2937;">📸 Product Hero Shots</h4>
-              <p style="margin: 0 0 8px; font-size: 13px; color: #6b7280;">High-impact product photography for marketing campaigns</p>
+              <h4 style="margin: 0 0 8px; color: #4b3b2a;">📸 Product Hero Shots</h4>
+              <p style="margin: 0 0 8px; font-size: 13px; color: #6b5440;">High-impact product photography for marketing campaigns</p>
               <div style="font-size: 11px; color: #9ca3af;">Method: Photographer • Priority: High • Duration: 3-5 days</div>
             </div>
             <div class="template-card" data-template="ecommerce-batch" style="background: white; border: 1px solid #e5e7eb; border-radius: 8px; padding: 16px; cursor: pointer; transition: all 0.2s;">
-              <h4 style="margin: 0 0 8px; color: #1f2937;">🛒 E-commerce Batch</h4>
-              <p style="margin: 0 0 8px; font-size: 13px; color: #6b7280;">Automated white background product shots for online store</p>
+              <h4 style="margin: 0 0 8px; color: #4b3b2a;">🛒 E-commerce Batch</h4>
+              <p style="margin: 0 0 8px; font-size: 13px; color: #6b5440;">Automated white background product shots for online store</p>
               <div style="font-size: 11px; color: #9ca3af;">Method: Photo Box • Priority: Medium • Duration: 1-2 days</div>
             </div>
             <div class="template-card" data-template="lifestyle-campaign" style="background: white; border: 1px solid #e5e7eb; border-radius: 8px; padding: 16px; cursor: pointer; transition: all 0.2s;">
-              <h4 style="margin: 0 0 8px; color: #1f2937;">🌟 Lifestyle Campaign</h4>
-              <p style="margin: 0 0 8px; font-size: 13px; color: #6b7280;">Professional lifestyle photography with models and scenarios</p>
+              <h4 style="margin: 0 0 8px; color: #4b3b2a;">🌟 Lifestyle Campaign</h4>
+              <p style="margin: 0 0 8px; font-size: 13px; color: #6b5440;">Professional lifestyle photography with models and scenarios</p>
               <div style="font-size: 11px; color: #9ca3af;">Method: External Studio • Priority: High • Duration: 5-7 days</div>
             </div>
             <div class="template-card" data-template="detail-macro" style="background: white; border: 1px solid #e5e7eb; border-radius: 8px; padding: 16px; cursor: pointer; transition: all 0.2s;">
-              <h4 style="margin: 0 0 8px; color: #1f2937;">🔍 Detail & Macro</h4>
-              <p style="margin: 0 0 8px; font-size: 13px; color: #6b7280;">Close-up detail shots highlighting product features</p>
+              <h4 style="margin: 0 0 8px; color: #4b3b2a;">🔍 Detail & Macro</h4>
+              <p style="margin: 0 0 8px; font-size: 13px; color: #6b5440;">Close-up detail shots highlighting product features</p>
               <div style="font-size: 11px; color: #9ca3af;">Method: Internal Studio • Priority: Medium • Duration: 2-3 days</div>
             </div>
           </div>
@@ -6023,7 +6273,7 @@
           <tbody id="ordersBody"></tbody>
         </table>
 
-        <div id="diag" style="margin-top: 16px; font-size: 12px; color: #6b7280; white-space: pre-wrap; max-height: 200px; overflow-y: auto;"></div>
+        <div id="diag" style="margin-top: 16px; font-size: 12px; color: #6b5440; white-space: pre-wrap; max-height: 200px; overflow-y: auto;"></div>
 
         </div>
       </div>
@@ -6082,6 +6332,359 @@
     let currentView = 'orders';
     let bulkMode = false;
     let selectedItems = new Set();
+    let expandedOrders = new Set();
+    let statusFilterOverride = '';
+
+  const SALES_ORG_OPTIONS = ['Bilka', 'føtex', 'netto', 'Fætter BR', 'Salling'];
+  const DEFAULT_TACTIC_TYPE = 'Print';
+  const DEFAULT_TACTIC = 'Leaflet';
+    const orderFilters = {
+      salesOrg: '',
+      eventId: '',
+      tacticType: '',
+      tactic: ''
+    };
+
+    function getAccessibleOrders() {
+      const sourceOrders = window.rkhOrders || [];
+      assignSalesOrgMetadata(sourceOrders);
+      return authSystem && typeof authSystem.getFilteredOrders === 'function'
+        ? authSystem.getFilteredOrders(sourceOrders)
+        : sourceOrders;
+    }
+
+    function hasPrimaryOrderFilter() {
+      return Boolean(orderFilters.salesOrg || orderFilters.eventId || orderFilters.tacticType || orderFilters.tactic || statusFilterOverride);
+    }
+
+    function normalizeFilterValue(value) {
+      return (value || '').toString().trim();
+    }
+
+    function normalizeComparisonValue(value) {
+      return normalizeFilterValue(value).toLowerCase();
+    }
+
+    function getRandomSalesOrg() {
+      return SALES_ORG_OPTIONS[Math.floor(Math.random() * SALES_ORG_OPTIONS.length)];
+    }
+
+    function assignSalesOrgToOrder(order, fallbackIndex = null) {
+      if (!order || typeof order !== 'object') return;
+
+      const rawValue = order.salesOrg || order.salesOrganisation || order.salesOrganization || order.format;
+      if (rawValue) {
+        const normalized = normalizeComparisonValue(rawValue);
+        const matched = SALES_ORG_OPTIONS.find(option => normalizeComparisonValue(option) === normalized);
+        order.salesOrg = matched || normalizeFilterValue(rawValue);
+      } else if (fallbackIndex !== null && !Number.isNaN(fallbackIndex)) {
+        const index = Math.abs(fallbackIndex) % SALES_ORG_OPTIONS.length;
+        order.salesOrg = SALES_ORG_OPTIONS[index];
+      } else {
+        order.salesOrg = getRandomSalesOrg();
+      }
+
+      order.tacticType = DEFAULT_TACTIC_TYPE;
+      order.tactic = DEFAULT_TACTIC;
+    }
+
+    function assignSalesOrgMetadata(orders) {
+      if (!Array.isArray(orders) || orders.length === 0) return;
+      const seed = Math.floor(Math.random() * SALES_ORG_OPTIONS.length);
+      orders.forEach((order, index) => assignSalesOrgToOrder(order, seed + index));
+    }
+
+    assignSalesOrgMetadata(window.rkhOrders || (typeof allOrders !== 'undefined' ? allOrders : []));
+
+    function getSalesOrgValue(order) {
+      return normalizeFilterValue(order.salesOrg || order.salesOrganisation || order.salesOrganization || order.format || '');
+    }
+
+    function getTacticTypeValue(order) {
+      return normalizeFilterValue(order.tacticType || order.tactic_type || '');
+    }
+
+    function getTacticValue(order) {
+      return normalizeFilterValue(order.tactic || order.tacticName || '');
+    }
+
+    function applyActiveOrderFilters(orderList) {
+      const expectedSalesOrg = normalizeComparisonValue(orderFilters.salesOrg);
+      const expectedEventId = normalizeComparisonValue(orderFilters.eventId);
+      const expectedTacticType = normalizeComparisonValue(orderFilters.tacticType);
+      const expectedTactic = normalizeComparisonValue(orderFilters.tactic);
+
+      if (!hasPrimaryOrderFilter()) {
+        return [];
+      }
+
+      return orderList.filter(order => {
+        if (expectedSalesOrg) {
+          const actualSalesOrg = normalizeComparisonValue(getSalesOrgValue(order));
+          if (!actualSalesOrg || actualSalesOrg !== expectedSalesOrg) {
+            return false;
+          }
+        }
+
+        if (expectedEventId) {
+          const actualEventId = normalizeComparisonValue(order.eventId);
+          if (!actualEventId || actualEventId !== expectedEventId) {
+            return false;
+          }
+        }
+
+        if (expectedTacticType) {
+          const actualTacticType = normalizeComparisonValue(getTacticTypeValue(order));
+          if (!actualTacticType || actualTacticType !== expectedTacticType) {
+            return false;
+          }
+        }
+
+        if (expectedTactic) {
+          const actualTactic = normalizeComparisonValue(getTacticValue(order));
+          if (!actualTactic || actualTactic !== expectedTactic) {
+            return false;
+          }
+        }
+
+        return true;
+      });
+    }
+
+    function getStatusFilterLabel(statusKey) {
+      const normalized = normalizeComparisonValue(statusKey);
+      const labelMap = {
+        urgent: 'Urgent Orders',
+        overdue: 'Overdue Orders',
+        today: "Today's Deadlines",
+        'today-deadlines': "Today's Deadlines",
+        draft: 'Draft & New',
+        pending: 'Pending Orders',
+        approved: 'Approved Orders',
+        samples: 'Sample Logistics',
+        'ready-samples': 'Sample Logistics',
+        inprogress: 'In Progress Orders',
+        'in progress': 'In Progress Orders',
+        review: 'Orders in Review',
+        completed: 'Completed Orders',
+        all: 'All Orders'
+      };
+
+      if (!normalized) return '';
+      return labelMap[normalized] || `Status: ${statusKey}`;
+    }
+
+    function applyStatusFilter(orderList, statusKey) {
+      const normalized = normalizeComparisonValue(statusKey);
+      if (!normalized || normalized === 'all') {
+        return { orders: orderList, label: normalized === 'all' ? 'All Orders' : '' };
+      }
+
+      const endOfToday = new Date();
+      endOfToday.setHours(23, 59, 59, 999);
+      const todayStr = new Date().toISOString().split('T')[0];
+
+      const filtered = orderList.filter(order => {
+        const statusValue = normalizeComparisonValue(order.status);
+        const priorityValue = normalizeComparisonValue(order.priority);
+
+        switch (normalized) {
+          case 'urgent':
+            return priorityValue === 'high' || priorityValue === 'critical' || priorityValue === 'urgent';
+          case 'overdue': {
+            const deadline = new Date(order.deadline);
+            return deadline < endOfToday && statusValue !== 'complete' && statusValue !== 'completed' && statusValue !== 'delivered' && statusValue !== 'archived';
+          }
+          case 'today':
+          case 'today-deadlines':
+            return (order.deadline || '').split('T')[0] === todayStr;
+          case 'draft':
+            return statusValue === 'draft' || statusValue === 'new request';
+          case 'pending':
+            return statusValue === 'pending approval' || statusValue === 'pending';
+          case 'approved':
+            return statusValue === 'approved';
+          case 'samples':
+          case 'ready-samples':
+            return statusValue === 'samples requested' || statusValue === 'samples in transit' || statusValue === 'samples received' || statusValue === 'ready for production';
+          case 'inprogress':
+          case 'in progress':
+            return statusValue === 'in progress' || statusValue === 'photo session' || statusValue === 'processing';
+          case 'review':
+            return statusValue === 'review';
+          case 'completed':
+            return statusValue === 'complete' || statusValue === 'completed' || statusValue === 'delivered' || statusValue === 'archived';
+          default:
+            return statusValue === normalized;
+        }
+      });
+
+  return { orders: filtered, label: getStatusFilterLabel(statusKey) };
+    }
+
+    function setStatusFilterOverride(value, options = {}) {
+      const normalized = normalizeFilterValue(value);
+      statusFilterOverride = normalized;
+
+      if (!options.skipRender && typeof drawOrderRows === 'function') {
+        drawOrderRows();
+      }
+    }
+
+    function updateOrderFilterSummary(filteredOrders) {
+      const countElement = document.getElementById('eventIdOrderCount');
+      if (!countElement) return;
+
+      if (!hasPrimaryOrderFilter()) {
+        countElement.textContent = 'Select a Sales Org, Event, Status, Tactic Type, or Tactic to view orders';
+        return;
+      }
+
+      let ordersList = filteredOrders || applyActiveOrderFilters(getAccessibleOrders());
+      const activeFilters = [];
+
+      if (orderFilters.salesOrg) activeFilters.push(`Sales Org: ${orderFilters.salesOrg}`);
+      if (orderFilters.eventId) activeFilters.push(`Event: ${orderFilters.eventId}`);
+      if (orderFilters.tacticType) activeFilters.push(`Tactic Type: ${orderFilters.tacticType}`);
+      if (orderFilters.tactic) activeFilters.push(`Tactic: ${orderFilters.tactic}`);
+
+      if (statusFilterOverride) {
+        const statusResult = applyStatusFilter(ordersList, statusFilterOverride);
+        ordersList = statusResult.orders;
+        const statusLabel = statusResult.label || getStatusFilterLabel(statusFilterOverride);
+        if (statusLabel) {
+          activeFilters.push(statusLabel);
+        }
+      }
+
+      const countText = ordersList.length === 1 ? '1 order' : `${ordersList.length} orders`;
+      countElement.textContent = activeFilters.length
+        ? `${countText} • ${activeFilters.join(' • ')}`
+        : countText;
+    }
+
+    function populateSalesOrgFilterOptions() {
+      const select = document.getElementById('salesOrgFilter');
+      if (!select) return;
+
+      const previousValue = orderFilters.salesOrg;
+      select.innerHTML = '<option value="">All Sales Orgs</option>';
+
+      SALES_ORG_OPTIONS.forEach(org => {
+        const option = document.createElement('option');
+        option.value = org;
+        option.textContent = org;
+        select.appendChild(option);
+      });
+
+      select.value = previousValue || '';
+    }
+
+    function populateTacticTypeFilterOptions() {
+      const select = document.getElementById('tacticTypeFilter');
+      if (!select) return;
+
+      const ordersList = getAccessibleOrders();
+      const types = Array.from(new Set(ordersList.map(o => getTacticTypeValue(o)).filter(Boolean)))
+        .sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
+
+      const previousValue = orderFilters.tacticType;
+      select.innerHTML = '<option value="">All Tactic Types</option>';
+
+      types.forEach(type => {
+        const option = document.createElement('option');
+        option.value = type;
+        option.textContent = type;
+        select.appendChild(option);
+      });
+
+      if (previousValue && !types.includes(previousValue)) {
+        orderFilters.tacticType = '';
+      }
+
+      select.value = orderFilters.tacticType || '';
+      select.disabled = types.length === 0;
+    }
+
+    function populateTacticFilterOptions() {
+      const select = document.getElementById('tacticFilter');
+      if (!select) return;
+
+      const ordersList = getAccessibleOrders();
+      const tacticTypeFilter = normalizeComparisonValue(orderFilters.tacticType);
+
+      const filteredOrders = tacticTypeFilter
+        ? ordersList.filter(order => normalizeComparisonValue(getTacticTypeValue(order)) === tacticTypeFilter)
+        : ordersList;
+
+      const tactics = Array.from(new Set(filteredOrders.map(o => getTacticValue(o)).filter(Boolean)))
+        .sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
+
+      const previousValue = orderFilters.tactic;
+      select.innerHTML = '<option value="">All Tactics</option>';
+
+      tactics.forEach(tactic => {
+        const option = document.createElement('option');
+        option.value = tactic;
+        option.textContent = tactic;
+        select.appendChild(option);
+      });
+
+      if (previousValue && !tactics.includes(previousValue)) {
+        orderFilters.tactic = '';
+      }
+
+      select.value = orderFilters.tactic || '';
+      select.disabled = tactics.length === 0;
+    }
+
+    function refreshOrdersAfterFilterChange() {
+      if (typeof drawOrderRows === 'function') {
+        drawOrderRows();
+      }
+    }
+
+    function handleSalesOrgFilterChange(value) {
+      orderFilters.salesOrg = normalizeFilterValue(value);
+      refreshOrdersAfterFilterChange();
+    }
+
+    function handleTacticTypeFilterChange(value) {
+      orderFilters.tacticType = normalizeFilterValue(value);
+      populateTacticFilterOptions();
+      refreshOrdersAfterFilterChange();
+    }
+
+    function handleTacticFilterChange(value) {
+      orderFilters.tactic = normalizeFilterValue(value);
+      refreshOrdersAfterFilterChange();
+    }
+
+    function handleEventFilterChange(value) {
+      orderFilters.eventId = normalizeFilterValue(value);
+      refreshOrdersAfterFilterChange();
+    }
+
+    function refreshOrderFilters() {
+      populateSalesOrgFilterOptions();
+      populateTacticTypeFilterOptions();
+      populateTacticFilterOptions();
+      if (typeof window.populateEventIdSuggestions === 'function') {
+        window.populateEventIdSuggestions();
+      }
+      updateOrderFilterSummary();
+    }
+
+    window.populateSalesOrgFilterOptions = populateSalesOrgFilterOptions;
+    window.populateTacticTypeFilterOptions = populateTacticTypeFilterOptions;
+    window.populateTacticFilterOptions = populateTacticFilterOptions;
+    window.updateOrderFilterSummary = updateOrderFilterSummary;
+    window.handleSalesOrgFilterChange = handleSalesOrgFilterChange;
+    window.handleTacticTypeFilterChange = handleTacticTypeFilterChange;
+    window.handleTacticFilterChange = handleTacticFilterChange;
+    window.handleEventFilterChange = handleEventFilterChange;
+    window.refreshOrderFilters = refreshOrderFilters;
+  window.setStatusFilterOverride = setStatusFilterOverride;
 
     // Calendar state
     let calendarDate = new Date();
@@ -6269,11 +6872,12 @@
         if (targetView) {
           targetView.style.display = 'block';
           targetView.classList.add('view-active');
-          if (typeof drawOrderRows === 'function') drawOrderRows();
-          // Populate Event ID suggestions when orders view loads
-          if (typeof window.populateEventIdSuggestions === 'function') {
-            setTimeout(() => window.populateEventIdSuggestions(), 100);
+          if (typeof refreshOrderFilters === 'function') {
+            refreshOrderFilters();
+          } else if (typeof window.populateEventIdSuggestions === 'function') {
+            window.populateEventIdSuggestions();
           }
+          if (typeof drawOrderRows === 'function') drawOrderRows();
         }
       } else if (viewName === 'samples') {
         targetView = document.getElementById('samplesView');
@@ -6322,12 +6926,12 @@
 
     // Function to populate dashboard content
     function populateDashboardContent() {
-      if (!window.allOrders || !window.authSystem) {
+      if (!window.rkhOrders || !window.authSystem) {
         console.error('Dashboard: Required data not available');
         return;
       }
 
-      const orders = window.authSystem.getFilteredOrders(window.allOrders);
+      const orders = window.authSystem.getFilteredOrders(window.rkhOrders);
       
       // Calculate stats
       const stats = {
@@ -6338,67 +6942,35 @@
         newRequests: orders.filter(o => o.status === 'New Request' || o.status === 'Draft').length
       };
 
-      // Populate stats grid with process flow order
+      const draftCount = orders.filter(o => o.status === 'Draft' || o.status === 'New Request').length;
+      const pendingCount = orders.filter(o => o.status === 'Pending Approval' || o.status === 'Pending').length;
+      const approvedCount = orders.filter(o => o.status === 'Approved').length;
+      const samplesCount = orders.filter(o => o.status === 'Samples Requested' || o.status === 'Samples in Transit' || o.status === 'Samples Received').length;
+      const reviewCount = orders.filter(o => o.status === 'Review').length;
+
+      // Populate stats grid with updated beige palette
       const statsContainer = document.getElementById('dashboardStats');
       if (statsContainer) {
-        statsContainer.innerHTML = `
-          <!-- Process Flow Order -->
-          <div onclick="filterOrdersByStatus('all')" style="background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); padding: 16px; text-align: center; cursor: pointer; transition: all 0.3s ease; border-left: 4px solid #6b7280;" 
-               onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.15)'"
-               onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 4px rgba(0,0,0,0.1)'">
-            <div style="font-size: 24px; font-weight: bold; color: #6b7280; margin-bottom: 8px;">${stats.total}</div>
-            <div style="font-size: 12px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px;">📋 All Orders</div>
+        const tileData = [
+          { filter: 'all', label: '📋 All Orders', count: stats.total, accent: '#6b5440', subtitle: 'Full pipeline snapshot' },
+          { filter: 'draft', label: '📝 Draft & New', count: draftCount, accent: '#c48b5a', subtitle: 'Requests awaiting kickoff' },
+          { filter: 'pending', label: '⏳ Pending', count: pendingCount, accent: '#d69b55', subtitle: 'Awaiting approvals & inputs' },
+          { filter: 'approved', label: '✅ Approved', count: approvedCount, accent: '#7fa284', subtitle: 'Ready for production' },
+          { filter: 'samples', label: '📦 Samples', count: samplesCount, accent: '#d0aa7c', subtitle: 'Logistics & samples in motion' },
+          { filter: 'In Progress', label: '🔄 In Progress', count: stats.inProgress, accent: '#a66b38', subtitle: 'Active content creation' },
+          { filter: 'review', label: '🔍 Review', count: reviewCount, accent: '#b98c6f', subtitle: 'Stakeholder review cycle' },
+          { filter: 'completed', label: '🎉 Complete', count: stats.complete, accent: '#4b3b2a', subtitle: 'Delivered & wrapped' }
+        ];
+
+        statsContainer.innerHTML = tileData.map(tile => `
+          <div onclick="filterOrdersByStatus('${tile.filter}')" style="background: linear-gradient(135deg, #fdf4e6 0%, #f2e4d2 100%); border-radius: 14px; box-shadow: 0 10px 24px rgba(112, 82, 50, 0.12); padding: 18px; text-align: center; cursor: pointer; transition: transform 0.3s ease, box-shadow 0.3s ease; border: 1px solid rgba(196, 139, 90, 0.24); border-left: 5px solid ${tile.accent};"
+               onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 16px 32px rgba(112,82,50,0.18)';"
+               onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 10px 24px rgba(112,82,50,0.12)';">
+            <div style="font-size: 26px; font-weight: 700; color: ${tile.accent}; margin-bottom: 6px;">${tile.count}</div>
+            <div style="font-size: 12px; color: #5b4635; text-transform: uppercase; letter-spacing: 0.6px;">${tile.label}</div>
+            <div style="margin-top: 6px; font-size: 11px; color: rgba(75, 59, 42, 0.72);">${tile.subtitle}</div>
           </div>
-          
-          <div onclick="filterOrdersByStatus('draft')" style="background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); padding: 16px; text-align: center; cursor: pointer; transition: all 0.3s ease; border-left: 4px solid #94a3b8;" 
-               onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.15)'"
-               onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 4px rgba(0,0,0,0.1)'">
-            <div style="font-size: 24px; font-weight: bold; color: #94a3b8; margin-bottom: 8px;">${orders.filter(o => o.status === 'Draft' || o.status === 'New Request').length}</div>
-            <div style="font-size: 12px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px;">📝 Draft</div>
-          </div>
-          
-          <div onclick="filterOrdersByStatus('pending')" style="background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); padding: 16px; text-align: center; cursor: pointer; transition: all 0.3s ease; border-left: 4px solid #f59e0b;" 
-               onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.15)'"
-               onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 4px rgba(0,0,0,0.1)'">
-            <div style="font-size: 24px; font-weight: bold; color: #f59e0b; margin-bottom: 8px;">${orders.filter(o => o.status === 'Pending Approval' || o.status === 'Pending').length}</div>
-            <div style="font-size: 12px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px;">⏳ Pending</div>
-          </div>
-          
-          <div onclick="filterOrdersByStatus('approved')" style="background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); padding: 16px; text-align: center; cursor: pointer; transition: all 0.3s ease; border-left: 4px solid #06b6d4;" 
-               onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.15)'"
-               onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 4px rgba(0,0,0,0.1)'">
-            <div style="font-size: 24px; font-weight: bold; color: #06b6d4; margin-bottom: 8px;">${orders.filter(o => o.status === 'Approved').length}</div>
-            <div style="font-size: 12px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px;">✅ Approved</div>
-          </div>
-          
-          <div onclick="filterOrdersByStatus('samples')" style="background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); padding: 16px; text-align: center; cursor: pointer; transition: all 0.3s ease; border-left: 4px solid #8b5cf6;" 
-               onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.15)'"
-               onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 4px rgba(0,0,0,0.1)'">
-            <div style="font-size: 24px; font-weight: bold; color: #8b5cf6; margin-bottom: 8px;">${orders.filter(o => o.status === 'Samples Requested' || o.status === 'Samples in Transit' || o.status === 'Samples Received').length}</div>
-            <div style="font-size: 12px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px;">📦 Samples</div>
-          </div>
-          
-          <div onclick="filterOrdersByStatus('In Progress')" style="background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); padding: 16px; text-align: center; cursor: pointer; transition: all 0.3s ease; border-left: 4px solid #3b82f6;" 
-               onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.15)'"
-               onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 4px rgba(0,0,0,0.1)'">
-            <div style="font-size: 24px; font-weight: bold; color: #3b82f6; margin-bottom: 8px;">${stats.inProgress}</div>
-            <div style="font-size: 12px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px;">🔄 In Progress</div>
-          </div>
-          
-          <div onclick="filterOrdersByStatus('review')" style="background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); padding: 16px; text-align: center; cursor: pointer; transition: all 0.3s ease; border-left: 4px solid #10b981;" 
-               onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.15)'"
-               onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 4px rgba(0,0,0,0.1)'">
-            <div style="font-size: 24px; font-weight: bold; color: #10b981; margin-bottom: 8px;">${orders.filter(o => o.status === 'Review').length}</div>
-            <div style="font-size: 12px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px;">🔍 Review</div>
-          </div>
-          
-          <div onclick="filterOrdersByStatus('completed')" style="background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); padding: 16px; text-align: center; cursor: pointer; transition: all 0.3s ease; border-left: 4px solid #059669;" 
-               onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.15)'"
-               onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 4px rgba(0,0,0,0.1)'">
-            <div style="font-size: 24px; font-weight: bold; color: #059669; margin-bottom: 8px;">${stats.complete}</div>
-            <div style="font-size: 12px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px;">🎉 Complete</div>
-          </div>
-        `;
+        `).join('');
       }
 
       // Populate recent orders
@@ -6409,21 +6981,21 @@
           <table style="width: 100%; border-collapse: collapse;">
             <thead>
               <tr style="background: #f8fafc;">
-                <th style="padding: 12px 16px; text-align: left; font-weight: 600; color: #374151; border-bottom: 1px solid #e5e7eb;">Order #</th>
-                <th style="padding: 12px 16px; text-align: left; font-weight: 600; color: #374151; border-bottom: 1px solid #e5e7eb;">Title</th>
-                <th style="padding: 12px 16px; text-align: left; font-weight: 600; color: #374151; border-bottom: 1px solid #e5e7eb;">Status</th>
-                <th style="padding: 12px 16px; text-align: left; font-weight: 600; color: #374151; border-bottom: 1px solid #e5e7eb;">Priority</th>
-                <th style="padding: 12px 16px; text-align: left; font-weight: 600; color: #374151; border-bottom: 1px solid #e5e7eb;">Deadline</th>
+                <th style="padding: 12px 16px; text-align: left; font-weight: 600; color: #4b3b2a; border-bottom: 1px solid #e5e7eb;">Order #</th>
+                <th style="padding: 12px 16px; text-align: left; font-weight: 600; color: #4b3b2a; border-bottom: 1px solid #e5e7eb;">Title</th>
+                <th style="padding: 12px 16px; text-align: left; font-weight: 600; color: #4b3b2a; border-bottom: 1px solid #e5e7eb;">Status</th>
+                <th style="padding: 12px 16px; text-align: left; font-weight: 600; color: #4b3b2a; border-bottom: 1px solid #e5e7eb;">Priority</th>
+                <th style="padding: 12px 16px; text-align: left; font-weight: 600; color: #4b3b2a; border-bottom: 1px solid #e5e7eb;">Deadline</th>
               </tr>
             </thead>
             <tbody>
               ${recentOrders.map(order => `
-                <tr onclick="showOrderDetails('${order.orderNumber}')" style="cursor: pointer; border-bottom: 1px solid #f3f4f6;" onmouseover="this.style.backgroundColor='#f9fafb'" onmouseout="this.style.backgroundColor=''">
-                  <td style="padding: 12px 16px; color: #374151;"><strong>${order.orderNumber}</strong></td>
-                  <td style="padding: 12px 16px; color: #374151;">${order.title}</td>
+                <tr onclick="showOrderDetails('${order.orderNumber}')" style="cursor: pointer; border-bottom: 1px solid #f1e8dc;" onmouseover="this.style.backgroundColor='#f9fafb'" onmouseout="this.style.backgroundColor=''">
+                  <td style="padding: 12px 16px; color: #4b3b2a;"><strong>${order.orderNumber}</strong></td>
+                  <td style="padding: 12px 16px; color: #4b3b2a;">${order.title}</td>
                   <td style="padding: 12px 16px;"><span class="status ${order.status.replace(/\s+/g, '')}">${order.status}</span></td>
                   <td style="padding: 12px 16px;"><span class="status ${order.priority}">${order.priority}</span></td>
-                  <td style="padding: 12px 16px; color: #374151;">${order.deadline}</td>
+                  <td style="padding: 12px 16px; color: #4b3b2a;">${order.deadline}</td>
                 </tr>
               `).join('')}
             </tbody>
@@ -6497,8 +7069,8 @@
       modal.id = 'leftSideCreateModal';
       modal.style.cssText = `
         position: fixed;
-        top: 0;
-        left: 280px;
+    top: 0;
+    left: 260px;
         width: 450px;
         height: 100vh;
         background: rgba(255, 255, 255, 0.98);
@@ -6518,11 +7090,11 @@
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 2px solid #e5e7eb;">
           <div style="display: flex; align-items: center; gap: 10px;">
             <img src="/CCP_Logog.png" alt="CCP Logo" style="width: 28px; height: 28px; object-fit: contain;" />
-            <h3 style="margin: 0; font-size: 20px; color: #1f2937; font-weight: 600;">Create New Content Project</h3>
+            <h3 style="margin: 0; font-size: 20px; color: #4b3b2a; font-weight: 600;">Create New Content Project</h3>
           </div>
           <button onclick="closeCreateOrderLeftModal()" style="background: #ef4444; color: white; border: none; border-radius: 50%; width: 32px; height: 32px; cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center;">×</button>
         </div>
-        ${existingCreateView.innerHTML.replace('<h3 style="margin: 16px 0 8px; font-size: 18px; color: #1f2937;">🎨 Create New Content Project</h3>', '')}
+  ${existingCreateView.innerHTML.replace('<h3 style="margin: 16px 0 8px; font-size: 18px; color: #4b3b2a;">🎨 Create New Content Project</h3>', '')}
       `;
 
       document.body.appendChild(modal);
@@ -6535,7 +7107,7 @@
       // Shift main content to the right to make space for modal
       const mainContent = document.querySelector('.main-content');
       if (mainContent) {
-        mainContent.style.marginLeft = '450px';
+  mainContent.style.marginLeft = '520px';
         mainContent.style.transition = 'margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
       }
     }
@@ -6578,48 +7150,54 @@
       modal.style.cssText = `
         position: fixed;
         top: 0;
-        left: 280px;
-        width: 450px;
+        left: 260px;
+        width: 520px;
         height: 100vh;
-        background: rgba(255, 255, 255, 0.98);
-        backdrop-filter: blur(20px);
-        border-right: 1px solid rgba(0, 0, 0, 0.1);
-        box-shadow: 4px 0 20px rgba(0, 0, 0, 0.15);
+        background: rgba(255, 250, 243, 0.97);
+        backdrop-filter: blur(22px);
+        border-right: 1px solid rgba(196, 139, 90, 0.25);
+        box-shadow: 12px 0 40px rgba(75, 59, 42, 0.18);
         z-index: 1000;
         overflow-y: auto;
         transform: translateX(-100%);
         transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        padding: 20px;
+        padding: 28px;
       `;
 
       modal.innerHTML = `
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 2px solid #e5e7eb;">
-          <h3 style="margin: 0; font-size: 20px; color: #1f2937; font-weight: 600;">📷 Scan Article</h3>
-          <button onclick="closeScanArticleRightModal()" style="background: #ef4444; color: white; border: none; border-radius: 50%; width: 32px; height: 32px; cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center;">×</button>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 2px solid rgba(196, 139, 90, 0.28);">
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <div style="font-size: 28px; color: #c48b5a; background: rgba(196, 139, 90, 0.14); width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center;">📷</div>
+            <div>
+              <h3 style="margin: 0; font-size: 22px; color: #4b3b2a; font-weight: 600; letter-spacing: 0.2px;">Scan Article</h3>
+              <p style="margin: 4px 0 0; font-size: 12px; color: rgba(107, 84, 64, 0.78); letter-spacing: 0.3px;">Capture product details with a refined scanner experience.</p>
+            </div>
+          </div>
+          <button onclick="closeScanArticleRightModal()" style="background: #ef4444; color: white; border: none; border-radius: 50%; width: 36px; height: 36px; cursor: pointer; font-size: 18px; display: flex; align-items: center; justify-content: center; transition: all 0.2s ease;" onmouseover="this.style.background='#dc2626'" onmouseout="this.style.background='#ef4444'">×</button>
         </div>
         
-        <div style="background: #f8fafc; padding: 16px; border-radius: 8px; margin-bottom: 16px;">
-          <div style="margin-bottom: 16px;">
-            <label style="display: block; font-weight: 500; margin-bottom: 4px; color: #374151;">Article Name</label>
-            <input id="scannedArticleName" style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px;" 
-                   placeholder="🔍 Scan or type article name...">
+        <div style="background: linear-gradient(135deg, #fdf4e6 0%, #f2e4d2 100%); padding: 24px; border-radius: 16px; border: 1px solid rgba(196, 139, 90, 0.24); box-shadow: 0 18px 32px rgba(112, 82, 50, 0.12);">
+          <div style="margin-bottom: 18px;">
+            <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #4b3b2a; font-size: 15px;">Article Name</label>
+            <input id="scannedArticleName" style="width: 100%; padding: 14px; border: 2px solid #ead7c2; border-radius: 10px; font-size: 15px; background: rgba(255,252,245,0.85); color: #4b3b2a; transition: border-color 0.2s ease;" 
+                   placeholder="🔍 Scan or type article name..." onfocus="this.style.borderColor='#c48b5a'" onblur="this.style.borderColor='#ead7c2'">
           </div>
           
-          <div style="margin-bottom: 16px;">
-            <label style="display: block; font-weight: 500; margin-bottom: 4px; color: #374151;">EAN Code</label>
-            <input id="scannedEAN" style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px;" 
-                   placeholder="📊 Scan or type EAN barcode..." pattern="[0-9]{8,13}">
+          <div style="margin-bottom: 18px;">
+            <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #4b3b2a; font-size: 15px;">EAN Code</label>
+            <input id="scannedEAN" style="width: 100%; padding: 14px; border: 2px solid #ead7c2; border-radius: 10px; font-size: 15px; background: rgba(255,252,245,0.85); color: #4b3b2a; transition: border-color 0.2s ease;" 
+                   placeholder="📊 Scan or type EAN barcode..." pattern="[0-9]{8,13}" onfocus="this.style.borderColor='#c48b5a'" onblur="this.style.borderColor='#ead7c2'">
           </div>
           
-          <div style="margin-bottom: 20px;">
-            <label style="display: block; font-weight: 500; margin-bottom: 4px; color: #374151;">Notes</label>
-            <textarea id="scanNotes" style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px; min-height: 80px; resize: vertical;" 
-                      placeholder="📝 Additional notes about the scanned article..."></textarea>
+          <div style="margin-bottom: 22px;">
+            <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #4b3b2a; font-size: 15px;">Notes</label>
+            <textarea id="scanNotes" style="width: 100%; padding: 14px; border: 2px solid #ead7c2; border-radius: 12px; font-size: 15px; min-height: 96px; resize: vertical; background: rgba(255,252,245,0.85); color: #4b3b2a; transition: border-color 0.2s ease;" 
+                      placeholder="📝 Additional notes about the scanned article..." onfocus="this.style.borderColor='#c48b5a'" onblur="this.style.borderColor='#ead7c2'"></textarea>
           </div>
           
           <div style="display: flex; gap: 12px;">
-            <button onclick="closeScanArticleRightModal()" style="flex: 1; padding: 12px 16px; border: 1px solid #d1d5db; background: white; border-radius: 6px; cursor: pointer; font-weight: 500;">Cancel</button>
-            <button onclick="processScanFromModal()" style="flex: 1; padding: 12px 16px; background: linear-gradient(135deg, #059669 0%, #047857 100%); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 500; box-shadow: 0 2px 4px rgba(5, 150, 105, 0.3);">Process Scan</button>
+            <button onclick="closeScanArticleRightModal()" style="flex: 1; padding: 12px 16px; border: 2px solid #ead7c2; background: rgba(255,252,245,0.9); border-radius: 10px; cursor: pointer; font-weight: 600; color: #6b5440; transition: all 0.2s ease;" onmouseover="this.style.borderColor='#c48b5a'" onmouseout="this.style.borderColor='#ead7c2'">Cancel</button>
+            <button onclick="processScanFromModal()" style="flex: 1; padding: 12px 18px; background: linear-gradient(135deg, #c48b5a 0%, #a66b38 100%); color: white; border: none; border-radius: 10px; cursor: pointer; font-weight: 600; box-shadow: 0 10px 24px rgba(166, 107, 56, 0.35); transition: transform 0.2s ease;" onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform='translateY(0)'">Process Scan</button>
           </div>
         </div>
       `;
@@ -6731,43 +7309,46 @@
       modal.style.cssText = `
         position: fixed;
         top: 0;
-        left: 280px;
+        left: 260px;
         width: 650px;
         height: 100vh;
-        background: rgba(255, 255, 255, 0.98);
-        backdrop-filter: blur(20px);
-        border-right: 1px solid rgba(0, 0, 0, 0.1);
-        box-shadow: 4px 0 20px rgba(0, 0, 0, 0.15);
+        background: rgba(255, 250, 243, 0.97);
+        backdrop-filter: blur(22px);
+        border-right: 1px solid rgba(196, 139, 90, 0.25);
+        box-shadow: 12px 0 40px rgba(75, 59, 42, 0.18);
         z-index: 1000;
         overflow-y: auto;
         transform: translateX(-100%);
         transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        padding: 24px;
+        padding: 28px;
       `;
 
       modal.innerHTML = `
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 2px solid #e5e7eb;">
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 2px solid rgba(196, 139, 90, 0.28);">
           <div style="display: flex; align-items: center; gap: 12px;">
             <img src="/CCP_Logog.png" alt="CCP Logo" style="width: 32px; height: 32px; object-fit: contain;" />
-            <h3 style="margin: 0; font-size: 22px; color: #1f2937; font-weight: 600;">Create New Content Project</h3>
+            <div>
+              <h3 style="margin: 0; font-size: 22px; color: #4b3b2a; font-weight: 600;">Create New Content Project</h3>
+              <p style="margin: 4px 0 0; font-size: 12px; color: rgba(107, 84, 64, 0.78); letter-spacing: 0.3px;">Streamline new requests with the warm CCP workspace aesthetic.</p>
+            </div>
           </div>
           <button onclick="closeNewOrderModal()" style="background: #ef4444; color: white; border: none; border-radius: 50%; width: 36px; height: 36px; cursor: pointer; font-size: 18px; display: flex; align-items: center; justify-content: center; transition: all 0.2s ease;" onmouseover="this.style.background='#dc2626'" onmouseout="this.style.background='#ef4444'">×</button>
         </div>
 
-        <div style="background: #f8fafc; padding: 20px; border-radius: 12px; box-sizing: border-box;">
+  <div style="background: linear-gradient(135deg, #fdf4e6 0%, #f2e4d2 100%); padding: 24px; border-radius: 16px; box-sizing: border-box; border: 1px solid rgba(196, 139, 90, 0.24); box-shadow: 0 18px 32px rgba(112, 82, 50, 0.12);">
           <form id="newOrderForm" onsubmit="handleNewOrderSubmit(event)">
             <div style="margin-bottom: 20px;">
-              <label style="display: block; font-weight: 600; margin-bottom: 6px; color: #374151; font-size: 14px;">Order Title</label>
-              <input name="title" required style="width: 100%; box-sizing: border-box; padding: 14px; border: 2px solid #d1d5db; border-radius: 8px; font-size: 16px; transition: border-color 0.2s ease;" 
+              <label style="display: block; font-weight: 600; margin-bottom: 6px; color: #4b3b2a; font-size: 14px;">Order Title</label>
+    <input name="title" required style="width: 100%; box-sizing: border-box; padding: 14px; border: 2px solid #ead7c2; border-radius: 8px; font-size: 16px; transition: border-color 0.2s ease;" 
                      placeholder="e.g., Premium Product Photography Session"
-                     onfocus="this.style.borderColor='#3b82f6'" onblur="this.style.borderColor='#d1d5db'">
+      onfocus="this.style.borderColor='#c48b5a'" onblur="this.style.borderColor='#ead7c2'">
             </div>
 
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px;">
               <div style="min-width: 0;">
-                <label style="display: block; font-weight: 600; margin-bottom: 6px; color: #374151; font-size: 14px;">Method</label>
-                <select name="method" required style="width: 100%; box-sizing: border-box; padding: 14px; border: 2px solid #d1d5db; border-radius: 8px; font-size: 16px; transition: border-color 0.2s ease;"
-                        onfocus="this.style.borderColor='#3b82f6'" onblur="this.style.borderColor='#d1d5db'">
+                <label style="display: block; font-weight: 600; margin-bottom: 6px; color: #4b3b2a; font-size: 14px;">Method</label>
+    <select name="method" required style="width: 100%; box-sizing: border-box; padding: 14px; border: 2px solid #ead7c2; border-radius: 8px; font-size: 16px; transition: border-color 0.2s ease;"
+      onfocus="this.style.borderColor='#c48b5a'" onblur="this.style.borderColor='#ead7c2'">
                   <option value="">Select method...</option>
                   <option value="Photographer">Photographer</option>
                   <option value="Photo Box">Photo Box</option>
@@ -6776,9 +7357,9 @@
                 </select>
               </div>
               <div style="min-width: 0;">
-                <label style="display: block; font-weight: 600; margin-bottom: 6px; color: #374151; font-size: 14px;">Priority</label>
-                <select name="priority" required style="width: 100%; box-sizing: border-box; padding: 14px; border: 2px solid #d1d5db; border-radius: 8px; font-size: 16px; transition: border-color 0.2s ease;"
-                        onfocus="this.style.borderColor='#3b82f6'" onblur="this.style.borderColor='#d1d5db'">
+                <label style="display: block; font-weight: 600; margin-bottom: 6px; color: #4b3b2a; font-size: 14px;">Priority</label>
+    <select name="priority" required style="width: 100%; box-sizing: border-box; padding: 14px; border: 2px solid #ead7c2; border-radius: 8px; font-size: 16px; transition: border-color 0.2s ease;"
+      onfocus="this.style.borderColor='#c48b5a'" onblur="this.style.borderColor='#ead7c2'">
                   <option value="Low">Low</option>
                   <option value="Medium" selected>Medium</option>
                   <option value="High">High</option>
@@ -6789,21 +7370,21 @@
 
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px;">
               <div style="min-width: 0;">
-                <label style="display: block; font-weight: 600; margin-bottom: 6px; color: #374151; font-size: 14px;">Deadline</label>
-                <input name="deadline" type="date" required style="width: 100%; box-sizing: border-box; padding: 14px; border: 2px solid #d1d5db; border-radius: 8px; font-size: 16px; transition: border-color 0.2s ease;"
-                       onfocus="this.style.borderColor='#3b82f6'" onblur="this.style.borderColor='#d1d5db'">
+                <label style="display: block; font-weight: 600; margin-bottom: 6px; color: #4b3b2a; font-size: 14px;">Deadline</label>
+      <input name="deadline" type="date" required style="width: 100%; box-sizing: border-box; padding: 14px; border: 2px solid #ead7c2; border-radius: 8px; font-size: 16px; transition: border-color 0.2s ease;"
+        onfocus="this.style.borderColor='#c48b5a'" onblur="this.style.borderColor='#ead7c2'">
               </div>
               <div style="min-width: 0;">
-                <label style="display: block; font-weight: 600; margin-bottom: 6px; color: #374151; font-size: 14px;">Budget (SEK)</label>
-                <input name="budget" type="number" min="0" style="width: 100%; box-sizing: border-box; padding: 14px; border: 2px solid #d1d5db; border-radius: 8px; font-size: 16px; transition: border-color 0.2s ease;" placeholder="0"
-                       onfocus="this.style.borderColor='#3b82f6'" onblur="this.style.borderColor='#d1d5db'">
+                <label style="display: block; font-weight: 600; margin-bottom: 6px; color: #4b3b2a; font-size: 14px;">Budget (SEK)</label>
+      <input name="budget" type="number" min="0" style="width: 100%; box-sizing: border-box; padding: 14px; border: 2px solid #ead7c2; border-radius: 8px; font-size: 16px; transition: border-color 0.2s ease;" placeholder="0"
+        onfocus="this.style.borderColor='#c48b5a'" onblur="this.style.borderColor='#ead7c2'">
               </div>
             </div>
 
             <div style="margin-bottom: 20px;">
-              <label style="display: block; font-weight: 600; margin-bottom: 6px; color: #374151; font-size: 14px;">Assign To</label>
-              <select name="photographer" style="width: 100%; box-sizing: border-box; padding: 14px; border: 2px solid #d1d5db; border-radius: 8px; font-size: 16px; transition: border-color 0.2s ease;"
-                      onfocus="this.style.borderColor='#3b82f6'" onblur="this.style.borderColor='#d1d5db'">
+              <label style="display: block; font-weight: 600; margin-bottom: 6px; color: #4b3b2a; font-size: 14px;">Assign To</label>
+        <select name="photographer" style="width: 100%; box-sizing: border-box; padding: 14px; border: 2px solid #ead7c2; border-radius: 8px; font-size: 16px; transition: border-color 0.2s ease;"
+          onfocus="this.style.borderColor='#c48b5a'" onblur="this.style.borderColor='#ead7c2'">
                 <option value="">Select photographer/photo box...</option>
                 <option value="Mike Rodriguez">Mike Rodriguez (Photographer)</option>
                 <option value="Sarah Johnson">Sarah Johnson (Photographer)</option>
@@ -6813,38 +7394,38 @@
             </div>
 
             <div style="margin-bottom: 20px;">
-              <label style="display: block; font-weight: 600; margin-bottom: 6px; color: #374151; font-size: 14px;">Brief Description</label>
-              <textarea name="brief" required rows="3" style="width: 100%; box-sizing: border-box; padding: 14px; border: 2px solid #d1d5db; border-radius: 8px; font-size: 16px; resize: vertical; transition: border-color 0.2s ease;" 
+              <label style="display: block; font-weight: 600; margin-bottom: 6px; color: #4b3b2a; font-size: 14px;">Brief Description</label>
+              <textarea name="brief" required rows="3" style="width: 100%; box-sizing: border-box; padding: 14px; border: 2px solid #ead7c2; border-radius: 8px; font-size: 16px; resize: vertical; transition: border-color 0.2s ease;" 
                         placeholder="Provide detailed instructions for the content creation..."
-                        onfocus="this.style.borderColor='#3b82f6'" onblur="this.style.borderColor='#d1d5db'"></textarea>
+                        onfocus="this.style.borderColor='#c48b5a'" onblur="this.style.borderColor='#ead7c2'"></textarea>
             </div>
 
             <div style="margin-bottom: 20px;">
-              <label style="display: block; font-weight: 600; margin-bottom: 6px; color: #374151; font-size: 14px;">
+              <label style="display: block; font-weight: 600; margin-bottom: 6px; color: #4b3b2a; font-size: 14px;">
                 <span style="display: flex; align-items: center; gap: 8px;">
                   <span>Article Code (EAN/GTIN)</span>
                   <span style="font-size: 18px;" title="Scan barcode or enter manually">📦</span>
                 </span>
               </label>
-              <input name="articleCode" type="text" style="width: 100%; box-sizing: border-box; padding: 14px; border: 2px solid #d1d5db; border-radius: 8px; font-size: 16px; transition: border-color 0.2s ease; font-family: 'Courier New', monospace; letter-spacing: 1px;" 
+    <input name="articleCode" type="text" style="width: 100%; box-sizing: border-box; padding: 14px; border: 2px solid #ead7c2; border-radius: 8px; font-size: 16px; transition: border-color 0.2s ease; font-family: 'Courier New', monospace; letter-spacing: 1px;" 
                      placeholder="e.g., 5901234567890"
-                     onfocus="this.style.borderColor='#3b82f6'" onblur="this.style.borderColor='#d1d5db'"
+      onfocus="this.style.borderColor='#c48b5a'" onblur="this.style.borderColor='#ead7c2'"
                      oninput="updateArticleFieldFromCode(this.value)">
-              <div style="margin-top: 6px; font-size: 12px; color: #6b7280;">
+              <div style="margin-top: 6px; font-size: 12px; color: #6b5440;">
                 💡 Tip: You can scan a barcode directly into this field, or type the code manually
               </div>
             </div>
 
             <div style="margin-bottom: 24px;">
-              <label style="display: block; font-weight: 600; margin-bottom: 6px; color: #374151; font-size: 14px;">Articles</label>
-              <textarea id="newOrderArticles" name="articles" required rows="2" style="width: 100%; box-sizing: border-box; padding: 14px; border: 2px solid #d1d5db; border-radius: 8px; font-size: 16px; resize: vertical; transition: border-color 0.2s ease;" 
+              <label style="display: block; font-weight: 600; margin-bottom: 6px; color: #4b3b2a; font-size: 14px;">Articles</label>
+              <textarea id="newOrderArticles" name="articles" required rows="2" style="width: 100%; box-sizing: border-box; padding: 14px; border: 2px solid #ead7c2; border-radius: 8px; font-size: 16px; resize: vertical; transition: border-color 0.2s ease;" 
                         placeholder="Articles with EAN codes will appear here...&#10;Format: Article Name [EAN: 1234567890123]"
-                        onfocus="this.style.borderColor='#3b82f6'" onblur="this.style.borderColor='#d1d5db'"></textarea>
+                        onfocus="this.style.borderColor='#c48b5a'" onblur="this.style.borderColor='#ead7c2'"></textarea>
             </div>
 
             <div style="display: flex; gap: 12px; justify-content: flex-end;">
-              <button type="button" onclick="closeNewOrderModal()" style="padding: 14px 24px; background: #6b7280; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 500; transition: all 0.2s ease;" onmouseover="this.style.background='#4b5563'" onmouseout="this.style.background='#6b7280'">Cancel</button>
-                <button type="submit" style="padding: 14px 24px; background: linear-gradient(135deg, #059669 0%, #047857 100%); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 500; box-shadow: 0 4px 12px rgba(5, 150, 105, 0.3); transition: all 0.2s ease;" onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform='translateY(0)'">Create Order</button>
+              <button type="button" onclick="closeNewOrderModal()" style="padding: 14px 24px; background: #6b5440; color: white; border: none; border-radius: 10px; cursor: pointer; font-weight: 500; transition: all 0.2s ease; box-shadow: 0 10px 24px rgba(107, 84, 64, 0.25);" onmouseover="this.style.background='#4b3b2a'; this.style.transform='translateY(-1px)'" onmouseout="this.style.background='#6b5440'; this.style.transform='translateY(0)'">Cancel</button>
+                <button type="submit" style="padding: 14px 28px; background: linear-gradient(135deg, #c48b5a 0%, #a66b38 100%); color: white; border: none; border-radius: 10px; cursor: pointer; font-weight: 600; box-shadow: 0 8px 20px rgba(166, 107, 56, 0.35); transition: all 0.2s ease;" onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform='translateY(0)'">Create Order</button>
               </div>
             </form>
           </div>
@@ -6936,8 +7517,11 @@
         deliverables: ['Product Photos', 'High-Resolution Images']
       };
 
+      assignSalesOrgToOrder(newOrder);
+
       // Add to orders array
       allOrders.push(newOrder);
+      assignSalesOrgMetadata(allOrders);
 
       // Save to localStorage
       localStorage.setItem('photoOrders', JSON.stringify(allOrders));
@@ -6978,10 +7562,10 @@
         
         // Visual feedback
         articlesField.style.background = '#d1fae5';
-        articlesField.style.borderColor = '#10b981';
+        articlesField.style.borderColor = '#7fa284';
         setTimeout(() => {
           articlesField.style.background = '';
-          articlesField.style.borderColor = '#d1d5db';
+      articlesField.style.borderColor = '#ead7c2';
         }, 1500);
       }
     }
@@ -7010,59 +7594,65 @@
       modal.style.cssText = `
         position: fixed;
         top: 0;
-        left: 280px;
+        left: 260px;
         width: 650px;
         height: 100vh;
-        background: rgba(255, 255, 255, 0.98);
-        backdrop-filter: blur(20px);
-        border-right: 1px solid rgba(0, 0, 0, 0.1);
-        box-shadow: 4px 0 20px rgba(0, 0, 0, 0.15);
+        background: rgba(255, 250, 243, 0.97);
+        backdrop-filter: blur(22px);
+        border-right: 1px solid rgba(196, 139, 90, 0.25);
+        box-shadow: 12px 0 40px rgba(75, 59, 42, 0.18);
         z-index: 1000;
         overflow-y: auto;
         transform: translateX(-100%);
         transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        padding: 24px;
+        padding: 28px;
       `;
 
       modal.innerHTML = `
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 2px solid #e5e7eb;">
-          <h3 style="margin: 0; font-size: 22px; color: #1f2937; font-weight: 600;">🎨 Create/Edit Content</h3>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 2px solid rgba(196, 139, 90, 0.28);">
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <img src="/CCP_Logog.png" alt="CCP Logo" style="width: 32px; height: 32px; object-fit: contain;" />
+            <div>
+              <h3 style="margin: 0; font-size: 22px; color: #4b3b2a; font-weight: 600;">🎨 Create/Edit Content</h3>
+              <p style="margin: 4px 0 0; font-size: 12px; color: rgba(107, 84, 64, 0.78); letter-spacing: 0.3px;">Choose AI-powered edits or an editorial brief with the same warm palette.</p>
+            </div>
+          </div>
           <button onclick="closeContentCreationModal()" style="background: #ef4444; color: white; border: none; border-radius: 50%; width: 36px; height: 36px; cursor: pointer; font-size: 18px; display: flex; align-items: center; justify-content: center; transition: all 0.2s ease;" onmouseover="this.style.background='#dc2626'" onmouseout="this.style.background='#ef4444'">×</button>
         </div>
 
-        <div style="background: #f8fafc; padding: 20px; border-radius: 12px;">
+        <div style="background: linear-gradient(135deg, #fdf4e6 0%, #f2e4d2 100%); padding: 24px; border-radius: 16px; border: 1px solid rgba(196, 139, 90, 0.24); box-shadow: 0 18px 32px rgba(112, 82, 50, 0.12);">
           <!-- Content Creation Type Selection -->
           <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px;">
-            <div onclick="selectContentType('ai')" id="aiContentType" style="padding: 20px; border: 2px solid #e5e7eb; border-radius: 12px; cursor: pointer; text-align: center; transition: all 0.3s ease; background: white;" onmouseover="this.style.borderColor='#3b82f6'" onmouseout="this.style.borderColor=this.classList.contains('selected') ? '#10b981' : '#e5e7eb'">
+            <div onclick="selectContentType('ai')" id="aiContentType" style="padding: 20px; border: 2px solid #ead7c2; border-radius: 16px; cursor: pointer; text-align: center; transition: all 0.3s ease; background: white; box-shadow: 0 12px 24px rgba(112, 82, 50, 0.08);" onmouseover="this.style.borderColor='#c48b5a'" onmouseout="this.style.borderColor=this.classList.contains('selected') ? '#7fa284' : '#ead7c2'">
               <div style="font-size: 48px; margin-bottom: 12px;">🚀</div>
-              <h4 style="margin: 0 0 8px; color: #1f2937;">AI Content Creation</h4>
-              <p style="margin: 0; font-size: 14px; color: #6b7280;">Use Runware API with Google Gemini Flash Image 2.5 to edit images with natural language</p>
+              <h4 style="margin: 0 0 8px; color: #4b3b2a;">AI Content Creation</h4>
+              <p style="margin: 0; font-size: 14px; color: #6b5440;">Use Runware API with Google Gemini Flash Image 2.5 to edit images with natural language</p>
             </div>
             
-            <div onclick="selectContentType('editorial')" id="editorialContentType" style="padding: 20px; border: 2px solid #e5e7eb; border-radius: 12px; cursor: pointer; text-align: center; transition: all 0.3s ease; background: white;" onmouseover="this.style.borderColor='#3b82f6'" onmouseout="this.style.borderColor=this.classList.contains('selected') ? '#10b981' : '#e5e7eb'">
+            <div onclick="selectContentType('editorial')" id="editorialContentType" style="padding: 20px; border: 2px solid #ead7c2; border-radius: 16px; cursor: pointer; text-align: center; transition: all 0.3s ease; background: white; box-shadow: 0 12px 24px rgba(112, 82, 50, 0.08);" onmouseover="this.style.borderColor='#c48b5a'" onmouseout="this.style.borderColor=this.classList.contains('selected') ? '#7fa284' : '#ead7c2'">
               <div style="font-size: 48px; margin-bottom: 12px;">✂️</div>
-              <h4 style="margin: 0 0 8px; color: #1f2937;">Editorial Request</h4>
-              <p style="margin: 0; font-size: 14px; color: #6b7280;">Request internal/external vendor to edit existing assets</p>
+              <h4 style="margin: 0 0 8px; color: #4b3b2a;">Editorial Request</h4>
+              <p style="margin: 0; font-size: 14px; color: #6b5440;">Request internal/external vendor to edit existing assets</p>
             </div>
           </div>
 
           <!-- AI Content Creation Panel -->
           <div id="aiContentPanel" style="display: none;">
-            <div style="border: 2px solid #059669; border-radius: 12px; padding: 20px; background: linear-gradient(135deg, #059669 0%, #047857 100%); color: white; margin-bottom: 20px;">
+            <div style="border: 1px solid rgba(127, 162, 132, 0.4); border-radius: 16px; padding: 22px; background: linear-gradient(135deg, rgba(127, 162, 132, 0.9) 0%, rgba(4, 120, 87, 0.92) 100%); color: white; margin-bottom: 20px; box-shadow: 0 18px 32px rgba(79, 115, 95, 0.25);">
               <div style="display: flex; align-items: center; margin-bottom: 16px;">
                 <span style="font-size: 28px; margin-right: 12px;">🚀</span>
                 <h4 style="margin: 0; font-weight: 600; font-size: 18px;">AI Content Creation with Nano Banana 🍌</h4>
               </div>
               
               <!-- Info Banner -->
-              <div style="background: rgba(16, 185, 129, 0.1); border-left: 4px solid #10b981; padding: 12px; margin-bottom: 20px; border-radius: 4px;">
-                <div style="font-weight: 600; color: #10b981; margin-bottom: 4px;">✨ Powered by Google Gemini Flash Image 2.5 (Nano Banana)</div>
-                <div style="color: rgba(255,255,255,0.9); font-size: 14px;">Professional AI image editing and generation via Runware API</div>
+              <div style="background: rgba(255, 252, 245, 0.12); border-left: 4px solid rgba(255, 252, 245, 0.55); padding: 12px; margin-bottom: 20px; border-radius: 8px;">
+                <div style="font-weight: 600; color: #fffaf0; margin-bottom: 4px; letter-spacing: 0.4px;">✨ Powered by Google Gemini Flash Image 2.5 (Nano Banana)</div>
+                <div style="color: rgba(255,255,255,0.86); font-size: 14px;">Professional AI image editing and generation via Runware API</div>
               </div>
               
               <!-- Image Upload Section -->
-              <div style="background: rgba(255,255,255,0.1); border: 2px dashed rgba(255,255,255,0.3); border-radius: 8px; padding: 24px; margin-bottom: 20px; text-align: center; cursor: pointer;" 
-                   id="contentImageUploadArea" onclick="document.getElementById('contentImageInput').click()">
+        <div style="background: rgba(255,255,255,0.14); border: 2px dashed rgba(255,255,255,0.35); border-radius: 12px; padding: 26px; margin-bottom: 20px; text-align: center; cursor: pointer; transition: transform 0.2s ease;" 
+          id="contentImageUploadArea" onclick="document.getElementById('contentImageInput').click()" onmouseover="this.style.transform='translateY(-2px)'; this.style.borderColor='rgba(255,255,255,0.55)';" onmouseout="this.style.transform='translateY(0)'; this.style.borderColor='rgba(255,255,255,0.35)';">
                 <input type="file" id="contentImageInput" accept="image/*" style="display: none;" onchange="handleContentImageUpload(event)">
                 <div id="contentUploadContent">
                   <span style="font-size: 64px; color: rgba(255,255,255,0.7);">📷</span><br>
@@ -7075,7 +7665,7 @@
               <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px;">
                 <div>
                   <label style="display: block; font-weight: 600; margin-bottom: 8px; font-size: 16px;">AI Operation</label>
-                  <select id="contentAiOperation" style="width: 100%; padding: 14px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 16px; color: #374151;">
+                  <select id="contentAiOperation" style="width: 100%; padding: 14px; border: 2px solid #ead7c2; border-radius: 10px; font-size: 16px; color: #4b3b2a; background: rgba(255,252,245,0.85); transition: border-color 0.2s ease;" onfocus="this.style.borderColor='#c48b5a'" onblur="this.style.borderColor='#ead7c2'">
                     <option value="">Select operation...</option>
                     <option value="color-change">Color Change</option>
                     <option value="add-model">Add Model</option>
@@ -7089,7 +7679,7 @@
                 </div>
                 <div>
                   <label style="display: block; font-weight: 600; margin-bottom: 8px; font-size: 16px;">Quality Level</label>
-                  <select id="contentAiQuality" style="width: 100%; padding: 14px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 16px; color: #374151;">
+                  <select id="contentAiQuality" style="width: 100%; padding: 14px; border: 2px solid #ead7c2; border-radius: 10px; font-size: 16px; color: #4b3b2a; background: rgba(255,252,245,0.85); transition: border-color 0.2s ease;" onfocus="this.style.borderColor='#c48b5a'" onblur="this.style.borderColor='#ead7c2'">
                     <option value="standard">Standard</option>
                     <option value="high" selected>High Quality</option>
                     <option value="ultra">Ultra HD</option>
@@ -7099,15 +7689,15 @@
               
               <div style="margin-bottom: 20px;">
                 <label style="display: block; font-weight: 600; margin-bottom: 8px; font-size: 16px;" id="aiInstructionsLabel">🚀 Google Gemini Flash Image 2.5 AI Instructions</label>
-                <textarea id="contentAiInstructions" rows="4" style="width: 100%; padding: 14px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 16px; resize: vertical; color: #374151;" 
+                <textarea id="contentAiInstructions" rows="4" style="width: 100%; padding: 14px; border: 2px solid #ead7c2; border-radius: 10px; font-size: 16px; resize: vertical; color: #4b3b2a; background: rgba(255,252,245,0.85); transition: border-color 0.2s ease;" onfocus="this.style.borderColor='#c48b5a'" onblur="this.style.borderColor='#ead7c2'" 
                           placeholder="Describe how you want to edit the image with AI...&#10;Example: Make the dress red and add a beautiful sunset background&#10;&#10;� AI will help you:&#10;• Professional product enhancement&#10;• Background replacement and editing&#10;• Color modifications and style transfers&#10;• Model addition and scene composition"></textarea>
               </div>
               
               <div style="display: flex; gap: 12px;">
-                <button type="button" id="testAIButton" onclick="testSelectedAIService()" style="padding: 12px 20px; background: #059669; color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: 500;">
+                <button type="button" id="testAIButton" onclick="testSelectedAIService()" style="padding: 12px 20px; background: #7fa284; color: white; border: none; border-radius: 10px; font-size: 16px; font-weight: 500; box-shadow: 0 10px 24px rgba(127, 162, 132, 0.35); transition: transform 0.2s ease;" onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform='translateY(0)';">
                   🔗 Test Nano Banana
                 </button>
-                <button type="button" id="processAIButton" onclick="processContentWithSelectedAI()" style="padding: 12px 20px; background: #047857; color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: 500;">
+                <button type="button" id="processAIButton" onclick="processContentWithSelectedAI()" style="padding: 12px 22px; background: linear-gradient(135deg, #c48b5a 0%, #a66b38 100%); color: white; border: none; border-radius: 10px; font-size: 16px; font-weight: 600; box-shadow: 0 10px 24px rgba(166, 107, 56, 0.35); transition: transform 0.2s ease;" onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform='translateY(0)';">
                   🍌 Process with Nano Banana
                 </button>
               </div>
@@ -7116,7 +7706,7 @@
 
           <!-- Editorial Request Panel -->
           <div id="editorialContentPanel" style="display: none;">
-            <div style="border: 2px solid #f59e0b; border-radius: 12px; padding: 20px; background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; margin-bottom: 20px;">
+            <div style="border: 1px solid rgba(213, 158, 86, 0.4); border-radius: 16px; padding: 22px; background: linear-gradient(135deg, rgba(213, 158, 86, 0.94) 0%, rgba(217, 119, 6, 0.92) 100%); color: white; margin-bottom: 20px; box-shadow: 0 18px 32px rgba(181, 123, 43, 0.28);">
               <div style="display: flex; align-items: center; margin-bottom: 16px;">
                 <span style="font-size: 28px; margin-right: 12px;">✂️</span>
                 <h4 style="margin: 0; font-weight: 600; font-size: 18px;">Editorial Request</h4>
@@ -7125,7 +7715,7 @@
               <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px;">
                 <div>
                   <label style="display: block; font-weight: 600; margin-bottom: 8px; font-size: 16px;">Request Type</label>
-                  <select id="editorialType" style="width: 100%; padding: 14px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 16px; color: #374151;">
+                  <select id="editorialType" style="width: 100%; padding: 14px; border: 2px solid #ead7c2; border-radius: 10px; font-size: 16px; color: #4b3b2a; background: rgba(255,252,245,0.85); transition: border-color 0.2s ease;" onfocus="this.style.borderColor='#c48b5a'" onblur="this.style.borderColor='#ead7c2'">
                     <option value="">Select type...</option>
                     <option value="internal">Internal Team</option>
                     <option value="external">External Vendor</option>
@@ -7133,7 +7723,7 @@
                 </div>
                 <div>
                   <label style="display: block; font-weight: 600; margin-bottom: 8px; font-size: 16px;">Priority</label>
-                  <select id="editorialPriority" style="width: 100%; padding: 14px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 16px; color: #374151;">
+                  <select id="editorialPriority" style="width: 100%; padding: 14px; border: 2px solid #ead7c2; border-radius: 10px; font-size: 16px; color: #4b3b2a; background: rgba(255,252,245,0.85); transition: border-color 0.2s ease;" onfocus="this.style.borderColor='#c48b5a'" onblur="this.style.borderColor='#ead7c2'">
                     <option value="Low">Low</option>
                     <option value="Medium" selected>Medium</option>
                     <option value="High">High</option>
@@ -7143,8 +7733,8 @@
               </div>
               
               <!-- Asset Upload Section -->
-              <div style="background: rgba(255,255,255,0.1); border: 2px dashed rgba(255,255,255,0.3); border-radius: 8px; padding: 24px; margin-bottom: 20px; text-align: center; cursor: pointer;" 
-                   id="editorialAssetUploadArea" onclick="document.getElementById('editorialAssetInput').click()">
+        <div style="background: rgba(255,255,255,0.14); border: 2px dashed rgba(255,255,255,0.35); border-radius: 12px; padding: 26px; margin-bottom: 20px; text-align: center; cursor: pointer; transition: transform 0.2s ease;" 
+          id="editorialAssetUploadArea" onclick="document.getElementById('editorialAssetInput').click()" onmouseover="this.style.transform='translateY(-2px)'; this.style.borderColor='rgba(255,255,255,0.55)';" onmouseout="this.style.transform='translateY(0)'; this.style.borderColor='rgba(255,255,255,0.35)';">
                 <input type="file" id="editorialAssetInput" accept="image/*,video/*,.pdf,.psd,.ai" multiple style="display: none;" onchange="handleEditorialAssetUpload(event)">
                 <div id="editorialUploadContent">
                   <span style="font-size: 64px; color: rgba(255,255,255,0.7);">📁</span><br>
@@ -7156,23 +7746,23 @@
               
               <div style="margin-bottom: 20px;">
                 <label style="display: block; font-weight: 600; margin-bottom: 8px; font-size: 16px;">✂️ Editorial Instructions</label>
-                <textarea id="editorialInstructions" rows="4" style="width: 100%; padding: 14px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 16px; resize: vertical; color: #374151;" 
+                <textarea id="editorialInstructions" rows="4" style="width: 100%; padding: 14px; border: 2px solid #ead7c2; border-radius: 10px; font-size: 16px; resize: vertical; color: #4b3b2a; background: rgba(255,252,245,0.85); transition: border-color 0.2s ease;" onfocus="this.style.borderColor='#c48b5a'" onblur="this.style.borderColor='#ead7c2'" 
                           placeholder="Describe the edits you need...&#10;Example: Remove background, adjust lighting, color correct, retouch model skin&#10;&#10;📋 Be specific about:&#10;• Colors to change&#10;• Objects to remove/add&#10;• Style preferences&#10;• File format needed"></textarea>
               </div>
               
               <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px;">
                 <div>
                   <label style="display: block; font-weight: 600; margin-bottom: 8px; font-size: 16px;">Deadline</label>
-                  <input type="date" id="editorialDeadline" style="width: 100%; padding: 14px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 16px; color: #374151;">
+                  <input type="date" id="editorialDeadline" style="width: 100%; padding: 14px; border: 2px solid #ead7c2; border-radius: 10px; font-size: 16px; color: #4b3b2a; background: rgba(255,252,245,0.85); transition: border-color 0.2s ease;" onfocus="this.style.borderColor='#c48b5a'" onblur="this.style.borderColor='#ead7c2'">
                 </div>
                 <div>
                   <label style="display: block; font-weight: 600; margin-bottom: 8px; font-size: 16px;">Budget (SEK)</label>
-                  <input type="number" id="editorialBudget" min="0" style="width: 100%; padding: 14px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 16px; color: #374151;" placeholder="0">
+                  <input type="number" id="editorialBudget" min="0" style="width: 100%; padding: 14px; border: 2px solid #ead7c2; border-radius: 10px; font-size: 16px; color: #4b3b2a; background: rgba(255,252,245,0.85); transition: border-color 0.2s ease;" placeholder="0" onfocus="this.style.borderColor='#c48b5a'" onblur="this.style.borderColor='#ead7c2'">
                 </div>
               </div>
               
               <div style="display: flex; gap: 12px;">
-                <button type="button" onclick="submitEditorialRequest()" style="padding: 12px 20px; background: #059669; color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: 500;">
+                <button type="button" onclick="submitEditorialRequest()" style="padding: 12px 22px; background: linear-gradient(135deg, #7fa284 0%, #4f7e5d 100%); color: white; border: none; border-radius: 10px; font-size: 16px; font-weight: 600; box-shadow: 0 10px 24px rgba(127, 162, 132, 0.35); transition: transform 0.2s ease;" onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform='translateY(0)';">
                   📝 Submit Request
                 </button>
               </div>
@@ -7236,16 +7826,16 @@
       document.getElementById('editorialContentPanel').style.display = 'none';
       
       // Reset border colors
-      document.getElementById('aiContentType').style.borderColor = '#e5e7eb';
-      document.getElementById('editorialContentType').style.borderColor = '#e5e7eb';
+  document.getElementById('aiContentType').style.borderColor = '#ead7c2';
+  document.getElementById('editorialContentType').style.borderColor = '#ead7c2';
       
       if (type === 'ai') {
         document.getElementById('aiContentType').classList.add('selected');
-        document.getElementById('aiContentType').style.borderColor = '#10b981';
+        document.getElementById('aiContentType').style.borderColor = '#7fa284';
         document.getElementById('aiContentPanel').style.display = 'block';
       } else if (type === 'editorial') {
         document.getElementById('editorialContentType').classList.add('selected');
-        document.getElementById('editorialContentType').style.borderColor = '#10b981';
+        document.getElementById('editorialContentType').style.borderColor = '#7fa284';
         document.getElementById('editorialContentPanel').style.display = 'block';
       }
     }
@@ -7270,8 +7860,8 @@
         if (uploadContent) {
           uploadContent.innerHTML = 
             '<div style="position: relative; text-align: center;">' +
-              '<img src="' + window.uploadedContentImageData + '" style="max-width: 100%; max-height: 200px; border-radius: 8px; margin-bottom: 12px; border: 2px solid #10b981;">' +
-              '<div style="font-weight: 600; margin: 12px 0; color: #10b981; font-size: 18px;">✅ Image Ready: ' + file.name + '</div>' +
+              '<img src="' + window.uploadedContentImageData + '" style="max-width: 100%; max-height: 200px; border-radius: 8px; margin-bottom: 12px; border: 2px solid #7fa284;">' +
+              '<div style="font-weight: 600; margin: 12px 0; color: #7fa284; font-size: 18px;">✅ Image Ready: ' + file.name + '</div>' +
               '<div style="color: rgba(255,255,255,0.8); font-size: 14px;">Click to change image</div>' +
             '</div>';
           
@@ -7293,8 +7883,8 @@
       if (uploadContent) {
         uploadContent.innerHTML = 
           '<div style="position: relative; text-align: center;">' +
-            '<span style="font-size: 48px; color: #10b981;">📁</span><br>' +
-            '<div style="font-weight: 600; margin: 12px 0; color: #10b981; font-size: 18px;">✅ ' + files.length + ' file(s) uploaded</div>' +
+            '<span style="font-size: 48px; color: #7fa284;">📁</span><br>' +
+            '<div style="font-weight: 600; margin: 12px 0; color: #7fa284; font-size: 18px;">✅ ' + files.length + ' file(s) uploaded</div>' +
             '<div style="color: rgba(255,255,255,0.8); font-size: 14px;">' + files.map(f => f.name).join(', ') + '</div>' +
             '<div style="color: rgba(255,255,255,0.6); font-size: 12px; margin-top: 6px;">Click to change files</div>' +
           '</div>';
@@ -7468,8 +8058,8 @@
       modal.id = 'ordersRightModal';
       modal.style.cssText = `
         position: fixed;
-        top: 0;
-        left: 280px;
+  top: 0;
+  left: 260px;
         width: 800px;
         height: 100vh;
         background: rgba(255, 255, 255, 0.98);
@@ -7497,7 +8087,7 @@
 
       modal.innerHTML = `
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 2px solid #e5e7eb;">
-          <h3 style="margin: 0; font-size: 20px; color: #1f2937; font-weight: 600;">📋 All Orders (${filtered.length})</h3>
+          <h3 style="margin: 0; font-size: 20px; color: #4b3b2a; font-weight: 600;">📋 All Orders (${filtered.length})</h3>
           <button onclick="closeOrdersModal()" style="background: #ef4444; color: white; border: none; border-radius: 50%; width: 32px; height: 32px; cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center;">×</button>
         </div>
 
@@ -7511,12 +8101,12 @@
           <table style="width: 100%; border-collapse: collapse;">
             <thead>
               <tr style="background: #f1f5f9; border-bottom: 2px solid #e2e8f0;">
-                <th style="padding: 12px; text-align: left; font-weight: 600; color: #374151; font-size: 12px;">Order #</th>
-                <th style="padding: 12px; text-align: left; font-weight: 600; color: #374151; font-size: 12px;">Title</th>
-                <th style="padding: 12px; text-align: left; font-weight: 600; color: #374151; font-size: 12px;">Status</th>
-                <th style="padding: 12px; text-align: left; font-weight: 600; color: #374151; font-size: 12px;">Priority</th>
-                <th style="padding: 12px; text-align: left; font-weight: 600; color: #374151; font-size: 12px;">Deadline</th>
-                <th style="padding: 12px; text-align: left; font-weight: 600; color: #374151; font-size: 12px;">Progress</th>
+                <th style="padding: 12px; text-align: left; font-weight: 600; color: #4b3b2a; font-size: 12px;">Order #</th>
+                <th style="padding: 12px; text-align: left; font-weight: 600; color: #4b3b2a; font-size: 12px;">Title</th>
+                <th style="padding: 12px; text-align: left; font-weight: 600; color: #4b3b2a; font-size: 12px;">Status</th>
+                <th style="padding: 12px; text-align: left; font-weight: 600; color: #4b3b2a; font-size: 12px;">Priority</th>
+                <th style="padding: 12px; text-align: left; font-weight: 600; color: #4b3b2a; font-size: 12px;">Deadline</th>
+                <th style="padding: 12px; text-align: left; font-weight: 600; color: #4b3b2a; font-size: 12px;">Progress</th>
               </tr>
             </thead>
             <tbody id="modalOrdersBody">
@@ -7528,16 +8118,16 @@
 
                 return `
                 <tr onclick="showOrderDetails('${o.orderNumber}'); closeOrdersModal();" style="cursor: pointer; border-bottom: 1px solid #e5e7eb; hover: background: #f9fafb;">
-                  <td style="padding: 12px; font-weight: 600; color: #1f2937;">${o.orderNumber}</td>
-                  <td style="padding: 12px; color: #374151;">${o.title}</td>
+                  <td style="padding: 12px; font-weight: 600; color: #4b3b2a;">${o.orderNumber}</td>
+                  <td style="padding: 12px; color: #4b3b2a;">${o.title}</td>
                   <td style="padding: 12px;"><span class="status ${o.status.replace(/\s+/g, '')}" style="font-size: 12px;">${o.status}</span></td>
                   <td style="padding: 12px;"><span class="status ${o.priority}" style="font-size: 12px;">${o.priority}</span></td>
                   <td style="padding: 12px; ${deadlineStyle}">${o.deadline}${isOverdue ? ' ⚠️' : ''}</td>
                   <td style="padding: 12px;">
                     <div class="progress-bar" style="width: 60px; height: 6px; background: #e5e7eb; border-radius: 3px; overflow: hidden;">
-                      <div class="progress-fill" style="width: ${progress}%; height: 100%; background: ${progress === 100 ? '#10b981' : '#3b82f6'}; transition: width 0.3s ease;"></div>
+                      <div class="progress-fill" style="width: ${progress}%; height: 100%; background: ${progress === 100 ? '#7fa284' : '#c48b5a'}; transition: width 0.3s ease;"></div>
                     </div>
-                    <div style="font-size: 10px; color: #6b7280; margin-top: 2px;">${progress}%</div>
+                    <div style="font-size: 10px; color: #6b5440; margin-top: 2px;">${progress}%</div>
                   </td>
                 </tr>
                 `;
@@ -7545,7 +8135,7 @@
             </tbody>
           </table>
 
-          ${filtered.length === 0 ? '<div style="text-align: center; color: #6b7280; padding: 40px; font-style: italic;">No orders found matching your search.</div>' : ''}
+          ${filtered.length === 0 ? '<div style="text-align: center; color: #6b5440; padding: 40px; font-style: italic;">No orders found matching your search.</div>' : ''}
         </div>
       `;
 
@@ -7614,8 +8204,8 @@
       modal.id = 'dashboardRightModal';
       modal.style.cssText = `
         position: fixed;
-        top: 0;
-        left: 280px;
+  top: 0;
+  left: 260px;
         width: 700px;
         height: 100vh;
         background: rgba(255, 255, 255, 0.98);
@@ -7639,28 +8229,28 @@
 
       modal.innerHTML = `
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 2px solid #e5e7eb;">
-          <h3 style="margin: 0; font-size: 20px; color: #1f2937; font-weight: 600;">📊 Dashboard Overview</h3>
+          <h3 style="margin: 0; font-size: 20px; color: #4b3b2a; font-weight: 600;">📊 Dashboard Overview</h3>
           <button onclick="closeDashboardModal()" style="background: #ef4444; color: white; border: none; border-radius: 50%; width: 32px; height: 32px; cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center;">×</button>
         </div>
 
         <div style="background: #f8fafc; padding: 16px; border-radius: 8px; margin-bottom: 16px;">
-          <h4 style="margin: 0 0 16px; font-size: 16px; color: #1f2937;">📈 Key Metrics</h4>
+          <h4 style="margin: 0 0 16px; font-size: 16px; color: #4b3b2a;">📈 Key Metrics</h4>
           <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;">
-            <div style="background: white; padding: 16px; border-radius: 8px; border-left: 4px solid #3b82f6;">
-              <div style="font-size: 24px; font-weight: bold; color: #1f2937;">${totalOrders}</div>
-              <div style="font-size: 12px; color: #6b7280;">Total Orders</div>
+            <div style="background: white; padding: 16px; border-radius: 8px; border-left: 4px solid #c48b5a;">
+              <div style="font-size: 24px; font-weight: bold; color: #4b3b2a;">${totalOrders}</div>
+              <div style="font-size: 12px; color: #6b5440;">Total Orders</div>
             </div>
             <div style="background: white; padding: 16px; border-radius: 8px; border-left: 4px solid #f59e0b;">
-              <div style="font-size: 24px; font-weight: bold; color: #1f2937;">${newOrders}</div>
-              <div style="font-size: 12px; color: #6b7280;">New Orders</div>
+              <div style="font-size: 24px; font-weight: bold; color: #4b3b2a;">${newOrders}</div>
+              <div style="font-size: 12px; color: #6b5440;">New Orders</div>
             </div>
-            <div style="background: white; padding: 16px; border-radius: 8px; border-left: 4px solid #0ea5e9;">
-              <div style="font-size: 24px; font-weight: bold; color: #1f2937;">${inProgressOrders}</div>
-              <div style="font-size: 12px; color: #6b7280;">In Progress</div>
+            <div style="background: white; padding: 16px; border-radius: 8px; border-left: 4px solid #c48b5a;">
+              <div style="font-size: 24px; font-weight: bold; color: #4b3b2a;">${inProgressOrders}</div>
+              <div style="font-size: 12px; color: #6b5440;">In Progress</div>
             </div>
-            <div style="background: white; padding: 16px; border-radius: 8px; border-left: 4px solid #10b981;">
-              <div style="font-size: 24px; font-weight: bold; color: #1f2937;">${completedOrders}</div>
-              <div style="font-size: 12px; color: #6b7280;">Completed</div>
+            <div style="background: white; padding: 16px; border-radius: 8px; border-left: 4px solid #7fa284;">
+              <div style="font-size: 24px; font-weight: bold; color: #4b3b2a;">${completedOrders}</div>
+              <div style="font-size: 12px; color: #6b5440;">Completed</div>
             </div>
           </div>
 
@@ -7672,7 +8262,7 @@
         </div>
 
         <div style="background: #f8fafc; padding: 16px; border-radius: 8px; margin-bottom: 16px;">
-          <h4 style="margin: 0 0 16px; font-size: 16px; color: #1f2937;">🔥 Recent Activity</h4>
+          <h4 style="margin: 0 0 16px; font-size: 16px; color: #4b3b2a;">🔥 Recent Activity</h4>
           <div style="max-height: 300px; overflow-y: auto;">
             ${orders.slice(0, 10).map(o => {
               const progress = calculateProgress(o.status);
@@ -7681,13 +8271,13 @@
               return `
                 <div onclick="showOrderDetails('${o.orderNumber}'); closeDashboardModal();" style="background: white; padding: 12px; border-radius: 6px; margin-bottom: 8px; cursor: pointer; border-left: 4px solid ${getStatusColor(o.status)}; hover: background: #f9fafb;">
                   <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
-                    <div style="font-weight: 600; color: #1f2937; font-size: 14px;">${o.orderNumber}</div>
+                    <div style="font-weight: 600; color: #4b3b2a; font-size: 14px;">${o.orderNumber}</div>
                     <span class="status ${o.status.replace(/\s+/g, '')}" style="font-size: 11px;">${o.status}</span>
                   </div>
-                  <div style="color: #6b7280; font-size: 12px; margin-bottom: 4px;">${o.title}</div>
+                  <div style="color: #6b5440; font-size: 12px; margin-bottom: 4px;">${o.title}</div>
                   <div style="display: flex; justify-content: space-between; align-items: center;">
                     <div style="font-size: 11px; color: #9ca3af;">${o.deadline}</div>
-                    <div style="font-size: 11px; color: #6b7280;">${progress}% complete</div>
+                    <div style="font-size: 11px; color: #6b5440;">${progress}% complete</div>
                   </div>
                 </div>
               `;
@@ -7696,12 +8286,12 @@
         </div>
 
         <div style="background: #f8fafc; padding: 16px; border-radius: 8px;">
-          <h4 style="margin: 0 0 16px; font-size: 16px; color: #1f2937;">⚡ Quick Actions</h4>
+          <h4 style="margin: 0 0 16px; font-size: 16px; color: #4b3b2a;">⚡ Quick Actions</h4>
           <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px;">
-            <button onclick="showNewOrderModal(); closeDashboardModal();" style="padding: 12px; background: linear-gradient(135deg, #059669 0%, #047857 100%); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 500; text-align: center;">
+            <button onclick="showNewOrderModal(); closeDashboardModal();" style="padding: 12px; background: linear-gradient(135deg, #7fa284 0%, #047857 100%); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 500; text-align: center;">
               ➕ New Order
             </button>
-            <button onclick="showView('orders'); closeDashboardModal();" style="padding: 12px; background: #3b82f6; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 500; text-align: center;">
+            <button onclick="showView('orders'); closeDashboardModal();" style="padding: 12px; background: #c48b5a; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 500; text-align: center;">
               📋 View All Orders
             </button>
           </div>
@@ -7784,11 +8374,12 @@
       const modal = document.createElement('div');
       modal.className = 'order-details-modal';
       modal.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;z-index:1000';
+      const articlesMarkup = renderArticleCards(order.articles);
       modal.innerHTML = `
         <div style="background:white;border-radius:12px;padding:32px;max-width:700px;width:95%;max-height:85vh;overflow-y:auto;">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;">
-            <h2 style="margin:0;font-size:24px;color:#1f2937;">📋 Order Details</h2>
-            <button onclick="this.closest('.order-details-modal').remove()" style="background:none;border:none;font-size:28px;cursor:pointer;color:#6b7280;">×</button>
+            <h2 style="margin:0;font-size:24px;color:#4b3b2a;">📋 Order Details</h2>
+            <button onclick="this.closest('.order-details-modal').remove()" style="background:none;border:none;font-size:28px;cursor:pointer;color:#6b5440;">×</button>
           </div>
           
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:24px;">
@@ -7805,7 +8396,7 @@
             
             <!-- Right Column - Status & Assignment Management -->
             <div style="background:#f8fafc;padding:16px;border-radius:8px;">
-              <h3 style="margin:0 0 16px;font-size:16px;color:#1f2937;">📊 Workflow Management</h3>
+              <h3 style="margin:0 0 16px;font-size:16px;color:#4b3b2a;">📊 Workflow Management</h3>
               
               <!-- Current Status -->
               <div style="margin-bottom:16px;">
@@ -7830,7 +8421,7 @@
               <!-- Current Assignment -->
               <div style="margin-bottom:16px;">
                 <strong>Assigned To:</strong>
-                <div style="margin-top:4px;color:#6b7280;">
+                <div style="margin-top:4px;color:#6b5440;">
                   ${order.photographer || 'Unassigned'}
                 </div>
               </div>
@@ -7849,7 +8440,7 @@
               
               ${(canManageOrders || canAssignWork) ? `
                 <button onclick="updateOrderWorkflow('${orderNumber}')" 
-                        style="width:100%;background:#2563eb;color:white;border:none;padding:12px;border-radius:6px;cursor:pointer;font-weight:600;margin-top:8px;">
+                        style="width:100%;background:#a66b38;color:white;border:none;padding:12px;border-radius:6px;cursor:pointer;font-weight:600;margin-top:8px;">
                   💾 Update Workflow
                 </button>
               ` : ''}
@@ -7859,7 +8450,10 @@
           <!-- Order Details -->
           <div style="space-y:16px;">
             ${order.brief ? `<div><strong>Brief:</strong><br><div style="margin-top:8px;padding:12px;background:#f8fafc;border-radius:6px;">${order.brief}</div></div>` : ''}
-            ${order.articles ? `<div><strong>Articles:</strong><br><div style="margin-top:8px;padding:12px;background:#f8fafc;border-radius:6px;">${order.articles}</div></div>` : ''}
+            <div>
+              <strong>Articles:</strong>
+              <div style="margin-top:12px;">${articlesMarkup}</div>
+            </div>
             ${order.deliverables ? `<div><strong>Deliverables:</strong><br><div style="margin-top:8px;padding:12px;background:#f8fafc;border-radius:6px;">${order.deliverables}</div></div>` : ''}
           </div>
           
@@ -7867,12 +8461,12 @@
           <div style="margin-top:24px;display:flex;gap:12px;justify-content:flex-end;">
             ${canManageOrders ? `
               <button onclick="showOrderHistory('${orderNumber}')" 
-                      style="background:#6b7280;color:white;border:none;padding:12px 24px;border-radius:6px;cursor:pointer;">
+                      style="background:#6b5440;color:white;border:none;padding:12px 24px;border-radius:6px;cursor:pointer;">
                 📜 View History
               </button>
             ` : ''}
             <button onclick="this.closest('.order-details-modal').remove()" 
-                    style="background:#6b7280;color:white;border:none;padding:12px 24px;border-radius:6px;cursor:pointer;">
+                    style="background:#6b5440;color:white;border:none;padding:12px 24px;border-radius:6px;cursor:pointer;">
               Close
             </button>
           </div>
@@ -7963,16 +8557,16 @@
       modal.innerHTML = `
         <div style="background:white;border-radius:12px;padding:24px;max-width:600px;width:90%;max-height:70vh;overflow-y:auto;">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
-            <h3 style="margin:0;color:#1f2937;">📜 Order History - ${orderNumber}</h3>
+            <h3 style="margin:0;color:#4b3b2a;">📜 Order History - ${orderNumber}</h3>
             <button onclick="this.parentElement.parentElement.parentElement.remove()" 
-                    style="background:none;border:none;font-size:24px;cursor:pointer;color:#6b7280;">×</button>
+                    style="background:none;border:none;font-size:24px;cursor:pointer;color:#6b5440;">×</button>
           </div>
           <div style="space-y:12px;">
             ${order.history.slice().reverse().map(entry => `
-              <div style="border-left:4px solid #3b82f6;padding-left:16px;margin-bottom:16px;">
-                <div style="font-weight:600;color:#1f2937;margin-bottom:4px;">${entry.action}</div>
-                <div style="color:#6b7280;font-size:13px;margin-bottom:4px;">${entry.timestamp} • ${entry.user}</div>
-                <div style="color:#374151;font-size:14px;">${entry.details}</div>
+              <div style="border-left:4px solid #c48b5a;padding-left:16px;margin-bottom:16px;">
+                <div style="font-weight:600;color:#4b3b2a;margin-bottom:4px;">${entry.action}</div>
+                <div style="color:#6b5440;font-size:13px;margin-bottom:4px;">${entry.timestamp} • ${entry.user}</div>
+                <div style="color:#4b3b2a;font-size:14px;">${entry.details}</div>
               </div>
             `).join('')}
           </div>
@@ -8115,7 +8709,7 @@
         opacity: 0;
         transform: translateX(100%);
         transition: all 0.3s ease;
-        ${type === 'success' ? 'background: #10b981;' : 'background: #3b82f6;'}
+        ${type === 'success' ? 'background: #7fa284;' : 'background: #c48b5a;'}
       `;
       notification.textContent = message;
       document.body.appendChild(notification);
@@ -8147,17 +8741,38 @@
       const tbody = document.getElementById('ordersBody');
       const searchBox = document.getElementById('searchBox');
       
-      if (!window.allOrders) {
+      if (!window.rkhOrders) {
         return;
       }
       
       if (!window.authSystem) {
         return;
       }
+
+      if (!hasPrimaryOrderFilter()) {
+        updateOrderFilterSummary([]);
+        if (tbody) {
+          tbody.innerHTML = '<tr><td colspan="14" style="text-align:center;color:#9ca3af;padding:20px;">Select a Sales Org, Event, Status, Tactic Type, or Tactic to load orders</td></tr>';
+        }
+        if (typeof updateFilterTileCounts === 'function') {
+          updateFilterTileCounts();
+        }
+        return;
+      }
       
-      const orders = window.authSystem.getFilteredOrders(window.allOrders);
+      const orders = window.authSystem.getFilteredOrders(window.rkhOrders);
+      let filteredByActiveFilters = applyActiveOrderFilters(orders);
+      let statusFiltered = { orders: filteredByActiveFilters, label: '' };
+
+      if (statusFilterOverride) {
+        statusFiltered = applyStatusFilter(filteredByActiveFilters, statusFilterOverride);
+        filteredByActiveFilters = statusFiltered.orders;
+      }
+
+      updateOrderFilterSummary(filteredByActiveFilters);
+
       const term = searchBox?.value.toLowerCase() || '';
-      const filtered = orders.filter(o => 
+      const filtered = filteredByActiveFilters.filter(o => 
         !term || 
         o.orderNumber.toLowerCase().includes(term) ||
         o.title.toLowerCase().includes(term) ||
@@ -8166,49 +8781,179 @@
       );
       
       if (tbody) {
-        tbody.innerHTML = filtered.map(o => {
-          const progress = window.calculateProgress(o.status);
-          const isOverdue = new Date(o.deadline) < new Date() && o.status !== 'Complete' && o.status !== 'Delivered';
-          const deadlineStyle = isOverdue ? 'color: #dc2626; font-weight: bold;' : '';
-          const commentCount = (o.comments || []).length;
-          const unreadComments = window.commentSystem ? window.commentSystem.getUnreadCommentCount(o.orderNumber) : 0;
-          
-          // Build method display with Post Production details
-          let methodDisplay = o.method;
-          if (o.method === 'Post Production' && o.postProduction) {
-            if (o.postProduction.type === 'GenAI' && o.postProduction.genaiConfig) {
-              methodDisplay = `Post Production (GenAI - ${o.postProduction.genaiConfig.operation})`;
-            } else if (o.postProduction.type === 'Internal') {
-              methodDisplay = 'Post Production (Internal)';
+        const placeholderSpan = '<span style="color:#9ca3af;">—</span>';
+
+        const formatPurchaseGroupDisplay = (value) => {
+          if (value === undefined || value === null || value === '') {
+            return placeholderSpan;
+          }
+          const numeric = Number(value);
+          if (!Number.isNaN(numeric) && purchaseGroups && purchaseGroups[numeric]) {
+            return `${numeric} - ${purchaseGroups[numeric]}`;
+          }
+          const textValue = String(value).trim();
+          if (purchaseGroups) {
+            const matchedKey = Object.keys(purchaseGroups).find(key => purchaseGroups[key].toLowerCase() === textValue.toLowerCase());
+            if (matchedKey) {
+              return `${matchedKey} - ${purchaseGroups[matchedKey]}`;
             }
           }
-          
+          return textValue || placeholderSpan;
+        };
+
+        const buildProductionInfo = (order) => {
+          const methodLabel = order.method || order.productionMethod || placeholderSpan;
+          const photographerLabel = order.photographer ? order.photographer : 'Unassigned';
+          const photographerColor = order.photographer ? '#6b5440' : '#9ca3af';
           return `
-          <tr onclick="showOrderDetails('${o.orderNumber}')" style="cursor: pointer; color: #374151 !important;" class="${window.selectedItems && window.selectedItems.has(o.orderNumber) ? 'selected-row' : ''}">
-            <td class="bulk-checkbox" style="display: none;"><input type="checkbox" class="item-checkbox" data-id="${o.orderNumber}" onclick="event.stopPropagation()"></td>
-            <td style="color: #374151 !important;"><strong>${o.orderNumber}</strong></td>
-            <td style="color: #374151 !important;">${o.title}</td>
-            <td><span class="status ${o.status.replace(/\s+/g, '')}">${o.status}</span></td>
-            <td style="color: #374151 !important;">${methodDisplay}</td>
-            <td style="color: #374151 !important;">${o.purchaseGroup || 'N/A'}</td>
-            <td style="color: #374151 !important;">${o.eventId || 'N/A'}</td>
-            <td style="color: #374151 !important;">${o.photographer}</td>
-            <td><span class="status ${o.priority}">${o.priority}</span></td>
-            <td style="${deadlineStyle}; color: #374151 !important;">${o.deadline}${isOverdue ? ' ⚠️' : ''}</td>
-            <td style="color: #374151 !important;">
-              <div class="progress-bar">
-                <div class="progress-fill" style="width: ${progress}%"></div>
+            <div style="display:flex;flex-direction:column;gap:4px;">
+              <span>${methodLabel}</span>
+              <span style="font-size:12px;color:${photographerColor};">${photographerLabel}</span>
+            </div>
+          `;
+        };
+
+        const buildPreviewCell = (order) => {
+          const assets = Array.isArray(order.uploadedContent) ? order.uploadedContent : [];
+          const firstAsset = assets.find(item => item && (item.thumbnailUrl || item.data || item.url)) || null;
+          const previewSource = firstAsset?.thumbnailUrl || firstAsset?.data || firstAsset?.url || order.cloudinaryUrl || '';
+
+          if (!previewSource) {
+            return '<span style="color:#9ca3af;">No preview</span>';
+          }
+
+          const assetName = firstAsset?.name ? firstAsset.name : 'Preview asset';
+
+          return `
+            <div style="display:flex;align-items:center;gap:8px;">
+              <div style="width:40px;height:40px;border-radius:8px;overflow:hidden;box-shadow:0 3px 8px rgba(0,0,0,0.08);background:#f9f4ec;flex-shrink:0;">
+                <img src="${previewSource}" alt="Preview for ${order.orderNumber}" data-preview="${previewSource}" 
+                  style="width:100%;height:100%;object-fit:cover;cursor:pointer;"
+                  onmouseenter="showThumbnailPreview(event, this.dataset.preview)"
+                  onmouseleave="hideThumbnailPreview()"
+                  onclick="openThumbnailModal(event, this.dataset.preview)">
               </div>
-              <div style="font-size: 10px; color: #6b7280; margin-top: 2px;">${progress}%</div>
+              <span style="font-size:11px;color:#6b5440;max-width:140px;display:inline-block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${assetName}</span>
+            </div>
+          `;
+        };
+
+        const buildChildDetailsTable = (order, normalizedArticles) => {
+          const hasOrderLevelDetail = Boolean(order.imageRequestId || order.articleNumber || order.articleName || order.purchaseGroup);
+          const dataSource = normalizedArticles.length ? normalizedArticles : (hasOrderLevelDetail ? [{
+            name: order.articleName || '',
+            articleNumber: order.articleNumber || '',
+            raw: {
+              imageRequestId: order.imageRequestId,
+              articleNumber: order.articleNumber,
+              unitOfMeasure: order.unitOfMeasure,
+              articleName: order.articleName,
+              netContent: order.netContent,
+              purchaseGroup: order.purchaseGroup
+            }
+          }] : []);
+
+          const rows = dataSource.length ? dataSource.map((article, index) => {
+            const raw = article && typeof article.raw === 'object' ? article.raw : {};
+            const imageRequestId = raw.imageRequestId || order.imageRequestId || placeholderSpan;
+            const articleNumber = article.articleNumber || raw.articleNumber || order.articleNumber || placeholderSpan;
+            const unitOfMeasure = raw.unitOfMeasure || raw.uom || raw.unit || order.unitOfMeasure || placeholderSpan;
+            const articleName = article.name || raw.articleName || order.articleName || placeholderSpan;
+            const netContent = raw.netContent || raw.netWeight || raw.size || order.netContent || placeholderSpan;
+            const purchaseGroupValue = raw.purchaseGroup ?? order.purchaseGroup;
+            const purchaseGroup = formatPurchaseGroupDisplay(purchaseGroupValue);
+
+            return `
+              <tr>
+                <td style="padding:6px 10px;border-bottom:1px solid rgba(196, 139, 90, 0.18);font-size:11px;">${imageRequestId || placeholderSpan}</td>
+                <td style="padding:6px 10px;border-bottom:1px solid rgba(196, 139, 90, 0.18);font-size:11px;">${articleNumber || placeholderSpan}</td>
+                <td style="padding:6px 10px;border-bottom:1px solid rgba(196, 139, 90, 0.18);font-size:11px;">${unitOfMeasure || placeholderSpan}</td>
+                <td style="padding:6px 10px;border-bottom:1px solid rgba(196, 139, 90, 0.18);font-size:11px;">${articleName || placeholderSpan}</td>
+                <td style="padding:6px 10px;border-bottom:1px solid rgba(196, 139, 90, 0.18);font-size:11px;">${netContent || placeholderSpan}</td>
+                <td style="padding:6px 10px;border-bottom:1px solid rgba(196, 139, 90, 0.18);font-size:11px;">${purchaseGroup || placeholderSpan}</td>
+              </tr>
+            `;
+          }).join('') : `
+            <tr>
+              <td colspan="6" style="padding:12px;color:#9ca3af;text-align:center;border-bottom:1px solid rgba(196, 139, 90, 0.2);">No article details available for this order.</td>
+            </tr>
+          `;
+
+          return `
+            <div style="background:white;border:1px solid rgba(196, 139, 90, 0.25);border-radius:10px;overflow:auto;max-height:220px;">
+              <table style="width:100%;border-collapse:collapse;">
+                <thead style="background:rgba(253, 244, 230, 0.6);">
+                  <tr>
+                    <th style="text-align:left;padding:8px 10px;font-size:11px;color:#6b5440;font-weight:600;">Image Request ID</th>
+                    <th style="text-align:left;padding:8px 10px;font-size:11px;color:#6b5440;font-weight:600;">Article Number</th>
+                    <th style="text-align:left;padding:8px 10px;font-size:11px;color:#6b5440;font-weight:600;">Unit of Measure</th>
+                    <th style="text-align:left;padding:8px 10px;font-size:11px;color:#6b5440;font-weight:600;">Article Name</th>
+                    <th style="text-align:left;padding:8px 10px;font-size:11px;color:#6b5440;font-weight:600;">Net Content</th>
+                    <th style="text-align:left;padding:8px 10px;font-size:11px;color:#6b5440;font-weight:600;">Purchase Group</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${rows}
+                </tbody>
+              </table>
+            </div>
+          `;
+        };
+
+        tbody.innerHTML = filtered.map(o => {
+          const isOverdue = o.deadline ? (new Date(o.deadline) < new Date() && o.status !== 'Complete' && o.status !== 'Delivered') : false;
+          const deadlineStyle = isOverdue ? 'color: #dc2626; font-weight: bold;' : 'color: #4b3b2a;';
+          const commentCount = (o.comments || []).length;
+          const unreadComments = window.commentSystem ? window.commentSystem.getUnreadCommentCount(o.orderNumber) : 0;
+          const normalizedArticles = normalizeArticles(o.articles);
+          const isExpanded = expandedOrders.has(o.orderNumber);
+          const expandIcon = `<span class="order-expand-arrow ${isExpanded ? 'is-open' : ''}">◀</span>`;
+          const expandLabel = isExpanded ? 'Collapse line items' : 'Expand line items';
+
+          const groupDisplay = formatPurchaseGroupDisplay(o.purchaseGroup);
+          const offerId = o.offerId || placeholderSpan;
+          const offerName = o.title || placeholderSpan;
+          const shotType = o.photoStatus || placeholderSpan;
+          const photoRef = o.imageRequestId || placeholderSpan;
+          const principle = o.salesOrg || placeholderSpan;
+          const productionInfo = buildProductionInfo(o);
+          const previewCell = buildPreviewCell(o);
+
+          const articleDetailsRow = isExpanded ? `
+            <tr class="order-articles-row" data-parent-order="${o.orderNumber}">
+              <td class="bulk-checkbox" style="display:none;"></td>
+              <td colspan="13" style="background:#fffaf3;padding:10px 18px 16px;border-bottom:1px solid rgba(196, 139, 90, 0.2);">
+                ${buildChildDetailsTable(o, normalizedArticles)}
+              </td>
+            </tr>
+          ` : '';
+
+          return `
+          <tr onclick="showOrderDetails('${o.orderNumber}')" style="cursor: pointer; color: #4b3b2a !important;" class="${window.selectedItems && window.selectedItems.has(o.orderNumber) ? 'selected-row' : ''}">
+            <td class="bulk-checkbox" style="display: none;"><input type="checkbox" class="item-checkbox" data-id="${o.orderNumber}" onclick="event.stopPropagation()"></td>
+            <td style="padding:6px 6px;text-align:center;">
+              <button type="button" class="order-expand-button" aria-label="${expandLabel}" title="${expandLabel}" onclick="toggleOrderExpansion('${o.orderNumber}', event)">${expandIcon}</button>
             </td>
-            <td style="text-align: center; color: #374151 !important;">
+            <td style="padding:8px 10px;color: #4b3b2a !important;"><strong>${o.orderNumber}</strong></td>
+            <td style="padding:8px 10px;color: #4b3b2a !important;">${offerId}</td>
+            <td style="padding:8px 10px;color: #4b3b2a !important;">${groupDisplay}</td>
+            <td style="padding:8px 10px;color: #4b3b2a !important;min-width:160px;">${offerName}</td>
+            <td style="padding:8px 10px;color: #4b3b2a !important;">${shotType}</td>
+            <td style="padding:8px 10px;color: #4b3b2a !important;">${photoRef}</td>
+            <td style="padding:8px 10px;color: #4b3b2a !important;">${productionInfo}</td>
+            <td style="padding:8px 10px;color: #4b3b2a !important;">${principle}</td>
+            <td style="padding:8px 10px;color: #4b3b2a !important;">${previewCell}</td>
+            <td style="padding:6px 8px;text-align: center; color: #4b3b2a !important;">
               <button onclick="event.stopPropagation(); window.commentSystem && window.commentSystem.showCommentsModal('${o.orderNumber}')" 
-                style="background: ${commentCount > 0 ? '#3b82f6' : '#6b7280'}; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; position: relative;">
+                style="background: ${commentCount > 0 ? '#c48b5a' : '#6b5440'}; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 11px; position: relative;">
                 💬 ${commentCount}
-                ${unreadComments > 0 ? `<span style="position: absolute; top: -4px; right: -4px; background: #ef4444; color: white; border-radius: 50%; width: 16px; height: 16px; font-size: 10px; display: flex; align-items: center; justify-content: center;">${unreadComments}</span>` : ''}
+                ${unreadComments > 0 ? `<span style="position: absolute; top: -5px; right: -5px; background: #ef4444; color: white; border-radius: 50%; width: 14px; height: 14px; font-size: 9px; display: flex; align-items: center; justify-content: center;">${unreadComments}</span>` : ''}
               </button>
             </td>
-          </tr>`;
+            <td style="padding:8px 10px;"><span class="status ${o.status.replace(/\s+/g, '')}">${o.status || 'Unknown'}</span></td>
+            <td style="padding:8px 10px;${deadlineStyle}">${o.deadline || placeholderSpan}${isOverdue ? ' ⚠️' : ''}</td>
+          </tr>
+          ${articleDetailsRow}`;
         }).join('');
       }
       
@@ -8221,6 +8966,43 @@
         updateFilterTileCounts();
       }
     }
+
+    let quickFiltersOpen = false;
+
+    function toggleQuickFilters() {
+      const panel = document.getElementById('quickFiltersPanel');
+      const toggleButton = document.getElementById('quickFiltersToggle');
+
+      if (!panel || !toggleButton) {
+        return;
+      }
+
+      quickFiltersOpen = !quickFiltersOpen;
+      panel.style.display = quickFiltersOpen ? 'block' : 'none';
+      toggleButton.textContent = quickFiltersOpen ? 'Quick Filters ▲' : 'Quick Filters ▾';
+    }
+
+    window.toggleQuickFilters = toggleQuickFilters;
+
+    // Kanban Board Functions
+    function toggleOrderExpansion(orderNumber, event) {
+      if (event) {
+        event.stopPropagation();
+        event.preventDefault();
+      }
+
+      if (expandedOrders.has(orderNumber)) {
+        expandedOrders.delete(orderNumber);
+      } else {
+        expandedOrders.add(orderNumber);
+      }
+
+      if (currentView === 'orders') {
+        drawOrderRows();
+      }
+    }
+
+    window.toggleOrderExpansion = toggleOrderExpansion;
 
     // Kanban Board Functions
     function drawKanbanBoard() {
@@ -8240,14 +9022,14 @@
       }
       
       const statuses = [
-        { name: 'Draft', color: '#6b7280', icon: '📝' },
+        { name: 'Draft', color: '#6b5440', icon: '📝' },
         { name: 'Pending Approval', color: '#f59e0b', icon: '⏳' },
-        { name: 'Approved', color: '#3b82f6', icon: '✅' },
-        { name: 'Samples Requested', color: '#8b5cf6', icon: '📦' },
-        { name: 'In Progress', color: '#0ea5e9', icon: '🔄' },
+        { name: 'Approved', color: '#c48b5a', icon: '✅' },
+        { name: 'Samples Requested', color: '#bfa3d6', icon: '📦' },
+        { name: 'In Progress', color: '#c48b5a', icon: '🔄' },
         { name: 'Review', color: '#f97316', icon: '👀' },
-        { name: 'Complete', color: '#10b981', icon: '🎉' },
-        { name: 'Delivered', color: '#059669', icon: '🚚' }
+        { name: 'Complete', color: '#7fa284', icon: '🎉' },
+        { name: 'Delivered', color: '#7fa284', icon: '🚚' }
       ];
 
       board.innerHTML = statuses.map(status => {
@@ -8257,7 +9039,7 @@
           <div class="kanban-column" data-status="${status.name}" 
                style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px; min-height: 400px;">
             <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 2px solid ${status.color};">
-              <h4 style="margin: 0; color: #374151; font-size: 14px; font-weight: 600;">
+              <h4 style="margin: 0; color: #4b3b2a; font-size: 14px; font-weight: 600;">
                 ${status.icon} ${status.name}
               </h4>
               <span style="background: ${status.color}; color: white; border-radius: 12px; padding: 2px 8px; font-size: 12px; font-weight: 600;">
@@ -8274,27 +9056,27 @@
                      onmouseover="this.style.boxShadow='0 4px 6px rgba(0,0,0,0.1)'; this.style.transform='translateY(-2px)';"
                      onmouseout="this.style.boxShadow='0 1px 3px rgba(0,0,0,0.1)'; this.style.transform='translateY(0)';"
                      onclick="showOrderDetails('${order.orderNumber}'); event.stopPropagation();">
-                  <div style="font-weight: 600; color: #374151; font-size: 12px; margin-bottom: 4px;">
+                  <div style="font-weight: 600; color: #4b3b2a; font-size: 12px; margin-bottom: 4px;">
                     ${order.orderNumber}
                     ${order.uploadedContent && order.uploadedContent.length > 0 ? 
-                      `<span style="background: #10b981; color: white; padding: 1px 4px; border-radius: 3px; font-size: 9px; margin-left: 4px;">📁 ${order.uploadedContent.length}</span>` : 
+                      `<span style="background: #7fa284; color: white; padding: 1px 4px; border-radius: 3px; font-size: 9px; margin-left: 4px;">📁 ${order.uploadedContent.length}</span>` : 
                       ''
                     }
                   </div>
-                  <div style="color: #1f2937; font-size: 13px; font-weight: 500; margin-bottom: 8px; line-height: 1.3;">${order.title}</div>
+                  <div style="color: #4b3b2a; font-size: 13px; font-weight: 500; margin-bottom: 8px; line-height: 1.3;">${order.title}</div>
                   <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
                     <span style="background: ${getPriorityColor(order.priority)}; color: white; padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: 600;">
                       ${order.priority}
                     </span>
-                    <span style="color: #6b7280; font-size: 11px;">${order.deadline}</span>
+                    <span style="color: #6b5440; font-size: 11px;">${order.deadline}</span>
                   </div>
                   <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <span style="color: #6b7280; font-size: 11px;">${order.photographer}</span>
-                    <span style="color: #6b7280; font-size: 11px;">${order.method}</span>
+                    <span style="color: #6b5440; font-size: 11px;">${order.photographer}</span>
+                    <span style="color: #6b5440; font-size: 11px;">${order.method}</span>
                   </div>
                   ${authSystem.canEditOrder(order) ? 
-                    '<div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid #f3f4f6; font-size: 10px; color: #9ca3af;">Drag to update status</div>' : 
-                    '<div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid #f3f4f6; font-size: 10px; color: #9ca3af;">View only</div>'
+                    '<div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid #f1e8dc; font-size: 10px; color: #9ca3af;">Drag to update status</div>' : 
+                    '<div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid #f1e8dc; font-size: 10px; color: #9ca3af;">View only</div>'
                   }
                 </div>
               `).join('')
@@ -8345,7 +9127,7 @@
       document.querySelectorAll('.kanban-column').forEach(column => {
         column.addEventListener('dragover', function(e) {
           e.preventDefault();
-          this.style.background = '#f0f9ff';
+          this.style.background = '#fdf4e6';
         });
 
         column.addEventListener('dragleave', function(e) {
@@ -8452,9 +9234,9 @@
       container.innerHTML = `
         <div style="display: grid; grid-template-columns: repeat(7, 1fr); border-bottom: 1px solid #e5e7eb;">
           ${days.map(day => `
-            <div style="padding: 12px 8px; background: #f9fafb; border-right: 1px solid #e5e7eb; text-align: center; font-weight: 600; color: #374151;">
-              <div style="font-size: 12px; color: #6b7280;">${day.toLocaleDateString('en-US', { weekday: 'short' })}</div>
-              <div style="font-size: 16px; ${isToday(day) ? 'color: #3b82f6; font-weight: 700;' : ''}">${day.getDate()}</div>
+            <div style="padding: 12px 8px; background: #f9fafb; border-right: 1px solid #e5e7eb; text-align: center; font-weight: 600; color: #4b3b2a;">
+              <div style="font-size: 12px; color: #6b5440;">${day.toLocaleDateString('en-US', { weekday: 'short' })}</div>
+              <div style="font-size: 16px; ${isToday(day) ? 'color: #c48b5a; font-weight: 700;' : ''}">${day.getDate()}</div>
             </div>
           `).join('')}
         </div>
@@ -8462,7 +9244,7 @@
           ${days.map(day => {
             const dayOrders = getOrdersForDate(orders, day);
             return `
-              <div style="border-right: 1px solid #e5e7eb; padding: 8px; background: ${isToday(day) ? '#f0f9ff' : 'white'};">
+              <div style="border-right: 1px solid #e5e7eb; padding: 8px; background: ${isToday(day) ? '#fdf4e6' : 'white'};">
                 ${dayOrders.map(order => `
                   <div style="background: ${getStatusColor(order.status)}; color: white; padding: 4px 6px; border-radius: 4px; margin-bottom: 4px; font-size: 11px; cursor: pointer;"
                        onclick="showOrderDetails('${order.orderNumber}')"
@@ -8503,7 +9285,7 @@
       container.innerHTML = `
         <div style="display: grid; grid-template-columns: repeat(7, 1fr); border-bottom: 1px solid #e5e7eb;">
           ${['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => `
-            <div style="padding: 12px 8px; background: #f9fafb; border-right: 1px solid #e5e7eb; text-align: center; font-weight: 600; color: #374151; font-size: 14px;">
+            <div style="padding: 12px 8px; background: #f9fafb; border-right: 1px solid #e5e7eb; text-align: center; font-weight: 600; color: #4b3b2a; font-size: 14px;">
               ${day}
             </div>
           `).join('')}
@@ -8514,8 +9296,8 @@
               const dayOrders = getOrdersForDate(orders, day);
               const isCurrentMonth = day.getMonth() === month;
               return `
-                <div style="border-right: 1px solid #e5e7eb; padding: 4px; min-height: 80px; background: ${isCurrentMonth ? (isToday(day) ? '#f0f9ff' : 'white') : '#f9fafb'};">
-                  <div style="font-size: 12px; font-weight: 600; color: ${isCurrentMonth ? (isToday(day) ? '#3b82f6' : '#374151') : '#9ca3af'}; margin-bottom: 4px;">
+                <div style="border-right: 1px solid #e5e7eb; padding: 4px; min-height: 80px; background: ${isCurrentMonth ? (isToday(day) ? '#fdf4e6' : 'white') : '#f9fafb'};">
+                  <div style="font-size: 12px; font-weight: 600; color: ${isCurrentMonth ? (isToday(day) ? '#c48b5a' : '#4b3b2a') : '#9ca3af'}; margin-bottom: 4px;">
                     ${day.getDate()}
                   </div>
                   ${dayOrders.slice(0, 3).map(order => `
@@ -8525,7 +9307,7 @@
                       ${order.orderNumber}${order.uploadedContent && order.uploadedContent.length > 0 ? ` 📁${order.uploadedContent.length}` : ''}
                     </div>
                   `).join('')}
-                  ${dayOrders.length > 3 ? `<div style="font-size: 8px; color: #6b7280; text-align: center;">+${dayOrders.length - 3} more</div>` : ''}
+                  ${dayOrders.length > 3 ? `<div style="font-size: 8px; color: #6b5440; text-align: center;">+${dayOrders.length - 3} more</div>` : ''}
                 </div>
               `;
             }).join('')}
@@ -8552,10 +9334,10 @@
             
             return `
               <div style="border: 1px solid #e5e7eb; border-radius: 8px; padding: 12px; background: white; min-width: 180px;">
-                <h4 style="margin: 0 0 8px; text-align: center; color: #374151; font-size: 14px; font-weight: 600;">
+                <h4 style="margin: 0 0 8px; text-align: center; color: #4b3b2a; font-size: 14px; font-weight: 600;">
                   ${month.toLocaleDateString('en-US', { month: 'long' })}
                 </h4>
-                <div style="text-align: center; margin-bottom: 8px; font-size: 12px; color: #6b7280;">
+                <div style="text-align: center; margin-bottom: 8px; font-size: 12px; color: #6b5440;">
                   ${monthOrders.length} orders
                 </div>
                 ${monthOrders.slice(0, 5).map(order => `
@@ -8566,7 +9348,7 @@
                     <div style="font-size: 9px; opacity: 0.9;">${new Date(order.deadline).getDate()}/${new Date(order.deadline).getMonth() + 1}</div>
                   </div>
                 `).join('')}
-                ${monthOrders.length > 5 ? `<div style="font-size: 9px; color: #6b7280; text-align: center;">+${monthOrders.length - 5} more</div>` : ''}
+                ${monthOrders.length > 5 ? `<div style="font-size: 9px; color: #6b5440; text-align: center;">+${monthOrders.length - 5} more</div>` : ''}
               </div>
             `;
           }).join('')}
@@ -8628,23 +9410,23 @@
       const priorityColors = {
         'High': '#dc2626',
         'Medium': '#f59e0b', 
-        'Low': '#10b981'
+        'Low': '#7fa284'
       };
-      return priorityColors[priority] || '#6b7280';
+      return priorityColors[priority] || '#6b5440';
     }
 
     function getStatusColor(status) {
       const statusColors = {
-        'Draft': '#6b7280',
+        'Draft': '#6b5440',
         'Pending Approval': '#f59e0b',
-        'Approved': '#3b82f6',
-        'Samples Requested': '#8b5cf6',
-        'In Progress': '#0ea5e9',
+        'Approved': '#c48b5a',
+        'Samples Requested': '#bfa3d6',
+        'In Progress': '#c48b5a',
         'Review': '#f97316',
-        'Complete': '#10b981',
-        'Delivered': '#059669'
+        'Complete': '#7fa284',
+        'Delivered': '#7fa284'
       };
-      return statusColors[status] || '#6b7280';
+      return statusColors[status] || '#6b5440';
     }
 
     function drawWorkflowView() {
@@ -8666,12 +9448,12 @@
                  ondragstart="handleDragStart(event, '${o.orderNumber}')"
                  data-order="${o.orderNumber}">
               <div style="font-weight: 600; margin-bottom: 4px;">${o.title}</div>
-              <div style="color: #6b7280; margin-bottom: 4px;">${o.orderNumber}</div>
+              <div style="color: #6b5440; margin-bottom: 4px;">${o.orderNumber}</div>
               <div style="display: flex; justify-content: space-between; align-items: center;">
                 <span class="status ${o.priority}" style="font-size: 10px;">${o.priority}</span>
                 <span style="font-size: 10px; color: #9ca3af;">${o.deadline}</span>
               </div>
-              ${o.photographer ? `<div style="font-size: 10px; color: #3b82f6; margin-top: 4px;">👤 ${o.photographer}</div>` : ''}
+              ${o.photographer ? `<div style="font-size: 10px; color: #c48b5a; margin-top: 4px;">👤 ${o.photographer}</div>` : ''}
             </div>
           `).join('');
         }
@@ -8780,18 +9562,20 @@
       const today = new Date().toISOString().split('T')[0];
       
       let filtered = [];
+      setStatusFilterOverride(filterType, { skipRender: true });
+      const scopedOrders = applyActiveOrderFilters(authSystem.getFilteredOrders(window.rkhOrders || []));
       switch(filterType) {
         case 'urgent':
-          filtered = orders.filter(o => o.priority === 'Urgent' || o.priority === 'High');
+          filtered = scopedOrders.filter(o => o.priority === 'Urgent' || o.priority === 'High');
           break;
         case 'ready-samples':
-          filtered = orders.filter(o => o.status === 'Samples Requested' || o.status === 'Ready for Production');
+          filtered = scopedOrders.filter(o => o.status === 'Samples Requested' || o.status === 'Ready for Production');
           break;
         case 'overdue':
-          filtered = orders.filter(o => new Date(o.deadline) < new Date() && o.status !== 'Complete' && o.status !== 'Delivered');
+          filtered = scopedOrders.filter(o => new Date(o.deadline) < new Date() && o.status !== 'Complete' && o.status !== 'Delivered');
           break;
         case 'today-deadlines':
-          filtered = orders.filter(o => o.deadline === today);
+          filtered = scopedOrders.filter(o => o.deadline === today);
           break;
       }
       
@@ -8801,32 +9585,75 @@
           const progress = calculateProgress(o.status);
           const isOverdue = new Date(o.deadline) < new Date() && o.status !== 'Complete' && o.status !== 'Delivered';
           const deadlineStyle = isOverdue ? 'color: #dc2626; font-weight: bold;' : '';
+          const articleChips = renderArticleChips(o.articles);
+          const isExpanded = expandedOrders.has(o.orderNumber);
+          const expandIcon = `<span class="order-expand-arrow ${isExpanded ? 'is-open' : ''}">◀</span>`;
+          const expandLabel = isExpanded ? 'Collapse articles' : 'Expand articles';
+          const articleDetails = renderArticleCards(o.articles);
+          const commentCount = (o.comments || []).length;
+          const unreadComments = window.commentSystem ? window.commentSystem.getUnreadCommentCount(o.orderNumber) : 0;
+          let methodDisplay = o.method;
+          if (o.method === 'Post Production' && o.postProduction) {
+            if (o.postProduction.type === 'GenAI' && o.postProduction.genaiConfig) {
+              methodDisplay = `Post Production (GenAI - ${o.postProduction.genaiConfig.operation})`;
+            } else if (o.postProduction.type === 'Internal') {
+              methodDisplay = 'Post Production (Internal)';
+            }
+          }
+
+          const articleDetailsRow = isExpanded ? `
+            <tr class="order-articles-row" data-parent-order="${o.orderNumber}">
+              <td class="bulk-checkbox" style="display:none;"></td>
+              <td colspan="13" style="background:#fffaf3;padding:16px 24px 24px;border-bottom:1px solid rgba(196, 139, 90, 0.2);">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+                  <span style="font-weight:600;color:#4b3b2a;font-size:13px;">Articles linked to ${o.orderNumber}</span>
+                  <button onclick="toggleOrderExpansion('${o.orderNumber}', event)" style="background:none;border:none;color:#a66b38;font-size:12px;font-weight:600;cursor:pointer;">Hide</button>
+                </div>
+                ${articleDetails}
+              </td>
+            </tr>
+          ` : '';
           
           return `
           <tr onclick="showOrderDetails('${o.orderNumber}')" style="cursor: pointer; background: #fef3c7;">
+            <td class="bulk-checkbox" style="display: none;"><input type="checkbox" class="item-checkbox" data-id="${o.orderNumber}" onclick="event.stopPropagation()"></td>
+            <td style="text-align:center;">
+              <button type="button" class="order-expand-button" aria-label="${expandLabel}" title="${expandLabel}" onclick="toggleOrderExpansion('${o.orderNumber}', event)">${expandIcon}</button>
+            </td>
             <td><strong>${o.orderNumber}</strong></td>
             <td>${o.title}</td>
+            <td>${articleChips}</td>
             <td><span class="status ${o.status.replace(/\s+/g, '')}">${o.status}</span></td>
-            <td>${o.method}</td>
+            <td>${methodDisplay}</td>
+            <td>${o.purchaseGroup || 'N/A'}</td>
+            <td>${o.eventId || 'N/A'}</td>
             <td>${o.photographer}</td>
             <td><span class="status ${o.priority}">${o.priority}</span></td>
             <td style="${deadlineStyle}">${o.deadline}${isOverdue ? ' ⚠️' : ''}</td>
-            <td>${o.articles ? o.articles.length : 0}</td>
-            <td>${o.budget ? '$' + o.budget.toLocaleString() : 'Not set'}</td>
             <td>
               <div class="progress-bar">
                 <div class="progress-fill" style="width: ${progress}%"></div>
               </div>
-              <div style="font-size: 10px; color: #6b7280; margin-top: 2px;">${progress}%</div>
+              <div style="font-size: 10px; color: #6b5440; margin-top: 2px;">${progress}%</div>
+            </td>
+            <td style="text-align: center; color: #4b3b2a !important;">
+              <button onclick="event.stopPropagation(); window.commentSystem && window.commentSystem.showCommentsModal('${o.orderNumber}')" 
+                style="background: ${commentCount > 0 ? '#c48b5a' : '#6b5440'}; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; position: relative;">
+                💬 ${commentCount}
+                ${unreadComments > 0 ? `<span style="position: absolute; top: -4px; right: -4px; background: #ef4444; color: white; border-radius: 50%; width: 16px; height: 16px; font-size: 10px; display: flex; align-items: center; justify-content: center;">${unreadComments}</span>` : ''}
+              </button>
             </td>
           </tr>
+          ${articleDetailsRow}
         `;
         }).join('');
         
         if (filtered.length === 0) {
-          tbody.innerHTML = '<tr><td colspan="11" style="text-align:center;color:#9ca3af;padding:20px;">No items found for this filter</td></tr>';
+          tbody.innerHTML = '<tr><td colspan="14" style="text-align:center;color:#9ca3af;padding:20px;">No items found for this filter</td></tr>';
         }
       }
+        updateOrderFilterSummary(scopedOrders);
+      updateOrderFilterSummary(scopedOrders);
       
       // Clear after 5 seconds
       setTimeout(() => {
@@ -8897,6 +9724,9 @@
       
       const currentUser = authSystem.getCurrentUser();
       const comments = order.comments || [];
+  const normalizedArticles = normalizeArticles(order.articles);
+  const articlesCount = normalizedArticles.length;
+  const articleCards = renderArticleCards(order.articles);
       
       const modal = document.createElement('div');
       modal.className = 'order-details-modal';
@@ -8904,20 +9734,20 @@
       modal.innerHTML = `
         <div style="background:white;border-radius:12px;padding:24px;max-width:900px;width:95%;max-height:90vh;overflow-y:auto;">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
-            <h2 style="margin:0;font-size:22px;color:#1f2937;">${order.title}</h2>
-            <button onclick="this.closest('.order-details-modal').remove()" style="background:none;border:none;font-size:28px;cursor:pointer;color:#6b7280;">×</button>
+            <h2 style="margin:0;font-size:22px;color:#4b3b2a;">${order.title}</h2>
+            <button onclick="this.closest('.order-details-modal').remove()" style="background:none;border:none;font-size:28px;cursor:pointer;color:#6b5440;">×</button>
           </div>
           
           <!-- Order Information Grid -->
           <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px;margin-bottom:24px;">
             <div style="background:#f8fafc;padding:16px;border-radius:8px;">
-              <h3 style="margin:0 0 12px;font-size:16px;color:#374151;">📋 Order Details</h3>
+              <h3 style="margin:0 0 12px;font-size:16px;color:#4b3b2a;">📋 Order Details</h3>
               <div style="display:grid;gap:8px;">
                 <div><strong>Order Number:</strong> ${order.orderNumber}</div>
                 <div><strong>Status:</strong> <span style="background:${getStatusColor(order.status)};color:white;padding:2px 8px;border-radius:4px;font-size:12px;">${order.status}</span></div>
                 <div><strong>Method:</strong> ${order.method}</div>
                 ${order.method === 'Post Production' && order.postProduction ? `
-                  <div style="margin-left:16px;padding:8px;background:#f3f4f6;border-radius:6px;">
+                  <div style="margin-left:16px;padding:8px;background:#f1e8dc;border-radius:6px;">
                     <div><strong>Type:</strong> ${order.postProduction.type}</div>
                     ${order.postProduction.type === 'GenAI' && order.postProduction.genaiConfig ? `
                       <div style="margin-top:4px;">
@@ -8942,7 +9772,7 @@
             
             ${order.eventId ? `
             <div style="background:#fef3c7;padding:16px;border-radius:8px;">
-              <h3 style="margin:0 0 12px;font-size:16px;color:#374151;">🏢 SAP PMR Integration</h3>
+              <h3 style="margin:0 0 12px;font-size:16px;color:#4b3b2a;">🏢 SAP PMR Integration</h3>
               <div style="display:grid;gap:8px;">
                 <div><strong>Event ID:</strong> ${order.eventId}</div>
                 <div><strong>Purchase Group:</strong> ${order.purchaseGroup} - ${purchaseGroups[order.purchaseGroup] || 'Unknown'}</div>
@@ -8950,12 +9780,12 @@
                 <div><strong>Article Number:</strong> ${order.articleNumber || 'N/A'}</div>
                 <div><strong>Image Request ID:</strong> ${order.imageRequestId || 'N/A'}</div>
                 <div><strong>Photo Status:</strong> <span style="background:#${order.photoStatus === 'Archive' ? '10b981' : order.photoStatus === 'New Shoot - Photo Box' ? '3b82f6' : 'f59e0b'};color:white;padding:2px 8px;border-radius:4px;font-size:12px;">${order.photoStatus || 'Not Set'}</span></div>
-                ${order.cloudinaryUrl ? `<div><strong>Cloudinary:</strong> <a href="${order.cloudinaryUrl}" target="_blank" style="color:#3b82f6;">View Image</a></div>` : ''}
+                ${order.cloudinaryUrl ? `<div><strong>Cloudinary:</strong> <a href="${order.cloudinaryUrl}" target="_blank" style="color:#c48b5a;">View Image</a></div>` : ''}
               </div>
             </div>
             ` : `
-            <div style="background:#f0f9ff;padding:16px;border-radius:8px;">
-              <h3 style="margin:0 0 12px;font-size:16px;color:#374151;">📝 Project Brief</h3>
+            <div style="background:#fdf4e6;padding:16px;border-radius:8px;">
+              <h3 style="margin:0 0 12px;font-size:16px;color:#4b3b2a;">📝 Project Brief</h3>
               <div style="background:white;padding:12px;border-radius:6px;line-height:1.5;max-height:200px;overflow-y:auto;">
                 ${order.brief}
               </div>
@@ -8964,8 +9794,8 @@
           </div>
           
           ${!order.eventId ? `
-          <div style="background:#f0f9ff;padding:16px;border-radius:8px;margin-bottom:24px;">
-            <h3 style="margin:0 0 12px;font-size:16px;color:#374151;">📝 Project Brief</h3>
+          <div style="background:#fdf4e6;padding:16px;border-radius:8px;margin-bottom:24px;">
+            <h3 style="margin:0 0 12px;font-size:16px;color:#4b3b2a;">📝 Project Brief</h3>
             <div style="background:white;padding:12px;border-radius:6px;line-height:1.5;max-height:200px;overflow-y:auto;">
               ${order.brief}
             </div>
@@ -8975,24 +9805,20 @@
           <!-- Articles, Buyers and Deliverables -->
           <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;margin-bottom:24px;">
             <div style="background:#f0fdf4;padding:16px;border-radius:8px;">
-              <h3 style="margin:0 0 12px;font-size:16px;color:#374151;">📦 Articles (${order.articles ? order.articles.length : 0})</h3>
-              <div style="max-height:120px;overflow-y:auto;">
-                ${order.articles ? order.articles.map(article => `
-                  <div style="background:white;margin:4px 0;padding:8px 12px;border-radius:6px;border-left:4px solid #10b981;">
-                    ${article}
-                  </div>
-                `).join('') : '<div style="color:#6b7280;font-style:italic;">No articles specified</div>'}
+              <h3 style="margin:0 0 12px;font-size:16px;color:#4b3b2a;">📦 Articles (${articlesCount})</h3>
+              <div style="max-height:220px;overflow-y:auto;padding-right:4px;">
+                ${articleCards}
               </div>
             </div>
             
             ${order.buyers ? `
             <div style="background:#fef7ff;padding:16px;border-radius:8px;">
-              <h3 style="margin:0 0 12px;font-size:16px;color:#374151;">👥 Buyers (${order.buyers.length})</h3>
+              <h3 style="margin:0 0 12px;font-size:16px;color:#4b3b2a;">👥 Buyers (${order.buyers.length})</h3>
               <div style="max-height:120px;overflow-y:auto;">
                 ${order.buyers.map(buyer => `
-                  <div style="background:white;margin:4px 0;padding:8px 12px;border-radius:6px;border-left:4px solid #8b5cf6;">
-                    <div style="font-weight:600;font-size:12px;color:#374151;">${buyer.name}</div>
-                    <div style="font-size:11px;color:#6b7280;margin-top:2px;">${buyer.items.join(', ')}</div>
+                  <div style="background:white;margin:4px 0;padding:8px 12px;border-radius:6px;border-left:4px solid #bfa3d6;">
+                    <div style="font-weight:600;font-size:12px;color:#4b3b2a;">${buyer.name}</div>
+                    <div style="font-size:11px;color:#6b5440;margin-top:2px;">${buyer.items.join(', ')}</div>
                   </div>
                 `).join('')}
               </div>
@@ -9000,13 +9826,13 @@
             ` : ''}
             
             <div style="background:#fef3f2;padding:16px;border-radius:8px;">
-              <h3 style="margin:0 0 12px;font-size:16px;color:#374151;">🎯 Deliverables</h3>
+              <h3 style="margin:0 0 12px;font-size:16px;color:#4b3b2a;">🎯 Deliverables</h3>
               <div style="max-height:120px;overflow-y:auto;">
                 ${order.deliverables ? order.deliverables.map(deliverable => `
                   <div style="background:white;margin:4px 0;padding:8px 12px;border-radius:6px;border-left:4px solid #f59e0b;">
                     ${deliverable}
                   </div>
-                `).join('') : '<div style="color:#6b7280;font-style:italic;">No deliverables specified</div>'}
+                `).join('') : '<div style="color:#6b5440;font-style:italic;">No deliverables specified</div>'}
               </div>
             </div>
           </div>
@@ -9017,33 +9843,33 @@
             const linkedAssets = damAssets.filter(asset => asset.orderNumber === order.orderNumber);
             return `
               <div style="background:#f0fdf4;padding:16px;border-radius:8px;margin-bottom:20px;">
-                <h3 style="margin:0 0 12px;font-size:16px;color:#374151;">🗂️ DAM Assets (${linkedAssets.length})</h3>
+                <h3 style="margin:0 0 12px;font-size:16px;color:#4b3b2a;">🗂️ DAM Assets (${linkedAssets.length})</h3>
                 ${linkedAssets.length > 0 ? `
                   <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;margin-bottom:12px;">
                     ${linkedAssets.map(asset => `
                       <div style="border:1px solid #d1fae5;border-radius:6px;padding:8px;background:white;">
-                        <div style="aspect-ratio:16/9;background:#f3f4f6;border-radius:4px;margin-bottom:6px;display:flex;align-items:center;justify-content:center;overflow:hidden;">
+                        <div style="aspect-ratio:16/9;background:#f1e8dc;border-radius:4px;margin-bottom:6px;display:flex;align-items:center;justify-content:center;overflow:hidden;">
                           ${asset.type === 'image' && asset.url ? 
                             '<img src="' + asset.url + '" alt="' + asset.filename + '" style="width:100%;height:100%;object-fit:cover;" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\';">' +
-                             '<div style="display:none;width:100%;height:100%;align-items:center;justify-content:center;color:#6b7280;font-size:12px;">🖼️</div>' :
-                            '<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#6b7280;font-size:12px;">' +
+                             '<div style="display:none;width:100%;height:100%;align-items:center;justify-content:center;color:#6b5440;font-size:12px;">🖼️</div>' :
+                            '<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#6b5440;font-size:12px;">' +
                                (asset.type === 'video' ? '🎬' : '📄') +
                              '</div>'
                           }
                         </div>
                         <div style="font-size:11px;font-weight:500;margin-bottom:2px;">${asset.filename.length > 18 ? asset.filename.substring(0, 15) + '...' : asset.filename}</div>
-                        <div style="font-size:9px;color:#6b7280;margin-bottom:4px;">${asset.category} • ${asset.size}</div>
+                        <div style="font-size:9px;color:#6b5440;margin-bottom:4px;">${asset.category} • ${asset.size}</div>
                         <div style="display:flex;gap:2px;">
-                          <button onclick="window.viewDAMAsset('${asset.id}')" style="flex:1;padding:3px;background:#10b981;color:white;border:none;border-radius:2px;font-size:8px;cursor:pointer;">View</button>
-                          <button onclick="window.downloadDAMAsset('${asset.id}')" style="flex:1;padding:3px;background:#3b82f6;color:white;border:none;border-radius:2px;font-size:8px;cursor:pointer;">Get</button>
+                          <button onclick="window.viewDAMAsset('${asset.id}')" style="flex:1;padding:3px;background:#7fa284;color:white;border:none;border-radius:2px;font-size:8px;cursor:pointer;">View</button>
+                          <button onclick="window.downloadDAMAsset('${asset.id}')" style="flex:1;padding:3px;background:#c48b5a;color:white;border:none;border-radius:2px;font-size:8px;cursor:pointer;">Get</button>
                         </div>
                       </div>
                     `).join('')}
                   </div>
                 ` : `
-                  <p style="margin:0 0 12px;font-size:12px;color:#059669;font-style:italic;">No assets linked to this order yet.</p>
+                  <p style="margin:0 0 12px;font-size:12px;color:#7fa284;font-style:italic;">No assets linked to this order yet.</p>
                 `}
-                <button onclick="window.showDAMIntegrationModal()" style="padding:6px 12px;background:#059669;color:white;border:none;border-radius:4px;font-size:12px;cursor:pointer;">
+                <button onclick="window.showDAMIntegrationModal()" style="padding:6px 12px;background:#7fa284;color:white;border:none;border-radius:4px;font-size:12px;cursor:pointer;">
                   📤 ${linkedAssets.length > 0 ? 'Upload More Assets' : 'Upload Assets'}
                 </button>
               </div>
@@ -9052,18 +9878,18 @@
           
           <!-- Comments Section -->
           <div style="background:#f9fafb;padding:16px;border-radius:8px;margin-bottom:20px;">
-            <h3 style="margin:0 0 16px;font-size:16px;color:#374151;">📁 Uploaded Content</h3>
+            <h3 style="margin:0 0 16px;font-size:16px;color:#4b3b2a;">📁 Uploaded Content</h3>
             
             <!-- Upload Section (for photographers) -->
             ${authSystem.canEditOrder(order) ? `
               <div style="background:white;padding:12px;border-radius:6px;margin-bottom:16px;border:2px dashed #d1d5db;">
-                <div style="text-align:center;color:#6b7280;margin-bottom:12px;">
+                <div style="text-align:center;color:#6b5440;margin-bottom:12px;">
                   <span style="font-size:24px;">📸</span>
                   <div>Upload content for this order</div>
                 </div>
                 <input type="file" id="contentUpload-${orderNumber}" accept="image/*,video/*,.pdf,.zip,.rar" multiple style="width:100%;padding:8px;border:1px solid #d1d5db;border-radius:4px;margin-bottom:8px;">
                 <div style="text-align:right;">
-                  <button onclick="uploadContent('${orderNumber}')" style="background:#10b981;color:white;border:none;padding:6px 16px;border-radius:4px;cursor:pointer;font-size:14px;">Upload Files</button>
+                  <button onclick="uploadContent('${orderNumber}')" style="background:#7fa284;color:white;border:none;padding:6px 16px;border-radius:4px;cursor:pointer;font-size:14px;">Upload Files</button>
                 </div>
               </div>
             ` : ''}
@@ -9072,7 +9898,7 @@
             <div id="uploadedContent-${orderNumber}" style="max-height:250px;overflow-y:auto;">
               ${order.uploadedContent && order.uploadedContent.length > 0 ? 
                 order.uploadedContent.map((file, index) => `
-                  <div style="background:white;padding:12px;border-radius:6px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;border-left:4px solid #10b981;">
+                  <div style="background:white;padding:12px;border-radius:6px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;border-left:4px solid #7fa284;">
                     <div style="display:flex;align-items:center;">
                       <div style="font-size:20px;margin-right:12px;">
                         ${file.type.startsWith('image/') ? '🖼️' : 
@@ -9080,8 +9906,8 @@
                           file.type === 'application/pdf' ? '📄' : '📁'}
                       </div>
                       <div>
-                        <div style="font-weight:600;color:#374151;">${file.name}</div>
-                        <div style="font-size:12px;color:#6b7280;">
+                        <div style="font-weight:600;color:#4b3b2a;">${file.name}</div>
+                        <div style="font-size:12px;color:#6b5440;">
                           ${(file.size / 1024 / 1024).toFixed(2)} MB • 
                           Uploaded by ${file.uploadedBy} • 
                           ${new Date(file.uploadedAt).toLocaleDateString()}
@@ -9089,39 +9915,39 @@
                       </div>
                     </div>
                     <div>
-                      <button onclick="previewContent('${orderNumber}', ${index})" style="background:#3b82f6;color:white;border:none;padding:4px 12px;border-radius:4px;cursor:pointer;font-size:12px;margin-right:8px;">Preview</button>
-                      <button onclick="downloadContent('${orderNumber}', ${index})" style="background:#6b7280;color:white;border:none;padding:4px 12px;border-radius:4px;cursor:pointer;font-size:12px;">Download</button>
+                      <button onclick="previewContent('${orderNumber}', ${index})" style="background:#c48b5a;color:white;border:none;padding:4px 12px;border-radius:4px;cursor:pointer;font-size:12px;margin-right:8px;">Preview</button>
+                      <button onclick="downloadContent('${orderNumber}', ${index})" style="background:#6b5440;color:white;border:none;padding:4px 12px;border-radius:4px;cursor:pointer;font-size:12px;">Download</button>
                     </div>
                   </div>
                 `).join('') :
-                '<div style="text-align:center;color:#6b7280;font-style:italic;padding:20px;">No content uploaded yet</div>'
+                '<div style="text-align:center;color:#6b5440;font-style:italic;padding:20px;">No content uploaded yet</div>'
               }
             </div>
           </div>
           
           <!-- Comments Section -->
           <div style="background:#f9fafb;padding:16px;border-radius:8px;">
-            <h3 style="margin:0 0 16px;font-size:16px;color:#374151;">💬 Comments (${comments.length})</h3>
+            <h3 style="margin:0 0 16px;font-size:16px;color:#4b3b2a;">💬 Comments (${comments.length})</h3>
             
             <!-- Add Comment Form -->
             <div style="background:white;padding:12px;border-radius:6px;margin-bottom:16px;">
               <textarea id="newComment-${orderNumber}" placeholder="Add a comment..." style="width:100%;padding:8px;border:1px solid #d1d5db;border-radius:4px;resize:vertical;min-height:60px;font-family:inherit;"></textarea>
               <div style="margin-top:8px;text-align:right;">
-                <button onclick="addComment('${orderNumber}')" style="background:#3b82f6;color:white;border:none;padding:6px 16px;border-radius:4px;cursor:pointer;font-size:14px;">Add Comment</button>
+                <button onclick="addComment('${orderNumber}')" style="background:#c48b5a;color:white;border:none;padding:6px 16px;border-radius:4px;cursor:pointer;font-size:14px;">Add Comment</button>
               </div>
             </div>
             
             <!-- Comments List -->
             <div style="max-height:300px;overflow-y:auto;">
               ${comments.length === 0 ? 
-                '<div style="text-align:center;color:#6b7280;font-style:italic;padding:20px;">No comments yet</div>' :
+                '<div style="text-align:center;color:#6b5440;font-style:italic;padding:20px;">No comments yet</div>' :
                 comments.map(comment => `
-                  <div style="background:white;padding:12px;border-radius:6px;margin-bottom:8px;border-left:4px solid #3b82f6;">
+                  <div style="background:white;padding:12px;border-radius:6px;margin-bottom:8px;border-left:4px solid #c48b5a;">
                     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-                      <div style="font-weight:600;color:#374151;">${comment.userName} <span style="font-size:12px;color:#6b7280;">(${comment.userRole})</span></div>
-                      <div style="font-size:12px;color:#6b7280;">${new Date(comment.createdAt).toLocaleDateString()} ${new Date(comment.createdAt).toLocaleTimeString()}</div>
+                      <div style="font-weight:600;color:#4b3b2a;">${comment.userName} <span style="font-size:12px;color:#6b5440;">(${comment.userRole})</span></div>
+                      <div style="font-size:12px;color:#6b5440;">${new Date(comment.createdAt).toLocaleDateString()} ${new Date(comment.createdAt).toLocaleTimeString()}</div>
                     </div>
-                    <div style="color:#1f2937;line-height:1.5;">${comment.message}</div>
+                    <div style="color:#4b3b2a;line-height:1.5;">${comment.message}</div>
                   </div>
                 `).join('')
               }
@@ -9279,16 +10105,16 @@
             <div style="font-size:48px;margin-bottom:16px;">
               ${file.type === 'application/pdf' ? '📄' : '📁'}
             </div>
-            <h3 style="margin:0 0 16px;color:#1f2937;">${file.name}</h3>
-            <div style="color:#6b7280;margin-bottom:24px;">
+            <h3 style="margin:0 0 16px;color:#4b3b2a;">${file.name}</h3>
+            <div style="color:#6b5440;margin-bottom:24px;">
               ${(file.size / 1024 / 1024).toFixed(2)} MB • 
               Uploaded by ${file.uploadedBy} • 
               ${new Date(file.uploadedAt).toLocaleDateString()}
             </div>
-            <div style="color:#6b7280;margin-bottom:24px;">
+            <div style="color:#6b5440;margin-bottom:24px;">
               Preview not available for this file type
             </div>
-            <button onclick="downloadContent('${orderNumber}', ${fileIndex})" style="background:#3b82f6;color:white;border:none;padding:12px 24px;border-radius:6px;cursor:pointer;font-size:16px;">Download File</button>
+            <button onclick="downloadContent('${orderNumber}', ${fileIndex})" style="background:#c48b5a;color:white;border:none;padding:12px 24px;border-radius:6px;cursor:pointer;font-size:16px;">Download File</button>
           </div>
         `;
       }
@@ -9333,8 +10159,8 @@
       modal.innerHTML = `
         <div style="background:white;border-radius:12px;padding:24px;max-width:600px;width:90%;max-height:80vh;overflow-y:auto;">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
-            <h2 style="margin:0;font-size:20px;color:#1f2937;">Sample Details</h2>
-            <button onclick="this.closest('div[style*=\\"position:fixed\\"]').remove()" style="background:none;border:none;font-size:24px;cursor:pointer;color:#6b7280;">×</button>
+            <h2 style="margin:0;font-size:20px;color:#4b3b2a;">Sample Details</h2>
+            <button onclick="this.closest('div[style*=\\"position:fixed\\"]').remove()" style="background:none;border:none;font-size:24px;cursor:pointer;color:#6b5440;">×</button>
           </div>
           
           <div style="display:grid;gap:12px;">
@@ -9364,17 +10190,17 @@
       modal.innerHTML = `
         <div style="background:white;border-radius:12px;padding:32px;max-width:800px;width:95%;max-height:80vh;overflow-y:auto;">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;">
-            <h2 style="margin:0;font-size:24px;color:#1f2937;">📝 Create New Order</h2>
-            <button onclick="this.closest('.create-order-modal').remove()" style="background:none;border:none;font-size:28px;cursor:pointer;color:#6b7280;">×</button>
+            <h2 style="margin:0;font-size:24px;color:#4b3b2a;">📝 Create New Order</h2>
+            <button onclick="this.closest('.create-order-modal').remove()" style="background:none;border:none;font-size:28px;cursor:pointer;color:#6b5440;">×</button>
           </div>
           <form id="createOrderForm" onsubmit="handleCreateOrder(event)">
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px;">
               <div>
-                <label style="display:block;margin-bottom:8px;font-weight:500;color:#374151;">Order Title</label>
+                <label style="display:block;margin-bottom:8px;font-weight:500;color:#4b3b2a;">Order Title</label>
                 <input name="title" required style="width:100%;padding:8px;border:1px solid #d1d5db;border-radius:4px;" placeholder="e.g., Summer Collection Photography">
               </div>
               <div>
-                <label style="display:block;margin-bottom:8px;font-weight:500;color:#374151;">Priority</label>
+                <label style="display:block;margin-bottom:8px;font-weight:500;color:#4b3b2a;">Priority</label>
                 <select name="priority" style="width:100%;padding:8px;border:1px solid #d1d5db;border-radius:4px;">
                   <option value="Low">Low</option>
                   <option value="Medium" selected>Medium</option>
@@ -9384,12 +10210,12 @@
               </div>
             </div>
             <div style="margin-bottom:20px;">
-              <label style="display:block;margin-bottom:8px;font-weight:500;color:#374151;">Brief & Instructions</label>
+              <label style="display:block;margin-bottom:8px;font-weight:500;color:#4b3b2a;">Brief & Instructions</label>
               <textarea name="brief" rows="4" style="width:100%;padding:8px;border:1px solid #d1d5db;border-radius:4px;" placeholder="Detailed brief..."></textarea>
             </div>
             <div style="display:flex;gap:12px;margin-top:24px;">
-              <button type="submit" style="background:#7c3aed;color:white;border:none;padding:12px 24px;border-radius:6px;cursor:pointer;font-weight:500;">Create Order</button>
-              <button type="button" onclick="this.closest('.create-order-modal').remove()" style="background:#6b7280;color:white;border:none;padding:12px 24px;border-radius:6px;cursor:pointer;">Cancel</button>
+              <button type="submit" style="background:#b48fc7;color:white;border:none;padding:12px 24px;border-radius:6px;cursor:pointer;font-weight:500;">Create Order</button>
+              <button type="button" onclick="this.closest('.create-order-modal').remove()" style="background:#6b5440;color:white;border:none;padding:12px 24px;border-radius:6px;cursor:pointer;">Cancel</button>
             </div>
           </form>
         </div>
@@ -9409,17 +10235,17 @@
       modal.innerHTML = `
         <div style="background:white;border-radius:12px;padding:32px;max-width:500px;width:95%;max-height:80vh;overflow-y:auto;">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;">
-            <h2 style="margin:0;font-size:24px;color:#1f2937;">📷 Scan Article</h2>
-            <button onclick="this.closest('.scan-modal').remove()" style="background:none;border:none;font-size:28px;cursor:pointer;color:#6b7280;">×</button>
+            <h2 style="margin:0;font-size:24px;color:#4b3b2a;">📷 Scan Article</h2>
+            <button onclick="this.closest('.scan-modal').remove()" style="background:none;border:none;font-size:28px;cursor:pointer;color:#6b5440;">×</button>
           </div>
           <div style="text-align:center;margin-bottom:24px;">
             <div style="background:#f8fafc;border:2px dashed #d1d5db;border-radius:8px;padding:40px;margin-bottom:16px;">
               <div style="font-size:48px;margin-bottom:16px;">📱</div>
-              <p style="margin:0;color:#6b7280;">Click to open camera or upload image</p>
+              <p style="margin:0;color:#6b5440;">Click to open camera or upload image</p>
             </div>
             <input type="file" accept="image/*" capture="camera" style="display:none;" id="scanInput">
-            <button onclick="document.getElementById('scanInput').click()" style="background:#059669;color:white;border:none;padding:12px 24px;border-radius:6px;cursor:pointer;font-weight:500;margin-right:12px;">📷 Open Camera</button>
-            <button onclick="document.getElementById('scanInput').click()" style="background:#3b82f6;color:white;border:none;padding:12px 24px;border-radius:6px;cursor:pointer;font-weight:500;">📁 Upload Image</button>
+            <button onclick="document.getElementById('scanInput').click()" style="background:#7fa284;color:white;border:none;padding:12px 24px;border-radius:6px;cursor:pointer;font-weight:500;margin-right:12px;">📷 Open Camera</button>
+            <button onclick="document.getElementById('scanInput').click()" style="background:#c48b5a;color:white;border:none;padding:12px 24px;border-radius:6px;cursor:pointer;font-weight:500;">📁 Upload Image</button>
           </div>
         </div>
       `;
@@ -9450,10 +10276,10 @@
         <div style="background:white;border-radius:16px;padding:32px;max-width:1200px;width:95%;max-height:85vh;overflow-y:auto;box-shadow:0 20px 40px rgba(0,0,0,0.15);">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:32px;">
             <div>
-              <h2 style="margin:0 0 8px;font-size:28px;color:#1f2937;font-weight:700;">⚡ Quick Templates</h2>
-              <p style="margin:0;color:#6b7280;font-size:16px;">Choose from pre-configured project templates to get started quickly</p>
+              <h2 style="margin:0 0 8px;font-size:28px;color:#4b3b2a;font-weight:700;">⚡ Quick Templates</h2>
+              <p style="margin:0;color:#6b5440;font-size:16px;">Choose from pre-configured project templates to get started quickly</p>
             </div>
-            <button onclick="this.closest('.templates-modal').remove()" style="background:none;border:none;font-size:32px;cursor:pointer;color:#6b7280;transition:color 0.2s;" onmouseover="this.style.color='#374151'" onmouseout="this.style.color='#6b7280'">×</button>
+            <button onclick="this.closest('.templates-modal').remove()" style="background:none;border:none;font-size:32px;cursor:pointer;color:#6b5440;transition:color 0.2s;" onmouseover="this.style.color='#4b3b2a'" onmouseout="this.style.color='#6b5440'">×</button>
           </div>
           
           <!-- Search and Filter Bar -->
@@ -9461,7 +10287,7 @@
             <div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap;">
               <input id="templateSearch" type="text" placeholder="🔍 Search templates..." 
                      style="flex:1;min-width:300px;padding:12px 16px;border:2px solid #e5e7eb;border-radius:12px;font-size:14px;transition:border-color 0.2s;"
-                     onmouseover="this.style.borderColor='#3b82f6'" onmouseout="this.style.borderColor='#e5e7eb'" onfocus="this.style.borderColor='#3b82f6'" onblur="this.style.borderColor='#e5e7eb'" />
+                     onmouseover="this.style.borderColor='#c48b5a'" onmouseout="this.style.borderColor='#e5e7eb'" onfocus="this.style.borderColor='#c48b5a'" onblur="this.style.borderColor='#e5e7eb'" />
               <select id="categoryFilter" style="padding:12px 16px;border:2px solid #e5e7eb;border-radius:12px;font-size:14px;background:white;">
                 <option value="">All Categories</option>
                 <option value="Photography">📸 Photography</option>
@@ -9482,7 +10308,7 @@
           <div id="templatesContainer">
             ${Object.entries(templatesByCategory).map(([category, categoryTemplates]) => `
               <div class="template-category" data-category="${category}" style="margin-bottom:40px;">
-                <h3 style="margin:0 0 20px;font-size:20px;color:#374151;font-weight:600;border-bottom:2px solid #e5e7eb;padding-bottom:8px;">
+                <h3 style="margin:0 0 20px;font-size:20px;color:#4b3b2a;font-weight:600;border-bottom:2px solid #e5e7eb;padding-bottom:8px;">
                   ${category === 'Photography' ? '📸' : category === 'Video' ? '🎥' : category === 'Social Media' ? '📱' : category === 'Branding' ? '🎨' : category === 'Documentation' ? '📋' : '🎯'} ${category}
                 </h3>
                 <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:20px;">
@@ -9490,20 +10316,20 @@
                     <div class="template-card" data-title="${template.title.toLowerCase()}" data-brief="${template.brief.toLowerCase()}" data-category="${template.category}" data-budget="${template.budget}"
                          style="border:2px solid #e5e7eb;border-radius:12px;padding:20px;cursor:pointer;transition:all 0.3s ease;background:linear-gradient(135deg, #f9fafb, #ffffff);" 
                          onclick="useTemplate('${template.key}')"
-                         onmouseover="this.style.borderColor='#3b82f6'; this.style.transform='translateY(-4px)'; this.style.boxShadow='0 8px 25px rgba(59,130,246,0.15)'"
+                         onmouseover="this.style.borderColor='#c48b5a'; this.style.transform='translateY(-4px)'; this.style.boxShadow='0 8px 25px rgba(59,130,246,0.15)'"
                          onmouseout="this.style.borderColor='#e5e7eb'; this.style.transform='translateY(0)'; this.style.boxShadow='none'">
                       <div style="display:flex;align-items:center;margin-bottom:12px;">
                         <span style="font-size:24px;margin-right:12px;">${template.icon}</span>
-                        <h4 style="margin:0;font-size:18px;color:#1f2937;font-weight:600;">${template.title}</h4>
+                        <h4 style="margin:0;font-size:18px;color:#4b3b2a;font-weight:600;">${template.title}</h4>
                       </div>
-                      <p style="margin:0 0 16px;font-size:14px;color:#6b7280;line-height:1.5;">${template.brief}</p>
+                      <p style="margin:0 0 16px;font-size:14px;color:#6b5440;line-height:1.5;">${template.brief}</p>
                       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
-                        <span style="background:linear-gradient(135deg, #f3f4f6, #e5e7eb);padding:6px 12px;border-radius:20px;font-size:12px;color:#374151;font-weight:500;">${template.method}</span>
-                        <span style="background:linear-gradient(135deg, #10b981, #059669);color:white;padding:6px 12px;border-radius:20px;font-size:12px;font-weight:600;">${template.budget.toLocaleString()} SEK</span>
+                        <span style="background:linear-gradient(135deg, #f1e8dc, #e5e7eb);padding:6px 12px;border-radius:20px;font-size:12px;color:#4b3b2a;font-weight:500;">${template.method}</span>
+                        <span style="background:linear-gradient(135deg, #7fa284, #7fa284);color:white;padding:6px 12px;border-radius:20px;font-size:12px;font-weight:600;">${template.budget.toLocaleString()} SEK</span>
                       </div>
                       <div style="display:flex;justify-content:space-between;align-items:center;">
-                        <span style="font-size:12px;color:#9ca3af;">Priority: <strong style="color:${template.priority === 'High' ? '#dc2626' : template.priority === 'Medium' ? '#f59e0b' : '#10b981'}">${template.priority}</strong></span>
-                        <span style="background:#3b82f6;color:white;padding:4px 8px;border-radius:12px;font-size:11px;font-weight:600;">Use Template →</span>
+                        <span style="font-size:12px;color:#9ca3af;">Priority: <strong style="color:${template.priority === 'High' ? '#dc2626' : template.priority === 'Medium' ? '#f59e0b' : '#7fa284'}">${template.priority}</strong></span>
+                        <span style="background:#c48b5a;color:white;padding:4px 8px;border-radius:12px;font-size:11px;font-weight:600;">Use Template →</span>
                       </div>
                     </div>
                   `).join('')}
@@ -9602,15 +10428,15 @@
       modal.innerHTML = `
         <div style="background:white;border-radius:12px;padding:32px;max-width:600px;width:95%;max-height:80vh;overflow-y:auto;">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;">
-            <h2 style="margin:0;font-size:24px;color:#1f2937;">🏢 Import SAP PMR Data</h2>
-            <button onclick="this.closest('.sap-import-modal').remove()" style="background:none;border:none;font-size:28px;cursor:pointer;color:#6b7280;">×</button>
+            <h2 style="margin:0;font-size:24px;color:#4b3b2a;">🏢 Import SAP PMR Data</h2>
+            <button onclick="this.closest('.sap-import-modal').remove()" style="background:none;border:none;font-size:28px;cursor:pointer;color:#6b5440;">×</button>
           </div>
           
           <div style="margin-bottom:24px;">
-            <h3 style="margin:0 0 16px;font-size:18px;color:#374151;">Data Format Expected</h3>
-            <div style="background:#f8fafc;padding:16px;border-radius:8px;border-left:4px solid #3b82f6;">
-              <p style="margin:0 0 12px;font-size:14px;color:#374151;"><strong>JSON Array with following fields:</strong></p>
-              <ul style="margin:0;padding-left:20px;font-size:14px;color:#6b7280;">
+            <h3 style="margin:0 0 16px;font-size:18px;color:#4b3b2a;">Data Format Expected</h3>
+            <div style="background:#f8fafc;padding:16px;border-radius:8px;border-left:4px solid #c48b5a;">
+              <p style="margin:0 0 12px;font-size:14px;color:#4b3b2a;"><strong>JSON Array with following fields:</strong></p>
+              <ul style="margin:0;padding-left:20px;font-size:14px;color:#6b5440;">
                 <li><strong>eventId</strong>: Event identifier (e.g., "A4025052")</li>
                 <li><strong>purchaseGroup</strong>: Purchase group number (100-999)</li>
                 <li><strong>offerId</strong>: Offer identifier (e.g., "10763319")</li>
@@ -9624,7 +10450,7 @@
           </div>
           
           <div style="margin-bottom:24px;">
-            <h3 style="margin:0 0 16px;font-size:18px;color:#374151;">Sample Data</h3>
+            <h3 style="margin:0 0 16px;font-size:18px;color:#4b3b2a;">Sample Data</h3>
             <div style="background:#f1f5f9;padding:16px;border-radius:8px;font-family:monospace;font-size:12px;max-height:200px;overflow-y:auto;">
 [{
   "eventId": "A4025052",
@@ -9640,15 +10466,15 @@
           </div>
           
           <div style="margin-bottom:24px;">
-            <label style="display:block;margin-bottom:8px;font-weight:600;color:#374151;">Paste JSON Data:</label>
+            <label style="display:block;margin-bottom:8px;font-weight:600;color:#4b3b2a;">Paste JSON Data:</label>
             <textarea id="sapJsonInput" style="width:100%;height:200px;padding:12px;border:1px solid #d1d5db;border-radius:6px;font-family:monospace;font-size:12px;" placeholder="Paste your SAP PMR JSON data here..."></textarea>
           </div>
           
           <div style="display:flex;gap:12px;justify-content:space-between;">
-            <button onclick="simulatePMRRequest()" style="padding:12px 24px;background:#059669;color:white;border:none;border-radius:6px;cursor:pointer;">🎲 Simulate PMR Request</button>
+            <button onclick="simulatePMRRequest()" style="padding:12px 24px;background:#7fa284;color:white;border:none;border-radius:6px;cursor:pointer;">🎲 Simulate PMR Request</button>
             <div style="display:flex;gap:12px;">
-              <button onclick="this.closest('.sap-import-modal').remove()" style="padding:12px 24px;border:1px solid #d1d5db;background:white;color:#374151;border-radius:6px;cursor:pointer;">Cancel</button>
-              <button onclick="processSAPImport()" style="padding:12px 24px;background:#2563eb;color:white;border:none;border-radius:6px;cursor:pointer;">Import Data</button>
+              <button onclick="this.closest('.sap-import-modal').remove()" style="padding:12px 24px;border:1px solid #d1d5db;background:white;color:#4b3b2a;border-radius:6px;cursor:pointer;">Cancel</button>
+              <button onclick="processSAPImport()" style="padding:12px 24px;background:#a66b38;color:white;border:none;border-radius:6px;cursor:pointer;">Import Data</button>
             </div>
           </div>
         </div>
@@ -9744,7 +10570,8 @@
         articleName: article.name,
         imageRequestId: Math.floor(Math.random() * 1000000).toString(),
         photoStatus: randomPhotoStatus,
-        cloudinaryUrl: null
+        cloudinaryUrl: null,
+        salesOrg: getRandomSalesOrg()
       }));
 
       // Fill the textarea with simulated data
@@ -9766,15 +10593,16 @@
       
       // Apply the filter after a short delay to ensure the view is loaded
       setTimeout(() => {
-        if (!window.allOrders) {
-          // Create some sample data if allOrders is not available
-          window.allOrders = [
+        if (!window.rkhOrders) {
+          // Create some sample data if orders are not available
+          window.rkhOrders = [
             { orderNumber: 'ORD001', title: 'Sample Order 1', status: 'Draft', priority: 'Medium', photographer: 'John Doe', method: 'Digital', deadline: '2025-09-10', purchaseGroup: 'PG1', eventId: 'E001' },
             { orderNumber: 'ORD002', title: 'Sample Order 2', status: 'Pending', priority: 'High', photographer: 'Jane Smith', method: 'Print', deadline: '2025-09-12', purchaseGroup: 'PG2', eventId: 'E002' },
             { orderNumber: 'ORD003', title: 'Sample Order 3', status: 'Approved', priority: 'Medium', photographer: 'Bob Wilson', method: 'Digital', deadline: '2025-09-15', purchaseGroup: 'PG1', eventId: 'E003' },
             { orderNumber: 'ORD004', title: 'Sample Order 4', status: 'In Progress', priority: 'Low', photographer: 'Alice Brown', method: 'Print', deadline: '2025-09-18', purchaseGroup: 'PG3', eventId: 'E004' },
             { orderNumber: 'ORD005', title: 'Sample Order 5', status: 'Complete', priority: 'High', photographer: 'Mike Davis', method: 'Digital', deadline: '2025-09-20', purchaseGroup: 'PG2', eventId: 'E005' }
           ];
+          assignSalesOrgMetadata(window.rkhOrders);
         }
         
         if (!window.authSystem) {
@@ -9785,187 +10613,20 @@
           };
         }
         
-        const ordersList = window.authSystem.getFilteredOrders(window.allOrders);
+        const ordersList = window.authSystem.getFilteredOrders(window.rkhOrders);
+        setStatusFilterOverride(statusFilter === 'all' ? '' : statusFilter, { skipRender: true });
         console.log('[DEBUG] filterOrdersByStatus - ordersList length:', ordersList.length);
         console.log('[DEBUG] First order in ordersList:', JSON.stringify(ordersList[0], null, 2));
-        let filteredOrders = [];
-        let filterTitle = '';
-        
-        switch(statusFilter) {
-          case 'all':
-            filteredOrders = ordersList;
-            filterTitle = 'All Orders';
-            break;
-          case 'urgent':
-            filteredOrders = ordersList.filter(o => 
-              o.priority === 'High' || 
-              o.priority === 'Critical' ||
-              o.priority === 'Urgent'
-            );
-            filterTitle = 'Urgent Orders';
-            break;
-          case 'overdue':
-            const overdueToday = new Date();
-            overdueToday.setHours(23, 59, 59, 999);
-            filteredOrders = ordersList.filter(o => {
-              const deadline = new Date(o.deadline);
-              return deadline < overdueToday && 
-                o.status !== 'Complete' && 
-                o.status !== 'Completed' &&
-                o.status !== 'Delivered' &&
-                o.status !== 'Archived';
-            });
-            filterTitle = 'Overdue Orders';
-            break;
-          case 'today':
-            const todayStr = new Date().toISOString().split('T')[0];
-            filteredOrders = ordersList.filter(o => o.deadline === todayStr);
-            filterTitle = "Today's Deadlines";
-            break;
-          case 'draft':
-            filteredOrders = ordersList.filter(o => 
-              o.status === 'Draft' || 
-              o.status === 'New Request'
-            );
-            filterTitle = 'Draft Orders';
-            break;
-          case 'pending':
-            filteredOrders = ordersList.filter(o => 
-              o.status === 'Pending Approval' || 
-              o.status === 'Pending'
-            );
-            filterTitle = 'Pending Orders';
-            break;
-          case 'approved':
-            filteredOrders = ordersList.filter(o => 
-              o.status === 'Approved'
-            );
-            filterTitle = 'Approved Orders';
-            break;
-          case 'samples':
-            filteredOrders = ordersList.filter(o => 
-              o.status === 'Samples Requested' || 
-              o.status === 'Samples in Transit' ||
-              o.status === 'Samples Received'
-            );
-            filterTitle = 'Samples Ready';
-            break;
-          case 'inprogress':
-          case 'In Progress':
-            filteredOrders = ordersList.filter(o => 
-              o.status === 'In Progress' || 
-              o.status === 'Photo Session' ||
-              o.status === 'Processing'
-            );
-            filterTitle = 'In Progress Orders';
-            break;
-          case 'review':
-            filteredOrders = ordersList.filter(o => 
-              o.status === 'Review'
-            );
-            filterTitle = 'Orders in Review';
-            break;
-          case 'completed':
-            filteredOrders = ordersList.filter(o => 
-              o.status === 'Complete' || 
-              o.status === 'Completed' ||
-              o.status === 'Delivered' ||
-              o.status === 'Archived'
-            );
-            filterTitle = 'Completed Orders';
-            break;
-          default:
-            filteredOrders = ordersList;
-            filterTitle = 'All Orders';
-            break;
-        }
+        const statusResult = applyStatusFilter(ordersList, statusFilter);
+        const filteredOrders = statusResult.orders;
+        const filterTitle = statusResult.label || getStatusFilterLabel(statusFilter);
         
         // Update the orders table with filtered results
         const ordersBody = document.getElementById('ordersBody');
-        
+
         if (ordersBody) {
-          // Create a temporary selectedItems for this view
-          const selectedItems = new Set();
-          
-          const tableHTML = filteredOrders.map(o => {
-            const commentCount = (o.comments || []).length;
-            const unreadComments = window.commentSystem ? window.commentSystem.getUnreadCommentCount(o.orderNumber) : 0;
-            
-            // Format deadline
-            const formatDeadline = (deadline) => {
-              if (!deadline) return '<span style="color: #9ca3af;">-</span>';
-              const date = new Date(deadline);
-              const today = new Date();
-              const diffTime = date - today;
-              const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-              
-              let color = '#6b7280';
-              if (diffDays < 0) color = '#ef4444'; // Overdue - red
-              else if (diffDays <= 3) color = '#f59e0b'; // Urgent - orange
-              else if (diffDays <= 7) color = '#3b82f6'; // Soon - blue
-              
-              return `<span style="color: ${color}; font-weight: 500;">${deadline}</span>`;
-            };
-            
-            // Format priority
-            const formatPriority = (priority) => {
-              if (!priority) return '<span style="color: #9ca3af;">-</span>';
-              const colors = {
-                'High': '#ef4444',
-                'Critical': '#dc2626',
-                'Urgent': '#f97316',
-                'Medium': '#f59e0b',
-                'Low': '#6b7280'
-              };
-              const color = colors[priority] || '#6b7280';
-              return `<span style="background: ${color}; color: white; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600;">${priority}</span>`;
-            };
-            
-            // Format progress
-            const formatProgress = (order) => {
-              const progress = order.progress || 0;
-              const barColor = progress >= 75 ? '#10b981' : progress >= 50 ? '#3b82f6' : progress >= 25 ? '#f59e0b' : '#ef4444';
-              return `
-                <div style="display: flex; align-items: center; gap: 8px;">
-                  <div style="flex: 1; background: #e5e7eb; border-radius: 4px; height: 8px; overflow: hidden;">
-                    <div style="width: ${progress}%; background: ${barColor}; height: 100%; transition: width 0.3s ease;"></div>
-                  </div>
-                  <span style="font-size: 11px; font-weight: 600; color: #6b7280; min-width: 35px;">${progress}%</span>
-                </div>
-              `;
-            };
-            
-            return `
-            <tr onclick="showOrderDetails && showOrderDetails('${o.orderNumber}')" style="cursor: pointer;" class="${selectedItems.has(o.orderNumber) ? 'selected-row' : ''}">
-              <td class="bulk-checkbox" style="display: none;"><input type="checkbox" class="item-checkbox" data-id="${o.orderNumber}" onclick="event.stopPropagation()"></td>
-              <td style="padding: 12px 16px;"><strong style="font-family: monospace;">${o.orderNumber}</strong></td>
-              <td style="padding: 12px 16px;">${o.title || '<span style="color: #9ca3af;">Untitled</span>'}</td>
-              <td style="padding: 12px 16px;"><span class="status ${(o.status || '').replace(/\s+/g, '')}">${o.status || 'Unknown'}</span></td>
-              <td style="padding: 12px 16px;">${o.method || o.productionMethod || '<span style="color: #9ca3af;">-</span>'}</td>
-              <td style="padding: 12px 16px;">${o.purchaseGroup || o.group || '<span style="color: #9ca3af;">-</span>'}</td>
-              <td style="padding: 12px 16px; font-family: monospace; color: #3b82f6;">${o.eventId || '<span style="color: #9ca3af;">-</span>'}</td>
-              <td style="padding: 12px 16px;">${o.photographer || '<span style="color: #9ca3af;">-</span>'}</td>
-              <td style="padding: 12px 16px; text-align: center;" onclick="event.stopPropagation()">${formatPriority(o.priority)}</td>
-              <td style="padding: 12px 16px;" onclick="event.stopPropagation()">${formatDeadline(o.deadline)}</td>
-              <td style="padding: 12px 16px;" onclick="event.stopPropagation()">${formatProgress(o)}</td>
-              <td style="padding: 12px 16px; text-align: center;" onclick="event.stopPropagation()">
-                ${commentCount > 0 ? `
-                  <div style="position: relative; display: inline-block; cursor: pointer;">
-                    <span style="background: #3b82f6; color: white; border-radius: 12px; padding: 4px 10px; font-size: 12px; font-weight: 600;">💬 ${commentCount}</span>
-                    ${unreadComments > 0 ? `<div style="position: absolute; top: -4px; right: -4px; background: #ef4444; color: white; border-radius: 50%; width: 16px; height: 16px; font-size: 9px; display: flex; align-items: center; justify-content: center; font-weight: bold;">${unreadComments}</div>` : ''}
-                  </div>
-                ` : '<span style="color: #d1d5db; font-size: 20px;">💬</span>'}
-              </td>
-            </tr>
-            `;
-          }).join('');
-          
-          console.log('[DEBUG] About to render table with', filteredOrders.length, 'orders');
-          console.log('[DEBUG] First order sample:', filteredOrders[0]);
-          console.log('[DEBUG] First row HTML (first 500 chars):', tableHTML.substring(0, 500));
-          ordersBody.innerHTML = tableHTML;
+          drawOrderRows();
         } else {
-          // ordersBody element not found
           console.error('[ERROR] ordersBody element not found!');
         }
         
@@ -9979,14 +10640,14 @@
         if (statusFilter !== 'all') {
           const filterInfo = document.createElement('div');
           filterInfo.className = 'filter-info';
-          filterInfo.style.cssText = 'background: linear-gradient(135deg, #f0f9ff, #e0f2fe); border: 1px solid #0ea5e9; border-radius: 8px; padding: 12px 16px; margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between;';
+          filterInfo.style.cssText = 'background: linear-gradient(135deg, #fdf4e6, #f2e4d2); border: 1px solid #c48b5a; border-radius: 8px; padding: 12px 16px; margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between;';
           filterInfo.innerHTML = `
             <div>
               <span style="color: #0284c7; font-weight: 600;">🔍 Filter Applied:</span>
-              <span style="color: #1e40af; font-weight: 500; margin-left: 8px;">${filterTitle}</span>
-              <span style="color: #6b7280; margin-left: 8px;">(${filteredOrders.length} ${filteredOrders.length === 1 ? 'order' : 'orders'})</span>
+              <span style="color: #a66b38; font-weight: 500; margin-left: 8px;">${filterTitle}</span>
+              <span style="color: #6b5440; margin-left: 8px;">(${filteredOrders.length} ${filteredOrders.length === 1 ? 'order' : 'orders'})</span>
             </div>
-            <button onclick="filterOrdersByStatus('all')" style="background: #0ea5e9; color: white; border: none; border-radius: 6px; padding: 6px 12px; font-size: 12px; cursor: pointer; font-weight: 500;">
+            <button onclick="filterOrdersByStatus('all')" style="background: #c48b5a; color: white; border: none; border-radius: 6px; padding: 6px 12px; font-size: 12px; cursor: pointer; font-weight: 500;">
               Clear Filter
             </button>
           `;
@@ -10023,7 +10684,11 @@
         });
       } else {
         // Calculate from ALL orders
-        ordersList = authSystem.getFilteredOrders(allOrders);
+        ordersList = applyActiveOrderFilters(authSystem.getFilteredOrders(window.rkhOrders || []));
+      }
+
+      if (statusFilterOverride) {
+        ordersList = applyStatusFilter(ordersList, statusFilterOverride).orders;
       }
       
       // Helper function to check if status matches a category (case-insensitive, supports multiple variations)
@@ -10070,7 +10735,7 @@
           </div>
           <div style="text-align:right;">
             <button id="cancelScanBtn" style="margin-right:8px;padding:8px 16px;border:1px solid #d1d5db;background:white;border-radius:4px;">Cancel</button>
-            <button id="processScanBtn" style="padding:8px 16px;background:#2563eb;color:white;border:none;border-radius:4px;">Process Scan</button>
+            <button id="processScanBtn" style="padding:8px 16px;background:#a66b38;color:white;border:none;border-radius:4px;">Process Scan</button>
           </div>
         </div>
       `;
@@ -10171,9 +10836,9 @@
           
           <!-- Required Headers Section -->
           <div id="headersSection" style="margin-bottom: 20px; padding: 16px; background: #f8fafc; border-radius: 8px; border: 1px solid #e2e8f0;">
-            <h4 style="margin: 0 0 12px; color: #1e40af; font-size: 16px;">📋 Required Excel/CSV Headers</h4>
+            <h4 style="margin: 0 0 12px; color: #a66b38; font-size: 16px;">📋 Required Excel/CSV Headers</h4>
             <div style="background: white; padding: 12px; border-radius: 6px; border: 1px solid #cbd5e1; margin-bottom: 12px;">
-              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 8px; font-family: monospace; font-size: 12px; font-weight: 600; color: #374151;">
+              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 8px; font-family: monospace; font-size: 12px; font-weight: 600; color: #4b3b2a;">
                 <div style="padding: 6px; background: #f1f5f9; border-radius: 4px;">Title</div>
                 <div style="padding: 6px; background: #f1f5f9; border-radius: 4px;">Method</div>
                 <div style="padding: 6px; background: #f1f5f9; border-radius: 4px;">Priority</div>
@@ -10195,7 +10860,7 @@
           
           <!-- File Upload Section -->
           <div style="margin-bottom: 20px;">
-            <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #374151;">Select Excel/CSV File</label>
+            <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #4b3b2a;">Select Excel/CSV File</label>
             <input type="file" id="excelFileInput" accept=".xlsx,.xls,.csv" 
                    style="width: 100%; padding: 12px; border: 2px dashed #cbd5e1; border-radius: 8px; background: #f8fafc; cursor: pointer;">
             <div style="font-size: 12px; color: #64748b; margin-top: 4px;">Supports .xlsx, .xls, and .csv files</div>
@@ -10203,7 +10868,7 @@
           
           <!-- Preview Section -->
           <div id="previewSection" style="display: none; margin-bottom: 20px;">
-            <h4 style="margin: 0 0 12px; color: #059669; font-size: 16px;">📊 Data Preview</h4>
+            <h4 style="margin: 0 0 12px; color: #7fa284; font-size: 16px;">📊 Data Preview</h4>
             <div id="previewContent" style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px; max-height: 300px; overflow: auto;"></div>
             <div id="previewStats" style="margin-top: 8px; font-size: 14px; color: #64748b;"></div>
           </div>
@@ -10213,7 +10878,7 @@
             <div id="validationMessage" style="color: #dc2626; font-size: 14px; font-weight: 500;"></div>
             <div>
               <button id="cancelExcelImport" style="margin-right:12px;padding:10px 20px;border:1px solid #d1d5db;background:white;border-radius:6px;font-weight:500;cursor:pointer;">Cancel</button>
-              <button id="processExcelImport" style="padding:10px 20px;background:#2563eb;color:white;border:none;border-radius:6px;font-weight:500;cursor:pointer;" disabled>Import Orders</button>
+              <button id="processExcelImport" style="padding:10px 20px;background:#a66b38;color:white;border:none;border-radius:6px;font-weight:500;cursor:pointer;" disabled>Import Orders</button>
             </div>
           </div>
         </div>
@@ -10353,7 +11018,7 @@
       let tableHTML = `
         <table style="width: 100%; border-collapse: collapse; font-size: 12px;">
           <thead>
-            <tr style="background: #3b82f6; color: white;">
+            <tr style="background: #c48b5a; color: white;">
               ${headers.map(h => `<th style="padding: 8px; border: 1px solid #cbd5e1; text-align: left;">${h}</th>`).join('')}
             </tr>
           </thead>
@@ -10377,7 +11042,7 @@
       previewContent.innerHTML = tableHTML;
       previewStats.innerHTML = `
         <strong>${data.length} orders</strong> found in file. 
-        <span style="color: #059669;">✓ Headers validated</span>
+        <span style="color: #7fa284;">✓ Headers validated</span>
       `;
       
       // Show preview and enable import button
@@ -10423,6 +11088,7 @@
             articles: row.Articles ? row.Articles.split(';').map(a => a.trim()).filter(a => a) : [],
             budget: null,
             deliverables: row.Deliverables ? row.Deliverables.split(';').map(d => d.trim()).filter(d => d) : [],
+            salesOrg: row['Sales Org'] ? normalizeFilterValue(row['Sales Org']) : null,
             
             // SAP PMR fields (auto-generated)
             eventId: `A${Math.floor(Math.random() * 9000000) + 1000000}`,
@@ -10442,6 +11108,8 @@
             comments: []
           };
           
+          assignSalesOrgToOrder(newOrder, allOrders.length + importedCount);
+
           // Add to orders array
           allOrders.unshift(newOrder);
           importedCount++;
@@ -10451,7 +11119,11 @@
         document.getElementById('excelImportModal').remove();
         
         // Update global orders and refresh view
-        window.allOrders = allOrders;
+    assignSalesOrgMetadata(allOrders);
+    window.rkhOrders = allOrders;
+        if (typeof refreshOrderFilters === 'function') {
+          refreshOrderFilters();
+        }
         if (typeof drawOrderRows === 'function') {
           drawOrderRows();
         }
@@ -10527,15 +11199,25 @@
     function searchOrdersByArticle(articleName, eanCode) {
       console.log('searchOrdersByArticle called with:', articleName, eanCode);
       console.log('Total orders to search:', allOrders.length);
-      
+
+      const normalizedSearchName = (articleName || '').toLowerCase().trim();
+      const normalizedEAN = (eanCode || '').replace(/\s+/g, '');
+
       const matchingOrders = allOrders.filter(order => {
-        if (!order.articles) return false;
-        
-        return order.articles.some(article => {
-          const articleText = typeof article === 'string' ? article : article.name;
-          const nameMatch = articleText.toLowerCase().includes(articleName.toLowerCase());
-          const eanMatch = articleText.includes(eanCode);
-          console.log('Checking article:', articleText, 'Name match:', nameMatch, 'EAN match:', eanMatch);
+        const normalized = normalizeArticles(order.articles);
+        if (!normalized.length) return false;
+
+        return normalized.some(article => {
+          const nameMatch = normalizedSearchName ?
+            (article.displayText || '').toLowerCase().includes(normalizedSearchName) ||
+            (article.name || '').toLowerCase().includes(normalizedSearchName)
+            : false;
+
+          const eanMatch = normalizedEAN ?
+            (article.ean || '').replace(/\s+/g, '').includes(normalizedEAN)
+            : false;
+
+          console.log('Checking article:', article.displayText, 'Name match:', nameMatch, 'EAN match:', eanMatch);
           return nameMatch || eanMatch;
         });
       });
@@ -10558,10 +11240,10 @@
             ${matchingOrders.map((order, index) => `
               <div style="border: 1px solid #e5e7eb; border-radius: 6px; padding: 12px; margin-bottom: 8px; cursor: pointer;"
                    data-order-number="${order.orderNumber}" class="search-result-item">
-                <div style="font-weight: 600; color: #1f2937;">${order.orderNumber} - ${order.title}</div>
-                <div style="color: #6b7280; font-size: 14px;">Status: ${order.status} | Assigned: ${order.photographer}</div>
-                <div style="color: #374151; font-size: 12px; margin-top: 4px;">
-                  Articles: ${Array.isArray(order.articles) ? order.articles.join(', ') : order.articles || 'None'}
+                <div style="font-weight: 600; color: #4b3b2a;">${order.orderNumber} - ${order.title}</div>
+                <div style="color: #6b5440; font-size: 14px;">Status: ${order.status} | Assigned: ${order.photographer}</div>
+                <div style="color: #4b3b2a; font-size: 12px; margin-top: 4px;">
+                  Articles: ${formatArticlesAsPlainText(order.articles) || 'None'}
                 </div>
               </div>
             `).join('')}
@@ -10664,7 +11346,7 @@
       modal.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;z-index:1000';
       modal.innerHTML = `
         <div style="background:white;border-radius:12px;padding:24px;max-width:400px;box-shadow:0 10px 25px rgba(0,0,0,0.2);">
-          <h3 style="margin:0 0 16px;color:#1f2937;font-size:18px;font-weight:600;">Update Status for ${selectedItems.size} items</h3>
+          <h3 style="margin:0 0 16px;color:#4b3b2a;font-size:18px;font-weight:600;">Update Status for ${selectedItems.size} items</h3>
           <select id="newStatus" style="width:100%;padding:12px;border:1px solid #d1d5db;border-radius:8px;margin-bottom:20px;font-size:14px;background:white;">
             <option value="Draft">Draft</option>
             <option value="Approved">Approved</option>
@@ -10672,8 +11354,8 @@
             <option value="Complete">Complete</option>
           </select>
           <div style="display:flex;gap:12px;justify-content:flex-end;">
-            <button id="cancelBulkUpdate" style="padding:10px 20px;border:1px solid #d1d5db;background:white;border-radius:6px;color:#6b7280;font-weight:500;cursor:pointer;transition:all 0.2s;">Cancel</button>
-            <button id="confirmBulkUpdate" style="padding:10px 20px;background:#2563eb;color:white;border:none;border-radius:6px;font-weight:500;cursor:pointer;transition:all 0.2s;">Update</button>
+            <button id="cancelBulkUpdate" style="padding:10px 20px;border:1px solid #d1d5db;background:white;border-radius:6px;color:#6b5440;font-weight:500;cursor:pointer;transition:all 0.2s;">Cancel</button>
+            <button id="confirmBulkUpdate" style="padding:10px 20px;background:#a66b38;color:white;border:none;border-radius:6px;font-weight:500;cursor:pointer;transition:all 0.2s;">Update</button>
           </div>
         </div>
       `;
@@ -10745,7 +11427,7 @@
       
       // Show success
       const success = document.createElement('div');
-      success.style.cssText = 'position:fixed;top:20px;right:20px;background:#10b981;color:white;padding:12px 16px;border-radius:6px;z-index:1001;';
+      success.style.cssText = 'position:fixed;top:20px;right:20px;background:#7fa284;color:white;padding:12px 16px;border-radius:6px;z-index:1001;';
       success.textContent = 'Status updated successfully!';
       document.body.appendChild(success);
       setTimeout(() => success.remove(), 3000);
@@ -10760,7 +11442,7 @@
       modal.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;z-index:1000';
       modal.innerHTML = `
         <div style="background:white;border-radius:12px;padding:24px;max-width:400px;box-shadow:0 10px 25px rgba(0,0,0,0.2);">
-          <h3 style="margin:0 0 16px;color:#1f2937;font-size:18px;font-weight:600;">Assign ${selectedItems.size} items to:</h3>
+          <h3 style="margin:0 0 16px;color:#4b3b2a;font-size:18px;font-weight:600;">Assign ${selectedItems.size} items to:</h3>
           <select id="newAssignee" style="width:100%;padding:12px;border:1px solid #d1d5db;border-radius:8px;margin-bottom:20px;font-size:14px;background:white;">
             <option value="">Unassigned</option>
             <option value="photographer1">John Smith</option>
@@ -10769,8 +11451,8 @@
             <option value="photographer4">Emily Davis</option>
           </select>
           <div style="display:flex;gap:12px;justify-content:flex-end;">
-            <button id="cancelBulkAssign" style="padding:10px 20px;border:1px solid #d1d5db;background:white;border-radius:6px;color:#6b7280;font-weight:500;cursor:pointer;transition:all 0.2s;">Cancel</button>
-            <button id="confirmBulkAssign" style="padding:10px 20px;background:#2563eb;color:white;border:none;border-radius:6px;font-weight:500;cursor:pointer;transition:all 0.2s;">Assign</button>
+            <button id="cancelBulkAssign" style="padding:10px 20px;border:1px solid #d1d5db;background:white;border-radius:6px;color:#6b5440;font-weight:500;cursor:pointer;transition:all 0.2s;">Cancel</button>
+            <button id="confirmBulkAssign" style="padding:10px 20px;background:#a66b38;color:white;border:none;border-radius:6px;font-weight:500;cursor:pointer;transition:all 0.2s;">Assign</button>
           </div>
         </div>
       `;
@@ -10854,7 +11536,7 @@
       
       // Show success message
       const success = document.createElement('div');
-      success.style.cssText = 'position:fixed;top:20px;right:20px;background:#10b981;color:white;padding:12px 16px;border-radius:6px;z-index:1001;';
+      success.style.cssText = 'position:fixed;top:20px;right:20px;background:#7fa284;color:white;padding:12px 16px;border-radius:6px;z-index:1001;';
       success.textContent = `${selectedItems.size} orders exported successfully!`;
       document.body.appendChild(success);
       setTimeout(() => success.remove(), 3000);
@@ -10879,7 +11561,7 @@
       
       // Show success
       const success = document.createElement('div');
-      success.style.cssText = 'position:fixed;top:20px;right:20px;background:#10b981;color:white;padding:12px 16px;border-radius:6px;z-index:1001;';
+      success.style.cssText = 'position:fixed;top:20px;right:20px;background:#7fa284;color:white;padding:12px 16px;border-radius:6px;z-index:1001;';
       success.textContent = 'Items assigned successfully!';
       document.body.appendChild(success);
       setTimeout(() => success.remove(), 3000);
@@ -10938,6 +11620,8 @@
         comments: []
       };
 
+      assignSalesOrgToOrder(newOrder, allOrders.length + 1);
+
       // Handle Post Production specific fields
       const method = formData.get('method');
       if (method === 'Post Production') {
@@ -10970,12 +11654,13 @@
         }
       }
       
-      allOrders.unshift(newOrder);
+  allOrders.unshift(newOrder);
+  assignSalesOrgMetadata(allOrders);
       showView('orders');
       
       // Show success message
       const success = document.createElement('div');
-      success.style.cssText = 'position:fixed;top:20px;right:20px;background:#10b981;color:white;padding:12px 16px;border-radius:6px;z-index:1001;';
+      success.style.cssText = 'position:fixed;top:20px;right:20px;background:#7fa284;color:white;padding:12px 16px;border-radius:6px;z-index:1001;';
       success.textContent = 'Order created successfully!';
       document.body.appendChild(success);
       setTimeout(() => success.remove(), 3000);
@@ -11021,9 +11706,9 @@
           </div>
           
           <div style="margin-bottom:20px;">
-            <p style="color:#6b7280;margin-bottom:16px;">Create placeholder items for products that haven't been registered yet. This allows you to plan photo shoots and create orders in advance.</p>
+            <p style="color:#6b5440;margin-bottom:16px;">Create placeholder items for products that haven't been registered yet. This allows you to plan photo shoots and create orders in advance.</p>
             
-            <div style="background:#f3f4f6;padding:16px;border-radius:8px;margin-bottom:20px;">
+            <div style="background:#f1e8dc;padding:16px;border-radius:8px;margin-bottom:20px;">
               <h3 style="margin:0 0 12px 0;font-size:16px;font-weight:600;">Create New Placeholder Item</h3>
               <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
                 <div>
@@ -11074,26 +11759,26 @@
             <h3 style="margin:0 0 12px 0;font-size:16px;font-weight:600;">Existing Placeholder Items</h3>
             <div id="placeholderItemsList">
               ${placeholderItems.length === 0 ? 
-                '<p style="color:#6b7280;font-style:italic;">No placeholder items created yet.</p>' :
+                '<p style="color:#6b5440;font-style:italic;">No placeholder items created yet.</p>' :
                 placeholderItems.map(item => `
                   <div style="border:1px solid #e5e7eb;border-radius:8px;padding:16px;margin-bottom:12px;background:${item.priority === 'urgent' ? '#fef3c7' : item.priority === 'high' ? '#fecaca' : '#f9fafb'};">
                     <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:8px;">
                       <div style="flex:1;">
                         <h4 style="margin:0 0 4px 0;font-size:14px;font-weight:600;">${item.id}</h4>
-                        <p style="margin:0 0 4px 0;color:#6b7280;font-size:13px;">${item.description}</p>
-                        <div style="display:flex;gap:12px;font-size:12px;color:#6b7280;">
+                        <p style="margin:0 0 4px 0;color:#6b5440;font-size:13px;">${item.description}</p>
+                        <div style="display:flex;gap:12px;font-size:12px;color:#6b5440;">
                           <span>📂 ${item.category}</span>
                           <span>⏰ ${item.priority}</span>
                           <span>📅 Expected: ${item.expectedDate || 'Not set'}</span>
                         </div>
                       </div>
                       <div style="display:flex;gap:8px;">
-                        <button onclick="createOrderFromPlaceholder('${item.id}')" style="padding:4px 8px;background:#3b82f6;color:white;border:none;border-radius:4px;font-size:12px;cursor:pointer;">Create Order</button>
-                        <button onclick="editPlaceholderItem('${item.id}')" style="padding:4px 8px;background:#6b7280;color:white;border:none;border-radius:4px;font-size:12px;cursor:pointer;">Edit</button>
+                        <button onclick="createOrderFromPlaceholder('${item.id}')" style="padding:4px 8px;background:#c48b5a;color:white;border:none;border-radius:4px;font-size:12px;cursor:pointer;">Create Order</button>
+                        <button onclick="editPlaceholderItem('${item.id}')" style="padding:4px 8px;background:#6b5440;color:white;border:none;border-radius:4px;font-size:12px;cursor:pointer;">Edit</button>
                         <button onclick="deletePlaceholderItem('${item.id}')" style="padding:4px 8px;background:#ef4444;color:white;border:none;border-radius:4px;font-size:12px;cursor:pointer;">Delete</button>
                       </div>
                     </div>
-                    ${item.notes ? `<p style="margin:8px 0 0 0;font-size:12px;color:#4b5563;background:#f3f4f6;padding:8px;border-radius:4px;">${item.notes}</p>` : ''}
+                    ${item.notes ? `<p style="margin:8px 0 0 0;font-size:12px;color:#4b5563;background:#f1e8dc;padding:8px;border-radius:4px;">${item.notes}</p>` : ''}
                   </div>
                 `).join('')
               }
@@ -11182,7 +11867,7 @@
       
       // Show success message
       const success = document.createElement('div');
-      success.style.cssText = 'position:fixed;top:20px;right:20px;background:#10b981;color:white;padding:12px 16px;border-radius:6px;z-index:1001;';
+      success.style.cssText = 'position:fixed;top:20px;right:20px;background:#7fa284;color:white;padding:12px 16px;border-radius:6px;z-index:1001;';
       success.textContent = `Placeholder item "${id}" created successfully!`;
       document.body.appendChild(success);
       setTimeout(() => success.remove(), 3000);
@@ -11280,9 +11965,9 @@
           </div>
           
           <div style="margin-bottom:24px;">
-            <p style="color:#6b7280;margin-bottom:16px;">Configure intelligent rules that automatically include specific photo types based on item categories, keywords, and business logic. These rules help standardize photo requirements across your organization.</p>
+            <p style="color:#6b5440;margin-bottom:16px;">Configure intelligent rules that automatically include specific photo types based on item categories, keywords, and business logic. These rules help standardize photo requirements across your organization.</p>
             
-            <div style="background:#f3f4f6;padding:16px;border-radius:8px;margin-bottom:20px;">
+            <div style="background:#f1e8dc;padding:16px;border-radius:8px;margin-bottom:20px;">
               <h3 style="margin:0 0 12px 0;font-size:16px;font-weight:600;">Create New Template Rule</h3>
               
               <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
@@ -11349,20 +12034,20 @@
             <h3 style="margin:0 0 12px 0;font-size:16px;font-weight:600;">Active Template Rules</h3>
             <div id="templateRulesList">
               ${templateRules.length === 0 ? 
-                '<p style="color:#6b7280;font-style:italic;">No template rules configured yet. Create rules to automatically include photo types based on item characteristics.</p>' :
+                '<p style="color:#6b5440;font-style:italic;">No template rules configured yet. Create rules to automatically include photo types based on item characteristics.</p>' :
                 templateRules.map(rule => `
                   <div style="border:1px solid #e5e7eb;border-radius:8px;padding:16px;margin-bottom:12px;background:${rule.active ? '#f0fdf4' : '#fef3c7'};">
                     <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:8px;">
                       <div style="flex:1;">
                         <h4 style="margin:0 0 4px 0;font-size:14px;font-weight:600;">${rule.name}</h4>
-                        <p style="margin:0 0 4px 0;color:#6b7280;font-size:13px;">
+                        <p style="margin:0 0 4px 0;color:#6b5440;font-size:13px;">
                           When <strong>${rule.triggerType}</strong> ${rule.operator} "<strong>${rule.triggerValue}</strong>"
                         </p>
                         <div style="margin:8px 0;">
                           <span style="font-size:12px;color:#4b5563;font-weight:500;">Includes:</span>
                           ${rule.photoTypes.map(type => `<span style="display:inline-block;background:#ddd6fe;color:#5b21b6;padding:2px 6px;border-radius:12px;font-size:11px;margin:2px 4px 2px 0;">${type}</span>`).join('')}
                         </div>
-                        <div style="display:flex;gap:12px;font-size:12px;color:#6b7280;">
+                        <div style="display:flex;gap:12px;font-size:12px;color:#6b5440;">
                           <span>🎯 Priority: ${rule.priority}</span>
                           <span>📊 Used: ${rule.usageCount || 0} times</span>
                           <span>${rule.active ? '✅ Active' : '⏸️ Paused'}</span>
@@ -11370,15 +12055,15 @@
                       </div>
                       <div style="display:flex;gap:8px;flex-direction:column;">
                         <div style="display:flex;gap:4px;">
-                          <button onclick="toggleTemplateRule('${rule.id}')" style="padding:4px 8px;background:${rule.active ? '#f59e0b' : '#10b981'};color:white;border:none;border-radius:4px;font-size:12px;cursor:pointer;">
+                          <button onclick="toggleTemplateRule('${rule.id}')" style="padding:4px 8px;background:${rule.active ? '#f59e0b' : '#7fa284'};color:white;border:none;border-radius:4px;font-size:12px;cursor:pointer;">
                             ${rule.active ? 'Pause' : 'Activate'}
                           </button>
-                          <button onclick="editTemplateRule('${rule.id}')" style="padding:4px 8px;background:#6b7280;color:white;border:none;border-radius:4px;font-size:12px;cursor:pointer;">Edit</button>
+                          <button onclick="editTemplateRule('${rule.id}')" style="padding:4px 8px;background:#6b5440;color:white;border:none;border-radius:4px;font-size:12px;cursor:pointer;">Edit</button>
                         </div>
                         <button onclick="deleteTemplateRule('${rule.id}')" style="padding:4px 8px;background:#ef4444;color:white;border:none;border-radius:4px;font-size:12px;cursor:pointer;">Delete</button>
                       </div>
                     </div>
-                    ${rule.requirements ? `<p style="margin:8px 0 0 0;font-size:12px;color:#4b5563;background:#f3f4f6;padding:8px;border-radius:4px;">${rule.requirements}</p>` : ''}
+                    ${rule.requirements ? `<p style="margin:8px 0 0 0;font-size:12px;color:#4b5563;background:#f1e8dc;padding:8px;border-radius:4px;">${rule.requirements}</p>` : ''}
                   </div>
                 `).join('')
               }
@@ -11386,8 +12071,8 @@
           </div>
           
           <div style="margin-top:20px;padding:16px;background:#eff6ff;border-radius:8px;">
-            <h4 style="margin:0 0 8px 0;font-size:14px;font-weight:600;color:#1e40af;">Smart Suggestions</h4>
-            <p style="margin:0;font-size:12px;color:#1e40af;">
+            <h4 style="margin:0 0 8px 0;font-size:14px;font-weight:600;color:#a66b38;">Smart Suggestions</h4>
+            <p style="margin:0;font-size:12px;color:#a66b38;">
               💡 Consider creating rules for: High-value electronics (360° + Detail shots), Clothing items (Model + Size guide), 
               Home decor (Lifestyle + Group shots), Beauty products (Detail + Model shots)
             </p>
@@ -11474,7 +12159,7 @@
       
       // Show success message
       const success = document.createElement('div');
-      success.style.cssText = 'position:fixed;top:20px;right:20px;background:#10b981;color:white;padding:12px 16px;border-radius:6px;z-index:1001;';
+      success.style.cssText = 'position:fixed;top:20px;right:20px;background:#7fa284;color:white;padding:12px 16px;border-radius:6px;z-index:1001;';
       success.textContent = `Template rule "${name}" created successfully!`;
       document.body.appendChild(success);
       setTimeout(() => success.remove(), 3000);
@@ -11662,7 +12347,7 @@
 
       // Show success message
       const success = document.createElement('div');
-      success.style.cssText = 'position:fixed;top:20px;right:20px;background:#10b981;color:white;padding:12px 16px;border-radius:6px;z-index:1001;';
+      success.style.cssText = 'position:fixed;top:20px;right:20px;background:#7fa284;color:white;padding:12px 16px;border-radius:6px;z-index:1001;';
       success.textContent = `Applied ${ruleResult.appliedRules.length} template rule(s), selected ${ruleResult.photoTypes.length} photo type(s)`;
       document.body.appendChild(success);
       setTimeout(() => success.remove(), 3000);
@@ -11683,14 +12368,14 @@
           </div>
           
           <div style="margin-bottom:24px;">
-            <p style="color:#6b7280;margin-bottom:16px;">Get intelligent suggestions based on analysis of past orders. Enter an article or category to see data-driven recommendations for photo types, photographers, timelines, and requirements.</p>
+            <p style="color:#6b5440;margin-bottom:16px;">Get intelligent suggestions based on analysis of past orders. Enter an article or category to see data-driven recommendations for photo types, photographers, timelines, and requirements.</p>
             
-            <div style="background:#f3f4f6;padding:16px;border-radius:8px;margin-bottom:20px;">
+            <div style="background:#f1e8dc;padding:16px;border-radius:8px;margin-bottom:20px;">
               <h3 style="margin:0 0 12px 0;font-size:16px;font-weight:600;">Analyze Similar Orders</h3>
               
               <div style="display:grid;grid-template-columns:1fr auto;gap:12px;margin-bottom:12px;">
                 <input id="analysisInput" type="text" placeholder="Enter article number, category, or keywords" style="padding:8px;border:1px solid #d1d5db;border-radius:4px;">
-                <button id="analyzeBtn" style="padding:8px 16px;background:#3b82f6;color:white;border:none;border-radius:4px;cursor:pointer;">🔍 Analyze</button>
+                <button id="analyzeBtn" style="padding:8px 16px;background:#c48b5a;color:white;border:none;border-radius:4px;cursor:pointer;">🔍 Analyze</button>
               </div>
               
               <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px;">
@@ -11715,8 +12400,8 @@
           </div>
           
           <div style="margin-top:20px;padding:16px;background:#eff6ff;border-radius:8px;">
-            <h4 style="margin:0 0 8px 0;font-size:14px;font-weight:600;color:#1e40af;">💡 Smart Insights</h4>
-            <div id="smartInsights" style="font-size:12px;color:#1e40af;">
+            <h4 style="margin:0 0 8px 0;font-size:14px;font-weight:600;color:#a66b38;">💡 Smart Insights</h4>
+            <div id="smartInsights" style="font-size:12px;color:#a66b38;">
               ${window.generateSmartInsights()}
             </div>
           </div>
@@ -11754,9 +12439,9 @@
       const orders = allOrders.filter(order => 
         order.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
         order.brief.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (order.articles && order.articles.some(article => 
+        getArticleTextList(order.articles).some(article => 
           article.toLowerCase().includes(searchTerm.toLowerCase())
-        )) ||
+        ) ||
         (order.photoTypes && order.photoTypes.some(type =>
           type.toLowerCase().includes(searchTerm.toLowerCase())
         ))
@@ -11777,8 +12462,8 @@
       document.getElementById('analysisContent').innerHTML = `
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px;">
           <div style="background:#f0fdf4;padding:16px;border-radius:8px;">
-            <h4 style="margin:0 0 8px 0;font-size:14px;font-weight:600;color:#166534;">📈 Volume Analysis</h4>
-            <div style="font-size:12px;color:#166534;">
+            <h4 style="margin:0 0 8px 0;font-size:14px;font-weight:600;color:#54735d;">📈 Volume Analysis</h4>
+            <div style="font-size:12px;color:#54735d;">
               <div>Found: <strong>${orders.length}</strong> similar orders</div>
               <div>Date range: ${analysis.dateRange}</div>
               <div>Avg completion: <strong>${analysis.avgCompletionTime}</strong> days</div>
@@ -11801,8 +12486,8 @@
           </div>
           
           <div style="background:#f3e8ff;padding:16px;border-radius:8px;">
-            <h4 style="margin:0 0 8px 0;font-size:14px;font-weight:600;color:#7c3aed;">⚡ Priority Patterns</h4>
-            <div style="font-size:12px;color:#7c3aed;">
+            <h4 style="margin:0 0 8px 0;font-size:14px;font-weight:600;color:#b48fc7;">⚡ Priority Patterns</h4>
+            <div style="font-size:12px;color:#b48fc7;">
               ${analysis.priorities.slice(0, 3).map(p => `<div>${p.priority}: <strong>${p.percentage}%</strong></div>`).join('')}
             </div>
           </div>
@@ -11817,7 +12502,7 @@
             </div>
             <div>
               <strong>Recommended Photographer:</strong><br>
-              <span style="background:#dcfce7;color:#166534;padding:4px 8px;border-radius:4px;font-size:12px;">${analysis.bestPhotographer}</span>
+              <span style="background:#dcfce7;color:#54735d;padding:4px 8px;border-radius:4px;font-size:12px;">${analysis.bestPhotographer}</span>
             </div>
             <div>
               <strong>Estimated Timeline:</strong><br>
@@ -11831,7 +12516,7 @@
         </div>
         
         <div style="margin-top:16px;">
-          <button onclick="window.applyHistoricalSuggestions('${searchTerm}')" style="padding:8px 16px;background:#10b981;color:white;border:none;border-radius:4px;cursor:pointer;">
+          <button onclick="window.applyHistoricalSuggestions('${searchTerm}')" style="padding:8px 16px;background:#7fa284;color:white;border:none;border-radius:4px;cursor:pointer;">
             ✨ Apply Suggestions to New Order
           </button>
         </div>
@@ -11938,13 +12623,13 @@
       
       return `
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;">
-          <div style="background:#f0f9ff;padding:16px;border-radius:8px;text-align:center;">
-            <div style="font-size:24px;font-weight:bold;color:#1e40af;">${totalOrders}</div>
-            <div style="font-size:12px;color:#6b7280;">Total Orders</div>
+          <div style="background:#fdf4e6;padding:16px;border-radius:8px;text-align:center;">
+            <div style="font-size:24px;font-weight:bold;color:#a66b38;">${totalOrders}</div>
+            <div style="font-size:12px;color:#6b5440;">Total Orders</div>
           </div>
           <div style="background:#f0fdf4;padding:16px;border-radius:8px;text-align:center;">
-            <div style="font-size:24px;font-weight:bold;color:#166534;">${completionRate}%</div>
-            <div style="font-size:12px;color:#6b7280;">Completion Rate</div>
+            <div style="font-size:24px;font-weight:bold;color:#54735d;">${completionRate}%</div>
+            <div style="font-size:12px;color:#6b5440;">Completion Rate</div>
           </div>
           <div style="background:#fef3c7;padding:16px;border-radius:8px;">
             <div style="font-size:14px;font-weight:600;color:#92400e;margin-bottom:8px;">Top Photo Types</div>
@@ -12040,7 +12725,7 @@
         
         // Show success message
         const success = document.createElement('div');
-        success.style.cssText = 'position:fixed;top:20px;right:20px;background:#10b981;color:white;padding:12px 16px;border-radius:6px;z-index:1001;';
+        success.style.cssText = 'position:fixed;top:20px;right:20px;background:#7fa284;color:white;padding:12px 16px;border-radius:6px;z-index:1001;';
         success.textContent = `Applied historical suggestions based on ${orders.length} similar orders`;
         document.body.appendChild(success);
         setTimeout(() => success.remove(), 3000);
@@ -12061,12 +12746,12 @@
           </div>
           
           <div style="margin-bottom:24px;">
-            <div style="background:#f0f9ff;padding:16px;border-radius:8px;margin-bottom:16px;">
-              <h3 style="margin:0 0 8px 0;font-size:16px;font-weight:600;color:#1e40af;">☁️ Cloudinary Connection Status</h3>
+            <div style="background:#fdf4e6;padding:16px;border-radius:8px;margin-bottom:16px;">
+              <h3 style="margin:0 0 8px 0;font-size:16px;font-weight:600;color:#a66b38;">☁️ Cloudinary Connection Status</h3>
               <div style="display:flex;align-items:center;gap:8px;">
-                <span style="width:12px;height:12px;background:#10b981;border-radius:50%;"></span>
+                <span style="width:12px;height:12px;background:#7fa284;border-radius:50%;"></span>
                 <span style="font-size:14px;font-weight:500;">Cloudinary: Connected</span>
-                <span style="background:#dcfce7;color:#166534;padding:2px 8px;border-radius:12px;font-size:12px;margin-left:12px;">Active</span>
+                <span style="background:#dcfce7;color:#54735d;padding:2px 8px;border-radius:12px;font-size:12px;margin-left:12px;">Active</span>
               </div>
               <div style="margin-top:8px;font-size:12px;color:#64748b;">
                 Connected to demo cloud • Upload, manage, and transform your assets
@@ -12074,14 +12759,14 @@
             </div>
             
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;">
-              <div style="background:#f3f4f6;padding:16px;border-radius:8px;">
+              <div style="background:#f1e8dc;padding:16px;border-radius:8px;">
                 <h3 style="margin:0 0 12px 0;font-size:16px;font-weight:600;">📤 Upload to Cloudinary</h3>
                 <div style="border:2px dashed #d1d5db;border-radius:8px;padding:20px;text-align:center;margin-bottom:12px;">
                   <input type="file" id="damFileInput" multiple accept="image/*,video/*" style="display:none;">
-                  <button onclick="document.getElementById('damFileInput').click()" style="padding:8px 16px;background:#3b82f6;color:white;border:none;border-radius:4px;cursor:pointer;">
+                  <button onclick="document.getElementById('damFileInput').click()" style="padding:8px 16px;background:#c48b5a;color:white;border:none;border-radius:4px;cursor:pointer;">
                     📁 Select Files
                   </button>
-                  <p style="margin:8px 0 0;font-size:12px;color:#6b7280;">Support: JPG, PNG, TIFF, MP4, MOV up to 100MB</p>
+                  <p style="margin:8px 0 0;font-size:12px;color:#6b5440;">Support: JPG, PNG, TIFF, MP4, MOV up to 100MB</p>
                 </div>
                 <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">
                   <select id="damOrderSelect" style="padding:6px;border:1px solid #d1d5db;border-radius:4px;font-size:12px;">
@@ -12098,12 +12783,12 @@
                   </select>
                 </div>
                 <input id="damTagsInput" placeholder="Tags (comma-separated)" style="width:100%;padding:6px;border:1px solid #d1d5db;border-radius:4px;font-size:12px;margin-bottom:12px;">
-                <button id="uploadToDAMBtn" style="width:100%;padding:8px;background:#10b981;color:white;border:none;border-radius:4px;cursor:pointer;">
+                <button id="uploadToDAMBtn" style="width:100%;padding:8px;background:#7fa284;color:white;border:none;border-radius:4px;cursor:pointer;">
                   ⬆️ Upload to Cloudinary
                 </button>
               </div>
               
-              <div style="background:#f3f4f6;padding:16px;border-radius:8px;">
+              <div style="background:#f1e8dc;padding:16px;border-radius:8px;">
                 <h3 style="margin:0 0 12px 0;font-size:16px;font-weight:600;">🔍 Search Cloudinary Assets</h3>
                 <div style="display:grid;gap:8px;margin-bottom:12px;">
                   <input id="damSearchInput" placeholder="Search by filename, tags, or order number" style="padding:8px;border:1px solid #d1d5db;border-radius:4px;">
@@ -12125,7 +12810,7 @@
                     </select>
                   </div>
                 </div>
-                <button id="searchDAMBtn" style="width:100%;padding:8px;background:#3b82f6;color:white;border:none;border-radius:4px;cursor:pointer;">
+                <button id="searchDAMBtn" style="width:100%;padding:8px;background:#c48b5a;color:white;border:none;border-radius:4px;cursor:pointer;">
                   🔍 Search Cloudinary
                 </button>
               </div>
@@ -12136,32 +12821,32 @@
             <h3 style="margin:0 0 16px 0;font-size:16px;font-weight:600;">📁 Recent Cloudinary Assets</h3>
             <div id="damAssetsGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px;">
               ${damAssets.length === 0 ? 
-                '<p style="grid-column:1/-1;color:#6b7280;font-style:italic;text-align:center;padding:40px;">No assets uploaded yet. Upload your first asset using the form above.</p>' :
+                '<p style="grid-column:1/-1;color:#6b5440;font-style:italic;text-align:center;padding:40px;">No assets uploaded yet. Upload your first asset using the form above.</p>' :
                 damAssets.map(asset => `
                   <div style="border:1px solid #e5e7eb;border-radius:8px;padding:12px;background:white;">
-                    <div style="aspect-ratio:16/9;background:#f3f4f6;border-radius:6px;margin-bottom:8px;display:flex;align-items:center;justify-content:center;overflow:hidden;">
+                    <div style="aspect-ratio:16/9;background:#f1e8dc;border-radius:6px;margin-bottom:8px;display:flex;align-items:center;justify-content:center;overflow:hidden;">
                       ${asset.type === 'image' ? 
                         `<img src="${asset.url}" alt="${asset.filename}" style="width:100%;height:100%;object-fit:cover;" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
-                         <div style="display:none;width:100%;height:100%;align-items:center;justify-content:center;color:#6b7280;">
+                         <div style="display:none;width:100%;height:100%;align-items:center;justify-content:center;color:#6b5440;">
                            🖼️ Image
                          </div>` :
-                        `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#6b7280;">
+                        `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#6b5440;">
                            🎬 Video
                          </div>`
                       }
                     </div>
                     <div style="font-size:12px;font-weight:500;margin-bottom:4px;">${asset.filename}</div>
-                    <div style="font-size:10px;color:#6b7280;margin-bottom:8px;">
+                    <div style="font-size:10px;color:#6b5440;margin-bottom:8px;">
                       ${asset.category} • ${asset.uploadDate}<br>
                       ${asset.orderNumber ? `Order: ${asset.orderNumber}` : 'No order linked'}
                     </div>
                     <div style="display:flex;gap:4px;margin-bottom:8px;">
-                      ${asset.tags.slice(0, 3).map(tag => `<span style="background:#e5e7eb;color:#374151;padding:1px 4px;border-radius:2px;font-size:9px;">${tag}</span>`).join('')}
-                      ${asset.tags.length > 3 ? `<span style="color:#6b7280;font-size:9px;">+${asset.tags.length - 3}</span>` : ''}
+                      ${asset.tags.slice(0, 3).map(tag => `<span style="background:#e5e7eb;color:#4b3b2a;padding:1px 4px;border-radius:2px;font-size:9px;">${tag}</span>`).join('')}
+                      ${asset.tags.length > 3 ? `<span style="color:#6b5440;font-size:9px;">+${asset.tags.length - 3}</span>` : ''}
                     </div>
                     <div style="display:flex;gap:4px;">
-                      <button onclick="window.viewDAMAsset('${asset.id}')" style="flex:1;padding:4px;background:#3b82f6;color:white;border:none;border-radius:3px;font-size:10px;cursor:pointer;">View</button>
-                      <button onclick="window.downloadDAMAsset('${asset.id}')" style="flex:1;padding:4px;background:#10b981;color:white;border:none;border-radius:3px;font-size:10px;cursor:pointer;">Download</button>
+                      <button onclick="window.viewDAMAsset('${asset.id}')" style="flex:1;padding:4px;background:#c48b5a;color:white;border:none;border-radius:3px;font-size:10px;cursor:pointer;">View</button>
+                      <button onclick="window.downloadDAMAsset('${asset.id}')" style="flex:1;padding:4px;background:#7fa284;color:white;border:none;border-radius:3px;font-size:10px;cursor:pointer;">Download</button>
                       <button onclick="window.deleteDAMAsset('${asset.id}')" style="padding:4px;background:#ef4444;color:white;border:none;border-radius:3px;font-size:10px;cursor:pointer;">🗑️</button>
                     </div>
                   </div>
@@ -12171,8 +12856,8 @@
           </div>
           
           <div style="margin-top:20px;padding:16px;background:#eff6ff;border-radius:8px;">
-            <h4 style="margin:0 0 8px 0;font-size:14px;font-weight:600;color:#1e40af;">☁️ Cloudinary Features</h4>
-            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px;font-size:12px;color:#1e40af;">
+            <h4 style="margin:0 0 8px 0;font-size:14px;font-weight:600;color:#a66b38;">☁️ Cloudinary Features</h4>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px;font-size:12px;color:#a66b38;">
               <div>✅ Automatic image optimization</div>
               <div>✅ Order-asset linking</div>
               <div>✅ Multi-format support</div>
@@ -12204,7 +12889,7 @@
         if (files.length > 0) {
           const fileList = files.map(f => f.name).join(', ');
           const success = document.createElement('div');
-          success.style.cssText = 'position:fixed;top:20px;right:20px;background:#3b82f6;color:white;padding:12px 16px;border-radius:6px;z-index:1001;';
+          success.style.cssText = 'position:fixed;top:20px;right:20px;background:#c48b5a;color:white;padding:12px 16px;border-radius:6px;z-index:1001;';
           success.textContent = `Selected ${files.length} file(s): ${fileList.substring(0, 50)}${fileList.length > 50 ? '...' : ''}`;
           document.body.appendChild(success);
           setTimeout(() => success.remove(), 3000);
@@ -12340,7 +13025,7 @@
       
       // Show success message
       const success = document.createElement('div');
-      success.style.cssText = 'position:fixed;top:20px;right:20px;background:#10b981;color:white;padding:12px 16px;border-radius:6px;z-index:1001;';
+      success.style.cssText = 'position:fixed;top:20px;right:20px;background:#7fa284;color:white;padding:12px 16px;border-radius:6px;z-index:1001;';
       success.textContent = `Successfully uploaded ${files.length} asset(s) to DAM`;
       document.body.appendChild(success);
       setTimeout(() => success.remove(), 3000);
@@ -12389,33 +13074,33 @@
       // Update grid
       const grid = document.getElementById('damAssetsGrid');
       if (filteredAssets.length === 0) {
-        grid.innerHTML = '<p style="grid-column:1/-1;color:#6b7280;font-style:italic;text-align:center;padding:40px;">No assets found matching your search criteria.</p>';
+        grid.innerHTML = '<p style="grid-column:1/-1;color:#6b5440;font-style:italic;text-align:center;padding:40px;">No assets found matching your search criteria.</p>';
       } else {
         grid.innerHTML = filteredAssets.map(asset => `
           <div style="border:1px solid #e5e7eb;border-radius:8px;padding:12px;background:white;">
-            <div style="aspect-ratio:16/9;background:#f3f4f6;border-radius:6px;margin-bottom:8px;display:flex;align-items:center;justify-content:center;overflow:hidden;">
+            <div style="aspect-ratio:16/9;background:#f1e8dc;border-radius:6px;margin-bottom:8px;display:flex;align-items:center;justify-content:center;overflow:hidden;">
               ${asset.type === 'image' ? 
                 `<img src="${asset.url}" alt="${asset.filename}" style="width:100%;height:100%;object-fit:cover;" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
-                 <div style="display:none;width:100%;height:100%;align-items:center;justify-content:center;color:#6b7280;">
+                 <div style="display:none;width:100%;height:100%;align-items:center;justify-content:center;color:#6b5440;">
                    🖼️ Image
                  </div>` :
-                `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#6b7280;">
+                `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#6b5440;">
                    🎬 Video
                  </div>`
               }
             </div>
             <div style="font-size:12px;font-weight:500;margin-bottom:4px;">${asset.filename}</div>
-            <div style="font-size:10px;color:#6b7280;margin-bottom:8px;">
+            <div style="font-size:10px;color:#6b5440;margin-bottom:8px;">
               ${asset.category} • ${asset.uploadDate}<br>
               ${asset.orderNumber ? `Order: ${asset.orderNumber}` : 'No order linked'}
             </div>
             <div style="display:flex;gap:4px;margin-bottom:8px;">
-              ${asset.tags.slice(0, 3).map(tag => `<span style="background:#e5e7eb;color:#374151;padding:1px 4px;border-radius:2px;font-size:9px;">${tag}</span>`).join('')}
-              ${asset.tags.length > 3 ? `<span style="color:#6b7280;font-size:9px;">+${asset.tags.length - 3}</span>` : ''}
+              ${asset.tags.slice(0, 3).map(tag => `<span style="background:#e5e7eb;color:#4b3b2a;padding:1px 4px;border-radius:2px;font-size:9px;">${tag}</span>`).join('')}
+              ${asset.tags.length > 3 ? `<span style="color:#6b5440;font-size:9px;">+${asset.tags.length - 3}</span>` : ''}
             </div>
             <div style="display:flex;gap:4px;">
-              <button onclick="window.viewDAMAsset('${asset.id}')" style="flex:1;padding:4px;background:#3b82f6;color:white;border:none;border-radius:3px;font-size:10px;cursor:pointer;">View</button>
-              <button onclick="window.downloadDAMAsset('${asset.id}')" style="flex:1;padding:4px;background:#10b981;color:white;border:none;border-radius:3px;font-size:10px;cursor:pointer;">Download</button>
+              <button onclick="window.viewDAMAsset('${asset.id}')" style="flex:1;padding:4px;background:#c48b5a;color:white;border:none;border-radius:3px;font-size:10px;cursor:pointer;">View</button>
+              <button onclick="window.downloadDAMAsset('${asset.id}')" style="flex:1;padding:4px;background:#7fa284;color:white;border:none;border-radius:3px;font-size:10px;cursor:pointer;">Download</button>
               <button onclick="window.deleteDAMAsset('${asset.id}')" style="padding:4px;background:#ef4444;color:white;border:none;border-radius:3px;font-size:10px;cursor:pointer;">🗑️</button>
             </div>
           </div>
@@ -12424,7 +13109,7 @@
       
       // Show results info
       const success = document.createElement('div');
-      success.style.cssText = 'position:fixed;top:20px;right:20px;background:#3b82f6;color:white;padding:12px 16px;border-radius:6px;z-index:1001;';
+      success.style.cssText = 'position:fixed;top:20px;right:20px;background:#c48b5a;color:white;padding:12px 16px;border-radius:6px;z-index:1001;';
       success.textContent = `Found ${filteredAssets.length} asset(s) matching your criteria`;
       document.body.appendChild(success);
       setTimeout(() => success.remove(), 3000);
@@ -12583,20 +13268,20 @@
 
       content.innerHTML = `
         <div style="padding:24px;border-bottom:1px solid #e5e7eb;">
-          <h2 style="margin:0;font-size:20px;color:#1f2937;display:flex;align-items:center;">
+          <h2 style="margin:0;font-size:20px;color:#4b3b2a;display:flex;align-items:center;">
             🔧 Customization Request System
             <button onclick="document.getElementById('customizationRequestModal').remove()" 
-                    style="margin-left:auto;background:none;border:none;font-size:24px;cursor:pointer;color:#6b7280;">×</button>
+                    style="margin-left:auto;background:none;border:none;font-size:24px;cursor:pointer;color:#6b5440;">×</button>
           </h2>
-          <p style="margin:8px 0 0;color:#6b7280;font-size:14px;">Submit and track custom feature requests and system modifications</p>
+          <p style="margin:8px 0 0;color:#6b5440;font-size:14px;">Submit and track custom feature requests and system modifications</p>
         </div>
 
         <div style="padding:24px;">
           <!-- Request Statistics -->
           <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:16px;margin-bottom:24px;">
             <div style="background:#f0fdf4;padding:16px;border-radius:8px;text-align:center;">
-              <div style="font-size:24px;font-weight:bold;color:#059669;">${existingRequests.length}</div>
-              <div style="font-size:12px;color:#059669;">Total Requests</div>
+              <div style="font-size:24px;font-weight:bold;color:#7fa284;">${existingRequests.length}</div>
+              <div style="font-size:12px;color:#7fa284;">Total Requests</div>
             </div>
             <div style="background:#fef3f2;padding:16px;border-radius:8px;text-align:center;">
               <div style="font-size:24px;font-weight:bold;color:#dc2626;">${existingRequests.filter(r => r.status === 'submitted').length}</div>
@@ -12606,7 +13291,7 @@
               <div style="font-size:24px;font-weight:bold;color:#d97706;">${existingRequests.filter(r => r.status === 'in-progress').length}</div>
               <div style="font-size:12px;color:#d97706;">In Progress</div>
             </div>
-            <div style="background:#f0f9ff;padding:16px;border-radius:8px;text-align:center;">
+            <div style="background:#fdf4e6;padding:16px;border-radius:8px;text-align:center;">
               <div style="font-size:24px;font-weight:bold;color:#0284c7;">${existingRequests.filter(r => r.status === 'completed').length}</div>
               <div style="font-size:12px;color:#0284c7;">Completed</div>
             </div>
@@ -12614,10 +13299,10 @@
 
           <!-- New Request Form -->
           <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:20px;margin-bottom:24px;">
-            <h3 style="margin:0 0 16px;font-size:16px;color:#1f2937;">Submit New Request</h3>
+            <h3 style="margin:0 0 16px;font-size:16px;color:#4b3b2a;">Submit New Request</h3>
             
             <div style="margin-bottom:16px;">
-              <label style="display:block;margin-bottom:4px;font-weight:500;color:#374151;">Request Type *</label>
+              <label style="display:block;margin-bottom:4px;font-weight:500;color:#4b3b2a;">Request Type *</label>
               <select id="requestType" style="width:100%;padding:8px;border:1px solid #d1d5db;border-radius:4px;">
                 <option value="">Select request type...</option>
                 <option value="feature">New Feature</option>
@@ -12634,7 +13319,7 @@
             </div>
 
             <div style="margin-bottom:16px;">
-              <label style="display:block;margin-bottom:4px;font-weight:500;color:#374151;">Priority Level *</label>
+              <label style="display:block;margin-bottom:4px;font-weight:500;color:#4b3b2a;">Priority Level *</label>
               <select id="requestPriority" style="width:100%;padding:8px;border:1px solid #d1d5db;border-radius:4px;">
                 <option value="">Select priority...</option>
                 <option value="critical">🔴 Critical - Business Impact</option>
@@ -12645,25 +13330,25 @@
             </div>
 
             <div style="margin-bottom:16px;">
-              <label style="display:block;margin-bottom:4px;font-weight:500;color:#374151;">Request Title *</label>
+              <label style="display:block;margin-bottom:4px;font-weight:500;color:#4b3b2a;">Request Title *</label>
               <input type="text" id="requestTitle" placeholder="Brief description of the request" 
                      style="width:100%;padding:8px;border:1px solid #d1d5db;border-radius:4px;">
             </div>
 
             <div style="margin-bottom:16px;">
-              <label style="display:block;margin-bottom:4px;font-weight:500;color:#374151;">Detailed Description *</label>
+              <label style="display:block;margin-bottom:4px;font-weight:500;color:#4b3b2a;">Detailed Description *</label>
               <textarea id="requestDescription" rows="4" placeholder="Detailed description of what you need, including current limitations and desired outcomes"
                         style="width:100%;padding:8px;border:1px solid #d1d5db;border-radius:4px;resize:vertical;"></textarea>
             </div>
 
             <div style="margin-bottom:16px;">
-              <label style="display:block;margin-bottom:4px;font-weight:500;color:#374151;">Business Justification</label>
+              <label style="display:block;margin-bottom:4px;font-weight:500;color:#4b3b2a;">Business Justification</label>
               <textarea id="requestJustification" rows="3" placeholder="How will this benefit the business? Include efficiency gains, cost savings, or process improvements"
                         style="width:100%;padding:8px;border:1px solid #d1d5db;border-radius:4px;resize:vertical;"></textarea>
             </div>
 
             <div style="margin-bottom:16px;">
-              <label style="display:block;margin-bottom:4px;font-weight:500;color:#374151;">Affected Department(s)</label>
+              <label style="display:block;margin-bottom:4px;font-weight:500;color:#4b3b2a;">Affected Department(s)</label>
               <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px;margin-top:8px;">
                 <label style="display:flex;align-items:center;"><input type="checkbox" value="photography" style="margin-right:8px;">Photography</label>
                 <label style="display:flex;align-items:center;"><input type="checkbox" value="procurement" style="margin-right:8px;">Procurement</label>
@@ -12675,7 +13360,7 @@
             </div>
 
             <div style="margin-bottom:16px;">
-              <label style="display:block;margin-bottom:4px;font-weight:500;color:#374151;">Expected Timeline</label>
+              <label style="display:block;margin-bottom:4px;font-weight:500;color:#4b3b2a;">Expected Timeline</label>
               <select id="requestTimeline" style="width:100%;padding:8px;border:1px solid #d1d5db;border-radius:4px;">
                 <option value="">Select expected timeline...</option>
                 <option value="asap">ASAP - Urgent</option>
@@ -12687,23 +13372,23 @@
             </div>
 
             <div style="margin-bottom:20px;">
-              <label style="display:block;margin-bottom:4px;font-weight:500;color:#374151;">Additional Notes</label>
+              <label style="display:block;margin-bottom:4px;font-weight:500;color:#4b3b2a;">Additional Notes</label>
               <textarea id="requestNotes" rows="2" placeholder="Any additional information, constraints, or requirements"
                         style="width:100%;padding:8px;border:1px solid #d1d5db;border-radius:4px;resize:vertical;"></textarea>
             </div>
 
             <button onclick="window.submitCustomizationRequest()" 
-                    style="background:#7c3aed;color:white;border:none;border-radius:6px;padding:10px 20px;font-size:14px;cursor:pointer;font-weight:500;">
+                    style="background:#b48fc7;color:white;border:none;border-radius:6px;padding:10px 20px;font-size:14px;cursor:pointer;font-weight:500;">
               📤 Submit Request
             </button>
           </div>
 
           <!-- Existing Requests -->
           <div>
-            <h3 style="margin:0 0 16px;font-size:16px;color:#1f2937;">Request History</h3>
+            <h3 style="margin:0 0 16px;font-size:16px;color:#4b3b2a;">Request History</h3>
             <div id="customizationRequestsList">
               ${existingRequests.length === 0 ? `
-                <div style="text-align:center;padding:40px;color:#6b7280;">
+                <div style="text-align:center;padding:40px;color:#6b5440;">
                   <div style="font-size:48px;margin-bottom:16px;">📝</div>
                   <p style="margin:0;font-size:16px;">No customization requests yet</p>
                   <p style="margin:8px 0 0;font-size:14px;">Submit your first request using the form above</p>
@@ -12712,7 +13397,7 @@
                 <div style="border:1px solid #e5e7eb;border-radius:8px;padding:16px;margin-bottom:12px;background:white;">
                   <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:12px;">
                     <div>
-                      <h4 style="margin:0 0 4px;font-size:14px;color:#1f2937;">${request.title}</h4>
+                      <h4 style="margin:0 0 4px;font-size:14px;color:#4b3b2a;">${request.title}</h4>
                       <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px;">
                         <span style="background:${getRequestTypeColor(request.type)};color:white;padding:2px 8px;border-radius:12px;font-size:11px;">
                           ${getRequestTypeLabel(request.type)}
@@ -12725,7 +13410,7 @@
                         </span>
                       </div>
                     </div>
-                    <div style="text-align:right;font-size:12px;color:#6b7280;">
+                    <div style="text-align:right;font-size:12px;color:#6b5440;">
                       <div>ID: ${request.id}</div>
                       <div>${request.submittedDate}</div>
                     </div>
@@ -12735,12 +13420,12 @@
                   
                   ${request.justification ? `
                     <div style="background:#f9fafb;padding:8px;border-radius:4px;margin-bottom:8px;">
-                      <strong style="font-size:11px;color:#374151;">Business Justification:</strong>
-                      <p style="margin:4px 0 0;font-size:12px;color:#6b7280;">${request.justification.length > 100 ? request.justification.substring(0, 100) + '...' : request.justification}</p>
+                      <strong style="font-size:11px;color:#4b3b2a;">Business Justification:</strong>
+                      <p style="margin:4px 0 0;font-size:12px;color:#6b5440;">${request.justification.length > 100 ? request.justification.substring(0, 100) + '...' : request.justification}</p>
                     </div>
                   ` : ''}
                   
-                  <div style="display:flex;justify-content:space-between;align-items:center;font-size:12px;color:#6b7280;">
+                  <div style="display:flex;justify-content:space-between;align-items:center;font-size:12px;color:#6b5440;">
                     <div>
                       ${request.departments && request.departments.length > 0 ? 
                         `Departments: ${request.departments.join(', ')}` : 
@@ -12750,7 +13435,7 @@
                     </div>
                     <div style="display:flex;gap:8px;">
                       <button onclick="window.viewCustomizationRequest('${request.id}')" 
-                              style="background:#3b82f6;color:white;border:none;border-radius:4px;padding:4px 8px;font-size:11px;cursor:pointer;">
+                              style="background:#c48b5a;color:white;border:none;border-radius:4px;padding:4px 8px;font-size:11px;cursor:pointer;">
                         View Details
                       </button>
                       ${request.status === 'submitted' ? `
@@ -12761,7 +13446,7 @@
                       ` : ''}
                       ${request.status === 'in-progress' ? `
                         <button onclick="window.updateRequestStatus('${request.id}', 'completed')" 
-                                style="background:#10b981;color:white;border:none;border-radius:4px;padding:4px 8px;font-size:11px;cursor:pointer;">
+                                style="background:#7fa284;color:white;border:none;border-radius:4px;padding:4px 8px;font-size:11px;cursor:pointer;">
                           Mark Complete
                         </button>
                       ` : ''}
@@ -12780,18 +13465,18 @@
       // Helper functions for styling
       function getRequestTypeColor(type) {
         const colors = {
-          'feature': '#3b82f6',
-          'enhancement': '#10b981',
+          'feature': '#c48b5a',
+          'enhancement': '#7fa284',
           'integration': '#f59e0b',
-          'workflow': '#8b5cf6',
-          'reporting': '#06b6d4',
+          'workflow': '#bfa3d6',
+          'reporting': '#8fb0a3',
           'ui-ux': '#ec4899',
           'automation': '#84cc16',
           'security': '#ef4444',
           'performance': '#f97316',
-          'other': '#6b7280'
+          'other': '#6b5440'
         };
-        return colors[type] || '#6b7280';
+        return colors[type] || '#6b5440';
       }
 
       function getRequestTypeLabel(type) {
@@ -12817,7 +13502,7 @@
           'medium': '#eab308',
           'low': '#22c55e'
         };
-        return colors[priority] || '#6b7280';
+        return colors[priority] || '#6b5440';
       }
 
       function getPriorityLabel(priority) {
@@ -12835,10 +13520,10 @@
           'submitted': '#ef4444',
           'in-progress': '#f59e0b',
           'completed': '#22c55e',
-          'on-hold': '#6b7280',
+          'on-hold': '#6b5440',
           'cancelled': '#dc2626'
         };
-        return colors[status] || '#6b7280';
+        return colors[status] || '#6b5440';
       }
 
       function getStatusLabel(status) {
@@ -12933,31 +13618,31 @@
       content.innerHTML = `
         <div style="padding:24px;">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
-            <h2 style="margin:0;font-size:18px;color:#1f2937;">Request Details</h2>
+            <h2 style="margin:0;font-size:18px;color:#4b3b2a;">Request Details</h2>
             <button onclick="this.closest('[style*=\"z-index:10001\"]').remove()" 
-                    style="background:none;border:none;font-size:24px;cursor:pointer;color:#6b7280;">×</button>
+                    style="background:none;border:none;font-size:24px;cursor:pointer;color:#6b5440;">×</button>
           </div>
           
           <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:16px;margin-bottom:16px;">
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:12px;">
               <div>
-                <strong style="font-size:12px;color:#374151;">Request ID:</strong>
-                <div style="font-size:14px;color:#1f2937;">${request.id}</div>
+                <strong style="font-size:12px;color:#4b3b2a;">Request ID:</strong>
+                <div style="font-size:14px;color:#4b3b2a;">${request.id}</div>
               </div>
               <div>
-                <strong style="font-size:12px;color:#374151;">Status:</strong>
+                <strong style="font-size:12px;color:#4b3b2a;">Status:</strong>
                 <span style="background:${getStatusColor(request.status)};color:white;padding:2px 8px;border-radius:12px;font-size:11px;margin-left:4px;">
                   ${getStatusLabel(request.status)}
                 </span>
               </div>
               <div>
-                <strong style="font-size:12px;color:#374151;">Priority:</strong>
+                <strong style="font-size:12px;color:#4b3b2a;">Priority:</strong>
                 <span style="background:${getPriorityColor(request.priority)};color:white;padding:2px 8px;border-radius:12px;font-size:11px;margin-left:4px;">
                   ${getPriorityLabel(request.priority)}
                 </span>
               </div>
               <div>
-                <strong style="font-size:12px;color:#374151;">Type:</strong>
+                <strong style="font-size:12px;color:#4b3b2a;">Type:</strong>
                 <span style="background:${getRequestTypeColor(request.type)};color:white;padding:2px 8px;border-radius:12px;font-size:11px;margin-left:4px;">
                   ${getRequestTypeLabel(request.type)}
                 </span>
@@ -12966,28 +13651,28 @@
           </div>
 
           <div style="margin-bottom:16px;">
-            <strong style="font-size:12px;color:#374151;">Title:</strong>
-            <div style="font-size:14px;color:#1f2937;margin-top:4px;">${request.title}</div>
+            <strong style="font-size:12px;color:#4b3b2a;">Title:</strong>
+            <div style="font-size:14px;color:#4b3b2a;margin-top:4px;">${request.title}</div>
           </div>
 
           <div style="margin-bottom:16px;">
-            <strong style="font-size:12px;color:#374151;">Description:</strong>
-            <div style="font-size:14px;color:#1f2937;margin-top:4px;line-height:1.5;">${request.description}</div>
+            <strong style="font-size:12px;color:#4b3b2a;">Description:</strong>
+            <div style="font-size:14px;color:#4b3b2a;margin-top:4px;line-height:1.5;">${request.description}</div>
           </div>
 
           ${request.justification ? `
             <div style="margin-bottom:16px;">
-              <strong style="font-size:12px;color:#374151;">Business Justification:</strong>
-              <div style="font-size:14px;color:#1f2937;margin-top:4px;line-height:1.5;">${request.justification}</div>
+              <strong style="font-size:12px;color:#4b3b2a;">Business Justification:</strong>
+              <div style="font-size:14px;color:#4b3b2a;margin-top:4px;line-height:1.5;">${request.justification}</div>
             </div>
           ` : ''}
 
           ${request.departments && request.departments.length > 0 ? `
             <div style="margin-bottom:16px;">
-              <strong style="font-size:12px;color:#374151;">Affected Departments:</strong>
+              <strong style="font-size:12px;color:#4b3b2a;">Affected Departments:</strong>
               <div style="margin-top:4px;">
                 ${request.departments.map(dept => 
-                  `<span style="background:#e5e7eb;color:#374151;padding:2px 8px;border-radius:12px;font-size:11px;margin-right:4px;">${dept}</span>`
+                  `<span style="background:#e5e7eb;color:#4b3b2a;padding:2px 8px;border-radius:12px;font-size:11px;margin-right:4px;">${dept}</span>`
                 ).join('')}
               </div>
             </div>
@@ -12995,20 +13680,20 @@
 
           ${request.timeline ? `
             <div style="margin-bottom:16px;">
-              <strong style="font-size:12px;color:#374151;">Expected Timeline:</strong>
-              <div style="font-size:14px;color:#1f2937;margin-top:4px;">${request.timeline}</div>
+              <strong style="font-size:12px;color:#4b3b2a;">Expected Timeline:</strong>
+              <div style="font-size:14px;color:#4b3b2a;margin-top:4px;">${request.timeline}</div>
             </div>
           ` : ''}
 
           ${request.notes ? `
             <div style="margin-bottom:16px;">
-              <strong style="font-size:12px;color:#374151;">Additional Notes:</strong>
-              <div style="font-size:14px;color:#1f2937;margin-top:4px;line-height:1.5;">${request.notes}</div>
+              <strong style="font-size:12px;color:#4b3b2a;">Additional Notes:</strong>
+              <div style="font-size:14px;color:#4b3b2a;margin-top:4px;line-height:1.5;">${request.notes}</div>
             </div>
           ` : ''}
 
           <div style="border-top:1px solid #e5e7eb;padding-top:16px;margin-top:16px;">
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;font-size:12px;color:#6b7280;">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;font-size:12px;color:#6b5440;">
               <div>
                 <strong>Submitted:</strong> ${request.submittedDate}<br>
                 <strong>By:</strong> ${request.submittedBy}
@@ -13028,12 +13713,12 @@
             ` : ''}
             ${request.status === 'in-progress' ? `
               <button onclick="window.updateRequestStatus('${request.id}', 'completed'); this.closest('[style*=\"z-index:10001\"]').remove(); window.showCustomizationRequestModal();" 
-                      style="background:#10b981;color:white;border:none;border-radius:4px;padding:8px 16px;font-size:12px;cursor:pointer;">
+                      style="background:#7fa284;color:white;border:none;border-radius:4px;padding:8px 16px;font-size:12px;cursor:pointer;">
                 Mark Complete
               </button>
             ` : ''}
             <button onclick="this.closest('[style*=\"z-index:10001\"]').remove()" 
-                    style="background:#6b7280;color:white;border:none;border-radius:4px;padding:8px 16px;font-size:12px;cursor:pointer;">
+                    style="background:#6b5440;color:white;border:none;border-radius:4px;padding:8px 16px;font-size:12px;cursor:pointer;">
               Close
             </button>
           </div>
@@ -13196,10 +13881,10 @@
       showToast(message, type = 'info') {
         const toast = document.createElement('div');
         const colors = {
-          success: '#10b981',
+          success: '#7fa284',
           error: '#ef4444',
           warning: '#f59e0b',
-          info: '#3b82f6'
+          info: '#c48b5a'
         };
         
         toast.style.cssText = `
@@ -13257,17 +13942,17 @@
             <div style="flex: 1; overflow-y: auto; padding: 20px; max-height: 400px;">
               <div id="commentsContainer">
                 ${comments.length === 0 ? 
-                  '<p style="color: #6b7280; text-align: center; margin: 40px 0;">No comments yet. Start the conversation!</p>' :
+                  '<p style="color: #6b5440; text-align: center; margin: 40px 0;">No comments yet. Start the conversation!</p>' :
                   comments.map(comment => `
                     <div style="margin-bottom: 16px; padding: 12px; border: 1px solid #e5e7eb; border-radius: 6px;">
                       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
                         <div>
-                          <strong style="color: #374151;">${comment.userName}</strong>
-                          <span style="color: #6b7280; font-size: 12px; margin-left: 8px;">${comment.userRole}</span>
+                          <strong style="color: #4b3b2a;">${comment.userName}</strong>
+                          <span style="color: #6b5440; font-size: 12px; margin-left: 8px;">${comment.userRole}</span>
                         </div>
-                        <span style="color: #6b7280; font-size: 12px;">${new Date(comment.createdAt).toLocaleString()}</span>
+                        <span style="color: #6b5440; font-size: 12px;">${new Date(comment.createdAt).toLocaleString()}</span>
                       </div>
-                      <p style="margin: 0; color: #374151; line-height: 1.5;">${comment.message}</p>
+                      <p style="margin: 0; color: #4b3b2a; line-height: 1.5;">${comment.message}</p>
                     </div>
                   `).join('')
                 }
@@ -13278,7 +13963,7 @@
               <form id="commentForm" style="display: flex; gap: 12px;">
                 <textarea id="commentMessage" placeholder="Add a comment..." 
                   style="flex: 1; padding: 12px; border: 1px solid #d1d5db; border-radius: 6px; resize: vertical; min-height: 60px;" required></textarea>
-                <button type="submit" style="background: #3b82f6; color: white; border: none; padding: 12px 24px; border-radius: 6px; cursor: pointer; font-weight: 500;">Send</button>
+                <button type="submit" style="background: #c48b5a; color: white; border: none; padding: 12px 24px; border-radius: 6px; cursor: pointer; font-weight: 500;">Send</button>
               </form>
             </div>
           </div>
@@ -13357,17 +14042,17 @@
           
           <div style="flex: 1; overflow-y: auto; max-height: 400px;">
             ${notifications.length === 0 ? 
-              '<p style="color: #6b7280; text-align: center; margin: 40px 0;">No notifications yet.</p>' :
+              '<p style="color: #6b5440; text-align: center; margin: 40px 0;">No notifications yet.</p>' :
               notifications.map(notification => `
-                <div style="padding: 16px; border-bottom: 1px solid #f3f4f6; ${notification.isRead ? 'opacity: 0.6;' : 'background: #f0f9ff;'}" 
+                <div style="padding: 16px; border-bottom: 1px solid #f1e8dc; ${notification.isRead ? 'opacity: 0.6;' : 'background: #fdf4e6;'}" 
                      onclick="markNotificationRead('${notification.id}')">
                   <div style="display: flex; justify-content: between; align-items: start;">
                     <div style="flex: 1;">
-                      <h4 style="margin: 0 0 4px 0; font-size: 14px; font-weight: 600; color: #374151;">${notification.title}</h4>
-                      <p style="margin: 0 0 8px 0; color: #6b7280; font-size: 13px; line-height: 1.4;">${notification.message}</p>
+                      <h4 style="margin: 0 0 4px 0; font-size: 14px; font-weight: 600; color: #4b3b2a;">${notification.title}</h4>
+                      <p style="margin: 0 0 8px 0; color: #6b5440; font-size: 13px; line-height: 1.4;">${notification.message}</p>
                       <span style="color: #9ca3af; font-size: 11px;">${new Date(notification.createdAt).toLocaleString()}</span>
                     </div>
-                    ${!notification.isRead ? '<div style="width: 8px; height: 8px; background: #3b82f6; border-radius: 50%; margin-left: 8px; margin-top: 4px;"></div>' : ''}
+                    ${!notification.isRead ? '<div style="width: 8px; height: 8px; background: #c48b5a; border-radius: 50%; margin-left: 8px; margin-top: 4px;"></div>' : ''}
                   </div>
                 </div>
               `).join('')
@@ -13376,7 +14061,7 @@
           
           ${notifications.length > 0 ? `
             <div style="padding: 16px; border-top: 1px solid #e5e7eb; text-align: center;">
-              <button onclick="markAllNotificationsRead()" style="background: #3b82f6; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; font-size: 12px;">
+              <button onclick="markAllNotificationsRead()" style="background: #c48b5a; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; font-size: 12px;">
                 Mark All as Read
               </button>
             </div>
@@ -13507,6 +14192,8 @@
         comments: []
       };
 
+      assignSalesOrgToOrder(newOrder, window.rkhOrders ? window.rkhOrders.length : null);
+
       // Handle Post Production specific fields
       if (formData.get('method') === 'Post Production') {
         const postProductionType = formData.get('postProductionType');
@@ -13537,11 +14224,12 @@
       }
 
       // Add the order to the global array
-      if (window.allOrders) {
-        window.allOrders.push(newOrder);
+      if (window.rkhOrders) {
+        window.rkhOrders.push(newOrder);
       } else {
-        window.allOrders = [newOrder];
+        window.rkhOrders = [newOrder];
       }
+      assignSalesOrgMetadata(window.rkhOrders);
 
       // Close the modal
       event.target.closest('.create-order-modal')?.remove();
@@ -13607,7 +14295,7 @@
           showToast(`📝 Template "${template.title}" loaded into create order form!`, 'success');
           
           // Highlight the form briefly
-          form.style.background = 'linear-gradient(135deg, #f0f9ff, #e0f2fe)';
+          form.style.background = 'linear-gradient(135deg, #fdf4e6, #f2e4d2)';
           form.style.transform = 'scale(1.01)';
           form.style.transition = 'all 0.3s ease';
           setTimeout(() => {
@@ -13826,7 +14514,7 @@
         console.log('[Scanner] Scanned article code:', articleCode);
         
         // Search for orders containing this article
-        const matchingOrders = searchOrdersByArticle(articleCode);
+  const matchingOrders = findOrdersByArticleCode(articleCode);
         
         if (matchingOrders.length > 0) {
           // Highlight matching orders
@@ -13839,30 +14527,28 @@
       }
 
       // Search orders by article EAN/GTIN code
-      function searchOrdersByArticle(articleCode) {
-        const orders = window.allOrders || [];
-        const matches = [];
+      function findOrdersByArticleCode(articleCode) {
+  const orders = window.rkhOrders || [];
+  const matches = [];
+  const normalizedCode = (articleCode || '').replace(/\s+/g, '');
         
         orders.forEach(order => {
-          if (order.articles && Array.isArray(order.articles)) {
-            // Check if any article contains the scanned code
-            const hasMatch = order.articles.some(article => {
-              // Extract EAN from format: "Product Name [EAN: 1234567890]"
-              const eanMatch = article.match(/\[EAN:\s*(\d+)\]/i);
-              if (eanMatch && eanMatch[1] === articleCode) {
-                return true;
-              }
-              // Also check article number field
-              return false;
+          const normalizedArticles = normalizeArticles(order.articles);
+
+          if (normalizedArticles.length) {
+            const hasMatch = normalizedArticles.some(article => {
+              const ean = (article.ean || '').replace(/\s+/g, '');
+              const articleNumber = (article.articleNumber || '').replace(/\s+/g, '');
+              return ean && ean === normalizedCode || articleNumber && articleNumber === normalizedCode;
             });
-            
+
             if (hasMatch) {
               matches.push(order);
             }
           }
-          
-          // Also check articleNumber field if it exists
-          if (order.articleNumber === articleCode) {
+
+          const normalizedOrderArticleNumber = (order.articleNumber || '').replace(/\s+/g, '');
+          if (normalizedOrderArticleNumber && normalizedOrderArticleNumber === normalizedCode) {
             if (!matches.includes(order)) {
               matches.push(order);
             }
@@ -13915,7 +14601,7 @@
                 position: absolute;
                 top: 8px;
                 right: 8px;
-                background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+                background: linear-gradient(135deg, #7fa284 0%, #7fa284 100%);
                 color: white;
                 padding: 6px 12px;
                 border-radius: 6px;
@@ -13951,18 +14637,18 @@
           style.id = 'scanner-highlight-styles';
           style.textContent = `
             .scanner-highlight {
-              outline: 3px solid #10b981 !important;
+              outline: 3px solid #7fa284 !important;
               outline-offset: 2px;
               animation: scannerPulse 2s infinite;
             }
             
             @keyframes scannerPulse {
               0%, 100% {
-                outline-color: #10b981;
+                outline-color: #7fa284;
                 box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
               }
               50% {
-                outline-color: #059669;
+                outline-color: #7fa284;
                 box-shadow: 0 0 0 10px rgba(16, 185, 129, 0);
               }
             }
@@ -14100,7 +14786,7 @@
           position: fixed;
           top: 70px;
           right: 20px;
-          background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+          background: linear-gradient(135deg, #7fa284 0%, #7fa284 100%);
           color: white;
           padding: 14px 20px;
           border-radius: 10px;
@@ -14212,10 +14898,10 @@
               ">
                 🔍
               </div>
-              <h2 style="margin: 0 0 8px; font-size: 24px; color: #1f2937; font-weight: 700;">
+              <h2 style="margin: 0 0 8px; font-size: 24px; color: #4b3b2a; font-weight: 700;">
                 Article Not Found
               </h2>
-              <p style="margin: 0; color: #6b7280; font-size: 16px;">
+              <p style="margin: 0; color: #6b5440; font-size: 16px;">
                 The scanned article could not be found in any existing orders.
               </p>
             </div>
@@ -14254,7 +14940,7 @@
               <button onclick="closeArticleNotFoundModal()" style="
                 padding: 14px;
                 background: #e5e7eb;
-                color: #374151;
+                color: #4b3b2a;
                 border: none;
                 border-radius: 8px;
                 font-size: 16px;
@@ -14266,7 +14952,7 @@
               </button>
               <button onclick="createOrderFromScan('${articleCode}')" style="
                 padding: 14px;
-                background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+                background: linear-gradient(135deg, #7fa284 0%, #7fa284 100%);
                 color: white;
                 border: none;
                 border-radius: 8px;
@@ -14340,7 +15026,7 @@
             if (articleInput) {
               articleInput.value = articleCode;
               articleInput.style.background = '#d1fae5';
-              articleInput.style.borderColor = '#10b981';
+              articleInput.style.borderColor = '#7fa284';
             }
             
             // Add article code to form title for visual feedback
@@ -14401,134 +15087,192 @@
       
       // Create context menu
       function createContextMenu(x, y) {
-        // Remove any existing menu
         removeContextMenu();
-        
+
         contextMenu = document.createElement('div');
         contextMenu.id = 'scannerTestContextMenu';
         contextMenu.style.cssText = `
           position: fixed;
           left: ${x}px;
           top: ${y}px;
-          background: white;
-          border: 1px solid #d1d5db;
-          border-radius: 8px;
-          box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+          background: rgba(252, 250, 245, 0.96);
+          border: 1px solid rgba(15, 23, 42, 0.12);
+          border-radius: 16px;
+          box-shadow: 0 28px 60px -24px rgba(15, 23, 42, 0.45);
           z-index: 99999;
-          min-width: 280px;
-          padding: 8px;
+          min-width: 300px;
+          padding: 14px;
           font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-          animation: menuFadeIn 0.15s ease;
+          animation: scannerMenuFadeIn 0.18s ease;
+          backdrop-filter: blur(18px);
         `;
-        
-        // Add CSS animation if not exists
+
         if (!document.getElementById('scanner-test-menu-styles')) {
           const style = document.createElement('style');
           style.id = 'scanner-test-menu-styles';
           style.textContent = `
-            @keyframes menuFadeIn {
+            @keyframes scannerMenuFadeIn {
               from {
                 opacity: 0;
-                transform: scale(0.95);
+                transform: translateY(8px) scale(0.97);
               }
               to {
                 opacity: 1;
-                transform: scale(1);
+                transform: translateY(0) scale(1);
               }
             }
-            .context-menu-item {
-              padding: 10px 12px;
-              cursor: pointer;
-              border-radius: 6px;
-              font-size: 14px;
-              color: #374151;
-              transition: background 0.1s ease;
+            #scannerTestContextMenu {
+              color: #6f6149;
+            }
+            #scannerTestContextMenu .context-menu-header {
               display: flex;
               align-items: center;
-              gap: 10px;
+              gap: 12px;
+              padding: 4px 4px 12px 4px;
             }
-            .context-menu-item:hover {
-              background: #f3f4f6;
+            #scannerTestContextMenu .context-menu-title {
+              font-size: 14px;
+              font-weight: 700;
+              letter-spacing: 0.4px;
             }
-            .context-menu-item.submenu {
-              position: relative;
+            #scannerTestContextMenu .context-menu-subtitle {
+              font-size: 12px;
+              color: rgba(111, 97, 73, 0.68);
+            }
+            #scannerTestContextMenu .context-menu-item {
+              display: flex;
+              align-items: center;
+              gap: 12px;
+              cursor: pointer;
+              padding: 10px 12px;
+              border-radius: 12px;
+              transition: background 0.12s ease, transform 0.12s ease;
+            }
+            #scannerTestContextMenu .context-menu-item:hover {
+              background: rgba(244, 236, 223, 0.85);
+              transform: translateX(2px);
+            }
+            #scannerTestContextMenu .context-menu-item.submenu {
               justify-content: space-between;
             }
-            .context-menu-divider {
-              height: 1px;
-              background: #e5e7eb;
-              margin: 8px 0;
+            #scannerTestContextMenu .context-menu-item-label {
+              display: flex;
+              flex-direction: column;
+              gap: 2px;
+              flex: 1;
             }
-            .context-menu-header {
-              padding: 8px 12px;
+            #scannerTestContextMenu .context-menu-item-detail {
               font-size: 12px;
-              font-weight: 600;
-              color: #6b7280;
-              text-transform: uppercase;
-              letter-spacing: 0.5px;
+              color: rgba(111, 97, 73, 0.64);
+            }
+            #scannerTestContextMenu .context-menu-item-chevron {
+              color: rgba(111, 97, 73, 0.45);
+              font-size: 16px;
+            }
+            #scannerTestContextMenu .context-menu-item-icon {
+              width: 26px;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              font-size: 16px;
+            }
+            #scannerTestContextMenu .context-menu-divider {
+              height: 1px;
+              background: rgba(15, 23, 42, 0.08);
+              margin: 10px 0;
             }
             .submenu-container {
               position: fixed;
-              background: white;
-              border: 1px solid #d1d5db;
-              border-radius: 8px;
-              box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+              background: rgba(252, 250, 245, 0.97);
+              border: 1px solid rgba(15, 23, 42, 0.12);
+              border-radius: 14px;
+              box-shadow: 0 24px 58px -26px rgba(15, 23, 42, 0.4);
               z-index: 100000;
               min-width: 320px;
-              max-height: 400px;
+              max-height: 380px;
               overflow-y: auto;
-              padding: 8px;
-              animation: menuFadeIn 0.15s ease;
+              padding: 14px;
+              animation: scannerMenuFadeIn 0.2s ease;
+              font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            }
+            .submenu-container .context-menu-header {
+              padding: 0 0 10px 0;
             }
             .submenu-item {
-              padding: 8px 12px;
+              display: grid;
+              gap: 4px;
+              padding: 10px 12px;
+              border-radius: 12px;
               cursor: pointer;
-              border-radius: 6px;
-              font-size: 13px;
-              transition: background 0.1s ease;
+              transition: background 0.12s ease, transform 0.12s ease;
+              color: #6f6149;
             }
             .submenu-item:hover {
-              background: #f3f4f6;
+              background: rgba(244, 236, 223, 0.85);
+              transform: translateX(2px);
             }
             .submenu-item-code {
               font-family: 'Courier New', monospace;
-              color: #059669;
-              font-weight: 600;
               font-size: 12px;
+              font-weight: 600;
+              letter-spacing: 0.6px;
+              background: rgba(255, 255, 255, 0.65);
+              border: 1px solid rgba(111, 97, 73, 0.18);
+              border-radius: 8px;
+              padding: 4px 8px;
+              width: fit-content;
             }
             .submenu-item-name {
-              color: #6b7280;
-              font-size: 12px;
-              margin-top: 2px;
+              font-size: 13px;
+              font-weight: 600;
             }
             .submenu-item-order {
-              color: #9ca3af;
-              font-size: 11px;
-              margin-top: 2px;
+              font-size: 12px;
+              color: rgba(111, 97, 73, 0.72);
             }
           `;
           document.head.appendChild(style);
         }
-        
+
         contextMenu.innerHTML = `
           <div class="context-menu-header">
-            <span style="font-size: 16px;">🧪</span> Scanner Testing
+            <span class="context-menu-item-icon" style="font-size: 18px;">🧪</span>
+            <div class="context-menu-item-label">
+              <span class="context-menu-title">Scanner Testing</span>
+              <span class="context-menu-subtitle">Emulate scan scenarios in the beige lab</span>
+            </div>
           </div>
           <div class="context-menu-divider"></div>
           <div class="context-menu-item submenu" data-submenu="existing">
-            <span><span style="font-size: 16px;">📦</span> Scan Existing Article</span>
-            <span style="color: #9ca3af;">▶</span>
+            <span class="context-menu-item-icon">📦</span>
+            <div class="context-menu-item-label">
+              <span>Scan Existing Article</span>
+              <span class="context-menu-item-detail">Populate orders using curated demo inventory</span>
+            </div>
+            <span class="context-menu-item-chevron">›</span>
           </div>
           <div class="context-menu-item submenu" data-submenu="nonexisting">
-            <span><span style="font-size: 16px;">❌</span> Scan Non-Existing Article</span>
-            <span style="color: #9ca3af;">▶</span>
+            <span class="context-menu-item-icon">❌</span>
+            <div class="context-menu-item-label">
+              <span>Scan Non-Existing Article</span>
+              <span class="context-menu-item-detail">Trigger the not-found experience instantly</span>
+            </div>
+            <span class="context-menu-item-chevron">›</span>
           </div>
           <div class="context-menu-divider"></div>
           <div class="context-menu-item" data-action="random">
-            <span><span style="font-size: 16px;">🎲</span> Random Existing Article</span>
+            <span class="context-menu-item-icon">🎲</span>
+            <div class="context-menu-item-label">
+              <span>Random Existing Article</span>
+              <span class="context-menu-item-detail">Let the system surprise you with a demo code</span>
+            </div>
           </div>
           <div class="context-menu-item" data-action="clear">
-            <span><span style="font-size: 16px;">🔄</span> Clear Highlights</span>
+            <span class="context-menu-item-icon">🔄</span>
+            <div class="context-menu-item-label">
+              <span>Clear Highlights</span>
+              <span class="context-menu-item-detail">Remove all scanner filters & outlines</span>
+            </div>
           </div>
         `;
         
@@ -14563,56 +15307,55 @@
       
       // Show submenu
       function showSubmenu(type, parentItem) {
-        // Remove any existing submenu
         document.querySelectorAll('.submenu-container').forEach(el => el.remove());
-        
+
         const submenu = document.createElement('div');
         submenu.className = 'submenu-container';
-        
+
         const articles = type === 'existing' ? existingArticles : nonExistingArticles;
-        
-        if (type === 'existing') {
-          submenu.innerHTML = `
-            <div class="context-menu-header">Select Article to Scan</div>
-            <div class="context-menu-divider"></div>
-            ${articles.map(article => `
-              <div class="submenu-item" data-code="${article.code}">
-                <div class="submenu-item-code">${article.code}</div>
-                <div class="submenu-item-name">${article.name}</div>
-                <div class="submenu-item-order">📋 ${article.order}</div>
-              </div>
-            `).join('')}
+        const titleIcon = type === 'existing' ? '📦' : '❌';
+        const titleText = type === 'existing' ? 'Select Article to Scan' : 'Select Non-Existing Code';
+        const subtitleText = type === 'existing'
+          ? 'Matching demo inventory entries for quick success paths'
+          : 'Use these to validate the not-found workflow';
+
+        const listMarkup = articles.map(article => {
+          const orderMarkup = article.order ? `<div class="submenu-item-order">📋 ${article.order}</div>` : '';
+          return `
+            <div class="submenu-item" data-code="${article.code}">
+              <div class="submenu-item-code">${article.code}</div>
+              <div class="submenu-item-name">${article.name}</div>
+              ${orderMarkup}
+            </div>
           `;
-        } else {
-          submenu.innerHTML = `
-            <div class="context-menu-header">Select Non-Existing Code</div>
-            <div class="context-menu-divider"></div>
-            ${articles.map(article => `
-              <div class="submenu-item" data-code="${article.code}">
-                <div class="submenu-item-code">${article.code}</div>
-                <div class="submenu-item-name">${article.name}</div>
-              </div>
-            `).join('')}
-          `;
-        }
-        
-        // Position submenu
+        }).join('');
+
+        submenu.innerHTML = `
+          <div class="context-menu-header">
+            <span class="context-menu-item-icon" style="font-size: 16px;">${titleIcon}</span>
+            <div class="context-menu-item-label">
+              <span class="context-menu-title">${titleText}</span>
+              <span class="context-menu-subtitle">${subtitleText}</span>
+            </div>
+          </div>
+          <div class="context-menu-divider"></div>
+          ${listMarkup}
+        `;
+
         const parentRect = parentItem.getBoundingClientRect();
-        submenu.style.left = (parentRect.right + 5) + 'px';
+        submenu.style.left = (parentRect.right + 8) + 'px';
         submenu.style.top = parentRect.top + 'px';
-        
+
         document.body.appendChild(submenu);
-        
-        // Position adjustment if submenu goes off-screen
+
         const rect = submenu.getBoundingClientRect();
         if (rect.right > window.innerWidth) {
-          submenu.style.left = (parentRect.left - rect.width - 5) + 'px';
+          submenu.style.left = (parentRect.left - rect.width - 8) + 'px';
         }
         if (rect.bottom > window.innerHeight) {
-          submenu.style.top = (window.innerHeight - rect.height - 10) + 'px';
+          submenu.style.top = Math.max(12, window.innerHeight - rect.height - 12) + 'px';
         }
-        
-        // Add click handlers
+
         submenu.querySelectorAll('.submenu-item').forEach(item => {
           item.addEventListener('click', () => {
             const code = item.getAttribute('data-code');
@@ -14657,20 +15400,27 @@
           window.processScan(articleCode);
         } else {
           // Fallback: manually trigger the scan logic
-          const orders = window.allOrders || [];
+          const orders = window.rkhOrders || [];
           const matches = [];
-          
+          const normalizedCode = (articleCode || '').replace(/\s+/g, '');
+
           orders.forEach(order => {
-            if (order.articles && Array.isArray(order.articles)) {
-              const hasMatch = order.articles.some(article => {
-                const eanMatch = article.match(/\[EAN:\s*(\d+)\]/i);
-                return eanMatch && eanMatch[1] === articleCode;
+            const normalizedArticles = normalizeArticles(order.articles);
+
+            if (normalizedArticles.length) {
+              const hasMatch = normalizedArticles.some(article => {
+                const ean = (article.ean || '').replace(/\s+/g, '');
+                const articleNumber = (article.articleNumber || '').replace(/\s+/g, '');
+                return (ean && ean === normalizedCode) || (articleNumber && articleNumber === normalizedCode);
               });
+
               if (hasMatch) {
                 matches.push(order);
               }
             }
-            if (order.articleNumber === articleCode && !matches.includes(order)) {
+
+            const normalizedOrderArticleNumber = (order.articleNumber || '').replace(/\s+/g, '');
+            if (normalizedOrderArticleNumber && normalizedOrderArticleNumber === normalizedCode && !matches.includes(order)) {
               matches.push(order);
             }
           });
@@ -14798,27 +15548,27 @@
   const root = document.getElementById('app');
   if (root) {
     root.innerHTML = `
-      <div style="min-height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
-        <div style="background: white; padding: 48px; border-radius: 16px; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); max-width: 500px; width: 100%; text-align: center;">
+      <div style="min-height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #f4e8d8 0%, #e7d2b8 100%);">
+        <div style="background: #fffaf3; padding: 48px; border-radius: 16px; box-shadow: 0 30px 60px rgba(79, 59, 37, 0.18); max-width: 500px; width: 100%; text-align: center; border: 1px solid rgba(196, 139, 90, 0.2);">
           <div style="color: #ef4444; font-size: 48px; margin-bottom: 24px;">⚠️</div>
-          <h1 style="margin: 0 0 16px 0; font-size: 24px; font-weight: 700; color: #1f2937;">Application Error</h1>
-          <p style="margin: 0 0 24px 0; color: #6b7280; font-size: 16px;">The Content Creation Program encountered an error during initialization.</p>
+          <h1 style="margin: 0 0 16px 0; font-size: 24px; font-weight: 700; color: #4b3b2a;">Application Error</h1>
+          <p style="margin: 0 0 24px 0; color: #6b5440; font-size: 16px;">The Content Creation Program encountered an error during initialization.</p>
           
-          <div style="background: #fef2f2; border: 1px solid #fecaca; border-radius: 8px; padding: 16px; margin-bottom: 24px; text-align: left;">
+          <div style="background: #fef2f2; border: 1px solid #f5b5b5; border-radius: 12px; padding: 16px; margin-bottom: 24px; text-align: left;">
             <div style="font-weight: 600; color: #dc2626; margin-bottom: 8px;">Error Details:</div>
             <div style="font-family: monospace; font-size: 12px; color: #7f1d1d; word-break: break-word;">${error.message}</div>
           </div>
           
           <div style="display: flex; gap: 12px; justify-content: center;">
-            <button onclick="location.reload()" style="background: #3b82f6; color: white; border: none; padding: 12px 24px; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; transition: background-color 0.15s;">
+            <button onclick="location.reload()" style="background: #c48b5a; color: white; border: none; padding: 12px 24px; border-radius: 10px; font-size: 16px; font-weight: 600; cursor: pointer; transition: transform 0.2s; box-shadow: 0 12px 24px rgba(196, 139, 90, 0.35);">
               🔄 Reload Application
             </button>
-            <button onclick="window.open('mailto:support@company.com?subject=Content Creation Program Error&body=' + encodeURIComponent('Error: ' + error.message + '\\n\\nPlease describe what you were doing when this error occurred...'), '_blank')" style="background: #6b7280; color: white; border: none; padding: 12px 24px; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; transition: background-color 0.15s;">
+            <button onclick="window.open('mailto:support@company.com?subject=Content Creation Program Error&body=' + encodeURIComponent('Error: ' + error.message + '\n\nPlease describe what you were doing when this error occurred...'), '_blank')" style="background: #6b5440; color: white; border: none; padding: 12px 24px; border-radius: 10px; font-size: 16px; font-weight: 600; cursor: pointer; transition: transform 0.2s; box-shadow: 0 12px 24px rgba(107, 84, 64, 0.35);">
               📧 Report Issue
             </button>
           </div>
           
-          <div style="margin-top: 24px; padding-top: 24px; border-top: 1px solid #e5e7eb;">
+          <div style="margin-top: 24px; padding-top: 24px; border-top: 1px solid rgba(196, 139, 90, 0.2);">
             <p style="margin: 0; font-size: 14px; color: #9ca3af;">If this problem persists, please contact your system administrator.</p>
           </div>
         </div>
