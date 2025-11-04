@@ -23,33 +23,20 @@
   if (typeof window !== 'undefined') window.runwareConfig = runwareConfig;
   // Load saved API key as early as possible
   try {
-    var _savedKey = (typeof localStorage !== 'undefined') ? localStorage.getItem('runwareApiKey') : null;
-    if (_savedKey) {
-      runwareConfig.apiKey = _savedKey;
-    } else {
-      console.warn('[Runware] No API key configured. Please provide one via the setup modal.');
+    var _savedRunwareKey = (typeof localStorage !== 'undefined') ? localStorage.getItem('runwareApiKey') : null;
+    if (_savedRunwareKey) {
+      runwareConfig.apiKey = _savedRunwareKey;
     }
     if (typeof window !== 'undefined') window.runwareConfig = runwareConfig;
   } catch (e) {
-    console.warn('[Runware] Unable to access saved API key:', e);
+    console.warn('[Runware] Unable to access saved configuration:', e);
     if (typeof window !== 'undefined') window.runwareConfig = runwareConfig;
   }
 
-  // Helper to always get the active Runware config
-  function getRunwareConfig() {
-    return (typeof window !== 'undefined' && window.runwareConfig) ? window.runwareConfig : runwareConfig;
-  }
-
-  // Google Gemini API Configuration - Initialize early for global access
   var geminiConfig = (typeof window !== 'undefined' && window.geminiConfig) ? window.geminiConfig : {
     apiKey: '',
     baseUrl: 'https://generativelanguage.googleapis.com/v1beta', // Google AI Studio endpoint for AIzaSy keys
-    vertexUrl: 'https://us-central1-aiplatform.googleapis.com/v1', // Vertex AI endpoint for OAuth tokens
-    model: 'gemini-2.5-flash', // Stable model name from Google AI documentation
-    maxTokens: 2048,
-    temperature: 0.7,
-    projectId: '', // Optional - only needed for Vertex AI (OAuth tokens)
-    location: 'us-central1' // Default location for Vertex AI
+    vertexUrl: 'https://us-central1-aiplatform.googleapis.com/v1' // Vertex AI endpoint for OAuth tokens
   };
   if (typeof window !== 'undefined') window.geminiConfig = geminiConfig;
   // Load saved Gemini API key
@@ -70,6 +57,10 @@
   } catch (e) {
     console.warn('[Gemini] Unable to access saved configuration:', e);
     if (typeof window !== 'undefined') window.geminiConfig = geminiConfig;
+  }
+
+  function getRunwareConfig() {
+    return (typeof window !== 'undefined' && window.runwareConfig) ? window.runwareConfig : runwareConfig;
   }
 
   // Helper to always get the active Gemini config
@@ -865,7 +856,7 @@
         }
         
         // Enhanced header with Post Production info
-        const header = 'Order Number,Title,Status,Method,Post Production Type,AI Operation,Purchase Group,Event ID,Photographer,Priority,Deadline,Budget,Created By,Assigned To,Photo Types';
+              const header = 'Order Number,Title,Status,Production,Post Production Type,AI Operation,Purchase Group,Event ID,Photographer,Priority,Deadline,Budget,Created By,Assigned To,Photo Types';
         const rows = orders.map(o => {
           // Handle Post Production details
           let methodDisplay = o.method || '';
@@ -4019,136 +4010,166 @@
           
           <nav class="sidebar-nav">
             <!-- Core Operations -->
-            <div class="nav-section">
-              <div class="nav-section-title">Core Operations</div>
-              <div class="nav-item" data-tooltip="Dashboard Overview" onclick="showView('dashboard')">
-                <span class="nav-item-icon">🏠</span>
-                <span class="nav-item-text">Dashboard</span>
-              </div>
-              ${authSystem.canCreateOrders() ? `
-                <div class="nav-item" data-tooltip="Create New Order" onclick="showNewOrderModal()">
+            <div class="nav-section" data-section="core">
+              <button class="nav-section-title" type="button">
+                <span>Core Operations</span>
+                <span class="nav-section-chevron">▾</span>
+              </button>
+              <div class="nav-section-items">
+                <div class="nav-item" data-tooltip="Dashboard Overview" onclick="showView('dashboard')">
+                  <span class="nav-item-icon">🏠</span>
+                  <span class="nav-item-text">Dashboard</span>
+                </div>
+                ${authSystem.canCreateOrders() ? `
+                  <div class="nav-item" data-tooltip="Create New Order" onclick="showNewOrderModal()">
+                    <span class="nav-item-icon">📋</span>
+                    <span class="nav-item-text">New Order</span>
+                  </div>
+                  <div class="nav-item" data-tooltip="Create/Edit Content with Runware AI (Google Gemini Flash Image 2.5)" onclick="showContentCreationModal()">
+                    <span class="nav-item-icon">🚀</span>
+                    <span class="nav-item-text">Create/Edit Content</span>
+                  </div>
+                ` : ''}
+                <div class="nav-item" data-tooltip="View All Orders" onclick="showView('orders')">
                   <span class="nav-item-icon">📋</span>
-                  <span class="nav-item-text">New Order</span>
+                  <span class="nav-item-text">Orders</span>
                 </div>
-                <div class="nav-item" data-tooltip="Create/Edit Content with Runware AI (Google Gemini Flash Image 2.5)" onclick="showContentCreationModal()">
-                  <span class="nav-item-icon">🚀</span>
-                  <span class="nav-item-text">Create/Edit Content</span>
+                <div class="nav-item" data-tooltip="Scan Article" onclick="showScanArticleRightModal()">
+                  <span class="nav-item-icon">📷</span>
+                  <span class="nav-item-text">Scan Article</span>
                 </div>
-              ` : ''}
-              <div class="nav-item" data-tooltip="View All Orders" onclick="showView('orders')">
-                <span class="nav-item-icon">📋</span>
-                <span class="nav-item-text">Orders</span>
-              </div>
-              <div class="nav-item" data-tooltip="Scan Article" onclick="showScanArticleRightModal()">
-                <span class="nav-item-icon">📷</span>
-                <span class="nav-item-text">Scan Article</span>
               </div>
             </div>
 
             <!-- Views & Analytics -->
-            <div class="nav-section">
-              <div class="nav-section-title">Views & Analytics</div>
-              <div class="nav-item" data-tooltip="Kanban Board" onclick="showView('kanban')">
-                <span class="nav-item-icon">📊</span>
-                <span class="nav-item-text">Kanban Board</span>
-              </div>
-              <div class="nav-item" data-tooltip="Calendar View" onclick="showView('calendar')">
-                <span class="nav-item-icon">📅</span>
-                <span class="nav-item-text">Calendar</span>
-              </div>
-              <div class="nav-item" data-tooltip="Workflow View" onclick="showView('workflow')">
-                <span class="nav-item-icon">🔄</span>
-                <span class="nav-item-text">Workflow</span>
-              </div>
-              ${authSystem.canCreateOrders() ? `
-                <div class="nav-item" data-tooltip="Smart Suggestions" onclick="window.showHistoricalSuggestionsModal()">
+            <div class="nav-section" data-section="analytics">
+              <button class="nav-section-title" type="button">
+                <span>Views & Analytics</span>
+                <span class="nav-section-chevron">▾</span>
+              </button>
+              <div class="nav-section-items">
+                <div class="nav-item" data-tooltip="Kanban Board" onclick="showView('kanban')">
                   <span class="nav-item-icon">📊</span>
-                  <span class="nav-item-text">Smart Analytics</span>
+                  <span class="nav-item-text">Kanban Board</span>
                 </div>
-              ` : ''}
+                <div class="nav-item" data-tooltip="Calendar View" onclick="showView('calendar')">
+                  <span class="nav-item-icon">📅</span>
+                  <span class="nav-item-text">Calendar</span>
+                </div>
+                <div class="nav-item" data-tooltip="Workflow View" onclick="showView('workflow')">
+                  <span class="nav-item-icon">🔄</span>
+                  <span class="nav-item-text">Workflow</span>
+                </div>
+                ${authSystem.canCreateOrders() ? `
+                  <div class="nav-item" data-tooltip="Smart Suggestions" onclick="window.showHistoricalSuggestionsModal()">
+                    <span class="nav-item-icon">📊</span>
+                    <span class="nav-item-text">Smart Analytics</span>
+                  </div>
+                ` : ''}
+              </div>
             </div>
 
             <!-- Quick Actions -->
-            <div class="nav-section">
-              <div class="nav-section-title">Quick Actions</div>
-              <div class="nav-item nav-item-urgent" data-tooltip="View High & Critical Priority Orders" onclick="filterOrdersByStatus('urgent')">
-                <span class="nav-item-icon">🚨</span>
-                <span class="nav-item-text">Urgent Orders</span>
-                <span class="nav-item-badge" id="urgentBadge">0</span>
-              </div>
-              <div class="nav-item nav-item-samples" data-tooltip="View Orders with Samples Requested/In Transit/Received" onclick="filterOrdersByStatus('samples')">
-                <span class="nav-item-icon">📦</span>
-                <span class="nav-item-text">Samples Ready</span>
-                <span class="nav-item-badge" id="samplesBadge">0</span>
-              </div>
-              <div class="nav-item nav-item-overdue" data-tooltip="View Orders Past Their Deadline" onclick="filterOrdersByStatus('overdue')">
-                <span class="nav-item-icon">⏰</span>
-                <span class="nav-item-text">Overdue Orders</span>
-                <span class="nav-item-badge" id="overdueBadge">0</span>
-              </div>
-              <div class="nav-item nav-item-today" data-tooltip="View Orders Due Today" onclick="filterOrdersByStatus('today')">
-                <span class="nav-item-icon">📅</span>
-                <span class="nav-item-text">Due Today</span>
-                <span class="nav-item-badge" id="todayBadge">0</span>
+            <div class="nav-section" data-section="quick-actions">
+              <button class="nav-section-title" type="button">
+                <span>Quick Actions</span>
+                <span class="nav-section-chevron">▾</span>
+              </button>
+              <div class="nav-section-items">
+                <div class="nav-item nav-item-urgent" data-tooltip="View High & Critical Priority Orders" onclick="filterOrdersByStatus('urgent')">
+                  <span class="nav-item-icon">🚨</span>
+                  <span class="nav-item-text">Urgent Orders</span>
+                  <span class="nav-item-badge" id="urgentBadge">0</span>
+                </div>
+                <div class="nav-item nav-item-samples" data-tooltip="View Orders with Samples Requested/In Transit/Received" onclick="filterOrdersByStatus('samples')">
+                  <span class="nav-item-icon">📦</span>
+                  <span class="nav-item-text">Samples Ready</span>
+                  <span class="nav-item-badge" id="samplesBadge">0</span>
+                </div>
+                <div class="nav-item nav-item-overdue" data-tooltip="View Orders Past Their Deadline" onclick="filterOrdersByStatus('overdue')">
+                  <span class="nav-item-icon">⏰</span>
+                  <span class="nav-item-text">Overdue Orders</span>
+                  <span class="nav-item-badge" id="overdueBadge">0</span>
+                </div>
+                <div class="nav-item nav-item-today" data-tooltip="View Orders Due Today" onclick="filterOrdersByStatus('today')">
+                  <span class="nav-item-icon">📅</span>
+                  <span class="nav-item-text">Due Today</span>
+                  <span class="nav-item-badge" id="todayBadge">0</span>
+                </div>
               </div>
             </div>
 
             <!-- Data Management -->
-            <div class="nav-section">
-              <div class="nav-section-title">Data Management</div>
-              ${authSystem.canCreateOrders() ? `
-                <div class="nav-item" data-tooltip="Import SAP PMR" onclick="showSAPImportModal()">
-                  <span class="nav-item-icon">🏢</span>
-                  <span class="nav-item-text">SAP Import</span>
+            <div class="nav-section" data-section="data">
+              <button class="nav-section-title" type="button">
+                <span>Data Management</span>
+                <span class="nav-section-chevron">▾</span>
+              </button>
+              <div class="nav-section-items">
+                ${authSystem.canCreateOrders() ? `
+                  <div class="nav-item" data-tooltip="Import SAP PMR" onclick="showSAPImportModal()">
+                    <span class="nav-item-icon">🏢</span>
+                    <span class="nav-item-text">SAP Import</span>
+                  </div>
+                  <div class="nav-item" data-tooltip="Import Excel/CSV" onclick="window.showExcelImportModal()">
+                    <span class="nav-item-icon">📋</span>
+                    <span class="nav-item-text">Excel Import</span>
+                  </div>
+                ` : ''}
+                <div class="nav-item" data-tooltip="Cloudinary Asset Management" onclick="window.showDAMIntegrationModal()">
+                  <span class="nav-item-icon">☁️</span>
+                  <span class="nav-item-text">Cloudinary Assets</span>
                 </div>
-                <div class="nav-item" data-tooltip="Import Excel/CSV" onclick="window.showExcelImportModal()">
-                  <span class="nav-item-icon">📋</span>
-                  <span class="nav-item-text">Excel Import</span>
+                <div id="toggleBulkMode" class="nav-item" data-tooltip="Bulk Operations">
+                  <span class="nav-item-icon">☑️</span>
+                  <span class="nav-item-text">Bulk Select</span>
                 </div>
-              ` : ''}
-              <div class="nav-item" data-tooltip="Cloudinary Asset Management" onclick="window.showDAMIntegrationModal()">
-                <span class="nav-item-icon">☁️</span>
-                <span class="nav-item-text">Cloudinary Assets</span>
-              </div>
-              <div id="toggleBulkMode" class="nav-item" data-tooltip="Bulk Operations">
-                <span class="nav-item-icon">☑️</span>
-                <span class="nav-item-text">Bulk Select</span>
               </div>
             </div>
 
             <!-- Templates & Automation -->
             ${authSystem.canCreateOrders() ? `
-              <div class="nav-section">
-                <div class="nav-section-title">Automation</div>
-                <div class="nav-item" data-tooltip="Quick Templates" onclick="showQuickTemplatesModal()">
-                  <span class="nav-item-icon">⚡</span>
-                  <span class="nav-item-text">Quick Templates</span>
-                </div>
-                <div class="nav-item" data-tooltip="Template Rules Engine" onclick="window.showTemplateRulesModal()">
-                  <span class="nav-item-icon">🎯</span>
-                  <span class="nav-item-text">Template Rules</span>
-                </div>
-                <div class="nav-item" data-tooltip="Placeholder Items" onclick="window.showPlaceholderItemsModal()">
-                  <span class="nav-item-icon">📝</span>
-                  <span class="nav-item-text">Placeholder Items</span>
+              <div class="nav-section" data-section="automation">
+                <button class="nav-section-title" type="button">
+                  <span>Automation</span>
+                  <span class="nav-section-chevron">▾</span>
+                </button>
+                <div class="nav-section-items">
+                  <div class="nav-item" data-tooltip="Quick Templates" onclick="showQuickTemplatesModal()">
+                    <span class="nav-item-icon">⚡</span>
+                    <span class="nav-item-text">Quick Templates</span>
+                  </div>
+                  <div class="nav-item" data-tooltip="Template Rules Engine" onclick="window.showTemplateRulesModal()">
+                    <span class="nav-item-icon">🎯</span>
+                    <span class="nav-item-text">Template Rules</span>
+                  </div>
+                  <div class="nav-item" data-tooltip="Placeholder Items" onclick="window.showPlaceholderItemsModal()">
+                    <span class="nav-item-icon">📝</span>
+                    <span class="nav-item-text">Placeholder Items</span>
+                  </div>
                 </div>
               </div>
             ` : ''}
 
             <!-- System & Support -->
-            <div class="nav-section">
-              <div class="nav-section-title">System</div>
-              <div class="nav-item" data-tooltip="Request Customization" onclick="window.showCustomizationRequestModal()">
-                <span class="nav-item-icon">🔧</span>
-                <span class="nav-item-text">Customizations</span>
-              </div>
-              <div class="nav-item" data-tooltip="System Settings" onclick="showSettings()">
-                <span class="nav-item-icon">⚙️</span>
-                <span class="nav-item-text">Settings</span>
-              </div>
-              <div class="nav-item" data-tooltip="User Profile" onclick="showProfile()">
-                <span class="nav-item-icon">👤</span>
-                <span class="nav-item-text">Profile</span>
+            <div class="nav-section" data-section="system">
+              <button class="nav-section-title" type="button">
+                <span>System</span>
+                <span class="nav-section-chevron">▾</span>
+              </button>
+              <div class="nav-section-items">
+                <div class="nav-item" data-tooltip="Request Customization" onclick="window.showCustomizationRequestModal()">
+                  <span class="nav-item-icon">🔧</span>
+                  <span class="nav-item-text">Customizations</span>
+                </div>
+                <div class="nav-item" data-tooltip="System Settings" onclick="showSettings()">
+                  <span class="nav-item-icon">⚙️</span>
+                  <span class="nav-item-text">Settings</span>
+                </div>
+                <div class="nav-item" data-tooltip="User Profile" onclick="showProfile()">
+                  <span class="nav-item-icon">👤</span>
+                  <span class="nav-item-text">Profile</span>
+                </div>
               </div>
             </div>
           </nav>
@@ -4197,7 +4218,6 @@
               <div id="ordersView">
                 <!-- Compact Filter Row: Event ID + Search -->
                 <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px; padding: 12px 14px; background: #fdf8f1; border-radius: 12px; box-shadow: 0 8px 18px rgba(79, 59, 37, 0.08); border: 1px solid rgba(196, 139, 90, 0.18); flex-wrap: wrap; position: relative;">
-                  <span style="font-size: 18px;">🏢</span>
                   <select id="salesOrgFilter"
                           onchange="handleSalesOrgFilterChange(this.value)"
                           style="padding: 6px 10px; border: 1px solid rgba(216, 164, 88, 0.65); border-radius: 8px; font-size: 13px; font-family: monospace; font-weight: 500; background: #fffaf3; cursor: pointer; min-width: 140px; color: #6b5440; flex: 0 0 auto;">
@@ -4324,23 +4344,23 @@
                 </div>
 
                 <div style="background: #fffaf3; border-radius: 12px; box-shadow: 0 10px 24px rgba(79, 59, 37, 0.1); overflow: hidden; border: 1px solid rgba(196, 139, 90, 0.18);">
-                  <table style="width: 100%; border-collapse: collapse;">
+                  <table class="orders-table">
                     <thead>
                       <tr style="background: linear-gradient(135deg, #f7eedf, #efe0cf);">
                         <th style="width: 40px; display: none;" class="bulk-checkbox"><input type="checkbox" id="selectAllOrders"></th>
-                        <th style="padding: 10px 10px; text-align: center; font-weight: 600; color: #4b3b2a; border-bottom: 1px solid rgba(196, 139, 90, 0.25); width: 44px;">Details</th>
-                        <th style="padding: 10px 12px; text-align: left; font-weight: 600; color: #4b3b2a; border-bottom: 1px solid rgba(196, 139, 90, 0.25);">Order Number</th>
-                        <th style="padding: 10px 12px; text-align: left; font-weight: 600; color: #4b3b2a; border-bottom: 1px solid rgba(196, 139, 90, 0.25);">Offer ID</th>
-                        <th style="padding: 10px 12px; text-align: left; font-weight: 600; color: #4b3b2a; border-bottom: 1px solid rgba(196, 139, 90, 0.25);">Group</th>
-                        <th style="padding: 10px 12px; text-align: left; font-weight: 600; color: #4b3b2a; border-bottom: 1px solid rgba(196, 139, 90, 0.25);">Offer Name</th>
-                        <th style="padding: 10px 12px; text-align: left; font-weight: 600; color: #4b3b2a; border-bottom: 1px solid rgba(196, 139, 90, 0.25);">Shot Type</th>
-                        <th style="padding: 10px 12px; text-align: left; font-weight: 600; color: #4b3b2a; border-bottom: 1px solid rgba(196, 139, 90, 0.25);">Photo Ref.</th>
-                        <th style="padding: 10px 12px; text-align: left; font-weight: 600; color: #4b3b2a; border-bottom: 1px solid rgba(196, 139, 90, 0.25);">Production Method / Photographer</th>
-                        <th style="padding: 10px 12px; text-align: left; font-weight: 600; color: #4b3b2a; border-bottom: 1px solid rgba(196, 139, 90, 0.25);">Principle</th>
-                        <th style="padding: 10px 12px; text-align: left; font-weight: 600; color: #4b3b2a; border-bottom: 1px solid rgba(196, 139, 90, 0.25);">Preview Image</th>
-                        <th style="padding: 10px 12px; text-align: left; font-weight: 600; color: #4b3b2a; border-bottom: 1px solid rgba(196, 139, 90, 0.25); width: 92px;">Comments</th>
-                        <th style="padding: 10px 12px; text-align: left; font-weight: 600; color: #4b3b2a; border-bottom: 1px solid rgba(196, 139, 90, 0.25);">Status</th>
-                        <th style="padding: 10px 12px; text-align: left; font-weight: 600; color: #4b3b2a; border-bottom: 1px solid rgba(196, 139, 90, 0.25);">Deadline</th>
+                        <th style="padding: 8px 10px; text-align: center; font-weight: 600; color: #4b3b2a; border-bottom: 1px solid rgba(196, 139, 90, 0.22); width: 44px;">Details</th>
+                        <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: #4b3b2a; border-bottom: 1px solid rgba(196, 139, 90, 0.22);">Order Number</th>
+                        <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: #4b3b2a; border-bottom: 1px solid rgba(196, 139, 90, 0.22);">Offer ID</th>
+                        <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: #4b3b2a; border-bottom: 1px solid rgba(196, 139, 90, 0.22);">Group</th>
+                        <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: #4b3b2a; border-bottom: 1px solid rgba(196, 139, 90, 0.22);">Offer Name</th>
+                        <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: #4b3b2a; border-bottom: 1px solid rgba(196, 139, 90, 0.22);">Shot Type</th>
+                        <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: #4b3b2a; border-bottom: 1px solid rgba(196, 139, 90, 0.22);">Photo Ref.</th>
+                        <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: #4b3b2a; border-bottom: 1px solid rgba(196, 139, 90, 0.22);">Production</th>
+                        <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: #4b3b2a; border-bottom: 1px solid rgba(196, 139, 90, 0.22);">Principle</th>
+                        <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: #4b3b2a; border-bottom: 1px solid rgba(196, 139, 90, 0.22);">Preview Image</th>
+                        <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: #4b3b2a; border-bottom: 1px solid rgba(196, 139, 90, 0.22); width: 92px;">Comments</th>
+                        <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: #4b3b2a; border-bottom: 1px solid rgba(196, 139, 90, 0.22);">Status</th>
+                        <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: #4b3b2a; border-bottom: 1px solid rgba(196, 139, 90, 0.22);">Deadline</th>
                       </tr>
                     </thead>
                     <tbody id="ordersBody" style="background: #fffaf3;">
@@ -4426,26 +4446,26 @@
       </div>
 
       <style>
-        /* Enhanced Sidebar Styles */
+        /* Sidebar layout refinements */
         .sidebar {
           width: 260px;
-          background: rgba(255, 248, 237, 0.92);
-          backdrop-filter: blur(20px);
-          border: 1px solid rgba(156, 110, 60, 0.25);
-          box-shadow: 10px 0 32px rgba(112, 82, 50, 0.15);
+          background: transparent;
+          backdrop-filter: none;
+          border: none;
+          box-shadow: none;
           transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
           position: relative;
           z-index: 100;
           display: flex;
           flex-direction: column;
-          border-radius: 16px;
-          margin: 20px 0 20px 20px;
-          min-height: calc(100vh - 40px);
+          border-radius: 0;
+          margin: 18px 0 18px 18px;
+          min-height: calc(100vh - 36px);
         }
 
         .sidebar.collapsed {
           width: 60px;
-          box-shadow: 2px 0 10px rgba(0, 0, 0, 0.15);
+          box-shadow: none;
         }
 
         .sidebar.transitioning {
@@ -4453,25 +4473,23 @@
         }
 
         .sidebar.collapsed .nav-item {
-          padding: 12px 20px;
           justify-content: center;
-          display: flex; /* Ensure nav items are displayed */
-          opacity: 1; /* Make sure they're visible */
+          padding: 12px 14px;
+          margin: 6px;
         }
 
         .sidebar-header {
-          padding: 20px;
-          padding-right: 50px;
-          border-bottom: 1px solid rgba(156, 110, 60, 0.22);
+          padding: 20px 48px 20px 20px;
+          border-bottom: none;
           display: flex;
           align-items: center;
           justify-content: center;
-          background: rgba(250, 236, 217, 0.85);
+          background: transparent;
           position: relative;
-          height: 80px; /* Fixed height to maintain consistent header size */
-          min-height: 80px; /* Ensure minimum height */
-          box-sizing: border-box; /* Include padding in height calculation */
-          border-radius: 16px 16px 0 0;
+          height: 80px;
+          min-height: 80px;
+          box-sizing: border-box;
+          border-radius: 0;
         }
 
         .sidebar-title-container {
@@ -4489,17 +4507,23 @@
           height: 32px;
           object-fit: contain;
           flex-shrink: 0;
-          border-radius: 12px;
-          background: rgba(255, 252, 245, 0.85);
-          padding: 2px;
-          box-shadow: 0 10px 24px rgba(112, 82, 50, 0.18);
+          border-radius: 8px;
+          background: none;
+          padding: 0;
+          box-shadow: none;
           transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .sidebar-title-container:hover .sidebar-logo {
+          transform: translateY(-2px);
+          box-shadow: none;
         }
 
         .sidebar-meta {
           display: flex;
           flex-direction: column;
           gap: 4px;
+          align-items: center;
         }
 
         .sidebar-subtitle {
@@ -4511,7 +4535,7 @@
         .sidebar-title {
           font-size: 10px;
           font-weight: 600;
-          color: #4b3b2a;
+          color: rgba(251, 245, 236, 0.92);
           margin: 0;
           transition: opacity 0.2s ease;
         }
@@ -4523,84 +4547,69 @@
           white-space: nowrap;
         }
 
-        .sidebar.collapsed .sidebar-title {
+        .sidebar.collapsed .sidebar-title,
+        .sidebar.collapsed .sidebar-subtitle {
           opacity: 0;
         }
 
-        .sidebar.collapsed .sidebar-header {
-          padding: 20px 15px; /* Reduce right padding when collapsed */
-          height: 80px; /* Maintain exact same height */
-          min-height: 80px; /* Maintain exact same min-height */
-          box-sizing: border-box; /* Include padding in height calculation */
+        .sidebar.collapsed .sidebar-meta {
+          height: 0;
+          overflow: hidden;
         }
 
-        .sidebar.collapsed .sidebar-title-container {
-          margin-bottom: 0;
+        .sidebar.collapsed .sidebar-header {
+          padding: 20px 16px;
         }
 
         .sidebar.collapsed .sidebar-logo {
-          width: 32px;
-          height: 32px;
-          padding: 2px;
           box-shadow: 0 8px 18px rgba(112, 82, 50, 0.16);
         }
 
-        .sidebar.collapsed .sidebar-meta {
-          display: none;
-        }
-
-        .sidebar.collapsed .sidebar-title {
-          font-size: 0;
-        }
-
         .sidebar-toggle {
-          background: none;
+          background: transparent;
           border: none;
           cursor: pointer;
           padding: 8px;
-          border-radius: 6px;
-          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-          color: #8d765b;
+          border-radius: 12px;
+          transition: color 0.2s ease, transform 0.2s ease;
+          color: #4b3b2a;
           font-size: 16px;
           display: flex;
           align-items: center;
           justify-content: center;
           position: absolute;
-          right: 8px;
-          top: 50%;
-          width: 32px;
-          height: 32px;
-          z-index: 10;
-          transform: translateY(-50%);
+          right: 16px;
+          top: 34px;
+          width: 36px;
+          height: 36px;
+          backdrop-filter: none;
+          box-shadow: none;
         }
 
         .sidebar.collapsed .sidebar-toggle {
-          right: 20px; /* Move button 6px further right to compensate */
-          top: 56px; /* Keep the arrow tucked just below the logo */
-          background: transparent;
-          box-shadow: none;
-          border: none;
-          transform: translate(-6px, -50%); /* Maintain horizontal shift while aligning vertically */
+          right: 12px;
+          color: #3a2617;
+          transform: translateX(-6px);
         }
 
-        .sidebar-toggle:hover {
-          background: rgba(196, 139, 90, 0.16);
-          color: #a8703f;
-          transform: translateY(-50%) scale(1.1);
+        .sidebar-toggle:hover,
+        .sidebar-toggle:focus-visible {
+          color: #311f12;
+          outline: none;
+          transform: translateY(-1px);
         }
 
-        .sidebar.collapsed .sidebar-toggle:hover {
-          background: transparent;
-          color: #a8703f;
-          transform: translate(-6px, -50%) scale(1.1); /* Maintain left shift and consistent vertical alignment */
+        .sidebar.collapsed .sidebar-toggle:hover,
+        .sidebar.collapsed .sidebar-toggle:focus-visible {
+          transform: translateX(-6px) translateY(-1px);
         }
 
         .sidebar-toggle:active {
-          transform: translateY(-50%) scale(0.95);
+          transform: translateY(1px);
         }
 
         .sidebar.collapsed .sidebar-toggle:active {
-          transform: translate(-6px, -50%) scale(0.95);
+          transform: translateX(-6px) translateY(1px);
         }
 
         #sidebarToggleIcon {
@@ -4608,69 +4617,134 @@
           display: inline-block;
           font-size: 14px;
         }
-        }
 
         .sidebar-nav {
           flex: 1;
           padding: 16px 0;
           overflow-y: auto;
+          scrollbar-width: thin;
         }
 
         .nav-section {
-          margin-bottom: 8px;
+          margin: 0 12px 10px;
+          border-radius: 12px;
+          background: transparent;
+          border: none;
+          overflow: hidden;
+          transition: background 0.2s ease;
+        }
+
+        .nav-section:hover {
+          background: rgba(75, 59, 42, 0.06);
         }
 
         .nav-section-title {
-          padding: 12px 20px 8px;
+          width: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 12px;
+          background: transparent;
+          border: none;
+          color: #4b3b2a;
+          padding: 14px 18px;
           font-size: 11px;
           font-weight: 600;
+          letter-spacing: 0.1em;
           text-transform: uppercase;
-          letter-spacing: 0.5px;
-          color: #b49877;
-          transition: opacity 0.2s ease;
+          cursor: pointer;
+          transition: color 0.2s ease, background 0.2s ease;
+        }
+
+        .nav-section-title:hover,
+        .nav-section-title:focus-visible {
+          background: rgba(75, 59, 42, 0.08);
+          color: #3a2617;
+          outline: none;
+        }
+
+        .nav-section-chevron {
+          font-size: 12px;
+          transform: rotate(0deg);
+          transition: transform 0.2s ease;
+          opacity: 0.8;
+        }
+
+        .nav-section-items {
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+          padding: 8px 10px 12px;
+          transition: max-height 0.25s ease, opacity 0.2s ease, padding 0.2s ease;
+        }
+
+        .nav-section.collapsed .nav-section-items {
+          max-height: 0;
+          opacity: 0;
+          padding: 0 10px;
+          pointer-events: none;
+        }
+
+        .nav-section.collapsed .nav-section-chevron {
+          transform: rotate(-90deg);
         }
 
         .sidebar.collapsed .nav-section-title {
           opacity: 0;
+          padding: 0;
+          height: 0;
+          overflow: hidden;
+        }
+
+        .sidebar.collapsed .nav-section {
+          margin: 0 8px 12px;
         }
 
         .nav-item {
+          position: relative;
           display: flex;
           align-items: center;
-          padding: 12px 20px;
-          margin: 2px 12px;
-          border-radius: 8px;
+          gap: 12px;
+          padding: 10px 16px;
+          margin: 2px 4px;
+          border-radius: 10px;
           cursor: pointer;
-          transition: all 0.2s ease;
+          transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
           text-decoration: none;
-          color: #5c4a32;
-          position: relative;
+          color: #4b3b2a;
+          background: transparent;
+          border: 1px solid transparent;
         }
 
-        .nav-item:hover {
-          background: rgba(196, 139, 90, 0.18);
-          color: #a8703f;
-          transform: translateX(2px);
+        .nav-item:hover,
+        .nav-item:focus-visible {
+          background: rgba(75, 59, 42, 0.1);
+          border-color: rgba(75, 59, 42, 0.14);
+          color: #2f2115;
+          transform: translateX(4px);
+          outline: none;
         }
 
         .nav-item.active {
-          background: linear-gradient(135deg, #c99363, #b37847);
-          color: #fff9f1;
-          box-shadow: 0 12px 28px rgba(168, 112, 63, 0.32);
+          background: rgba(75, 59, 42, 0.18);
+          color: #2f2115;
+          box-shadow: none;
+          border-color: rgba(75, 59, 42, 0.22);
         }
 
         .nav-item-icon {
           font-size: 16px;
-          margin-right: 12px;
           width: 20px;
           text-align: center;
-          transition: margin 0.2s ease;
+          transition: margin 0.2s ease, transform 0.2s ease;
+        }
+
+        .nav-item:hover .nav-item-icon {
+          transform: translateY(-1px);
         }
 
         .sidebar.collapsed .nav-item-icon {
           margin-right: 0;
-          display: block; /* Ensure icons are displayed */
-          opacity: 1; /* Make sure icons are visible */
         }
 
         .nav-item-text {
@@ -4681,7 +4755,30 @@
 
         .sidebar.collapsed .nav-item-text {
           opacity: 0;
-          display: none; /* Completely hide the text */
+          display: none;
+        }
+
+        .nav-item::after {
+          content: attr(data-tooltip);
+          position: absolute;
+          left: 100%;
+          top: 50%;
+          transform: translateY(-50%);
+          background: rgba(0, 0, 0, 0.9);
+          color: white;
+          padding: 8px 12px;
+          border-radius: 6px;
+          font-size: 12px;
+          white-space: nowrap;
+          opacity: 0;
+          pointer-events: none;
+          transition: opacity 0.2s ease;
+          margin-left: 12px;
+          z-index: 1000;
+        }
+
+        .sidebar.collapsed .nav-item:hover::after {
+          opacity: 1;
         }
 
         /* Modern Notification Badge Styling */
@@ -4711,14 +4808,12 @@
           display: none;
         }
 
-        /* Badge hover effects when parent nav-item is hovered */
         .nav-item:hover .nav-item-badge {
           transform: scale(1.1);
           box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
           border-color: rgba(255, 255, 255, 1);
         }
 
-        /* Badge positioning for collapsed sidebar */
         .sidebar.collapsed .nav-item-badge {
           right: 8px;
           top: 6px;
@@ -4728,7 +4823,6 @@
           border-width: 1.5px;
         }
 
-        /* Specific badge colors with gradients */
         .nav-item-badge[id="urgentBadge"] {
           background: linear-gradient(135deg, #d96b5f, #b85045);
         }
@@ -4745,7 +4839,6 @@
           background: linear-gradient(135deg, #c48b5a, #a8703f);
         }
 
-        /* Animation for badge updates */
         @keyframes badgePulse {
           0% { transform: scale(1); }
           50% { transform: scale(1.2); }
@@ -4756,31 +4849,6 @@
           animation: badgePulse 0.6s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        /* Tooltip for collapsed sidebar */
-        .nav-item::after {
-          content: attr(data-tooltip);
-          position: absolute;
-          left: 100%;
-          top: 50%;
-          transform: translateY(-50%);
-          background: rgba(0, 0, 0, 0.9);
-          color: white;
-          padding: 8px 12px;
-          border-radius: 6px;
-          font-size: 12px;
-          white-space: nowrap;
-          opacity: 0;
-          pointer-events: none;
-          transition: opacity 0.2s ease;
-          margin-left: 12px;
-          z-index: 1000;
-        }
-
-        .sidebar.collapsed .nav-item:hover::after {
-          opacity: 1;
-        }
-
-        /* Enhanced Quick Action Styling */
         .nav-item-urgent:hover {
           background: rgba(217, 107, 95, 0.12) !important;
           color: #b85045 !important;
@@ -4804,12 +4872,12 @@
         /* Main content area */
         .main-content {
           flex: 1;
-          background: rgba(255, 250, 242, 0.88);
-          backdrop-filter: blur(20px);
+          background: rgba(75, 59, 42, 0.08);
+          backdrop-filter: none;
           margin: 20px;
           margin-left: 20px;
           border-radius: 16px;
-          box-shadow: 0 20px 46px rgba(114, 84, 52, 0.18);
+          box-shadow: 0 26px 60px rgba(47, 33, 21, 0.08);
           overflow: hidden;
           display: flex;
           flex-direction: column;
@@ -4967,6 +5035,96 @@
         .order-expand-arrow.is-open {
           transform: rotate(90deg);
         }
+
+        /* Production column styling */
+        .production-cell {
+          display: flex;
+          flex-direction: column;
+          gap: 6px;
+          line-height: 1.25;
+        }
+
+        .production-chip {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          padding: 6px 12px;
+          border-radius: 999px;
+          font-size: 12px;
+          font-weight: 600;
+          letter-spacing: 0.01em;
+          text-transform: none;
+          background: rgba(210, 187, 161, 0.35);
+          color: #4b3927;
+          border: 1px solid transparent;
+          box-shadow: 0 6px 14px rgba(41, 28, 18, 0.12);
+          white-space: nowrap;
+          transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .production-chip:hover {
+          transform: translateY(-1px);
+          box-shadow: 0 10px 20px rgba(41, 28, 18, 0.18);
+        }
+
+        .production-chip--photobox {
+          background: rgba(204, 223, 198, 0.9);
+          color: #375d3b;
+          border-color: rgba(167, 195, 164, 0.65);
+          box-shadow: 0 6px 14px rgba(55, 93, 59, 0.16);
+        }
+
+        .production-chip--mandb {
+          background: rgba(240, 200, 157, 0.8);
+          color: #8a5324;
+          border-color: rgba(210, 170, 128, 0.6);
+          box-shadow: 0 6px 14px rgba(138, 83, 36, 0.16);
+        }
+
+        .production-chip--gils {
+          background: rgba(210, 226, 221, 0.85);
+          color: #2f5f52;
+          border-color: rgba(171, 201, 192, 0.6);
+          box-shadow: 0 6px 14px rgba(47, 95, 82, 0.16);
+        }
+
+        .production-chip--merrild {
+          background: rgba(243, 214, 174, 0.8);
+          color: #7d4f1b;
+          border-color: rgba(222, 186, 138, 0.6);
+          box-shadow: 0 6px 14px rgba(125, 79, 27, 0.16);
+        }
+
+        .orders-table {
+          width: 100%;
+          border-collapse: collapse;
+        }
+
+        .orders-table thead th {
+          font-size: 12px;
+          text-transform: uppercase;
+          letter-spacing: 0.02em;
+        }
+
+        .orders-table tbody td {
+          padding: 6px 8px;
+          font-size: 12px;
+          vertical-align: top;
+          border-bottom: 1px solid rgba(196, 139, 90, 0.16);
+        }
+
+        .orders-table tbody tr {
+          background: rgba(75, 59, 42, 0.08);
+          transition: background 0.2s ease;
+        }
+
+        .orders-table tbody tr:hover {
+          background: rgba(75, 59, 42, 0.14);
+        }
+
+        .orders-table tbody tr.selected-row {
+          background: rgba(235, 207, 174, 0.7);
+        }
       </style>
 
       <script>
@@ -5035,7 +5193,7 @@
               }
               
               // Enhanced header with Post Production info
-              const header = 'Order Number,Title,Status,Method,Post Production Type,AI Operation,Purchase Group,Event ID,Photographer,Priority,Deadline,Budget,Created By,Assigned To,Photo Types';
+              const header = 'Order Number,Title,Status,Production,Post Production Type,AI Operation,Purchase Group,Event ID,Photographer,Priority,Deadline,Budget,Created By,Assigned To,Photo Types';
               const rows = orders.map(o => {
                 // Handle Post Production details
                 let methodDisplay = o.method || '';
@@ -6010,14 +6168,13 @@
                          placeholder="e.g., Premium Product Photography Session">
                 </div>
                 <div>
-                  <label style="display: block; font-weight: 500; margin-bottom: 4px;">Content Creation Method</label>
+                  <label style="display: block; font-weight: 500; margin-bottom: 4px;">Production</label>
                   <select name="method" required style="width: 100%; padding: 8px; border: 1px solid #d1d5db; border-radius: 4px;" onchange="handleMethodChange(this)">
-                    <option value="">Select method...</option>
-                    <option value="Photographer">Photographer</option>
+                    <option value="">Select production...</option>
                     <option value="Photo Box">Photo Box</option>
-                    <option value="Internal Studio">Internal Studio</option>
-                    <option value="External Studio">External Studio</option>
-                    <option value="Post Production">Post Production</option>
+                    <option value="M&B">M&B</option>
+                    <option value="GILS">GILS</option>
+                    <option value="MERRILD">MERRILD</option>
                   </select>
                 </div>
               </div>
@@ -6261,7 +6418,7 @@
               <th style="width: 150px;">Type</th>
               <th style="width: 120px;">Photo Reference</th>
               <th style="width: 150px;">Reference To File</th>
-              <th style="width: 150px;">Production Method</th>
+              <th style="width: 150px;">Production</th>
               <th style="width: 100px;">Principles</th>
               <th style="width: 80px;">Thumbnail</th>
               <th style="width: 80px;">Dialog</th>
@@ -6278,6 +6435,63 @@
         </div>
       </div>
     `;
+
+    const SIDEBAR_SECTION_STATE_KEY = 'ccpSidebarSectionState';
+
+    function initializeSidebarSections() {
+      const sidebar = document.getElementById('sidebar');
+      if (!sidebar || typeof window === 'undefined' || typeof localStorage === 'undefined') {
+        return;
+      }
+
+      const sections = Array.from(sidebar.querySelectorAll('.nav-section'));
+      const defaultCollapsed = new Set(['analytics', 'quick-actions', 'automation']);
+      let storedState = {};
+
+      try {
+        storedState = JSON.parse(localStorage.getItem(SIDEBAR_SECTION_STATE_KEY) || '{}') || {};
+      } catch (error) {
+        console.warn('[Sidebar] Failed to read section state from storage:', error);
+        storedState = {};
+      }
+
+      sections.forEach(section => {
+        const trigger = section.querySelector('.nav-section-title');
+        if (!trigger) {
+          return;
+        }
+
+        const sectionId = section.dataset.section || trigger.textContent.trim().toLowerCase();
+        const shouldCollapse = storedState[sectionId] ?? defaultCollapsed.has(sectionId);
+
+        const chevron = section.querySelector('.nav-section-chevron');
+        if (shouldCollapse) {
+          section.classList.add('collapsed');
+        }
+
+        if (chevron) {
+          chevron.textContent = '▾';
+        }
+
+        trigger.setAttribute('aria-expanded', String(!section.classList.contains('collapsed')));
+
+        trigger.addEventListener('click', () => {
+          const isCollapsed = section.classList.toggle('collapsed');
+          trigger.setAttribute('aria-expanded', String(!isCollapsed));
+          if (chevron) {
+            chevron.textContent = '▾';
+          }
+          if (sectionId) {
+            storedState[sectionId] = isCollapsed;
+            try {
+              localStorage.setItem(SIDEBAR_SECTION_STATE_KEY, JSON.stringify(storedState));
+            } catch (storageError) {
+              console.warn('[Sidebar] Unable to persist section state:', storageError);
+            }
+          }
+        });
+      });
+    }
 
     // Define toggleSidebar function globally after HTML is rendered
     window.toggleSidebar = function() {
@@ -6325,6 +6539,8 @@
       }, 300);
     };
 
+    initializeSidebarSections();
+
     const tbody = document.getElementById('ordersBody');
     const samplesBody = document.getElementById('samplesBody');
     const searchBox = document.getElementById('searchBox');
@@ -6365,6 +6581,178 @@
       return normalizeFilterValue(value).toLowerCase();
     }
 
+    const PRODUCTION_METHOD_OPTIONS = [
+      {
+        id: 'photobox',
+        label: 'Photo Box',
+        shortLabel: 'Photo Box',
+        icon: '📦',
+        description: 'Managed by the Photo Box production team.',
+        aliases: ['photo box', 'photobox', 'pb', 'box'],
+        chipClass: 'production-chip--photobox'
+      },
+      {
+        id: 'mandb',
+        label: 'M&B',
+        shortLabel: 'M&B',
+        icon: '🏭',
+        description: 'Handled through the M&B production workflow.',
+        aliases: ['m&b', 'm and b', 'm+b', 'mandb', 'mb'],
+        chipClass: 'production-chip--mandb'
+      },
+      {
+        id: 'gils',
+        label: 'GILS',
+        shortLabel: 'GILS',
+        icon: '🎯',
+        description: 'Assigned to the GILS production unit.',
+        aliases: ['gils'],
+        chipClass: 'production-chip--gils'
+      },
+      {
+        id: 'merrild',
+        label: 'MERRILD',
+        shortLabel: 'MERRILD',
+        icon: '☕',
+        description: 'Delivered by the MERRILD production team.',
+        aliases: ['merrild'],
+        chipClass: 'production-chip--merrild'
+      }
+    ];
+
+    const DEFAULT_PRODUCTION_META = {
+      ...PRODUCTION_METHOD_OPTIONS[0],
+      description: 'Auto-assigned to Photo Box until a production choice is confirmed.',
+      raw: ''
+    };
+
+    const LEGACY_PRODUCTION_VALUE_MAP = {
+      photographer: 'mandb',
+      internalstudio: 'photobox',
+      inhouse: 'photobox',
+      studio: 'photobox',
+      photostudio: 'photobox',
+      externalstudio: 'gils',
+      vendor: 'gils',
+      outsourced: 'gils',
+      freelance: 'gils',
+      bilka: 'merrild',
+      postproduction: 'merrild',
+      retouch: 'merrild',
+      ai: 'mandb',
+      automation: 'mandb'
+    };
+
+    const BILKA_PREVIEW_IMAGES = [
+      'https://images.unsplash.com/photo-1527169402691-feff5539e52c?auto=format&fit=crop&w=600&q=80',
+      'https://images.unsplash.com/photo-1526947411366-49aeff9c88ce?auto=format&fit=crop&w=600&q=80',
+      'https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?auto=format&fit=crop&w=600&q=80',
+      'https://images.unsplash.com/photo-1489515217757-5fd1be406fef?auto=format&fit=crop&w=600&q=80',
+      'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=600&q=80'
+    ];
+
+    let bilkaPreviewCursor = 1;
+
+    function matchProductionOption(normalizedValue) {
+      if (!normalizedValue) {
+        return null;
+      }
+      const sanitized = normalizedValue.replace(/[^a-z0-9]/g, '');
+      return PRODUCTION_METHOD_OPTIONS.find(option => option.aliases.some(alias => {
+        const aliasKey = normalizeComparisonValue(alias).replace(/[^a-z0-9]/g, '');
+        return aliasKey && (sanitized === aliasKey || sanitized.includes(aliasKey));
+      })) || null;
+    }
+
+    function normalizeProductionValue(rawValue) {
+      const raw = normalizeFilterValue(rawValue);
+      const normalized = normalizeComparisonValue(rawValue);
+      if (!raw) {
+        return { ...DEFAULT_PRODUCTION_META };
+      }
+
+      const matchedOption = matchProductionOption(normalized);
+      if (matchedOption) {
+        return { ...matchedOption, raw };
+      }
+
+      const sanitized = normalized.replace(/[^a-z0-9]/g, '');
+      const mappedOptionId = LEGACY_PRODUCTION_VALUE_MAP[sanitized];
+      if (mappedOptionId) {
+        const mappedOption = PRODUCTION_METHOD_OPTIONS.find(option => option.id === mappedOptionId);
+        if (mappedOption) {
+          return {
+            ...mappedOption,
+            raw,
+            description: `${mappedOption.description} • Legacy entry mapped from: ${raw}`
+          };
+        }
+      }
+
+      const fallbackOption = PRODUCTION_METHOD_OPTIONS.find(option => option.id === 'photobox') || PRODUCTION_METHOD_OPTIONS[0];
+      console.warn('[Production] Unrecognized production value encountered, falling back to Photo Box:', rawValue);
+      return {
+        ...fallbackOption,
+        description: `${fallbackOption.description} • Original entry: ${raw}`,
+        raw
+      };
+    }
+
+    function applyProductionNormalization(order) {
+      if (!order || typeof order !== 'object') {
+        return;
+      }
+      const meta = normalizeProductionValue(order.production || order.productionMethod || order.method);
+      order.productionMeta = meta;
+      order.production = meta.label;
+      if (!order.productionMethod || normalizeComparisonValue(order.productionMethod) === normalizeComparisonValue(order.method)) {
+        order.productionMethod = meta.label;
+      }
+      if (!order.method) {
+        order.method = meta.label;
+      }
+      return meta;
+    }
+
+    function applyProductionNormalizationToOrders(orders) {
+      if (!Array.isArray(orders)) {
+        return;
+      }
+      orders.forEach(order => applyProductionNormalization(order));
+    }
+
+    function getNextBilkaPreviewAsset() {
+      const index = (bilkaPreviewCursor - 1) % BILKA_PREVIEW_IMAGES.length;
+      const filename = `ENV.${String(bilkaPreviewCursor).padStart(6, '0')}.jpg`;
+      const imageUrl = BILKA_PREVIEW_IMAGES[index];
+      bilkaPreviewCursor += 1;
+      return {
+        name: filename,
+        url: imageUrl,
+        thumbnailUrl: imageUrl,
+        generated: true,
+        source: 'bilka-autogen'
+      };
+    }
+
+    function ensureBilkaOrdersHavePreview(orders) {
+      if (!Array.isArray(orders)) {
+        return;
+      }
+      orders.forEach(order => {
+        if (!order || normalizeComparisonValue(order.salesOrg) !== 'bilka') {
+          return;
+        }
+        const existingAssets = Array.isArray(order.uploadedContent) ? order.uploadedContent : [];
+        const hasPreview = existingAssets.some(asset => asset && (asset.thumbnailUrl || asset.url || asset.data));
+        if (hasPreview) {
+          return;
+        }
+        const nextAsset = getNextBilkaPreviewAsset();
+        order.uploadedContent = [...existingAssets, nextAsset];
+      });
+    }
+
     function getRandomSalesOrg() {
       return SALES_ORG_OPTIONS[Math.floor(Math.random() * SALES_ORG_OPTIONS.length)];
     }
@@ -6386,12 +6774,14 @@
 
       order.tacticType = DEFAULT_TACTIC_TYPE;
       order.tactic = DEFAULT_TACTIC;
+      applyProductionNormalization(order);
     }
 
     function assignSalesOrgMetadata(orders) {
       if (!Array.isArray(orders) || orders.length === 0) return;
       const seed = Math.floor(Math.random() * SALES_ORG_OPTIONS.length);
       orders.forEach((order, index) => assignSalesOrgToOrder(order, seed + index));
+      ensureBilkaOrdersHavePreview(orders);
     }
 
     assignSalesOrgMetadata(window.rkhOrders || (typeof allOrders !== 'undefined' ? allOrders : []));
@@ -7346,14 +7736,14 @@
 
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px;">
               <div style="min-width: 0;">
-                <label style="display: block; font-weight: 600; margin-bottom: 6px; color: #4b3b2a; font-size: 14px;">Method</label>
+                <label style="display: block; font-weight: 600; margin-bottom: 6px; color: #4b3b2a; font-size: 14px;">Production</label>
     <select name="method" required style="width: 100%; box-sizing: border-box; padding: 14px; border: 2px solid #ead7c2; border-radius: 8px; font-size: 16px; transition: border-color 0.2s ease;"
       onfocus="this.style.borderColor='#c48b5a'" onblur="this.style.borderColor='#ead7c2'">
-                  <option value="">Select method...</option>
-                  <option value="Photographer">Photographer</option>
+                  <option value="">Select production...</option>
                   <option value="Photo Box">Photo Box</option>
-                  <option value="Internal Studio">Internal Studio</option>
-                  <option value="External Studio">External Studio</option>
+                  <option value="M&B">M&B</option>
+                  <option value="GILS">GILS</option>
+                  <option value="MERRILD">MERRILD</option>
                 </select>
               </div>
               <div style="min-width: 0;">
@@ -8373,107 +8763,126 @@
       
       const modal = document.createElement('div');
       modal.className = 'order-details-modal';
-      modal.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;z-index:1000';
+      modal.style.cssText = 'position:fixed;inset:0;background:rgba(46,34,23,0.55);display:flex;align-items:center;justify-content:center;z-index:1000;padding:32px 18px;';
+
       const articlesMarkup = renderArticleCards(order.articles);
+      const assignedOwner = order.photographer || 'Unassigned';
+      const salesOrgLabel = order.salesOrg || 'Not set';
+      const budgetMarkup = order.budget ? `<div style="display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-radius:10px;background:rgba(255,255,255,0.6);margin-top:10px;border:1px solid rgba(196,139,90,0.25);"><span style="font-size:12px;letter-spacing:0.05em;color:#82694c;text-transform:uppercase;">Budget</span><span style="font-weight:600;color:#3a2a1d;">${order.budget}</span></div>` : '';
+
       modal.innerHTML = `
-        <div style="background:white;border-radius:12px;padding:32px;max-width:700px;width:95%;max-height:85vh;overflow-y:auto;">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;">
-            <h2 style="margin:0;font-size:24px;color:#4b3b2a;">📋 Order Details</h2>
-            <button onclick="this.closest('.order-details-modal').remove()" style="background:none;border:none;font-size:28px;cursor:pointer;color:#6b5440;">×</button>
-          </div>
-          
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:24px;">
-            <!-- Left Column - Order Info -->
-            <div>
-              <div style="margin-bottom:16px;"><strong>Order Number:</strong> ${order.orderNumber}</div>
-              <div style="margin-bottom:16px;"><strong>Title:</strong> ${order.title}</div>
-              <div style="margin-bottom:16px;"><strong>Created By:</strong> ${order.createdBy}</div>
-              <div style="margin-bottom:16px;"><strong>Created Date:</strong> ${order.createdDate}</div>
-              <div style="margin-bottom:16px;"><strong>Deadline:</strong> ${order.deadline}</div>
-              <div style="margin-bottom:16px;"><strong>Priority:</strong> <span class="status ${order.priority}">${order.priority}</span></div>
-              ${order.budget ? `<div style="margin-bottom:16px;"><strong>Budget:</strong> ${order.budget}</div>` : ''}
-            </div>
-            
-            <!-- Right Column - Status & Assignment Management -->
-            <div style="background:#f8fafc;padding:16px;border-radius:8px;">
-              <h3 style="margin:0 0 16px;font-size:16px;color:#4b3b2a;">📊 Workflow Management</h3>
-              
-              <!-- Current Status -->
-              <div style="margin-bottom:16px;">
-                <strong>Current Status:</strong>
-                <div style="margin-top:4px;">
-                  <span class="status ${order.status.replace(/\\s+/g, '')}" style="font-size:14px;">${order.status}</span>
-                </div>
+        <div style="position:relative;width:min(820px,95vw);max-height:88vh;overflow-y:auto;border-radius:18px;padding:36px 32px 30px;background:linear-gradient(135deg,rgba(255,255,255,0.96),rgba(249,245,240,0.92));box-shadow:0 40px 70px rgba(34,25,18,0.3);border:1px solid rgba(194,147,104,0.4);backdrop-filter:blur(26px);display:flex;flex-direction:column;gap:28px;">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:16px;">
+            <div style="flex:1;min-width:0;">
+              <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8a6d4c;font-weight:600;">${salesOrgLabel} · ${order.orderNumber}</div>
+              <h2 style="margin:10px 0 12px;font-size:28px;color:#372614;font-weight:700;line-height:1.2;">${order.title}</h2>
+              <div style="display:flex;align-items:center;gap:12px;font-size:13px;color:#715b43;">
+                <span>Created ${order.createdDate}</span>
+                <span style="width:6px;height:6px;border-radius:50%;background:#c48b5a;display:inline-block;"></span>
+                <span>Deadline ${order.deadline}</span>
               </div>
-              
+            </div>
+            <button onclick="this.closest('.order-details-modal').remove()" style="background:rgba(255,255,255,0.45);border:1px solid rgba(117,90,58,0.25);width:42px;height:42px;border-radius:12px;color:#5c4631;font-size:24px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(12px);">×</button>
+          </div>
+
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;">
+            <div style="padding:18px;border-radius:14px;background:rgba(255,255,255,0.7);border:1px solid rgba(196,139,90,0.25);box-shadow:0 16px 30px rgba(62,44,30,0.12);">
+              <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.12em;color:#7c6248;font-weight:600;">Status</div>
+              <div style="margin-top:10px;">
+                <span class="status ${order.status.replace(/\s+/g, '')}" style="display:inline-flex;align-items:center;padding:6px 12px;border-radius:999px;font-size:12px;">${order.status}</span>
+              </div>
+            </div>
+            <div style="padding:18px;border-radius:14px;background:rgba(255,255,255,0.7);border:1px solid rgba(196,139,90,0.25);box-shadow:0 16px 30px rgba(62,44,30,0.12);">
+              <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.12em;color:#7c6248;font-weight:600;">Priority</div>
+              <div style="margin-top:10px;">
+                <span class="status ${order.priority}" style="display:inline-flex;align-items:center;padding:6px 12px;border-radius:999px;font-size:12px;">${order.priority}</span>
+              </div>
+            </div>
+            <div style="padding:18px;border-radius:14px;background:rgba(255,255,255,0.7);border:1px solid rgba(196,139,90,0.25);box-shadow:0 16px 30px rgba(62,44,30,0.12);">
+              <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.12em;color:#7c6248;font-weight:600;">Assigned To</div>
+              <div style="margin-top:10px;font-weight:600;color:#3a2a1d;font-size:14px;">${assignedOwner}</div>
+            </div>
+            <div style="padding:18px;border-radius:14px;background:rgba(255,255,255,0.7);border:1px solid rgba(196,139,90,0.25);box-shadow:0 16px 30px rgba(62,44,30,0.12);">
+              <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.12em;color:#7c6248;font-weight:600;">Production</div>
+              <div style="margin-top:10px;font-weight:600;color:#3a2a1d;font-size:14px;">${order.production || 'Not set'}</div>
+            </div>
+          </div>
+
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:26px;align-items:start;">
+            <div>
+              <div style="padding:18px;border-radius:14px;background:rgba(255,255,255,0.78);border:1px solid rgba(196,139,90,0.25);box-shadow:0 12px 24px rgba(62,44,30,0.1);display:flex;flex-direction:column;gap:10px;">
+                <div style="display:flex;justify-content:space-between;color:#7c6248;font-weight:600;">Created By<span style="color:#3a2a1d;font-weight:600;">${order.createdBy}</span></div>
+                <div style="display:flex;justify-content:space-between;color:#7c6248;font-weight:600;">Order Type<span style="color:#3a2a1d;font-weight:600;">${order.orderType || 'Standard'}</span></div>
+                <div style="display:flex;justify-content:space-between;color:#7c6248;font-weight:600;">Sales Org<span style="color:#3a2a1d;font-weight:600;">${salesOrgLabel}</span></div>
+                ${order.channel ? `<div style="display:flex;justify-content:space-between;color:#7c6248;font-weight:600;">Channel<span style="color:#3a2a1d;font-weight:600;">${order.channel}</span></div>` : ''}
+              </div>
+              ${budgetMarkup}
+            </div>
+            <div style="padding:20px;border-radius:16px;background:rgba(253,250,246,0.85);border:1px solid rgba(196,139,90,0.35);box-shadow:0 18px 36px rgba(62,44,30,0.12);">
+              <h3 style="margin:0 0 16px;font-size:16px;color:#3b2b1a;display:flex;align-items:center;gap:8px;font-weight:700;">Workflow Controls</h3>
+              <div style="margin-bottom:16px;font-size:13px;color:#6f583f;">
+                <strong style="display:block;color:#3a2a1d;margin-bottom:6px;">Current Status</strong>
+                <span class="status ${order.status.replace(/\s+/g, '')}" style="display:inline-flex;align-items:center;padding:6px 12px;border-radius:999px;font-size:12px;">${order.status}</span>
+              </div>
               ${canManageOrders ? `
-                <!-- Status Change -->
-                <div style="margin-bottom:16px;">
-                  <strong>Update Status:</strong>
-                  <select id="statusSelect_${orderNumber}" style="width:100%;padding:8px;border:1px solid #d1d5db;border-radius:4px;margin-top:4px;">
-                    ${statusOptions.map(status => 
-                      `<option value="${status}" ${status === order.status ? 'selected' : ''}>${status}</option>`
-                    ).join('')}
+                <div style="margin-bottom:18px;">
+                  <label for="statusSelect_${orderNumber}" style="display:block;font-size:12px;text-transform:uppercase;letter-spacing:0.1em;color:#7c6248;font-weight:600;margin-bottom:6px;">Update Status</label>
+                  <select id="statusSelect_${orderNumber}" style="width:100%;padding:10px 12px;border:1px solid rgba(148,109,71,0.35);border-radius:10px;background:rgba(255,255,255,0.9);color:#3a2a1d;font-size:14px;">
+                    ${statusOptions.map(status => `<option value="${status}" ${status === order.status ? 'selected' : ''}>${status}</option>`).join('')}
                   </select>
                 </div>
               ` : ''}
-              
-              <!-- Current Assignment -->
-              <div style="margin-bottom:16px;">
-                <strong>Assigned To:</strong>
-                <div style="margin-top:4px;color:#6b5440;">
-                  ${order.photographer || 'Unassigned'}
-                </div>
+              <div style="margin-bottom:18px;">
+                <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.1em;color:#7c6248;font-weight:600;margin-bottom:6px;">Assigned To</div>
+                <div style="font-size:14px;color:#3a2a1d;font-weight:600;">${assignedOwner}</div>
               </div>
-              
               ${canAssignWork ? `
-                <!-- Assignment Change -->
-                <div style="margin-bottom:16px;">
-                  <strong>Reassign To:</strong>
-                  <select id="assignSelect_${orderNumber}" style="width:100%;padding:8px;border:1px solid #d1d5db;border-radius:4px;margin-top:4px;">
-                    ${teamMembers.map(member => 
-                      `<option value="${member}" ${(member === order.photographer || (member === 'Unassigned' && !order.photographer)) ? 'selected' : ''}>${member}</option>`
-                    ).join('')}
+                <div style="margin-bottom:18px;">
+                  <label for="assignSelect_${orderNumber}" style="display:block;font-size:12px;text-transform:uppercase;letter-spacing:0.1em;color:#7c6248;font-weight:600;margin-bottom:6px;">Reassign Order</label>
+                  <select id="assignSelect_${orderNumber}" style="width:100%;padding:10px 12px;border:1px solid rgba(148,109,71,0.35);border-radius:10px;background:rgba(255,255,255,0.9);color:#3a2a1d;font-size:14px;">
+                    ${teamMembers.map(member => `<option value="${member}" ${(member === order.photographer || (member === 'Unassigned' && !order.photographer)) ? 'selected' : ''}>${member}</option>`).join('')}
                   </select>
                 </div>
               ` : ''}
-              
               ${(canManageOrders || canAssignWork) ? `
-                <button onclick="updateOrderWorkflow('${orderNumber}')" 
-                        style="width:100%;background:#a66b38;color:white;border:none;padding:12px;border-radius:6px;cursor:pointer;font-weight:600;margin-top:8px;">
-                  💾 Update Workflow
-                </button>
+                <button onclick="updateOrderWorkflow('${orderNumber}')" style="width:100%;margin-top:4px;background:linear-gradient(135deg,#b88358 0%,#8e6238 100%);color:white;border:none;padding:12px 16px;border-radius:12px;font-weight:600;font-size:14px;cursor:pointer;box-shadow:0 12px 25px rgba(145,101,60,0.3);transition:transform 0.15s ease;">Save Updates</button>
               ` : ''}
             </div>
           </div>
-          
-          <!-- Order Details -->
-          <div style="space-y:16px;">
-            ${order.brief ? `<div><strong>Brief:</strong><br><div style="margin-top:8px;padding:12px;background:#f8fafc;border-radius:6px;">${order.brief}</div></div>` : ''}
-            <div>
-              <strong>Articles:</strong>
-              <div style="margin-top:12px;">${articlesMarkup}</div>
+
+          ${order.brief ? `
+            <div style="padding:20px;border-radius:16px;background:rgba(255,255,255,0.82);border:1px solid rgba(196,139,90,0.3);box-shadow:0 14px 28px rgba(62,44,30,0.1);">
+              <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.1em;color:#7c6248;font-weight:600;margin-bottom:10px;">Creative Brief</div>
+              <div style="font-size:14px;line-height:1.6;color:#3b2b1a;white-space:pre-wrap;">${order.brief}</div>
             </div>
-            ${order.deliverables ? `<div><strong>Deliverables:</strong><br><div style="margin-top:8px;padding:12px;background:#f8fafc;border-radius:6px;">${order.deliverables}</div></div>` : ''}
+          ` : ''}
+
+          <div style="padding:20px;border-radius:16px;background:rgba(253,250,246,0.88);border:1px solid rgba(196,139,90,0.3);box-shadow:0 14px 28px rgba(62,44,30,0.1);">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+              <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.1em;color:#7c6248;font-weight:600;">Articles</div>
+              <div style="font-size:12px;color:#8a6d4c;">${order.articles?.length || 0} items</div>
+            </div>
+            <div>${articlesMarkup}</div>
           </div>
-          
-          <!-- Action Buttons -->
-          <div style="margin-top:24px;display:flex;gap:12px;justify-content:flex-end;">
+
+          ${order.deliverables ? `
+            <div style="padding:20px;border-radius:16px;background:rgba(255,255,255,0.82);border:1px solid rgba(196,139,90,0.3);box-shadow:0 14px 28px rgba(62,44,30,0.1);">
+              <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.1em;color:#7c6248;font-weight:600;margin-bottom:10px;">Deliverables</div>
+              <div style="font-size:14px;line-height:1.6;color:#3b2b1a;white-space:pre-wrap;">${order.deliverables}</div>
+            </div>
+          ` : ''}
+
+          <div style="display:flex;justify-content:flex-end;gap:12px;">
             ${canManageOrders ? `
-              <button onclick="showOrderHistory('${orderNumber}')" 
-                      style="background:#6b5440;color:white;border:none;padding:12px 24px;border-radius:6px;cursor:pointer;">
-                📜 View History
-              </button>
+              <button onclick="showOrderHistory('${orderNumber}')" style="border:none;padding:12px 24px;border-radius:12px;background:rgba(94,73,52,0.12);color:#4b3825;font-weight:600;font-size:14px;cursor:pointer;">View History</button>
             ` : ''}
-            <button onclick="this.closest('.order-details-modal').remove()" 
-                    style="background:#6b5440;color:white;border:none;padding:12px 24px;border-radius:6px;cursor:pointer;">
-              Close
-            </button>
+            <button onclick="this.closest('.order-details-modal').remove()" style="border:none;padding:12px 26px;border-radius:12px;background:linear-gradient(135deg,#76604b 0%,#3d2d1e 100%);color:white;font-weight:600;font-size:14px;cursor:pointer;box-shadow:0 12px 24px rgba(61,45,30,0.25);">Close</button>
           </div>
         </div>
       `;
+
       document.body.appendChild(modal);
-      modal.addEventListener('click', (e) => { if(e.target === modal) modal.remove(); });
+      modal.addEventListener('click', (e) => { if (e.target === modal) { modal.remove(); } });
     }
     
     // Assign to window immediately after definition
@@ -8802,13 +9211,24 @@
         };
 
         const buildProductionInfo = (order) => {
-          const methodLabel = order.method || order.productionMethod || placeholderSpan;
-          const photographerLabel = order.photographer ? order.photographer : 'Unassigned';
-          const photographerColor = order.photographer ? '#6b5440' : '#9ca3af';
+          if (!order) {
+            return placeholderSpan;
+          }
+          const meta = order.productionMeta || applyProductionNormalization(order) || DEFAULT_PRODUCTION_META;
+          const label = meta.shortLabel || meta.label || '';
+          if (!label && !meta.icon) {
+            return placeholderSpan;
+          }
+          const descriptionBits = [];
+          if (meta.description) descriptionBits.push(meta.description);
+          if (meta.raw && meta.raw !== meta.label) descriptionBits.push(`Original: ${meta.raw}`);
+          const title = (descriptionBits.join(' • ') || 'Production').replace(/"/g, '&quot;');
+          const chipClass = meta.chipClass || 'production-chip--photobox';
           return `
-            <div style="display:flex;flex-direction:column;gap:4px;">
-              <span>${methodLabel}</span>
-              <span style="font-size:12px;color:${photographerColor};">${photographerLabel}</span>
+            <div class="production-cell">
+              <span class="production-chip ${chipClass}" title="${title}">
+                <span>${label || '—'}</span>
+              </span>
             </div>
           `;
         };
@@ -8934,24 +9354,24 @@
             <td style="padding:6px 6px;text-align:center;">
               <button type="button" class="order-expand-button" aria-label="${expandLabel}" title="${expandLabel}" onclick="toggleOrderExpansion('${o.orderNumber}', event)">${expandIcon}</button>
             </td>
-            <td style="padding:8px 10px;color: #4b3b2a !important;"><strong>${o.orderNumber}</strong></td>
-            <td style="padding:8px 10px;color: #4b3b2a !important;">${offerId}</td>
-            <td style="padding:8px 10px;color: #4b3b2a !important;">${groupDisplay}</td>
-            <td style="padding:8px 10px;color: #4b3b2a !important;min-width:160px;">${offerName}</td>
-            <td style="padding:8px 10px;color: #4b3b2a !important;">${shotType}</td>
-            <td style="padding:8px 10px;color: #4b3b2a !important;">${photoRef}</td>
-            <td style="padding:8px 10px;color: #4b3b2a !important;">${productionInfo}</td>
-            <td style="padding:8px 10px;color: #4b3b2a !important;">${principle}</td>
-            <td style="padding:8px 10px;color: #4b3b2a !important;">${previewCell}</td>
-            <td style="padding:6px 8px;text-align: center; color: #4b3b2a !important;">
+            <td style="padding:6px 8px;color: #4b3b2a !important;font-size:12px;"><strong>${o.orderNumber}</strong></td>
+            <td style="padding:6px 8px;color: #4b3b2a !important;font-size:12px;">${offerId}</td>
+            <td style="padding:6px 8px;color: #4b3b2a !important;font-size:12px;">${groupDisplay}</td>
+            <td style="padding:6px 8px;color: #4b3b2a !important;min-width:150px;font-size:12px;">${offerName}</td>
+            <td style="padding:6px 8px;color: #4b3b2a !important;font-size:12px;">${shotType}</td>
+            <td style="padding:6px 8px;color: #4b3b2a !important;font-size:12px;">${photoRef}</td>
+            <td style="padding:6px 8px;color: #4b3b2a !important;font-size:12px;">${productionInfo}</td>
+            <td style="padding:6px 8px;color: #4b3b2a !important;font-size:12px;">${principle}</td>
+            <td style="padding:6px 8px;color: #4b3b2a !important;font-size:12px;">${previewCell}</td>
+            <td style="padding:4px 6px;text-align: center; color: #4b3b2a !important;">
               <button onclick="event.stopPropagation(); window.commentSystem && window.commentSystem.showCommentsModal('${o.orderNumber}')" 
-                style="background: ${commentCount > 0 ? '#c48b5a' : '#6b5440'}; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 11px; position: relative;">
+                style="background: ${commentCount > 0 ? '#c48b5a' : '#6b5440'}; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 11px; position: relative;">
                 💬 ${commentCount}
                 ${unreadComments > 0 ? `<span style="position: absolute; top: -5px; right: -5px; background: #ef4444; color: white; border-radius: 50%; width: 14px; height: 14px; font-size: 9px; display: flex; align-items: center; justify-content: center;">${unreadComments}</span>` : ''}
               </button>
             </td>
-            <td style="padding:8px 10px;"><span class="status ${o.status.replace(/\s+/g, '')}">${o.status || 'Unknown'}</span></td>
-            <td style="padding:8px 10px;${deadlineStyle}">${o.deadline || placeholderSpan}${isOverdue ? ' ⚠️' : ''}</td>
+            <td style="padding:6px 8px;"><span class="status ${o.status.replace(/\s+/g, '')}">${o.status || 'Unknown'}</span></td>
+            <td style="padding:6px 8px;${deadlineStyle} font-size:12px;">${o.deadline || placeholderSpan}${isOverdue ? ' ⚠️' : ''}</td>
           </tr>
           ${articleDetailsRow}`;
         }).join('');
