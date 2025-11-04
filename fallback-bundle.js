@@ -3994,7 +3994,7 @@
     
     root.innerHTML = `
       <!-- Enhanced Sidebar Layout -->
-  <div id="fallback-app" style="min-height: 100vh; margin: 0; background: linear-gradient(135deg, #f4e8d8 0%, #e6d3bd 100%); display: flex;">
+  <div id="fallback-app" style="min-height: 100vh; margin: 0; background: #f3f4f6; display: flex;">
         
         <!-- Modern Sidebar -->
         <div class="sidebar" id="sidebar">
@@ -4180,15 +4180,13 @@
           <div class="content-header">
             <h1 class="content-title" id="contentTitle">Dashboard Overview</h1>
             <div class="content-actions">
-              <button class="btn btn-secondary" onclick="exportToCsv()" style="padding: 8px 16px; font-size: 14px; background: linear-gradient(135deg, #dfb37d, #c48b5a); color: white; border: none;">📊 Export</button>
-              <button class="btn btn-secondary" onclick="refreshData()" style="padding: 8px 16px; font-size: 14px; background: linear-gradient(135deg, #b4a392, #8f7b63); color: white; border: none;">🔄 Refresh</button>
+              <button class="content-pill-btn content-pill-btn--export" onclick="exportToCsv()">📊 <span>Export</span></button>
+              <button class="content-pill-btn content-pill-btn--refresh" onclick="refreshData()">🔄 <span>Refresh</span></button>
               <div style="position: relative; display: flex; align-items: center; gap: 12px;">
                 <span style="color: #6b5440; font-weight: 500; font-size: 14px;">
                   ${currentUser.name} (${currentUser.role})
                 </span>
-                <button onclick="logout()" class="btn btn-sm" style="background: linear-gradient(135deg, #c76f5c, #a85544); color: white; padding: 6px 12px; font-size: 12px; border-radius: 6px; border: none; box-shadow: 0 6px 12px rgba(167, 85, 68, 0.3);">
-                  Logout
-                </button>
+                <button onclick="logout()" class="content-pill-btn content-pill-btn--logout content-pill-btn--compact"><span>Logout</span></button>
               </div>
             </div>
           </div>
@@ -4217,7 +4215,7 @@
               <!-- Orders Table - Default View -->
               <div id="ordersView">
                 <!-- Compact Filter Row: Event ID + Search -->
-                <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px; padding: 12px 14px; background: #fdf8f1; border-radius: 12px; box-shadow: 0 8px 18px rgba(79, 59, 37, 0.08); border: 1px solid rgba(196, 139, 90, 0.18); flex-wrap: wrap; position: relative;">
+                <div class="orders-filter-bar">
                   <select id="salesOrgFilter"
                           onchange="handleSalesOrgFilterChange(this.value)"
                           style="padding: 6px 10px; border: 1px solid rgba(216, 164, 88, 0.65); border-radius: 8px; font-size: 13px; font-family: monospace; font-weight: 500; background: #fffaf3; cursor: pointer; min-width: 140px; color: #6b5440; flex: 0 0 auto;">
@@ -4343,12 +4341,12 @@
                   </div>
                 </div>
 
-                <div style="background: #fffaf3; border-radius: 12px; box-shadow: 0 10px 24px rgba(79, 59, 37, 0.1); overflow: hidden; border: 1px solid rgba(196, 139, 90, 0.18);">
+                <div class="orders-table-container">
                   <table class="orders-table">
                     <thead>
                       <tr style="background: linear-gradient(135deg, #f7eedf, #efe0cf);">
                         <th style="width: 40px; display: none;" class="bulk-checkbox"><input type="checkbox" id="selectAllOrders"></th>
-                        <th style="padding: 8px 10px; text-align: center; font-weight: 600; color: #4b3b2a; border-bottom: 1px solid rgba(196, 139, 90, 0.22); width: 44px;">Details</th>
+                        <th style="padding: 4px; text-align: center; border-bottom: 1px solid rgba(196, 139, 90, 0.22); width: 32px;" aria-label="Expand"></th>
                         <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: #4b3b2a; border-bottom: 1px solid rgba(196, 139, 90, 0.22);">Order Number</th>
                         <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: #4b3b2a; border-bottom: 1px solid rgba(196, 139, 90, 0.22);">Offer ID</th>
                         <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: #4b3b2a; border-bottom: 1px solid rgba(196, 139, 90, 0.22);">Group</th>
@@ -4459,7 +4457,7 @@
           display: flex;
           flex-direction: column;
           border-radius: 0;
-          margin: 18px 0 18px 18px;
+          margin: 12px 0 18px 18px;
           min-height: calc(100vh - 36px);
         }
 
@@ -4479,15 +4477,14 @@
         }
 
         .sidebar-header {
-          padding: 20px 48px 20px 20px;
+          padding: 12px 48px 18px 20px;
           border-bottom: none;
           display: flex;
           align-items: center;
           justify-content: center;
           background: transparent;
           position: relative;
-          height: 80px;
-          min-height: 80px;
+          min-height: 96px;
           box-sizing: border-box;
           border-radius: 0;
         }
@@ -4503,8 +4500,8 @@
         }
 
         .sidebar-logo {
-          width: 32px;
-          height: 32px;
+          width: 64px;
+          height: 64px;
           object-fit: contain;
           flex-shrink: 0;
           border-radius: 8px;
@@ -4869,15 +4866,61 @@
           color: #a8703f !important;
         }
 
+        .orders-filter-bar {
+          position: relative;
+          display: flex;
+          flex-wrap: wrap;
+          align-items: center;
+          gap: 12px;
+          row-gap: 12px;
+          width: calc(100% + 64px);
+          margin: -32px -32px 24px;
+          padding: 16px 24px;
+          background: #fdf8f1;
+          border-radius: 0 0 16px 16px;
+          border: 1px solid rgba(196, 139, 90, 0.18);
+          border-top: none;
+          box-shadow: 0 8px 18px rgba(79, 59, 37, 0.08);
+        }
+
+        .orders-table-container {
+          background: #fffaf3;
+          border-radius: 16px;
+          border: 1px solid rgba(196, 139, 90, 0.18);
+          box-shadow: 0 10px 24px rgba(79, 59, 37, 0.1);
+          overflow: hidden;
+          width: calc(100% + 64px);
+          margin: -8px -32px 24px;
+          border-top-left-radius: 0;
+          border-top-right-radius: 0;
+        }
+
+        @media (max-width: 768px) {
+          .orders-filter-bar {
+            width: 100%;
+            margin: 12px 0 20px;
+            padding: 16px;
+            border-radius: 12px;
+            border-top: 1px solid rgba(196, 139, 90, 0.18);
+          }
+
+          .orders-table-container {
+            width: 100%;
+            margin: -8px 0 20px;
+            border-top-left-radius: 0;
+            border-top-right-radius: 0;
+          }
+        }
+
         /* Main content area */
         .main-content {
           flex: 1;
-          background: rgba(75, 59, 42, 0.08);
+          background: #f3f4f6;
           backdrop-filter: none;
           margin: 20px;
           margin-left: 20px;
           border-radius: 16px;
-          box-shadow: 0 26px 60px rgba(47, 33, 21, 0.08);
+          box-shadow: none;
           overflow: hidden;
           display: flex;
           flex-direction: column;
@@ -4904,6 +4947,52 @@
           display: flex;
           gap: 12px;
           align-items: center;
+        }
+
+        .content-pill-btn {
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          padding: 10px 22px;
+          font-size: 14px;
+          font-weight: 600;
+          color: #fffaf3;
+          background: linear-gradient(135deg, #e2b684, #c7925b);
+          border-radius: 999px;
+          border: 1px solid rgba(108, 78, 52, 0.25);
+          box-shadow: 0 10px 20px rgba(79, 59, 37, 0.18);
+          cursor: pointer;
+          transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+          text-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
+        }
+
+        .content-pill-btn:hover {
+          transform: translateY(-1px);
+          box-shadow: 0 12px 24px rgba(79, 59, 37, 0.22);
+          filter: brightness(1.02);
+        }
+
+        .content-pill-btn:active {
+          transform: translateY(0);
+          box-shadow: 0 6px 14px rgba(79, 59, 37, 0.18);
+          filter: brightness(0.98);
+        }
+
+        .content-pill-btn--export {
+          background: linear-gradient(135deg, #efc892, #c48b5a);
+        }
+
+        .content-pill-btn--refresh {
+          background: linear-gradient(135deg, #d2c3ac, #a3876a);
+        }
+
+        .content-pill-btn--logout {
+          background: linear-gradient(135deg, #c76f5c, #a85544);
+        }
+
+        .content-pill-btn--compact {
+          padding: 8px 18px;
+          font-size: 13px;
         }
 
         .content-body {
@@ -4997,19 +5086,19 @@
           border: none;
           background: transparent;
           color: #a66b38;
-          border-radius: 6px;
           cursor: pointer;
           display: flex;
           align-items: center;
           justify-content: center;
           padding: 0;
-          transition: background-color 0.2s ease;
+          transition: color 0.2s ease;
         }
 
         .order-expand-button:hover,
         .order-expand-button:focus-visible,
         #ordersBody tr:hover .order-expand-button {
-          background: rgba(196, 139, 90, 0.12);
+          background: transparent;
+          color: #8c5f30;
         }
 
         .order-expand-button:focus-visible {
@@ -5022,14 +5111,8 @@
           font-size: 12px;
           line-height: 1;
           transform: rotate(180deg);
-          opacity: 0;
-          transition: transform 0.2s ease, opacity 0.2s ease;
-        }
-
-        .order-expand-button:hover .order-expand-arrow,
-        .order-expand-button:focus-visible .order-expand-arrow,
-        #ordersBody tr:hover .order-expand-arrow {
           opacity: 1;
+          transition: transform 0.2s ease;
         }
 
         .order-expand-arrow.is-open {
@@ -9351,7 +9434,7 @@
           return `
           <tr onclick="showOrderDetails('${o.orderNumber}')" style="cursor: pointer; color: #4b3b2a !important;" class="${window.selectedItems && window.selectedItems.has(o.orderNumber) ? 'selected-row' : ''}">
             <td class="bulk-checkbox" style="display: none;"><input type="checkbox" class="item-checkbox" data-id="${o.orderNumber}" onclick="event.stopPropagation()"></td>
-            <td style="padding:6px 6px;text-align:center;">
+            <td style="padding:4px;text-align:center;width:32px;">
               <button type="button" class="order-expand-button" aria-label="${expandLabel}" title="${expandLabel}" onclick="toggleOrderExpansion('${o.orderNumber}', event)">${expandIcon}</button>
             </td>
             <td style="padding:6px 8px;color: #4b3b2a !important;font-size:12px;"><strong>${o.orderNumber}</strong></td>
