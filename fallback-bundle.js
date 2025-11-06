@@ -1278,6 +1278,16 @@
             department: 'Creative'
           }
         },
+        'agency1': {
+          password: 'agency123',
+          user: {
+            id: 'user-agency1',
+            name: 'Camilla Sorensen',
+            email: 'camilla.sorensen@agency-partner.com',
+            role: 'Agency',
+            department: 'External Agency'
+          }
+        },
         'marketing1': {
           password: 'marketing123',
           user: {
@@ -1366,7 +1376,7 @@
     }
 
     canViewAllOrders() {
-      return this.currentUser && ['Admin', 'Marketing Manager'].includes(this.currentUser.role);
+  return this.currentUser && ['Admin', 'Marketing Manager', 'Agency'].includes(this.currentUser.role);
     }
 
     canCreateOrders() {
@@ -1379,6 +1389,7 @@
       switch (this.currentUser.role) {
         case 'Admin':
         case 'Marketing Manager':
+        case 'Agency':
           return true;
         case 'Promo Coordinator':
           return order.createdBy === this.currentUser.id;
@@ -1391,7 +1402,7 @@
     }
 
     canUploadImages() {
-      return this.currentUser && ['Admin', 'Marketing Manager', 'Photographer', 'Photo Box'].includes(this.currentUser.role);
+  return this.currentUser && ['Admin', 'Marketing Manager', 'Photographer', 'Photo Box', 'Agency'].includes(this.currentUser.role);
     }
 
     // Permission to manage order status and workflow
@@ -1405,6 +1416,7 @@
       switch (this.currentUser.role) {
         case 'Admin':
         case 'Marketing Manager':
+        case 'Agency':
           return allOrders; // Can see all orders
         case 'Promo Coordinator':
           // Filter by purchase groups assigned to the promo coordinator
@@ -1510,6 +1522,13 @@
                 <div style="color: #6b5440; font-family: monospace;">photobox1</div>
                 <div style="color: #c76f5c; font-size: 10px; margin-top: 4px;">Product Photography Specialist</div>
               </div>
+          <div style="background: #edf2ff; padding: 12px; border-radius: 8px; cursor: pointer; border: 1px solid rgba(165, 180, 252, 0.25); transition: all 0.15s;" 
+             onclick="document.getElementById('username').value='agency1'; document.getElementById('password').value='agency123';">
+           <div style="font-weight: 600; color: #4b3b2a; margin-bottom: 4px;">📝 Agency</div>
+           <div style="color: #4b3b2a; font-weight: 500;">Camilla Sorensen</div>
+           <div style="color: #6b5440; font-family: monospace;">agency1</div>
+           <div style="color: #64748b; font-size: 10px; margin-top: 4px;">Briefing & Image Review Lead</div>
+          </div>
               <div style="background: #f0f8f4; padding: 12px; border-radius: 8px; cursor: pointer; border: 1px solid rgba(143, 162, 148, 0.25); transition: all 0.15s;" 
                    onclick="document.getElementById('username').value='marketing1'; document.getElementById('password').value='marketing123';">
                 <div style="font-weight: 600; color: #4b3b2a; margin-bottom: 4px;">🎯 Marketing Manager</div>
@@ -2140,11 +2159,17 @@
   }
 
   const allOrders = [
+    
     {
       orderNumber:'ORD-2025-001', 
       title:'Premium Dog Food - Hero Shot', 
-      status:'In Progress', 
+      status:'In Progress',
+      
       method:'Photographer',
+      
+      
+      
+      
       photographer:'Mike Rodriguez', 
       deadline:'2025-09-06', 
       costCenter:'PG-100',
@@ -2156,13 +2181,14 @@
       
       // SAP PMR fields
       eventId: 'A4025052', // Week 40, 2025, Bilka format
-      purchaseGroup: 100, // Groceries
+      purchaseGroup: 101, // Groceries
       offerId: '10763319',
-      articleNumber: 'ART-DOG-001',
+      articleNumber: '1234575511',
       articleName: 'Premium Dog Food 2kg',
       imageRequestId: '123456',
       photoStatus: 'New Shoot - Photographer',
       cloudinaryUrl: null,
+      page: 1,
       
       // Creator and assignment fields
       createdBy: 'user-promo1', // Sarah Johnson (Groceries)
@@ -2191,28 +2217,39 @@
           createdAt: '2025-08-25T14:15:00Z',
           isRead: false,
           readBy: ['photographer1']
+        },
+        {
+          id: 'c_agency_001',
+          orderId: 'ORD-2025-001',
+          userId: 'user-agency1',
+          userName: 'Camilla Sorensen',
+          userRole: 'Agency',
+          message: 'Agency briefing update: please capture close-ups of the brand story panel for the campaign deck.',
+          createdAt: '2025-08-26T10:15:00Z',
+          isRead: false,
+          readBy: []
         }
       ],
       uploadedContent: [
         {
-          id: 'file_sample_001',
-          name: 'Hero_Shot_Draft_v1.jpg',
+          id: 'file_bilka_001_1',
+          name: 'ENV.000001.jpg',
           type: 'image/jpeg',
           size: 2456789,
-          data: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgZmlsbD0iIzMzNzNkYyIvPjx0ZXh0IHg9IjIwMCIgeT0iMTUwIiBmb250LXNpemU9IjE4IiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPkhlcm8gU2hvdCBEcmFmdDwvdGV4dD48L3N2Zz4=',
-          uploadedBy: 'John Smith',
-          uploadedAt: '2025-08-25T16:45:00Z',
-          uploadedByRole: 'Photographer'
+          data: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R+IRjWjBqO6O2mhP//Z',
+          uploadedBy: 'Bilka Auto-Generator',
+          uploadedAt: '2025-08-25T10:30:00Z',
+          uploadedByRole: 'System'
         },
         {
-          id: 'file_sample_002',
-          name: 'Product_Details_Macro.jpg',
+          id: 'file_bilka_001_2',
+          name: 'ENV.000002.jpg',
           type: 'image/jpeg',
-          size: 3245678,
-          data: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgZmlsbD0iIzEwYjk4MSIvPjx0ZXh0IHg9IjIwMCIgeT0iMTUwIiBmb250LXNpemU9IjE2IiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPk1hY3JvIERldGFpbCBTaG90PC90ZXh0Pjwvc3ZnPg==',
-          uploadedBy: 'John Smith',
-          uploadedAt: '2025-08-26T08:30:00Z',
-          uploadedByRole: 'Photographer'
+          size: 1987654,
+          data: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R+IRjWjBqO6O2mhP//Z',
+          uploadedBy: 'Bilka Auto-Generator',
+          uploadedAt: '2025-08-25T11:15:00Z',
+          uploadedByRole: 'System'
         }
       ]
     },
@@ -2221,6 +2258,7 @@
       title:'Espresso Beans - E-commerce Photography', 
       status:'Samples Requested', 
       method:'Photo Box',
+      orderType: 'PS',
       photographer:'Emily Chen', 
       deadline:'2025-09-05', 
       costCenter:'PG-200',
@@ -2232,13 +2270,14 @@
       
       // SAP PMR fields
       eventId: 'A4125053', // Week 41, 2025, Netto format
-      purchaseGroup: 200, // Fresh Products
+      purchaseGroup: 101, // Fresh Products
       offerId: '10763320',
       articleNumber: 'ART-COF-002',
       articleName: 'Espresso Beans 500g',
       imageRequestId: '123457',
       photoStatus: 'New Shoot - Photo Box',
       cloudinaryUrl: null,
+      page: 2,
       
       // Creator and assignment fields
       createdBy: 'user-promo1', // Sarah Johnson (Fresh Products)
@@ -2257,6 +2296,28 @@
           isRead: false,
           readBy: ['user2']
         }
+      ],
+      uploadedContent: [
+        {
+          id: 'file_coffee_001',
+          name: 'Espresso_Beans_Hero_Shot.jpg',
+          type: 'image/jpeg',
+          size: 2856789,
+          data: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgZmlsbD0iIzMzNzNkYyIvPjx0ZXh0IHg9IjIwMCIgeT0iMTUwIiBmb250LXNpemU9IjE2IiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPkVzLXByZXNzbyBCZWFucyBIZXJvPC90ZXh0Pjwvc3ZnPg==',
+          uploadedBy: 'Emily Chen',
+          uploadedAt: '2025-08-27T10:30:00Z',
+          uploadedByRole: 'Photographer'
+        },
+        {
+          id: 'file_coffee_002',
+          name: 'Coffee_Packaging_Detail.jpg',
+          type: 'image/jpeg',
+          size: 1987654,
+          data: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgZmlsbD0iIzEwYjk4MSIvPjx0ZXh0IHg9IjIwMCIgeT0iMTUwIiBmb250LXNpemU9IjE0IiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPkNvZmZlZSBQYWNrYWdpbmcgRGV0YWlsPC90ZXh0Pjwvc3ZnPg==',
+          uploadedBy: 'Emily Chen',
+          uploadedAt: '2025-08-27T11:15:00Z',
+          uploadedByRole: 'Photographer'
+        }
       ]
     },
     {
@@ -2264,6 +2325,7 @@
       title:'Wireless Speaker - Tech Photography', 
       status:'Draft', 
       method:'Photographer',
+      orderType: 'PS',
       photographer:'Mike Rodriguez', 
       deadline:'2025-09-15', 
       costCenter:'PG-300',
@@ -2275,26 +2337,60 @@
       
       // SAP PMR fields
       eventId: 'A3825054', // Week 38, 2025, Føtex format
-      purchaseGroup: 300, // Electronics
+      purchaseGroup: 101, // Electronics
       offerId: '10763321',
       articleNumber: 'ART-ELEC-003',
       articleName: 'Wireless Bluetooth Speaker Premium',
       imageRequestId: '123458',
       photoStatus: 'New Shoot - Photographer',
       cloudinaryUrl: null,
+      page: 3,
       
       // Creator and assignment fields
       createdBy: 'user-promo2', // Lars Nielsen (Electronics)
       createdAt: '2025-08-22T14:15:00Z',
       assignedTo: 'user-photo1', // Mike Rodriguez
       
-      comments: []
+      comments: [],
+      uploadedContent: [
+        {
+          id: 'file_speaker_001',
+          name: 'Wireless_Speaker_Hero_Shot.jpg',
+          type: 'image/jpeg',
+          size: 2456789,
+          data: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgZmlsbD0iIzMzNzNkYyIvPjx0ZXh0IHg9IjIwMCIgeT0iMTUwIiBmb250LXNpemU9IjE2IiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPkJsdWV0b290aCBTcGVha2VyIEhlcm88L3RleHQ+PC9zdmc+',
+          uploadedBy: 'Mike Rodriguez',
+          uploadedAt: '2025-08-27T14:30:00Z',
+          uploadedByRole: 'Photographer'
+        },
+        {
+          id: 'file_speaker_002',
+          name: 'Speaker_Waterproof_Demo.jpg',
+          type: 'image/jpeg',
+          size: 1987654,
+          data: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgZmlsbD0iIzEwYjk4MSIvPjx0ZXh0IHg9IjIwMCIgeT0iMTUwIiBmb250LXNpemU9IjE0IiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPldhdGVycHJvb2YgRGVtbzwvdGV4dD48L3N2Zz4=',
+          uploadedBy: 'Mike Rodriguez',
+          uploadedAt: '2025-08-27T15:15:00Z',
+          uploadedByRole: 'Photographer'
+        },
+        {
+          id: 'file_speaker_003',
+          name: 'Speaker_Outdoor_Lifestyle.jpg',
+          type: 'image/jpeg',
+          size: 3123456,
+          data: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgZmlsbD0iIzMzNzNkYyIvPjx0ZXh0IHg9IjIwMCIgeT0iMTUwIiBmb250LXNpemU9IjE0IiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPk91dGRvb3IgTGlmZXN0eWxlPC90ZXh0Pjwvc3ZnPg==',
+          uploadedBy: 'Mike Rodriguez',
+          uploadedAt: '2025-08-27T16:00:00Z',
+          uploadedByRole: 'Photographer'
+        }
+      ]
     },
     {
       orderNumber:'ORD-2025-004', 
       title:'Garden Tools - Product Showcase', 
       status:'Approved', 
       method:'Photographer',
+      orderType: 'PS',
       photographer:'Emily Chen', 
       deadline:'2025-09-07', 
       costCenter:'PG-400',
@@ -2306,20 +2402,53 @@
       
       // SAP PMR fields
       eventId: 'A3725055', // Week 37, 2025, Bilka format
-      purchaseGroup: 400, // Home & Garden
+      purchaseGroup: 101, // Home & Garden
       offerId: '10763322',
-      articleNumber: 'ART-GARD-004',
+      articleNumber: '1234575512',
       articleName: 'Electric Hedge Trimmer Pro',
       imageRequestId: '123459',
       photoStatus: 'New Shoot - Photographer',
       cloudinaryUrl: null,
+      page: 4,
       
       // Creator and assignment fields
       createdBy: 'user-promo2', // Lars Nielsen (Home & Garden)
       createdAt: '2025-08-23T11:20:00Z',
       assignedTo: 'user-photo2', // Emily Chen
       
-      comments: []
+      comments: [],
+      uploadedContent: [
+        {
+          id: 'file_bilka_004_1',
+          name: 'ENV.000003.jpg',
+          type: 'image/jpeg',
+          size: 3456789,
+          data: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R+IRjWjBqO6O2mhP//Z',
+          uploadedBy: 'Bilka Auto-Generator',
+          uploadedAt: '2025-08-27T14:30:00Z',
+          uploadedByRole: 'System'
+        },
+        {
+          id: 'file_bilka_004_2',
+          name: 'ENV.000004.jpg',
+          type: 'image/jpeg',
+          size: 2345678,
+          data: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R+IRjWjBqO6O2mhP//Z',
+          uploadedBy: 'Bilka Auto-Generator',
+          uploadedAt: '2025-08-27T15:15:00Z',
+          uploadedByRole: 'System'
+        },
+        {
+          id: 'file_bilka_004_3',
+          name: 'ENV.000005.jpg',
+          type: 'image/jpeg',
+          size: 4567890,
+          data: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R+IRjWjBqO6O2mhP//Z',
+          uploadedBy: 'Bilka Auto-Generator',
+          uploadedAt: '2025-08-27T16:00:00Z',
+          uploadedByRole: 'System'
+        }
+      ]
     },
     // Additional orders to populate all Kanban status columns
     {
@@ -2327,6 +2456,7 @@
       title:'Organic Pasta - Product Photography', 
       status:'Pending Approval', 
       method:'Photo Box',
+      orderType: 'PS',
       photographer:'Emily Chen', 
       deadline:'2025-09-04', 
       costCenter:'PG-100',
@@ -2338,26 +2468,60 @@
       
       // SAP PMR fields
       eventId: 'A3925056', // Week 39, 2025, Netto format
-      purchaseGroup: 100, // Groceries
+      purchaseGroup: 101, // Groceries
       offerId: '10763323',
       articleNumber: 'ART-PAST-005',
       articleName: 'Organic Penne Pasta Premium',
       imageRequestId: '123460',
       photoStatus: 'New Shoot - Photo Box',
       cloudinaryUrl: null,
+      page: 5,
       
       // Creator and assignment fields
       createdBy: 'user-promo1', // Sarah Johnson (Groceries)
       createdAt: '2025-08-24T08:45:00Z',
       assignedTo: 'user-photo2', // Emily Chen
       
-      comments: []
+      comments: [],
+      uploadedContent: [
+        {
+          id: 'file_past_005_1',
+          name: 'Organic_Penne_Pasta_Hero_Shot.jpg',
+          type: 'image/jpeg',
+          size: 3456789,
+          data: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgZmlsbD0iIzMzNzNkYyIvPjx0ZXh0IHg9IjIwMCIgeT0iMTUwIiBmb250LXNpemU9IjE0IiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPk9yZ2FuaWMgUGFzdGEgSGVybzwvdGV4dD48L3N2Zz4=',
+          uploadedBy: 'Emily Chen',
+          uploadedAt: '2025-08-27T14:30:00Z',
+          uploadedByRole: 'Photographer'
+        },
+        {
+          id: 'file_past_005_2',
+          name: 'Organic_Linguine_Detail_Shot.jpg',
+          type: 'image/jpeg',
+          size: 2345678,
+          data: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgZmlsbD0iIzMzNzNkYyIvPjx0ZXh0IHg9IjIwMCIgeT0iMTUwIiBmb250LXNpemU9IjE0IiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPk9yZ2FuaWMgTGluZ3VpbmUgRGV0YWlsPC90ZXh0Pjwvc3ZnPg==',
+          uploadedBy: 'Emily Chen',
+          uploadedAt: '2025-08-27T15:15:00Z',
+          uploadedByRole: 'Photographer'
+        },
+        {
+          id: 'file_past_005_3',
+          name: 'Pasta_Lifestyle_Shot.jpg',
+          type: 'image/jpeg',
+          size: 4567890,
+          data: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgZmlsbD0iIzMzNzNkYyIvPjx0ZXh0IHg9IjIwMCIgeT0iMTUwIiBmb250LXNpemU9IjE0IiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPlBhc3RhIExpZmVzdHlsZTwvdGV4dD48L3N2Zz4=',
+          uploadedBy: 'Emily Chen',
+          uploadedAt: '2025-08-27T16:00:00Z',
+          uploadedByRole: 'Photographer'
+        }
+      ]
     },
     {
       orderNumber:'ORD-2025-006', 
       title:'Fresh Dairy - E-commerce Photos', 
       status:'Review', 
       method:'Photo Box',
+      orderType: 'PS',
       photographer:'Mike Rodriguez', 
       deadline:'2025-08-28', 
       costCenter:'PG-200',
@@ -2369,26 +2533,62 @@
       
       // SAP PMR fields
       eventId: 'A3525057', // Week 35, 2025, Føtex format
-      purchaseGroup: 200, // Fresh Products
+      purchaseGroup: 101, // Fresh Products
       offerId: '10763324',
       articleNumber: 'ART-DAIRY-006',
       articleName: 'Organic Milk Premium 1L',
       imageRequestId: '123461',
       photoStatus: 'Archive',
       cloudinaryUrl: 'https://res.cloudinary.com/demo/image/upload/organic_milk.jpg',
+      page: 6,
       
       // Creator and assignment fields
       createdBy: 'user-promo1', // Sarah Johnson (Fresh Products)
       createdAt: '2025-08-25T09:30:00Z',
       assignedTo: 'user-photo1', // Mike Rodriguez
       
-      comments: []
+      comments: [],
+      uploadedContent: [
+        {
+          id: 'file_dairy_006_1',
+          name: 'Organic_Milk_Bottle_Hero_Shot.jpg',
+          type: 'image/jpeg',
+          size: 2876543,
+          data: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgZmlsbD0iI2Y5ZjlmOSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPk9yZ2FuaWMgTWlsa8KhdGxlPC90ZXh0Pjwvc3ZnPg==',
+          uploadedBy: 'Mike Rodriguez',
+          uploadedAt: '2025-08-27T10:15:00Z',
+          uploadedByRole: 'Photographer'
+        },
+        {
+          id: 'file_dairy_006_2',
+          name: 'Greek_Yogurt_Container_Detail_Shot.jpg',
+          type: 'image/jpeg',
+          size: 1987654,
+          data: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgZmlsbD0iI2Y5ZjlmOSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPkdyZWVrIFlvZ3VydCDE0YWlsPC90ZXh0Pjwvc3ZnPg==',
+          uploadedBy: 'Mike Rodriguez',
+          uploadedAt: '2025-08-27T11:00:00Z',
+          uploadedByRole: 'Photographer'
+        },
+        {
+          id: 'file_dairy_006_3',
+          name: 'Dairy_Products_Lifestyle_Shot.jpg',
+          type: 'image/jpeg',
+          size: 3456789,
+          data: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgZmlsbD0iI2Y5ZjlmOSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPkRhaXJ5IFByb2R1Y3RzIExpZmVzdHlsZTwvdGV4dD48L3N2Zz4=',
+          uploadedBy: 'Mike Rodriguez',
+          uploadedAt: '2025-08-27T11:45:00Z',
+          uploadedByRole: 'Photographer'
+        }
+      ]
     },
     {
       orderNumber:'ORD-2025-007', 
       title:'Smart Home Devices - Tech Showcase', 
       status:'Complete', 
       method:'Photographer',
+      
+      
+      
       photographer:'Mike Rodriguez', 
       deadline:'2025-09-02', 
       costCenter:'PG-300',
@@ -2400,26 +2600,60 @@
       
       // SAP PMR fields
       eventId: 'A4825058', // Week 48, 2025, Bilka format
-      purchaseGroup: 300, // Electronics
+      purchaseGroup: 101, // Electronics
       offerId: '10763325',
-      articleNumber: 'ART-SMART-007',
+      articleNumber: '1234575513',
       articleName: 'Smart Thermostat Pro',
       imageRequestId: '123462',
       photoStatus: 'Archive',
       cloudinaryUrl: 'https://res.cloudinary.com/demo/image/upload/smart_thermostat.jpg',
+      page: 7,
       
       // Creator and assignment fields
       createdBy: 'user-promo2', // Lars Nielsen (Electronics)
       createdAt: '2025-08-20T13:15:00Z',
       assignedTo: 'user-photo1', // Mike Rodriguez
       
-      comments: []
+      comments: [],
+      uploadedContent: [
+        {
+          id: 'file_bilka_007_1',
+          name: 'ENV.000006.jpg',
+          type: 'image/jpeg',
+          size: 3123456,
+          data: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R+IRjWjBqO6O2mhP//Z',
+          uploadedBy: 'Bilka Auto-Generator',
+          uploadedAt: '2025-08-27T12:30:00Z',
+          uploadedByRole: 'System'
+        },
+        {
+          id: 'file_bilka_007_2',
+          name: 'ENV.000007.jpg',
+          type: 'image/jpeg',
+          size: 2456789,
+          data: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R+IRjWjBqO6O2mhP//Z',
+          uploadedBy: 'Bilka Auto-Generator',
+          uploadedAt: '2025-08-27T13:15:00Z',
+          uploadedByRole: 'System'
+        },
+        {
+          id: 'file_bilka_007_3',
+          name: 'ENV.000008.jpg',
+          type: 'image/jpeg',
+          size: 3789456,
+          data: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R+IRjWjBqO6O2mhP//Z',
+          uploadedBy: 'Bilka Auto-Generator',
+          uploadedAt: '2025-08-27T14:00:00Z',
+          uploadedByRole: 'System'
+        }
+      ]
     },
     {
       orderNumber:'ORD-2025-008', 
       title:'Patio Furniture - Seasonal Showcase', 
       status:'Delivered', 
       method:'Photographer',
+      orderType: 'PS',
       photographer:'Emily Chen', 
       deadline:'2025-08-20', 
       costCenter:'PG-400',
@@ -2431,18 +2665,52 @@
       
       // SAP PMR fields
       eventId: 'A3425059', // Week 34, 2025, Netto format
-      purchaseGroup: 400, // Home & Garden
+      purchaseGroup: 101, // Home & Garden
       offerId: '10763326',
       articleNumber: 'ART-PATIO-008',
       articleName: 'Outdoor Dining Set Premium',
       imageRequestId: '123463',
       photoStatus: 'Archive',
       cloudinaryUrl: 'https://res.cloudinary.com/demo/image/upload/patio_furniture.jpg',
+      page: 8,
       
       // Creator and assignment fields
       createdBy: 'user-promo2', // Lars Nielsen (Home & Garden)
       createdAt: '2025-08-19T16:30:00Z',
       assignedTo: 'user-photo2', // Emily Chen
+      
+      uploadedContent: [
+        {
+          id: 'file-008-001',
+          name: 'Patio_Dining_Set_Outdoor_Lifestyle_Shot.jpg',
+          type: 'image/jpeg',
+          size: 2845672,
+          data: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgZmlsbD0iIzMzNzNkYyIvPjx0ZXh0IHg9IjIwMCIgeT0iMTUwIiBmb250LXNpemU9IjE0IiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPk91dGRvb3IgUGF0aW8gRnVybml0dXJlPC90ZXh0Pjwvc3ZnPg==',
+          uploadedBy: 'Emily Chen',
+          uploadedAt: '2025-08-19T15:30:00Z',
+          uploadedByRole: 'Photographer'
+        },
+        {
+          id: 'file-008-002',
+          name: 'Outdoor_Patio_Furniture_Collection_Hero_Shot.jpg',
+          type: 'image/jpeg',
+          size: 3123456,
+          data: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgZmlsbD0iIzMzNzNkYyIvPjx0ZXh0IHg9IjIwMCIgeT0iMTUwIiBmb250LXNpemU9IjE0IiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPk91dGRvb3IgUGF0aW8gRnVybml0dXJlPC90ZXh0Pjwvc3ZnPg==',
+          uploadedBy: 'Emily Chen',
+          uploadedAt: '2025-08-19T16:00:00Z',
+          uploadedByRole: 'Photographer'
+        },
+        {
+          id: 'file-008-003',
+          name: 'Seasonal_Patio_Furniture_Transition_Shot.jpg',
+          type: 'image/jpeg',
+          size: 2987654,
+          data: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgZmlsbD0iIzMzNzNkYyIvPjx0ZXh0IHg9IjIwMCIgeT0iMTUwIiBmb250LXNpemU9IjE0IiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPk91dGRvb3IgUGF0aW8gRnVybml0dXJlPC90ZXh0Pjwvc3ZnPg==',
+          uploadedBy: 'Emily Chen',
+          uploadedAt: '2025-08-19T16:30:00Z',
+          uploadedByRole: 'Photographer'
+        }
+      ],
       
       comments: []
     },
@@ -2453,6 +2721,7 @@
       title:'Organic Baby Food - Product Launch', 
       status:'Draft', 
       method:'Photographer',
+      orderType: 'PS',
       photographer:'Sarah Johnson', 
       deadline:'2025-09-10', 
       costCenter:'PG-100',
@@ -2462,12 +2731,13 @@
       budget: 8500,
       deliverables: ['Hero Product Shots', 'Ingredient Photography', 'Lifestyle with Babies'],
       eventId: 'A4125060', 
-      purchaseGroup: 100,
+      purchaseGroup: 101,
       offerId: '10763327',
       articleNumber: 'ART-BABY-009',
       articleName: 'Organic Baby Food Variety Pack',
       imageRequestId: '123470',
       photoStatus: 'New',
+      page: 9,
       createdBy: 'user-promo1',
       createdAt: '2025-09-01T08:30:00Z',
       assignedTo: 'user-photo1',
@@ -2478,6 +2748,7 @@
       title:'Gaming Laptop - Tech Showcase', 
       status:'Samples Requested', 
       method:'Photo Box',
+      orderType: 'PS',
       photographer:'Marcus Thompson', 
       deadline:'2025-09-08', 
       costCenter:'PG-300',
@@ -2487,12 +2758,13 @@
       budget: 12000,
       deliverables: ['Tech Hero Shots', 'RGB Lighting Effects', 'Detail Macro Shots'],
       eventId: 'A4225061', 
-      purchaseGroup: 300,
+      purchaseGroup: 101,
       offerId: '10763328',
       articleNumber: 'ART-LAPTOP-010',
       articleName: 'Gaming Laptop Pro X1',
       imageRequestId: '123471',
       photoStatus: 'Samples Requested',
+      page: 10,
       createdBy: 'user-promo2',
       createdAt: '2025-09-02T10:15:00Z',
       assignedTo: 'user-photo3',
@@ -2503,6 +2775,7 @@
       title:'Winter Jacket Collection', 
       status:'Pending Approval', 
       method:'Photographer',
+      orderType: 'PS',
       photographer:'Emily Chen', 
       deadline:'2025-09-12', 
       costCenter:'PG-200',
@@ -2512,12 +2785,13 @@
       budget: 15000,
       deliverables: ['Model Photography', 'Flat Lay Styling', 'Detail Shots'],
       eventId: 'A4325062', 
-      purchaseGroup: 200,
+      purchaseGroup: 101,
       offerId: '10763329',
       articleNumber: 'ART-JACKET-011',
       articleName: 'Winter Jacket Collection',
       imageRequestId: '123472',
       photoStatus: 'Pending',
+      page: 11,
       createdBy: 'user-promo1',
       createdAt: '2025-09-02T14:20:00Z',
       assignedTo: 'user-photo2',
@@ -2528,6 +2802,7 @@
       title:'Kitchen Appliances - Modern Design', 
       status:'Approved', 
       method:'Photo Box',
+      orderType: 'PS',
       photographer:'David Kim', 
       deadline:'2025-09-15', 
       costCenter:'PG-400',
@@ -2537,12 +2812,13 @@
       budget: 9500,
       deliverables: ['Product Photography', 'Lifestyle Kitchen Scenes', 'Technical Detail Shots'],
       eventId: 'A4425063', 
-      purchaseGroup: 400,
+      purchaseGroup: 101,
       offerId: '10763330',
       articleNumber: 'ART-KITCHEN-012',
       articleName: 'Kitchen Appliance Set',
       imageRequestId: '123473',
       photoStatus: 'Approved',
+      page: 12,
       createdBy: 'user-promo2',
       createdAt: '2025-09-02T16:45:00Z',
       assignedTo: 'user-photo4',
@@ -2553,6 +2829,7 @@
       title:'Organic Skincare Line', 
       status:'Photo Session', 
       method:'Photographer',
+      orderType: 'PS',
       photographer:'Lisa Wang', 
       deadline:'2025-09-07', 
       costCenter:'PG-100',
@@ -2562,12 +2839,13 @@
       budget: 11000,
       deliverables: ['Beauty Product Shots', 'Ingredient Close-ups', 'Lifestyle Beauty'],
       eventId: 'A4525064', 
-      purchaseGroup: 100,
+      purchaseGroup: 101,
       offerId: '10763331',
       articleNumber: 'ART-SKINCARE-013',
       articleName: 'Organic Skincare Collection',
       imageRequestId: '123474',
       photoStatus: 'In Progress',
+      page: 13,
       createdBy: 'user-promo1',
       createdAt: '2025-09-03T09:00:00Z',
       assignedTo: 'user-photo5',
@@ -2578,6 +2856,7 @@
       title:'Smart Home Security System', 
       status:'Samples in Transit', 
       method:'Photo Box',
+      orderType: 'PS',
       photographer:'Alex Johnson', 
       deadline:'2025-09-20', 
       costCenter:'PG-300',
@@ -2587,12 +2866,13 @@
       budget: 7500,
       deliverables: ['Tech Product Shots', 'Installation Demo', 'App Interface'],
       eventId: 'A4625065', 
-      purchaseGroup: 300,
+      purchaseGroup: 101,
       offerId: '10763332',
       articleNumber: 'ART-SECURITY-014',
       articleName: 'Smart Security System',
       imageRequestId: '123475',
       photoStatus: 'Samples in Transit',
+      page: 14,
       createdBy: 'user-promo2',
       createdAt: '2025-09-03T11:30:00Z',
       assignedTo: 'user-photo1',
@@ -2603,6 +2883,7 @@
       title:'Artisan Bread Collection', 
       status:'Complete', 
       method:'Photographer',
+      orderType: 'PS',
       photographer:'Maria Garcia', 
       deadline:'2025-08-30', 
       costCenter:'PG-100',
@@ -2612,12 +2893,13 @@
       budget: 6000,
       deliverables: ['Food Photography', 'Lifestyle Bakery Scenes', 'Ingredient Shots'],
       eventId: 'A4725066', 
-      purchaseGroup: 100,
+      purchaseGroup: 101,
       offerId: '10763333',
       articleNumber: 'ART-BREAD-015',
       articleName: 'Artisan Bread Selection',
       imageRequestId: '123476',
       photoStatus: 'Archive',
+      page: 15,
       createdBy: 'user-promo1',
       createdAt: '2025-08-25T13:45:00Z',
       assignedTo: 'user-photo2',
@@ -2628,6 +2910,7 @@
       title:'Fitness Equipment - Home Gym', 
       status:'Review', 
       method:'Photographer',
+      orderType: 'PS',
       photographer:'James Wilson', 
       deadline:'2025-09-18', 
       costCenter:'PG-400',
@@ -2637,12 +2920,13 @@
       budget: 13500,
       deliverables: ['Action Photography', 'Product Detail Shots', 'Home Gym Lifestyle'],
       eventId: 'A4825067', 
-      purchaseGroup: 400,
+      purchaseGroup: 101,
       offerId: '10763334',
       articleNumber: 'ART-FITNESS-016',
       articleName: 'Home Fitness Set',
       imageRequestId: '123477',
       photoStatus: 'Review',
+      page: 16,
       createdBy: 'user-promo2',
       createdAt: '2025-09-03T15:20:00Z',
       assignedTo: 'user-photo3',
@@ -2653,6 +2937,7 @@
       title:'Smartphone Accessories Bundle', 
       status:'New Request', 
       method:'Photo Box',
+      orderType: 'PS',
       photographer:'Not Assigned', 
       deadline:'2025-09-25', 
       costCenter:'PG-300',
@@ -2662,12 +2947,13 @@
       budget: 4500,
       deliverables: ['Tech Product Shots', 'Compatibility Demo', 'Lifestyle Tech'],
       eventId: 'A4925068', 
-      purchaseGroup: 300,
+      purchaseGroup: 101,
       offerId: '10763335',
       articleNumber: 'ART-PHONE-017',
       articleName: 'Smartphone Accessory Bundle',
       imageRequestId: '123478',
       photoStatus: 'New',
+      page: 17,
       createdBy: 'user-promo1',
       createdAt: '2025-09-04T08:00:00Z',
       assignedTo: null,
@@ -2678,6 +2964,7 @@
       title:'Luxury Watch Collection', 
       status:'Samples Received', 
       method:'Photographer',
+      orderType: 'PS',
       photographer:'Catherine Lee', 
       deadline:'2025-09-14', 
       costCenter:'PG-200',
@@ -2687,12 +2974,13 @@
       budget: 18000,
       deliverables: ['Luxury Product Photography', 'Macro Detail Shots', 'Lifestyle Luxury'],
       eventId: 'A5025069', 
-      purchaseGroup: 200,
+      purchaseGroup: 101,
       offerId: '10763336',
       articleNumber: 'ART-WATCH-018',
       articleName: 'Luxury Watch Collection',
       imageRequestId: '123479',
       photoStatus: 'Samples Received',
+      page: 18,
       createdBy: 'user-promo2',
       createdAt: '2025-09-04T10:30:00Z',
       assignedTo: 'user-photo4',
@@ -2703,6 +2991,7 @@
       title:'Garden Tool Set - Spring Collection', 
       status:'Processing', 
       method:'Photo Box',
+      orderType: 'PS',
       photographer:'Robert Chen', 
       deadline:'2025-09-11', 
       costCenter:'PG-400',
@@ -2712,12 +3001,13 @@
       budget: 7800,
       deliverables: ['Product Photography', 'Garden Lifestyle', 'Tool Detail Shots'],
       eventId: 'A5125070', 
-      purchaseGroup: 400,
+      purchaseGroup: 101,
       offerId: '10763337',
       articleNumber: 'ART-GARDEN-019',
       articleName: 'Garden Tool Collection',
       imageRequestId: '123480',
       photoStatus: 'Processing',
+      page: 19,
       createdBy: 'user-promo1',
       createdAt: '2025-09-04T12:15:00Z',
       assignedTo: 'user-photo5',
@@ -2728,6 +3018,7 @@
       title:'Gourmet Coffee Beans', 
       status:'Delivered', 
       method:'Photographer',
+      orderType: 'PS',
       photographer:'Ana Rodriguez', 
       deadline:'2025-08-28', 
       costCenter:'PG-100',
@@ -2737,12 +3028,13 @@
       budget: 5500,
       deliverables: ['Food Photography', 'Lifestyle Coffee Scenes', 'Bean Close-ups'],
       eventId: 'A5225071', 
-      purchaseGroup: 100,
+      purchaseGroup: 101,
       offerId: '10763338',
       articleNumber: 'ART-COFFEE-020',
       articleName: 'Gourmet Coffee Selection',
       imageRequestId: '123481',
       photoStatus: 'Archive',
+      page: 20,
       createdBy: 'user-promo2',
       createdAt: '2025-08-23T14:40:00Z',
       assignedTo: 'user-photo1',
@@ -2753,6 +3045,10 @@
       title:'Children Toys - Educational Series', 
       status:'Draft', 
       method:'Photographer',
+      orderType: 'PS',
+      
+      
+      
       photographer:'Sophie Turner', 
       deadline:'2025-09-22', 
       costCenter:'PG-200',
@@ -2762,12 +3058,13 @@
       budget: 10500,
       deliverables: ['Toy Photography', 'Kids Playing Lifestyle', 'Educational Demo'],
       eventId: 'A5325072', 
-      purchaseGroup: 200,
+      purchaseGroup: 101,
       offerId: '10763339',
       articleNumber: 'ART-TOYS-021',
       articleName: 'Educational Toy Set',
       imageRequestId: '123482',
       photoStatus: 'New',
+      page: 21,
       createdBy: 'user-promo1',
       createdAt: '2025-09-04T16:00:00Z',
       assignedTo: 'user-photo2',
@@ -2778,6 +3075,7 @@
       title:'Wireless Headphones Premium', 
       status:'Urgent', 
       method:'Photo Box',
+      orderType: 'PS',
       photographer:'Michael Park', 
       deadline:'2025-09-05', 
       costCenter:'PG-300',
@@ -2787,12 +3085,13 @@
       budget: 14000,
       deliverables: ['Tech Hero Shots', 'Feature Highlights', 'Lifestyle Music'],
       eventId: 'A5425073', 
-      purchaseGroup: 300,
+      purchaseGroup: 101,
       offerId: '10763340',
       articleNumber: 'ART-HEADPHONES-022',
       articleName: 'Wireless Headphones Premium',
       imageRequestId: '123483',
       photoStatus: 'Urgent',
+      page: 22,
       createdBy: 'user-promo2',
       createdAt: '2025-09-04T18:30:00Z',
       assignedTo: 'user-photo3',
@@ -2803,6 +3102,7 @@
       title:'Outdoor Camping Gear', 
       status:'Pending Approval', 
       method:'Photographer',
+      orderType: 'PS',
       photographer:'Tom Anderson', 
       deadline:'2025-09-28', 
       costCenter:'PG-400',
@@ -2812,12 +3112,13 @@
       budget: 12500,
       deliverables: ['Outdoor Photography', 'Camping Lifestyle', 'Product Features'],
       eventId: 'A5525074', 
-      purchaseGroup: 400,
+      purchaseGroup: 101,
       offerId: '10763341',
       articleNumber: 'ART-CAMPING-023',
       articleName: 'Camping Gear Set',
       imageRequestId: '123484',
       photoStatus: 'Pending',
+      page: 23,
       createdBy: 'user-promo1',
       createdAt: '2025-09-05T08:45:00Z',
       assignedTo: 'user-photo4',
@@ -2828,6 +3129,7 @@
       title:'Artisan Chocolate Collection', 
       status:'Approved', 
       method:'Photographer',
+      orderType: 'PS',
       photographer:'Isabella Martinez', 
       deadline:'2025-09-16', 
       costCenter:'PG-100',
@@ -2837,12 +3139,13 @@
       budget: 8800,
       deliverables: ['Luxury Food Photography', 'Lifestyle Gifting', 'Chocolate Close-ups'],
       eventId: 'A5625075', 
-      purchaseGroup: 100,
+      purchaseGroup: 101,
       offerId: '10763342',
       articleNumber: 'ART-CHOCOLATE-024',
       articleName: 'Artisan Chocolate Collection',
       imageRequestId: '123485',
       photoStatus: 'Approved',
+      page: 24,
       createdBy: 'user-promo2',
       createdAt: '2025-09-05T10:20:00Z',
       assignedTo: 'user-photo5',
@@ -2853,6 +3156,7 @@
       title:'Smart TV 75 inch Ultra HD', 
       status:'Photo Session', 
       method:'Photo Box',
+      orderType: 'PS',
       photographer:'Kevin Wright', 
       deadline:'2025-09-13', 
       costCenter:'PG-300',
@@ -2862,12 +3166,13 @@
       budget: 16000,
       deliverables: ['Tech Product Shots', 'Living Room Lifestyle', 'Screen Quality Demo'],
       eventId: 'A5725076', 
-      purchaseGroup: 300,
+      purchaseGroup: 101,
       offerId: '10763343',
       articleNumber: 'ART-TV-025',
       articleName: 'Smart TV Ultra HD',
       imageRequestId: '123486',
       photoStatus: 'In Progress',
+      page: 25,
       createdBy: 'user-promo1',
       createdAt: '2025-09-05T12:00:00Z',
       assignedTo: 'user-photo1',
@@ -2878,6 +3183,7 @@
       title:'Luxury Bedding Set', 
       status:'Samples Requested', 
       method:'Photographer',
+      orderType: 'PS',
       photographer:'Rachel Green', 
       deadline:'2025-09-19', 
       costCenter:'PG-200',
@@ -2887,12 +3193,13 @@
       budget: 9200,
       deliverables: ['Lifestyle Bedroom', 'Fabric Close-ups', 'Comfort Demonstration'],
       eventId: 'A5825077', 
-      purchaseGroup: 200,
+      purchaseGroup: 101,
       offerId: '10763344',
       articleNumber: 'ART-BEDDING-026',
       articleName: 'Luxury Bedding Collection',
       imageRequestId: '123487',
       photoStatus: 'Samples Requested',
+      page: 26,
       createdBy: 'user-promo2',
       createdAt: '2025-09-05T14:30:00Z',
       assignedTo: 'user-photo2',
@@ -2903,6 +3210,7 @@
       title:'Electric Bike Urban Series', 
       status:'Complete', 
       method:'Photographer',
+      orderType: 'PS',
       photographer:'Daniel Foster', 
       deadline:'2025-08-25', 
       costCenter:'PG-400',
@@ -2912,12 +3220,13 @@
       budget: 17500,
       deliverables: ['Action Photography', 'Urban Lifestyle', 'Tech Feature Highlights'],
       eventId: 'A5925078', 
-      purchaseGroup: 400,
+      purchaseGroup: 101,
       offerId: '10763345',
       articleNumber: 'ART-EBIKE-027',
       articleName: 'Electric Bike Urban',
       imageRequestId: '123488',
       photoStatus: 'Archive',
+      page: 27,
       createdBy: 'user-promo1',
       createdAt: '2025-08-20T16:15:00Z',
       assignedTo: 'user-photo3',
@@ -2928,6 +3237,7 @@
       title:'Baby Monitor Smart Camera', 
       status:'Review', 
       method:'Photo Box',
+      orderType: 'PS',
       photographer:'Jennifer Liu', 
       deadline:'2025-09-17', 
       costCenter:'PG-300',
@@ -2937,12 +3247,13 @@
       budget: 6700,
       deliverables: ['Tech Product Shots', 'Nursery Lifestyle', 'App Interface Demo'],
       eventId: 'A6025079', 
-      purchaseGroup: 300,
+      purchaseGroup: 101,
       offerId: '10763346',
       articleNumber: 'ART-BABYMONITOR-028',
       articleName: 'Smart Baby Monitor',
       imageRequestId: '123489',
       photoStatus: 'Review',
+      page: 28,
       createdBy: 'user-promo2',
       createdAt: '2025-09-05T17:45:00Z',
       assignedTo: 'user-photo4',
@@ -2953,6 +3264,7 @@
       title:'Gourmet Spice Collection', 
       status:'New Request', 
       method:'Photographer',
+      orderType: 'PS',
       photographer:'Not Assigned', 
       deadline:'2025-09-30', 
       costCenter:'PG-100',
@@ -2962,12 +3274,13 @@
       budget: 4200,
       deliverables: ['Food Photography', 'Spice Close-ups', 'Cooking Lifestyle'],
       eventId: 'A6125080', 
-      purchaseGroup: 100,
+      purchaseGroup: 101,
       offerId: '10763347',
       articleNumber: 'ART-SPICES-029',
       articleName: 'Gourmet Spice Collection',
       imageRequestId: '123490',
       photoStatus: 'New',
+      page: 29,
       createdBy: 'user-promo1',
       createdAt: '2025-09-06T09:00:00Z',
       assignedTo: null,
@@ -2978,6 +3291,7 @@
       title:'Gaming Chair Pro Series', 
       status:'Samples in Transit', 
       method:'Photographer',
+      orderType: 'PS',
       photographer:'Chris Taylor', 
       deadline:'2025-09-21', 
       costCenter:'PG-200',
@@ -2987,12 +3301,13 @@
       budget: 11500,
       deliverables: ['Product Photography', 'Gaming Setup Lifestyle', 'Comfort Features'],
       eventId: 'A6225081', 
-      purchaseGroup: 200,
+      purchaseGroup: 101,
       offerId: '10763348',
       articleNumber: 'ART-GAMECHAIR-030',
       articleName: 'Gaming Chair Pro',
       imageRequestId: '123491',
       photoStatus: 'Samples in Transit',
+      page: 30,
       createdBy: 'user-promo2',
       createdAt: '2025-09-06T11:30:00Z',
       assignedTo: 'user-photo5',
@@ -3003,6 +3318,7 @@
       title:'Solar Panel Home Kit', 
       status:'Delivered', 
       method:'Photo Box',
+      orderType: 'PS',
       photographer:'Mark Davis', 
       deadline:'2025-08-22', 
       costCenter:'PG-400',
@@ -3012,12 +3328,13 @@
       budget: 13800,
       deliverables: ['Tech Product Shots', 'Installation Demo', 'Eco Lifestyle'],
       eventId: 'A6325082', 
-      purchaseGroup: 400,
+      purchaseGroup: 101,
       offerId: '10763349',
       articleNumber: 'ART-SOLAR-031',
       articleName: 'Solar Panel Home Kit',
       imageRequestId: '123492',
       photoStatus: 'Archive',
+      page: 31,
       createdBy: 'user-promo1',
       createdAt: '2025-08-17T13:20:00Z',
       assignedTo: 'user-photo1',
@@ -3028,6 +3345,7 @@
       title:'Artisan Cheese Selection', 
       status:'Processing', 
       method:'Photographer',
+      orderType: 'PS',
       photographer:'Emma Thompson', 
       deadline:'2025-09-15', 
       costCenter:'PG-100',
@@ -3037,12 +3355,13 @@
       budget: 7200,
       deliverables: ['Gourmet Food Photography', 'Cheese Board Styling', 'Lifestyle Dining'],
       eventId: 'A6425083', 
-      purchaseGroup: 100,
+      purchaseGroup: 101,
       offerId: '10763350',
       articleNumber: 'ART-CHEESE-032',
       articleName: 'Artisan Cheese Collection',
       imageRequestId: '123493',
       photoStatus: 'Processing',
+      page: 32,
       createdBy: 'user-promo2',
       createdAt: '2025-09-06T15:45:00Z',
       assignedTo: 'user-photo2',
@@ -3053,6 +3372,7 @@
       title:'Wireless Speaker Waterproof', 
       status:'Urgent', 
       method:'Photo Box',
+      orderType: 'PS',
       photographer:'Ryan Miller', 
       deadline:'2025-09-04', 
       costCenter:'PG-300',
@@ -3062,12 +3382,13 @@
       budget: 8900,
       deliverables: ['Tech Product Shots', 'Waterproof Demo', 'Outdoor Lifestyle'],
       eventId: 'A6525084', 
-      purchaseGroup: 300,
+      purchaseGroup: 101,
       offerId: '10763351',
       articleNumber: 'ART-SPEAKER-033',
       articleName: 'Wireless Speaker Outdoor',
       imageRequestId: '123494',
       photoStatus: 'Urgent',
+      page: 33,
       createdBy: 'user-promo1',
       createdAt: '2025-09-02T17:00:00Z',
       assignedTo: 'user-photo3',
@@ -3078,6 +3399,7 @@
       title:'Designer Handbag Collection', 
       status:'Samples Received', 
       method:'Photographer',
+      orderType: 'PS',
       photographer:'Victoria Stone', 
       deadline:'2025-09-24', 
       costCenter:'PG-200',
@@ -3087,12 +3409,13 @@
       budget: 19500,
       deliverables: ['Fashion Photography', 'Lifestyle Luxury', 'Detail Craftsmanship'],
       eventId: 'A6625085', 
-      purchaseGroup: 200,
+      purchaseGroup: 101,
       offerId: '10763352',
       articleNumber: 'ART-HANDBAG-034',
       articleName: 'Designer Handbag Collection',
       imageRequestId: '123495',
       photoStatus: 'Samples Received',
+      page: 34,
       createdBy: 'user-promo2',
       createdAt: '2025-09-07T08:30:00Z',
       assignedTo: 'user-photo4',
@@ -3103,6 +3426,7 @@
       title:'Power Tools Professional Set', 
       status:'Draft', 
       method:'Photo Box',
+      orderType: 'PS',
       photographer:'Steve Johnson', 
       deadline:'2025-09-26', 
       costCenter:'PG-400',
@@ -3112,12 +3436,13 @@
       budget: 10800,
       deliverables: ['Product Photography', 'Workshop Lifestyle', 'Tool Features Demo'],
       eventId: 'A6725086', 
-      purchaseGroup: 400,
+      purchaseGroup: 101,
       offerId: '10763353',
       articleNumber: 'ART-POWERTOOLS-035',
       articleName: 'Power Tools Pro Set',
       imageRequestId: '123496',
       photoStatus: 'New',
+      page: 35,
       createdBy: 'user-promo1',
       createdAt: '2025-09-07T10:15:00Z',
       assignedTo: 'user-photo5',
@@ -3128,6 +3453,7 @@
       title:'Organic Wine Collection', 
       status:'Pending Approval', 
       method:'Photographer',
+      orderType: 'PS',
       photographer:'Anthony Clark', 
       deadline:'2025-09-29', 
       costCenter:'PG-100',
@@ -3137,12 +3463,13 @@
       budget: 12000,
       deliverables: ['Wine Photography', 'Lifestyle Dining', 'Bottle Detail Shots'],
       eventId: 'A6825087', 
-      purchaseGroup: 100,
+      purchaseGroup: 101,
       offerId: '10763354',
       articleNumber: 'ART-WINE-036',
       articleName: 'Organic Wine Selection',
       imageRequestId: '123497',
       photoStatus: 'Pending',
+      page: 36,
       createdBy: 'user-promo2',
       createdAt: '2025-09-07T12:45:00Z',
       assignedTo: 'user-photo1',
@@ -3153,6 +3480,7 @@
       title:'Robot Vacuum Smart Home', 
       status:'Approved', 
       method:'Photo Box',
+      orderType: 'PS',
       photographer:'Nancy Wilson', 
       deadline:'2025-09-23', 
       costCenter:'PG-300',
@@ -3162,12 +3490,13 @@
       budget: 9800,
       deliverables: ['Tech Product Shots', 'Home Cleaning Demo', 'App Interface'],
       eventId: 'A6925088', 
-      purchaseGroup: 300,
+      purchaseGroup: 101,
       offerId: '10763355',
       articleNumber: 'ART-ROBOTVAC-037',
       articleName: 'Robot Vacuum Smart',
       imageRequestId: '123498',
       photoStatus: 'Approved',
+      page: 37,
       createdBy: 'user-promo1',
       createdAt: '2025-09-07T14:20:00Z',
       assignedTo: 'user-photo2',
@@ -3178,6 +3507,7 @@
       title:'Luxury Perfume Launch', 
       status:'Photo Session', 
       method:'Photographer',
+      orderType: 'PS',
       photographer:'Sophia Martinez', 
       deadline:'2025-09-12', 
       costCenter:'PG-200',
@@ -3187,12 +3517,13 @@
       budget: 22000,
       deliverables: ['Luxury Beauty Photography', 'Lifestyle Elegance', 'Bottle Art Shots'],
       eventId: 'A7025089', 
-      purchaseGroup: 200,
+      purchaseGroup: 101,
       offerId: '10763356',
       articleNumber: 'ART-PERFUME-038',
       articleName: 'Luxury Perfume Collection',
       imageRequestId: '123499',
       photoStatus: 'In Progress',
+      page: 38,
       createdBy: 'user-promo2',
       createdAt: '2025-09-07T16:00:00Z',
       assignedTo: 'user-photo3',
@@ -3203,6 +3534,7 @@
       title:'BBQ Grill Professional', 
       status:'Samples Requested', 
       method:'Photographer',
+      orderType: 'PS',
       photographer:'Jason Lee', 
       deadline:'2025-09-27', 
       costCenter:'PG-400',
@@ -3212,12 +3544,13 @@
       budget: 14500,
       deliverables: ['Product Photography', 'Outdoor Cooking Lifestyle', 'Food Results'],
       eventId: 'A7125090', 
-      purchaseGroup: 400,
+      purchaseGroup: 101,
       offerId: '10763357',
       articleNumber: 'ART-BBQ-039',
       articleName: 'BBQ Grill Professional',
       imageRequestId: '123500',
       photoStatus: 'Samples Requested',
+      page: 39,
       createdBy: 'user-promo1',
       createdAt: '2025-09-08T08:00:00Z',
       assignedTo: 'user-photo4',
@@ -3228,6 +3561,7 @@
       title:'Gourmet Tea Collection', 
       status:'Complete', 
       method:'Photographer',
+      orderType: 'PS',
       photographer:'Helen Chang', 
       deadline:'2025-08-31', 
       costCenter:'PG-100',
@@ -3237,12 +3571,13 @@
       budget: 6500,
       deliverables: ['Food Photography', 'Tea Ceremony Lifestyle', 'Leaf Close-ups'],
       eventId: 'A7225091', 
-      purchaseGroup: 100,
+      purchaseGroup: 101,
       offerId: '10763358',
       articleNumber: 'ART-TEA-040',
       articleName: 'Gourmet Tea Collection',
       imageRequestId: '123501',
       photoStatus: 'Archive',
+      page: 40,
       createdBy: 'user-promo2',
       createdAt: '2025-08-26T10:30:00Z',
       assignedTo: 'user-photo5',
@@ -3253,6 +3588,7 @@
       title:'Mechanical Keyboard Gaming', 
       status:'Review', 
       method:'Photo Box',
+      orderType: 'PS',
       photographer:'Brian Kim', 
       deadline:'2025-09-18', 
       costCenter:'PG-300',
@@ -3262,12 +3598,13 @@
       budget: 7800,
       deliverables: ['Tech Product Shots', 'Gaming Setup Lifestyle', 'RGB Light Effects'],
       eventId: 'A7325092', 
-      purchaseGroup: 300,
+      purchaseGroup: 101,
       offerId: '10763359',
       articleNumber: 'ART-KEYBOARD-041',
       articleName: 'Mechanical Keyboard Gaming',
       imageRequestId: '123502',
       photoStatus: 'Review',
+      page: 41,
       createdBy: 'user-promo1',
       createdAt: '2025-09-08T12:15:00Z',
       assignedTo: 'user-photo1',
@@ -3278,6 +3615,7 @@
       title:'Luxury Skincare Anti-Aging', 
       status:'New Request', 
       method:'Photographer',
+      orderType: 'PS',
       photographer:'Not Assigned', 
       deadline:'2025-10-01', 
       costCenter:'PG-200',
@@ -3287,12 +3625,13 @@
       budget: 16500,
       deliverables: ['Beauty Product Photography', 'Lifestyle Mature Beauty', 'Ingredient Close-ups'],
       eventId: 'A7425093', 
-      purchaseGroup: 200,
+      purchaseGroup: 101,
       offerId: '10763360',
       articleNumber: 'ART-ANTIAGING-042',
       articleName: 'Anti-Aging Skincare Line',
       imageRequestId: '123503',
       photoStatus: 'New',
+      page: 42,
       createdBy: 'user-promo2',
       createdAt: '2025-09-08T14:45:00Z',
       assignedTo: null,
@@ -3303,6 +3642,7 @@
       title:'Smart Doorbell Security', 
       status:'Samples in Transit', 
       method:'Photo Box',
+      orderType: 'PS',
       photographer:'Peter Wilson', 
       deadline:'2025-09-20', 
       costCenter:'PG-300',
@@ -3312,12 +3652,13 @@
       budget: 8200,
       deliverables: ['Tech Product Shots', 'Home Security Demo', 'App Interface'],
       eventId: 'A7525094', 
-      purchaseGroup: 300,
+      purchaseGroup: 101,
       offerId: '10763361',
       articleNumber: 'ART-DOORBELL-043',
       articleName: 'Smart Video Doorbell',
       imageRequestId: '123504',
       photoStatus: 'Samples in Transit',
+      page: 43,
       createdBy: 'user-promo1',
       createdAt: '2025-09-08T16:30:00Z',
       assignedTo: 'user-photo2',
@@ -3328,6 +3669,7 @@
       title:'Outdoor Furniture Patio Set', 
       status:'Delivered', 
       method:'Photographer',
+      orderType: 'PS',
       photographer:'Lisa Rodriguez', 
       deadline:'2025-08-29', 
       costCenter:'PG-400',
@@ -3337,12 +3679,13 @@
       budget: 11200,
       deliverables: ['Outdoor Lifestyle Photography', 'Product Detail Shots', 'Seasonal Styling'],
       eventId: 'A7625095', 
-      purchaseGroup: 400,
+      purchaseGroup: 101,
       offerId: '10763362',
       articleNumber: 'ART-PATIO-044',
       articleName: 'Outdoor Patio Furniture',
       imageRequestId: '123505',
       photoStatus: 'Archive',
+      page: 44,
       createdBy: 'user-promo2',
       createdAt: '2025-08-24T18:00:00Z',
       assignedTo: 'user-photo3',
@@ -3353,6 +3696,7 @@
       title:'Artisan Bread Making Kit', 
       status:'Processing', 
       method:'Photographer',
+      orderType: 'PS',
       photographer:'Carlos Garcia', 
       deadline:'2025-09-25', 
       costCenter:'PG-100',
@@ -3362,12 +3706,13 @@
       budget: 5800,
       deliverables: ['Food Photography', 'Baking Process Demo', 'Lifestyle Kitchen'],
       eventId: 'A7725096', 
-      purchaseGroup: 100,
+      purchaseGroup: 101,
       offerId: '10763363',
       articleNumber: 'ART-BREADKIT-045',
       articleName: 'Artisan Bread Making Kit',
       imageRequestId: '123506',
       photoStatus: 'Processing',
+      page: 45,
       createdBy: 'user-promo1',
       createdAt: '2025-09-09T08:15:00Z',
       assignedTo: 'user-photo4',
@@ -3378,6 +3723,7 @@
       title:'Electric Scooter Urban', 
       status:'Urgent', 
       method:'Photographer',
+      orderType: 'PS',
       photographer:'David Thompson', 
       deadline:'2025-09-06', 
       costCenter:'PG-400',
@@ -3387,12 +3733,13 @@
       budget: 13200,
       deliverables: ['Action Photography', 'Urban Lifestyle', 'Tech Feature Highlights'],
       eventId: 'A7825097', 
-      purchaseGroup: 400,
+      purchaseGroup: 101,
       offerId: '10763364',
       articleNumber: 'ART-ESCOOTER-046',
       articleName: 'Electric Scooter Urban',
       imageRequestId: '123507',
       photoStatus: 'Urgent',
+      page: 46,
       createdBy: 'user-promo2',
       createdAt: '2025-09-04T19:30:00Z',
       assignedTo: 'user-photo5',
@@ -3403,6 +3750,7 @@
       title:'Designer Sunglasses Collection', 
       status:'Samples Received', 
       method:'Photographer',
+      orderType: 'PS',
       photographer:'Amanda Foster', 
       deadline:'2025-09-22', 
       costCenter:'PG-200',
@@ -3412,12 +3760,13 @@
       budget: 15800,
       deliverables: ['Fashion Photography', 'Lifestyle Summer', 'Detail Craftsmanship'],
       eventId: 'A7925098', 
-      purchaseGroup: 200,
+      purchaseGroup: 101,
       offerId: '10763365',
       articleNumber: 'ART-SUNGLASSES-047',
       articleName: 'Designer Sunglasses Collection',
       imageRequestId: '123508',
       photoStatus: 'Samples Received',
+      page: 47,
       createdBy: 'user-promo1',
       createdAt: '2025-09-09T10:45:00Z',
       assignedTo: 'user-photo1',
@@ -3428,6 +3777,7 @@
       title:'Smart Home Thermostat', 
       status:'Approved', 
       method:'Photo Box',
+      orderType: 'PS',
       photographer:'Richard Davis', 
       deadline:'2025-09-28', 
       costCenter:'PG-300',
@@ -3437,12 +3787,13 @@
       budget: 7400,
       deliverables: ['Tech Product Shots', 'Home Lifestyle', 'Energy Saving Demo'],
       eventId: 'A8025099', 
-      purchaseGroup: 300,
+      purchaseGroup: 101,
       offerId: '10763366',
       articleNumber: 'ART-THERMOSTAT-048',
       articleName: 'Smart Home Thermostat',
       imageRequestId: '123509',
       photoStatus: 'Approved',
+      page: 48,
       createdBy: 'user-promo2',
       createdAt: '2025-09-09T12:30:00Z',
       assignedTo: 'user-photo2',
@@ -3453,6 +3804,7 @@
       title:'Luxury Bath Towel Set', 
       status:'Draft', 
       method:'Photographer',
+      orderType: 'PS',
       photographer:'Grace Wilson', 
       deadline:'2025-10-02', 
       costCenter:'PG-200',
@@ -3462,12 +3814,13 @@
       budget: 6800,
       deliverables: ['Lifestyle Bathroom', 'Texture Close-ups', 'Spa Styling'],
       eventId: 'A8125100', 
-      purchaseGroup: 200,
+      purchaseGroup: 101,
       offerId: '10763367',
       articleNumber: 'ART-TOWELS-049',
       articleName: 'Luxury Bath Towel Set',
       imageRequestId: '123510',
       photoStatus: 'New',
+      page: 49,
       createdBy: 'user-promo1',
       createdAt: '2025-09-09T14:15:00Z',
       assignedTo: 'user-photo3',
@@ -3478,6 +3831,7 @@
       title:'Professional Blender High-Speed', 
       status:'Pending Approval', 
       method:'Photo Box',
+      orderType: 'PS',
       photographer:'Michelle Lee', 
       deadline:'2025-09-30', 
       costCenter:'PG-400',
@@ -3487,12 +3841,13 @@
       budget: 9600,
       deliverables: ['Product Photography', 'Kitchen Lifestyle', 'Action Blending Shots'],
       eventId: 'A8225101', 
-      purchaseGroup: 400,
+      purchaseGroup: 101,
       offerId: '10763368',
       articleNumber: 'ART-BLENDER-050',
       articleName: 'Professional Blender',
       imageRequestId: '123511',
       photoStatus: 'Pending',
+      page: 50,
       createdBy: 'user-promo2',
       createdAt: '2025-09-09T16:00:00Z',
       assignedTo: 'user-photo4',
@@ -3503,6 +3858,7 @@
       title:'Wireless Charging Pad Multi-Device', 
       status:'Photo Session', 
       method:'Photo Box',
+      orderType: 'PS',
       photographer:'Kevin Chang', 
       deadline:'2025-09-14', 
       costCenter:'PG-300',
@@ -3512,12 +3868,13 @@
       budget: 5200,
       deliverables: ['Tech Product Shots', 'Device Compatibility Demo', 'Lifestyle Office'],
       eventId: 'A8325102', 
-      purchaseGroup: 300,
+      purchaseGroup: 101,
       offerId: '10763369',
       articleNumber: 'ART-CHARGER-051',
       articleName: 'Wireless Charging Station',
       imageRequestId: '123512',
       photoStatus: 'In Progress',
+      page: 51,
       createdBy: 'user-promo1',
       createdAt: '2025-09-09T17:45:00Z',
       assignedTo: 'user-photo5',
@@ -3528,6 +3885,7 @@
       title:'Artisan Ceramic Dinnerware', 
       status:'Complete', 
       method:'Photographer',
+      orderType: 'PS',
       photographer:'Diana Miller', 
       deadline:'2025-09-01', 
       costCenter:'PG-200',
@@ -3537,12 +3895,13 @@
       budget: 8400,
       deliverables: ['Lifestyle Table Setting', 'Product Detail Shots', 'Artisan Craftsmanship'],
       eventId: 'A8425103', 
-      purchaseGroup: 200,
+      purchaseGroup: 101,
       offerId: '10763370',
       articleNumber: 'ART-DINNERWARE-052',
       articleName: 'Artisan Ceramic Collection',
       imageRequestId: '123513',
       photoStatus: 'Archive',
+      page: 52,
       createdBy: 'user-promo2',
       createdAt: '2025-08-27T09:30:00Z',
       assignedTo: 'user-photo1',
@@ -3553,6 +3912,7 @@
       title:'Smart Water Bottle Hydration', 
       status:'Samples Requested', 
       method:'Photo Box',
+      orderType: 'PS',
       photographer:'Tyler Brown', 
       deadline:'2025-09-26', 
       costCenter:'PG-400',
@@ -3562,12 +3922,13 @@
       budget: 6200,
       deliverables: ['Tech Product Shots', 'Active Lifestyle', 'App Interface Demo'],
       eventId: 'A8525104', 
-      purchaseGroup: 400,
+      purchaseGroup: 101,
       offerId: '10763371',
       articleNumber: 'ART-WATERBOTTLE-053',
       articleName: 'Smart Hydration Bottle',
       imageRequestId: '123514',
       photoStatus: 'Samples Requested',
+      page: 53,
       createdBy: 'user-promo1',
       createdAt: '2025-09-10T08:00:00Z',
       assignedTo: 'user-photo2',
@@ -3578,6 +3939,7 @@
       title:'Luxury Watch Band Collection', 
       status:'Review', 
       method:'Photographer',
+      orderType: 'PS',
       photographer:'Olivia Garcia', 
       deadline:'2025-09-21', 
       costCenter:'PG-200',
@@ -3587,12 +3949,13 @@
       budget: 11800,
       deliverables: ['Luxury Accessory Photography', 'Material Close-ups', 'Lifestyle Elegance'],
       eventId: 'A8625105', 
-      purchaseGroup: 200,
+      purchaseGroup: 101,
       offerId: '10763372',
       articleNumber: 'ART-WATCHBAND-054',
       articleName: 'Luxury Watch Band Collection',
       imageRequestId: '123515',
       photoStatus: 'Review',
+      page: 54,
       createdBy: 'user-promo2',
       createdAt: '2025-09-10T10:30:00Z',
       assignedTo: 'user-photo3',
@@ -3603,6 +3966,7 @@
       title:'Electric Coffee Grinder Pro', 
       status:'New Request', 
       method:'Photo Box',
+      orderType: 'PS',
       photographer:'Not Assigned', 
       deadline:'2025-10-03', 
       costCenter:'PG-100',
@@ -3612,12 +3976,13 @@
       budget: 4800,
       deliverables: ['Product Photography', 'Coffee Lifestyle', 'Grinding Demo'],
       eventId: 'A8725106', 
-      purchaseGroup: 100,
+      purchaseGroup: 101,
       offerId: '10763373',
       articleNumber: 'ART-GRINDER-055',
       articleName: 'Electric Coffee Grinder',
       imageRequestId: '123516',
       photoStatus: 'New',
+      page: 55,
       createdBy: 'user-promo1',
       createdAt: '2025-09-10T12:15:00Z',
       assignedTo: null,
@@ -3628,6 +3993,7 @@
       title:'Ergonomic Office Chair Executive', 
       status:'Samples in Transit', 
       method:'Photographer',
+      orderType: 'PS',
       photographer:'Jonathan Smith', 
       deadline:'2025-09-24', 
       costCenter:'PG-200',
@@ -3637,12 +4003,13 @@
       budget: 14200,
       deliverables: ['Product Photography', 'Office Lifestyle', 'Ergonomic Features'],
       eventId: 'A8825107', 
-      purchaseGroup: 200,
+      purchaseGroup: 101,
       offerId: '10763374',
       articleNumber: 'ART-OFFICECHAIR-056',
       articleName: 'Ergonomic Executive Chair',
       imageRequestId: '123517',
       photoStatus: 'Samples in Transit',
+      page: 56,
       createdBy: 'user-promo2',
       createdAt: '2025-09-10T14:45:00Z',
       assignedTo: 'user-photo4',
@@ -3653,6 +4020,7 @@
       title:'Air Purifier HEPA Advanced', 
       status:'Delivered', 
       method:'Photo Box',
+      orderType: 'PS',
       photographer:'Sandra Lee', 
       deadline:'2025-09-02', 
       costCenter:'PG-300',
@@ -3662,12 +4030,13 @@
       budget: 10500,
       deliverables: ['Tech Product Shots', 'Home Lifestyle', 'Air Quality Demo'],
       eventId: 'A8925108', 
-      purchaseGroup: 300,
+      purchaseGroup: 101,
       offerId: '10763375',
       articleNumber: 'ART-AIRPURIFIER-057',
       articleName: 'HEPA Air Purifier',
       imageRequestId: '123518',
       photoStatus: 'Archive',
+      page: 57,
       createdBy: 'user-promo1',
       createdAt: '2025-08-28T16:30:00Z',
       assignedTo: 'user-photo5',
@@ -3678,6 +4047,7 @@
       title:'Gourmet Olive Oil Collection', 
       status:'Processing', 
       method:'Photographer',
+      orderType: 'PS',
       photographer:'Mario Rossi', 
       deadline:'2025-09-19', 
       costCenter:'PG-100',
@@ -3687,17 +4057,19 @@
       budget: 7600,
       deliverables: ['Gourmet Food Photography', 'Lifestyle Cooking', 'Oil Quality Demo'],
       eventId: 'A9025109', 
-      purchaseGroup: 100,
+      purchaseGroup: 101,
       offerId: '10763376',
       articleNumber: 'ART-OLIVEOIL-058',
       articleName: 'Gourmet Olive Oil Collection',
       imageRequestId: '123519',
       photoStatus: 'Processing',
+      page: 58,
       createdBy: 'user-promo2',
       createdAt: '2025-09-10T18:00:00Z',
       assignedTo: 'user-photo1',
       comments: []
     }
+  
   ];
 
   // Expose orders globally for access from other scopes
@@ -4348,14 +4720,16 @@
                         <th style="width: 40px; display: none;" class="bulk-checkbox"><input type="checkbox" id="selectAllOrders"></th>
                         <th style="padding: 4px; text-align: center; border-bottom: 1px solid rgba(196, 139, 90, 0.22); width: 32px;" aria-label="Expand"></th>
                         <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: #4b3b2a; border-bottom: 1px solid rgba(196, 139, 90, 0.22);">Order Number</th>
+                        <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: #4b3b2a; border-bottom: 1px solid rgba(196, 139, 90, 0.22);">Page</th>
                         <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: #4b3b2a; border-bottom: 1px solid rgba(196, 139, 90, 0.22);">Offer ID</th>
                         <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: #4b3b2a; border-bottom: 1px solid rgba(196, 139, 90, 0.22);">Group</th>
+                        <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: #4b3b2a; border-bottom: 1px solid rgba(196, 139, 90, 0.22);">Order Type</th>
                         <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: #4b3b2a; border-bottom: 1px solid rgba(196, 139, 90, 0.22);">Offer Name</th>
                         <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: #4b3b2a; border-bottom: 1px solid rgba(196, 139, 90, 0.22);">Shot Type</th>
                         <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: #4b3b2a; border-bottom: 1px solid rgba(196, 139, 90, 0.22);">Photo Ref.</th>
                         <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: #4b3b2a; border-bottom: 1px solid rgba(196, 139, 90, 0.22);">Production</th>
                         <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: #4b3b2a; border-bottom: 1px solid rgba(196, 139, 90, 0.22);">Principle</th>
-                        <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: #4b3b2a; border-bottom: 1px solid rgba(196, 139, 90, 0.22);">Preview Image</th>
+                        <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: #4b3b2a; border-bottom: 1px solid rgba(196, 139, 90, 0.22);">File Name</th>
                         <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: #4b3b2a; border-bottom: 1px solid rgba(196, 139, 90, 0.22); width: 92px;">Comments</th>
                         <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: #4b3b2a; border-bottom: 1px solid rgba(196, 139, 90, 0.22);">Status</th>
                         <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: #4b3b2a; border-bottom: 1px solid rgba(196, 139, 90, 0.22);">Deadline</th>
@@ -5176,6 +5550,13 @@
           color: #7d4f1b;
           border-color: rgba(222, 186, 138, 0.6);
           box-shadow: 0 6px 14px rgba(125, 79, 27, 0.16);
+        }
+
+        .production-chip--unassigned {
+          background: rgba(226, 232, 240, 0.6);
+          color: #475569;
+          border-color: rgba(203, 213, 225, 0.7);
+          box-shadow: 0 6px 14px rgba(71, 85, 105, 0.14);
         }
 
         .orders-table {
@@ -6704,26 +7085,13 @@
     ];
 
     const DEFAULT_PRODUCTION_META = {
-      ...PRODUCTION_METHOD_OPTIONS[0],
-      description: 'Auto-assigned to Photo Box until a production choice is confirmed.',
-      raw: ''
-    };
-
-    const LEGACY_PRODUCTION_VALUE_MAP = {
-      photographer: 'mandb',
-      internalstudio: 'photobox',
-      inhouse: 'photobox',
-      studio: 'photobox',
-      photostudio: 'photobox',
-      externalstudio: 'gils',
-      vendor: 'gils',
-      outsourced: 'gils',
-      freelance: 'gils',
-      bilka: 'merrild',
-      postproduction: 'merrild',
-      retouch: 'merrild',
-      ai: 'mandb',
-      automation: 'mandb'
+      id: 'unassigned',
+      label: '',
+      shortLabel: '',
+      icon: '',
+      description: '',
+      raw: '',
+      chipClass: 'production-chip--unassigned'
     };
 
     const BILKA_PREVIEW_IMAGES = [
@@ -6759,26 +7127,13 @@
         return { ...matchedOption, raw };
       }
 
-      const sanitized = normalized.replace(/[^a-z0-9]/g, '');
-      const mappedOptionId = LEGACY_PRODUCTION_VALUE_MAP[sanitized];
-      if (mappedOptionId) {
-        const mappedOption = PRODUCTION_METHOD_OPTIONS.find(option => option.id === mappedOptionId);
-        if (mappedOption) {
-          return {
-            ...mappedOption,
-            raw,
-            description: `${mappedOption.description} • Legacy entry mapped from: ${raw}`
-          };
-        }
-      }
-
-      const fallbackOption = PRODUCTION_METHOD_OPTIONS.find(option => option.id === 'photobox') || PRODUCTION_METHOD_OPTIONS[0];
-      console.warn('[Production] Unrecognized production value encountered, falling back to Photo Box:', rawValue);
-      return {
-        ...fallbackOption,
-        description: `${fallbackOption.description} • Original entry: ${raw}`,
-        raw
+      const meta = {
+        ...DEFAULT_PRODUCTION_META,
+        raw,
+        description: raw ? `Unmapped production entry recorded as: ${raw}` : ''
       };
+      console.warn('[Production] Unrecognized production value encountered, leaving column unassigned:', rawValue);
+      return meta;
     }
 
     function applyProductionNormalization(order) {
@@ -6787,12 +7142,14 @@
       }
       const meta = normalizeProductionValue(order.production || order.productionMethod || order.method);
       order.productionMeta = meta;
-      order.production = meta.label;
-      if (!order.productionMethod || normalizeComparisonValue(order.productionMethod) === normalizeComparisonValue(order.method)) {
-        order.productionMethod = meta.label;
-      }
-      if (!order.method) {
-        order.method = meta.label;
+      if (meta.label) {
+        order.production = meta.label;
+        if (!order.productionMethod || normalizeComparisonValue(order.productionMethod) === normalizeComparisonValue(order.method)) {
+          order.productionMethod = meta.label;
+        }
+        if (!order.method) {
+          order.method = meta.label;
+        }
       }
       return meta;
     }
@@ -6888,7 +7245,7 @@
       const expectedTactic = normalizeComparisonValue(orderFilters.tactic);
 
       if (!hasPrimaryOrderFilter()) {
-        return [];
+        return orderList;
       }
 
       return orderList.filter(order => {
@@ -8809,49 +9166,183 @@
     window.showDashboardModal = showDashboardModal;
     window.closeDashboardModal = closeDashboardModal;
 
-    // Show order details function
+    // Show order details function (unified modal)
     function showOrderDetails(orderNumber) {
-      const order = allOrders.find(o => o.orderNumber === orderNumber);
+      const baseOrders = Array.isArray(window.rkhOrders) && window.rkhOrders.length
+        ? window.rkhOrders
+        : (typeof allOrders !== 'undefined' ? allOrders : []);
+
+      // Prefer finding from base orders so we mutate the canonical object
+      let order = baseOrders.find(o => String(o.orderNumber) === String(orderNumber));
+
+      if (!order && window.authSystem && typeof authSystem.getFilteredOrders === 'function') {
+        try {
+          const filtered = authSystem.getFilteredOrders(baseOrders) || [];
+          order = filtered.find(o => String(o.orderNumber) === String(orderNumber)) || order;
+        } catch (err) {
+          console.error('[Orders] Unable to resolve order from filtered list:', err);
+        }
+      }
+
       if (!order) {
         alert('Order not found: ' + orderNumber);
         return;
       }
-      
-      const currentUser = authSystem.getCurrentUser();
-      const canManageOrders = authSystem.canManageOrders();
-      const canAssignWork = authSystem.canAssignWork();
-      
-      // Available status options for progression
+
+      const safeAuth = window.authSystem || {};
+      const currentUser = typeof safeAuth.getCurrentUser === 'function' ? safeAuth.getCurrentUser() : { name: 'Guest', role: 'viewer' };
+      const canManageOrders = typeof safeAuth.canManageOrders === 'function' ? safeAuth.canManageOrders() : false;
+      const canAssignWork = typeof safeAuth.canAssignWork === 'function' ? safeAuth.canAssignWork() : false;
+      const canEditOrder = typeof safeAuth.canEditOrder === 'function' ? safeAuth.canEditOrder(order) : (canManageOrders || canAssignWork);
+
       const statusOptions = [
         'Draft',
-        'New Request', 
+        'New Request',
         'Samples Requested',
         'In Progress',
         'Approved',
         'Complete',
         'Delivered'
       ];
-      
-      // Available team members for assignment
+
       const teamMembers = [
         'Unassigned',
         'Alice Johnson',
-        'Bob Smith', 
+        'Bob Smith',
         'Charlie Brown',
         'Diana Prince',
         'Eva Martinez',
         'Frank Wilson',
         'Grace Lee'
       ];
-      
+
       const modal = document.createElement('div');
       modal.className = 'order-details-modal';
       modal.style.cssText = 'position:fixed;inset:0;background:rgba(46,34,23,0.55);display:flex;align-items:center;justify-content:center;z-index:1000;padding:32px 18px;';
 
       const articlesMarkup = renderArticleCards(order.articles);
+      const articlesCount = Array.isArray(order.articles) ? order.articles.length : 0;
       const assignedOwner = order.photographer || 'Unassigned';
       const salesOrgLabel = order.salesOrg || 'Not set';
       const budgetMarkup = order.budget ? `<div style="display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-radius:10px;background:rgba(255,255,255,0.6);margin-top:10px;border:1px solid rgba(196,139,90,0.25);"><span style="font-size:12px;letter-spacing:0.05em;color:#82694c;text-transform:uppercase;">Budget</span><span style="font-weight:600;color:#3a2a1d;">${order.budget}</span></div>` : '';
+      const deliverablesList = Array.isArray(order.deliverables) ? order.deliverables : (order.deliverables ? [order.deliverables] : []);
+      const deliverablesMarkup = deliverablesList.length
+        ? deliverablesList.map(item => `
+              <div style="background:rgba(255,255,255,0.85);margin:4px 0;padding:10px 12px;border-radius:10px;border-left:4px solid #f59e0b;color:#3a2a1d;font-size:13px;">
+                ${item}
+              </div>
+            `).join('')
+        : '<div style="color:#7c6248;font-style:italic;">No deliverables specified</div>';
+
+      const buyersMarkup = Array.isArray(order.buyers) && order.buyers.length
+        ? order.buyers.map(buyer => `
+              <div style="background:rgba(255,255,255,0.85);margin:4px 0;padding:10px 12px;border-radius:10px;border-left:4px solid #bfa3d6;">
+                <div style="font-weight:600;color:#3a2a1d;font-size:13px;">${buyer.name}</div>
+                <div style="font-size:12px;color:#7c6248;margin-top:4px;">${Array.isArray(buyer.items) ? buyer.items.join(', ') : (buyer.items || '')}</div>
+              </div>
+            `).join('')
+        : '<div style="color:#7c6248;font-style:italic;">No buyers recorded</div>';
+
+      const eventOrBriefBlock = order.eventId ? `
+          <div style="padding:20px;border-radius:16px;background:rgba(254,243,199,0.85);border:1px solid rgba(212,163,94,0.35);box-shadow:0 18px 36px rgba(62,44,30,0.12);">
+            <h3 style="margin:0 0 16px;font-size:16px;color:#3b2b1a;display:flex;align-items:center;gap:8px;font-weight:700;">🏢 SAP PMR Integration</h3>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;font-size:13px;color:#3b2b1a;">
+              <div><strong>Event ID:</strong> ${order.eventId}</div>
+              <div><strong>Purchase Group:</strong> ${order.purchaseGroup} - ${(typeof purchaseGroups !== 'undefined' && purchaseGroups) ? (purchaseGroups[order.purchaseGroup] || 'Unknown') : 'Unknown'}</div>
+              <div><strong>Offer ID:</strong> ${order.offerId || 'N/A'}</div>
+              <div><strong>Article Number:</strong> ${order.articleNumber || 'N/A'}</div>
+              <div><strong>Image Request ID:</strong> ${order.imageRequestId || 'N/A'}</div>
+              <div><strong>Photo Status:</strong> <span style="display:inline-flex;align-items:center;padding:4px 10px;border-radius:999px;background:#${order.photoStatus === 'Archive' ? '10b981' : order.photoStatus === 'New Shoot - Photo Box' ? '3b82f6' : 'f59e0b'};color:white;font-size:12px;">${order.photoStatus || 'Not Set'}</span></div>
+              ${order.cloudinaryUrl ? `<div><strong>Cloudinary:</strong> <a href="${order.cloudinaryUrl}" target="_blank" style="color:#b15d1d;">View Image</a></div>` : ''}
+            </div>
+          </div>
+        ` : (order.brief ? `
+          <div style="padding:20px;border-radius:16px;background:rgba(253,250,246,0.85);border:1px solid rgba(196,139,90,0.35);box-shadow:0 18px 36px rgba(62,44,30,0.12);">
+            <h3 style="margin:0 0 12px;font-size:16px;color:#3b2b1a;font-weight:700;">📝 Creative Brief</h3>
+            <div style="font-size:14px;line-height:1.6;color:#3b2b1a;white-space:pre-wrap;">${order.brief}</div>
+          </div>
+        ` : '');
+
+      const damSection = (() => {
+        if (typeof window.getDAMAssets !== 'function') {
+          return '';
+        }
+        const damAssets = window.getDAMAssets();
+        const linkedAssets = damAssets.filter(asset => asset.orderNumber === order.orderNumber);
+        const assetsGrid = linkedAssets.length ? `
+          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px;margin-bottom:16px;">
+            ${linkedAssets.map(asset => `
+              <div style="border:1px solid rgba(127,162,132,0.35);border-radius:10px;padding:10px;background:white;">
+                <div style="aspect-ratio:16/9;background:#f1e8dc;border-radius:8px;margin-bottom:8px;display:flex;align-items:center;justify-content:center;overflow:hidden;">
+                  ${asset.type === 'image' && asset.url
+                    ? `<img src="${asset.url}" alt="${asset.filename}" style="width:100%;height:100%;object-fit:cover;" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">` +
+                      `<div style="display:none;width:100%;height:100%;align-items:center;justify-content:center;color:#6b5440;font-size:12px;">🖼️</div>`
+                    : `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#6b5440;font-size:16px;">${asset.type === 'video' ? '🎬' : '📄'}</div>`}
+                </div>
+                <div style="font-size:12px;font-weight:600;color:#3a2a1d;margin-bottom:4px;">${asset.filename && asset.filename.length > 22 ? asset.filename.substring(0, 19) + '...' : (asset.filename || 'Asset')}</div>
+                <div style="font-size:11px;color:#7c6248;margin-bottom:8px;">${asset.category || 'General'} • ${asset.size || ''}</div>
+                <div style="display:flex;gap:6px;">
+                  <button onclick="window.viewDAMAsset('${asset.id}')" style="flex:1;padding:6px 8px;background:#7fa284;color:white;border:none;border-radius:6px;font-size:11px;cursor:pointer;">View</button>
+                  <button onclick="window.downloadDAMAsset('${asset.id}')" style="flex:1;padding:6px 8px;background:#c48b5a;color:white;border:none;border-radius:6px;font-size:11px;cursor:pointer;">Get</button>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        ` : '<p style="margin:0;font-size:13px;color:#7c6248;font-style:italic;">No assets linked to this order yet.</p>';
+        return `
+          <div style="padding:20px;border-radius:16px;background:rgba(240,253,244,0.85);border:1px solid rgba(127,162,132,0.35);box-shadow:0 18px 36px rgba(62,44,30,0.12);">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+              <h3 style="margin:0;font-size:16px;color:#3b2b1a;font-weight:700;">🗂️ DAM Assets (${linkedAssets.length})</h3>
+              <button onclick="window.showDAMIntegrationModal()" style="padding:8px 14px;background:#7fa284;color:white;border:none;border-radius:10px;font-size:12px;font-weight:600;cursor:pointer;">${linkedAssets.length > 0 ? 'Upload More' : 'Upload Assets'}</button>
+            </div>
+            ${assetsGrid}
+          </div>
+        `;
+      })();
+
+      const uploadFormMarkup = canEditOrder ? `
+            <div style="background:rgba(255,255,255,0.9);padding:16px;border-radius:12px;margin-bottom:16px;border:2px dashed rgba(196,139,90,0.4);">
+              <div style="text-align:center;color:#6b5440;margin-bottom:12px;">
+                <span style="font-size:24px;">📸</span>
+                <div style="margin-top:6px;font-size:13px;">Upload content for this order</div>
+              </div>
+              <input type="file" id="contentUpload-${orderNumber}" accept="image/*,video/*,.pdf,.zip,.rar" multiple style="width:100%;padding:10px;border:1px solid rgba(196,139,90,0.4);border-radius:10px;font-size:13px;margin-bottom:12px;background:rgba(255,255,255,0.95);">
+              <div style="text-align:right;">
+                <button onclick="uploadContent('${orderNumber}')" style="background:#7fa284;color:white;border:none;padding:8px 18px;border-radius:10px;cursor:pointer;font-size:13px;font-weight:600;">Upload Files</button>
+              </div>
+            </div>
+          ` : '';
+
+      const uploadedContentMarkup = order.uploadedContent && order.uploadedContent.length
+        ? order.uploadedContent.map((file, index) => `
+          <div style="background:white;padding:14px;border-radius:12px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;border-left:4px solid #7fa284;box-shadow:0 8px 16px rgba(62,44,30,0.08);">
+            <div style="display:flex;align-items:center;gap:12px;">
+              <div style="font-size:24px;">${file.type.startsWith('image/') ? '🖼️' : file.type.startsWith('video/') ? '🎥' : file.type === 'application/pdf' ? '📄' : '📁'}</div>
+              <div>
+                <div style="font-weight:600;color:#3a2a1d;">${file.name}</div>
+                <div style="font-size:12px;color:#7c6248;">${(file.size / 1024 / 1024).toFixed(2)} MB • Uploaded by ${file.uploadedBy} • ${new Date(file.uploadedAt).toLocaleDateString()}</div>
+              </div>
+            </div>
+            <div style="display:flex;gap:8px;">
+              <button onclick="previewContent('${orderNumber}', ${index})" style="background:#c48b5a;color:white;border:none;padding:6px 12px;border-radius:8px;cursor:pointer;font-size:12px;">Preview</button>
+              <button onclick="downloadContent('${orderNumber}', ${index})" style="background:#6b5440;color:white;border:none;padding:6px 12px;border-radius:8px;cursor:pointer;font-size:12px;">Download</button>
+            </div>
+          </div>
+        `).join('')
+        : '<div style="text-align:center;color:#7c6248;font-style:italic;padding:20px;">No content uploaded yet</div>';
+
+      const comments = order.comments || [];
+      const commentsMarkup = comments.length
+        ? comments.map(comment => `
+          <div style="background:white;padding:16px;border-radius:12px;margin-bottom:10px;border-left:4px solid #c48b5a;box-shadow:0 8px 16px rgba(62,44,30,0.08);">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+              <div style="font-weight:600;color:#3a2a1d;">${comment.userName} <span style="font-size:12px;color:#7c6248;">(${comment.userRole})</span></div>
+              <div style="font-size:12px;color:#7c6248;">${new Date(comment.createdAt).toLocaleDateString()} ${new Date(comment.createdAt).toLocaleTimeString()}</div>
+            </div>
+            <div style="color:#3a2a1d;line-height:1.5;">${comment.message}</div>
+          </div>
+        `).join('')
+        : '<div style="text-align:center;color:#7c6248;font-style:italic;padding:20px;">No comments yet</div>';
 
       modal.innerHTML = `
         <div style="position:relative;width:min(820px,95vw);max-height:88vh;overflow-y:auto;border-radius:18px;padding:36px 32px 30px;background:linear-gradient(135deg,rgba(255,255,255,0.96),rgba(249,245,240,0.92));box-shadow:0 40px 70px rgba(34,25,18,0.3);border:1px solid rgba(194,147,104,0.4);backdrop-filter:blur(26px);display:flex;flex-direction:column;gap:28px;">
@@ -8933,27 +9424,44 @@
             </div>
           </div>
 
-          ${order.brief ? `
-            <div style="padding:20px;border-radius:16px;background:rgba(255,255,255,0.82);border:1px solid rgba(196,139,90,0.3);box-shadow:0 14px 28px rgba(62,44,30,0.1);">
-              <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.1em;color:#7c6248;font-weight:600;margin-bottom:10px;">Creative Brief</div>
-              <div style="font-size:14px;line-height:1.6;color:#3b2b1a;white-space:pre-wrap;">${order.brief}</div>
-            </div>
-          ` : ''}
+          ${eventOrBriefBlock}
 
-          <div style="padding:20px;border-radius:16px;background:rgba(253,250,246,0.88);border:1px solid rgba(196,139,90,0.3);box-shadow:0 14px 28px rgba(62,44,30,0.1);">
-            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
-              <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.1em;color:#7c6248;font-weight:600;">Articles</div>
-              <div style="font-size:12px;color:#8a6d4c;">${order.articles?.length || 0} items</div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:26px;">
+            <div style="padding:20px;border-radius:16px;background:rgba(253,250,246,0.88);border:1px solid rgba(196,139,90,0.3);box-shadow:0 14px 28px rgba(62,44,30,0.1);">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+                <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.1em;color:#7c6248;font-weight:600;">Articles</div>
+                <div style="font-size:12px;color:#8a6d4c;">${articlesCount} items</div>
+              </div>
+              <div>${articlesMarkup}</div>
             </div>
-            <div>${articlesMarkup}</div>
+            <div style="padding:20px;border-radius:16px;background:rgba(255,255,255,0.85);border:1px solid rgba(196,139,90,0.3);box-shadow:0 14px 28px rgba(62,44,30,0.1);">
+              <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.1em;color:#7c6248;font-weight:600;margin-bottom:12px;">Buyers</div>
+              <div style="max-height:220px;overflow-y:auto;">${buyersMarkup}</div>
+            </div>
+            <div style="padding:20px;border-radius:16px;background:rgba(255,255,255,0.85);border:1px solid rgba(196,139,90,0.3);box-shadow:0 14px 28px rgba(62,44,30,0.1);">
+              <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.1em;color:#7c6248;font-weight:600;margin-bottom:12px;">Deliverables</div>
+              <div style="max-height:220px;overflow-y:auto;">${deliverablesMarkup}</div>
+            </div>
           </div>
 
-          ${order.deliverables ? `
-            <div style="padding:20px;border-radius:16px;background:rgba(255,255,255,0.82);border:1px solid rgba(196,139,90,0.3);box-shadow:0 14px 28px rgba(62,44,30,0.1);">
-              <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.1em;color:#7c6248;font-weight:600;margin-bottom:10px;">Deliverables</div>
-              <div style="font-size:14px;line-height:1.6;color:#3b2b1a;white-space:pre-wrap;">${order.deliverables}</div>
+          ${damSection}
+
+          <div style="padding:20px;border-radius:16px;background:rgba(249,250,251,0.9);border:1px solid rgba(196,139,90,0.25);box-shadow:0 14px 28px rgba(62,44,30,0.08);">
+            <h3 style="margin:0 0 16px;font-size:16px;color:#3b2b1a;display:flex;align-items:center;gap:8px;font-weight:700;">📁 Uploaded Content</h3>
+            ${uploadFormMarkup}
+            <div id="uploadedContent-${orderNumber}" style="max-height:260px;overflow-y:auto;">${uploadedContentMarkup}</div>
+          </div>
+
+          <div style="padding:20px;border-radius:16px;background:rgba(249,250,251,0.9);border:1px solid rgba(196,139,90,0.25);box-shadow:0 14px 28px rgba(62,44,30,0.08);">
+            <h3 style="margin:0 0 16px;font-size:16px;color:#3b2b1a;display:flex;align-items:center;gap:8px;font-weight:700;">💬 Comments (${comments.length})</h3>
+            <div style="background:rgba(255,255,255,0.95);padding:12px;border-radius:12px;margin-bottom:16px;">
+              <textarea id="newComment-${orderNumber}" placeholder="Add a comment..." style="width:100%;padding:10px;border:1px solid rgba(196,139,90,0.4);border-radius:10px;resize:vertical;min-height:70px;font-family:inherit;font-size:14px;"></textarea>
+              <div style="margin-top:8px;text-align:right;">
+                <button onclick="addComment('${orderNumber}')" style="background:#c48b5a;color:white;border:none;padding:8px 20px;border-radius:10px;cursor:pointer;font-size:13px;font-weight:600;">Add Comment</button>
+              </div>
             </div>
-          ` : ''}
+            <div style="max-height:300px;overflow-y:auto;">${commentsMarkup}</div>
+          </div>
 
           <div style="display:flex;justify-content:flex-end;gap:12px;">
             ${canManageOrders ? `
@@ -8967,8 +9475,7 @@
       document.body.appendChild(modal);
       modal.addEventListener('click', (e) => { if (e.target === modal) { modal.remove(); } });
     }
-    
-    // Assign to window immediately after definition
+
     window.showOrderDetails = showOrderDetails;
     
     // Function to update order workflow (status and assignment)
@@ -9241,19 +9748,8 @@
         return;
       }
 
-      if (!hasPrimaryOrderFilter()) {
-        updateOrderFilterSummary([]);
-        if (tbody) {
-          tbody.innerHTML = '<tr><td colspan="14" style="text-align:center;color:#9ca3af;padding:20px;">Select a Sales Org, Event, Status, Tactic Type, or Tactic to load orders</td></tr>';
-        }
-        if (typeof updateFilterTileCounts === 'function') {
-          updateFilterTileCounts();
-        }
-        return;
-      }
-      
       const orders = window.authSystem.getFilteredOrders(window.rkhOrders);
-      let filteredByActiveFilters = applyActiveOrderFilters(orders);
+      let filteredByActiveFilters = hasPrimaryOrderFilter() ? applyActiveOrderFilters(orders) : orders;
       let statusFiltered = { orders: filteredByActiveFilters, label: '' };
 
       if (statusFilterOverride) {
@@ -9298,7 +9794,7 @@
             return placeholderSpan;
           }
           const meta = order.productionMeta || applyProductionNormalization(order) || DEFAULT_PRODUCTION_META;
-          const label = meta.shortLabel || meta.label || '';
+          const label = meta.shortLabel || meta.label || meta.raw || '';
           if (!label && !meta.icon) {
             return placeholderSpan;
           }
@@ -9306,7 +9802,7 @@
           if (meta.description) descriptionBits.push(meta.description);
           if (meta.raw && meta.raw !== meta.label) descriptionBits.push(`Original: ${meta.raw}`);
           const title = (descriptionBits.join(' • ') || 'Production').replace(/"/g, '&quot;');
-          const chipClass = meta.chipClass || 'production-chip--photobox';
+          const chipClass = meta.chipClass || 'production-chip--unassigned';
           return `
             <div class="production-cell">
               <span class="production-chip ${chipClass}" title="${title}">
@@ -9414,6 +9910,10 @@
           const expandLabel = isExpanded ? 'Collapse line items' : 'Expand line items';
 
           const groupDisplay = formatPurchaseGroupDisplay(o.purchaseGroup);
+          const orderTypeDisplay = (o.orderType || 'PS');
+          const rawPage = o.page ?? o.pageNumber ?? o.pageNo ?? o.catalogPage ?? o.pamPage ?? o.pageReference ?? '';
+          const parsedPage = parseInt(rawPage, 10);
+          const pageDisplay = !isNaN(parsedPage) && parsedPage >= 0 ? String(parsedPage) : (rawPage ? String(rawPage).trim() : placeholderSpan);
           const offerId = o.offerId || placeholderSpan;
           const offerName = o.title || placeholderSpan;
           const shotType = o.photoStatus || placeholderSpan;
@@ -9425,7 +9925,7 @@
           const articleDetailsRow = isExpanded ? `
             <tr class="order-articles-row" data-parent-order="${o.orderNumber}">
               <td class="bulk-checkbox" style="display:none;"></td>
-              <td colspan="13" style="background:#fffaf3;padding:10px 18px 16px;border-bottom:1px solid rgba(196, 139, 90, 0.2);">
+              <td colspan="15" style="background:#fffaf3;padding:10px 18px 16px;border-bottom:1px solid rgba(196, 139, 90, 0.2);">
                 ${buildChildDetailsTable(o, normalizedArticles)}
               </td>
             </tr>
@@ -9438,8 +9938,10 @@
               <button type="button" class="order-expand-button" aria-label="${expandLabel}" title="${expandLabel}" onclick="toggleOrderExpansion('${o.orderNumber}', event)">${expandIcon}</button>
             </td>
             <td style="padding:6px 8px;color: #4b3b2a !important;font-size:12px;"><strong>${o.orderNumber}</strong></td>
+            <td style="padding:6px 8px;color: #4b3b2a !important;font-size:12px;">${pageDisplay}</td>
             <td style="padding:6px 8px;color: #4b3b2a !important;font-size:12px;">${offerId}</td>
             <td style="padding:6px 8px;color: #4b3b2a !important;font-size:12px;">${groupDisplay}</td>
+            <td style="padding:6px 8px;color: #4b3b2a !important;font-size:12px;">${orderTypeDisplay}</td>
             <td style="padding:6px 8px;color: #4b3b2a !important;min-width:150px;font-size:12px;">${offerName}</td>
             <td style="padding:6px 8px;color: #4b3b2a !important;font-size:12px;">${shotType}</td>
             <td style="padding:6px 8px;color: #4b3b2a !important;font-size:12px;">${photoRef}</td>
@@ -10084,75 +10586,144 @@
       
       // Temporarily override the search to show filtered results
       if (tbody) {
+        const placeholderSpan = '<span style="color:#9ca3af;">—</span>';
+
+        const formatGroupDisplay = (value) => {
+          const groupLookup = (typeof purchaseGroups !== 'undefined' && purchaseGroups) ? purchaseGroups : (window.purchaseGroups || null);
+          if (value === undefined || value === null || value === '') {
+            return placeholderSpan;
+          }
+          const numeric = Number(value);
+          if (!Number.isNaN(numeric) && groupLookup && groupLookup[numeric]) {
+            return `${numeric} - ${groupLookup[numeric]}`;
+          }
+          const textValue = String(value).trim();
+          if (groupLookup) {
+            const matchedKey = Object.keys(groupLookup).find(key => groupLookup[key].toLowerCase() === textValue.toLowerCase());
+            if (matchedKey) {
+              return `${matchedKey} - ${groupLookup[matchedKey]}`;
+            }
+          }
+          return textValue || placeholderSpan;
+        };
+
+        const buildQuickProductionInfo = (order) => {
+          if (!order) {
+            return placeholderSpan;
+          }
+          const meta = order.productionMeta || applyProductionNormalization(order) || DEFAULT_PRODUCTION_META;
+          const label = meta.shortLabel || meta.label || meta.raw || '';
+          if (!label && !meta.icon) {
+            return placeholderSpan;
+          }
+          const descriptionBits = [];
+          if (meta.description) descriptionBits.push(meta.description);
+          if (meta.raw && meta.raw !== meta.label) descriptionBits.push(`Original: ${meta.raw}`);
+          const title = (descriptionBits.join(' • ') || 'Production').replace(/"/g, '&quot;');
+          const chipClass = meta.chipClass || 'production-chip--unassigned';
+          return `
+            <div class="production-cell">
+              <span class="production-chip ${chipClass}" title="${title}">
+                <span>${label || '—'}</span>
+              </span>
+            </div>
+          `;
+        };
+
+        const buildQuickPreviewCell = (order) => {
+          const assets = Array.isArray(order.uploadedContent) ? order.uploadedContent : [];
+          const firstAsset = assets.find(item => item && (item.thumbnailUrl || item.data || item.url)) || null;
+          const previewSource = firstAsset?.thumbnailUrl || firstAsset?.data || firstAsset?.url || order.cloudinaryUrl || '';
+
+          if (!previewSource) {
+            return '<span style="color:#9ca3af;">No preview</span>';
+          }
+
+          const assetName = firstAsset?.name ? firstAsset.name : 'Preview asset';
+
+          return `
+            <div style="display:flex;align-items:center;gap:8px;">
+              <div style="width:40px;height:40px;border-radius:8px;overflow:hidden;box-shadow:0 3px 8px rgba(0,0,0,0.08);background:#f9f4ec;flex-shrink:0;">
+                <img src="${previewSource}" alt="Preview for ${order.orderNumber}" data-preview="${previewSource}" 
+                  style="width:100%;height:100%;object-fit:cover;cursor:pointer;"
+                  onmouseenter="showThumbnailPreview(event, this.dataset.preview)"
+                  onmouseleave="hideThumbnailPreview()"
+                  onclick="openThumbnailModal(event, this.dataset.preview)">
+              </div>
+              <span style="font-size:11px;color:#6b5440;max-width:140px;display:inline-block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${assetName}</span>
+            </div>
+          `;
+        };
+
         tbody.innerHTML = filtered.map(o => {
-          const progress = calculateProgress(o.status);
-          const isOverdue = new Date(o.deadline) < new Date() && o.status !== 'Complete' && o.status !== 'Delivered';
-          const deadlineStyle = isOverdue ? 'color: #dc2626; font-weight: bold;' : '';
-          const articleChips = renderArticleChips(o.articles);
+          const isOverdue = o.deadline ? (new Date(o.deadline) < new Date() && o.status !== 'Complete' && o.status !== 'Delivered') : false;
+          const deadlineStyle = isOverdue ? 'color: #dc2626; font-weight: bold;' : 'color: #4b3b2a;';
+          const commentCount = (o.comments || []).length;
+          const unreadComments = window.commentSystem ? window.commentSystem.getUnreadCommentCount(o.orderNumber) : 0;
           const isExpanded = expandedOrders.has(o.orderNumber);
           const expandIcon = `<span class="order-expand-arrow ${isExpanded ? 'is-open' : ''}">◀</span>`;
           const expandLabel = isExpanded ? 'Collapse articles' : 'Expand articles';
-          const articleDetails = renderArticleCards(o.articles);
-          const commentCount = (o.comments || []).length;
-          const unreadComments = window.commentSystem ? window.commentSystem.getUnreadCommentCount(o.orderNumber) : 0;
-          let methodDisplay = o.method;
-          if (o.method === 'Post Production' && o.postProduction) {
-            if (o.postProduction.type === 'GenAI' && o.postProduction.genaiConfig) {
-              methodDisplay = `Post Production (GenAI - ${o.postProduction.genaiConfig.operation})`;
-            } else if (o.postProduction.type === 'Internal') {
-              methodDisplay = 'Post Production (Internal)';
-            }
-          }
+          const normalizedArticles = normalizeArticles(o.articles);
+
+          const rawPage = o.page ?? o.pageNumber ?? o.pageNo ?? o.catalogPage ?? o.pamPage ?? o.pageReference ?? '';
+          const parsedPage = parseInt(rawPage, 10);
+          const pageDisplay = !isNaN(parsedPage) && parsedPage >= 0 ? String(parsedPage) : (rawPage ? String(rawPage).trim() : placeholderSpan);
+          const offerId = o.offerId || placeholderSpan;
+          const groupDisplay = formatGroupDisplay(o.purchaseGroup);
+          const orderTypeDisplay = o.orderType || 'PS';
+          const offerName = o.title || placeholderSpan;
+          const shotType = o.photoStatus || placeholderSpan;
+          const photoRef = o.imageRequestId || placeholderSpan;
+          const productionInfo = buildQuickProductionInfo(o);
+          const principle = o.salesOrg || placeholderSpan;
+          const previewCell = buildQuickPreviewCell(o);
+
+          const articleDetailsContent = typeof buildChildDetailsTable === 'function'
+            ? buildChildDetailsTable(o, normalizedArticles)
+            : renderArticleCards(o.articles);
 
           const articleDetailsRow = isExpanded ? `
             <tr class="order-articles-row" data-parent-order="${o.orderNumber}">
               <td class="bulk-checkbox" style="display:none;"></td>
-              <td colspan="13" style="background:#fffaf3;padding:16px 24px 24px;border-bottom:1px solid rgba(196, 139, 90, 0.2);">
-                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
-                  <span style="font-weight:600;color:#4b3b2a;font-size:13px;">Articles linked to ${o.orderNumber}</span>
-                  <button onclick="toggleOrderExpansion('${o.orderNumber}', event)" style="background:none;border:none;color:#a66b38;font-size:12px;font-weight:600;cursor:pointer;">Hide</button>
-                </div>
-                ${articleDetails}
+              <td colspan="15" style="background:#fffaf3;padding:16px 24px 24px;border-bottom:1px solid rgba(196, 139, 90, 0.2);">
+                ${articleDetailsContent}
               </td>
             </tr>
           ` : '';
-          
+
           return `
-          <tr onclick="showOrderDetails('${o.orderNumber}')" style="cursor: pointer; background: #fef3c7;">
+          <tr onclick="showOrderDetails('${o.orderNumber}')" style="cursor: pointer; background: #fef3c7; color:#4b3b2a !important;">
             <td class="bulk-checkbox" style="display: none;"><input type="checkbox" class="item-checkbox" data-id="${o.orderNumber}" onclick="event.stopPropagation()"></td>
             <td style="text-align:center;">
               <button type="button" class="order-expand-button" aria-label="${expandLabel}" title="${expandLabel}" onclick="toggleOrderExpansion('${o.orderNumber}', event)">${expandIcon}</button>
             </td>
             <td><strong>${o.orderNumber}</strong></td>
-            <td>${o.title}</td>
-            <td>${articleChips}</td>
-            <td><span class="status ${o.status.replace(/\s+/g, '')}">${o.status}</span></td>
-            <td>${methodDisplay}</td>
-            <td>${o.purchaseGroup || 'N/A'}</td>
-            <td>${o.eventId || 'N/A'}</td>
-            <td>${o.photographer}</td>
-            <td><span class="status ${o.priority}">${o.priority}</span></td>
-            <td style="${deadlineStyle}">${o.deadline}${isOverdue ? ' ⚠️' : ''}</td>
-            <td>
-              <div class="progress-bar">
-                <div class="progress-fill" style="width: ${progress}%"></div>
-              </div>
-              <div style="font-size: 10px; color: #6b5440; margin-top: 2px;">${progress}%</div>
-            </td>
-            <td style="text-align: center; color: #4b3b2a !important;">
+            <td>${pageDisplay}</td>
+            <td>${offerId}</td>
+            <td>${groupDisplay}</td>
+            <td>${orderTypeDisplay}</td>
+            <td>${offerName}</td>
+            <td>${shotType}</td>
+            <td>${photoRef}</td>
+            <td>${productionInfo}</td>
+            <td>${principle}</td>
+            <td>${previewCell}</td>
+            <td style="text-align: center;">
               <button onclick="event.stopPropagation(); window.commentSystem && window.commentSystem.showCommentsModal('${o.orderNumber}')" 
                 style="background: ${commentCount > 0 ? '#c48b5a' : '#6b5440'}; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; position: relative;">
                 💬 ${commentCount}
                 ${unreadComments > 0 ? `<span style="position: absolute; top: -4px; right: -4px; background: #ef4444; color: white; border-radius: 50%; width: 16px; height: 16px; font-size: 10px; display: flex; align-items: center; justify-content: center;">${unreadComments}</span>` : ''}
               </button>
             </td>
+            <td><span class="status ${o.status.replace(/\s+/g, '')}">${o.status || 'Unknown'}</span></td>
+            <td style="${deadlineStyle}">${o.deadline || placeholderSpan}${isOverdue ? ' ⚠️' : ''}</td>
           </tr>
           ${articleDetailsRow}
         `;
         }).join('');
         
         if (filtered.length === 0) {
-          tbody.innerHTML = '<tr><td colspan="14" style="text-align:center;color:#9ca3af;padding:20px;">No items found for this filter</td></tr>';
+          tbody.innerHTML = '<tr><td colspan="15" style="text-align:center;color:#9ca3af;padding:20px;">No items found for this filter</td></tr>';
         }
       }
         updateOrderFilterSummary(scopedOrders);
@@ -10218,248 +10789,6 @@
       } else if (currentView === 'samples') {
         drawSampleRows();
       }
-    }
-
-    window.showOrderDetails = function(orderNumber) {
-      const orders = authSystem.getFilteredOrders(allOrders); // Get filtered orders
-      const order = orders.find(o => o.orderNumber === orderNumber);
-      if (!order) return;
-      
-      const currentUser = authSystem.getCurrentUser();
-      const comments = order.comments || [];
-  const normalizedArticles = normalizeArticles(order.articles);
-  const articlesCount = normalizedArticles.length;
-  const articleCards = renderArticleCards(order.articles);
-      
-      const modal = document.createElement('div');
-      modal.className = 'order-details-modal';
-      modal.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;z-index:1000';
-      modal.innerHTML = `
-        <div style="background:white;border-radius:12px;padding:24px;max-width:900px;width:95%;max-height:90vh;overflow-y:auto;">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
-            <h2 style="margin:0;font-size:22px;color:#4b3b2a;">${order.title}</h2>
-            <button onclick="this.closest('.order-details-modal').remove()" style="background:none;border:none;font-size:28px;cursor:pointer;color:#6b5440;">×</button>
-          </div>
-          
-          <!-- Order Information Grid -->
-          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px;margin-bottom:24px;">
-            <div style="background:#f8fafc;padding:16px;border-radius:8px;">
-              <h3 style="margin:0 0 12px;font-size:16px;color:#4b3b2a;">📋 Order Details</h3>
-              <div style="display:grid;gap:8px;">
-                <div><strong>Order Number:</strong> ${order.orderNumber}</div>
-                <div><strong>Status:</strong> <span style="background:${getStatusColor(order.status)};color:white;padding:2px 8px;border-radius:4px;font-size:12px;">${order.status}</span></div>
-                <div><strong>Method:</strong> ${order.method}</div>
-                ${order.method === 'Post Production' && order.postProduction ? `
-                  <div style="margin-left:16px;padding:8px;background:#f1e8dc;border-radius:6px;">
-                    <div><strong>Type:</strong> ${order.postProduction.type}</div>
-                    ${order.postProduction.type === 'GenAI' && order.postProduction.genaiConfig ? `
-                      <div style="margin-top:4px;">
-                        <div><strong>AI Provider:</strong> ${order.postProduction.genaiConfig.provider}</div>
-                        <div><strong>Operation:</strong> ${order.postProduction.genaiConfig.operation}</div>
-                        <div><strong>Quality:</strong> ${order.postProduction.genaiConfig.quality}</div>
-                        <div><strong>Status:</strong> <span style="background:#${order.postProduction.genaiConfig.status === 'pending' ? 'f59e0b' : order.postProduction.genaiConfig.status === 'processing' ? '3b82f6' : '10b981'};color:white;padding:1px 6px;border-radius:3px;font-size:11px;">${order.postProduction.genaiConfig.status}</span></div>
-                        ${order.postProduction.genaiConfig.instructions ? `<div><strong>Instructions:</strong> ${order.postProduction.genaiConfig.instructions}</div>` : ''}
-                        <div><strong>Processing Time:</strong> ${order.postProduction.genaiConfig.processingTime}</div>
-                      </div>
-                    ` : ''}
-                  </div>
-                ` : ''}
-                <div><strong>Priority:</strong> <span style="background:${getPriorityColor(order.priority)};color:white;padding:2px 8px;border-radius:4px;font-size:12px;">${order.priority}</span></div>
-                <div><strong>Assigned To:</strong> ${order.photographer}</div>
-                <div><strong>Deadline:</strong> ${order.deadline}</div>
-                <div><strong>Cost Center:</strong> ${order.costCenter}</div>
-                <div><strong>Budget:</strong> ${order.budget ? '$' + order.budget.toLocaleString() : 'Not set'}</div>
-                ${order.photoTypes && order.photoTypes.length > 0 ? `<div><strong>Photo Types:</strong><br>${order.photoTypes.map(type => `<span style="display:inline-block;background:#ddd6fe;color:#5b21b6;padding:2px 6px;border-radius:12px;font-size:11px;margin:2px 4px 2px 0;">${type}</span>`).join('')}</div>` : ''}
-              </div>
-            </div>
-            
-            ${order.eventId ? `
-            <div style="background:#fef3c7;padding:16px;border-radius:8px;">
-              <h3 style="margin:0 0 12px;font-size:16px;color:#4b3b2a;">🏢 SAP PMR Integration</h3>
-              <div style="display:grid;gap:8px;">
-                <div><strong>Event ID:</strong> ${order.eventId}</div>
-                <div><strong>Purchase Group:</strong> ${order.purchaseGroup} - ${purchaseGroups[order.purchaseGroup] || 'Unknown'}</div>
-                <div><strong>Offer ID:</strong> ${order.offerId || 'N/A'}</div>
-                <div><strong>Article Number:</strong> ${order.articleNumber || 'N/A'}</div>
-                <div><strong>Image Request ID:</strong> ${order.imageRequestId || 'N/A'}</div>
-                <div><strong>Photo Status:</strong> <span style="background:#${order.photoStatus === 'Archive' ? '10b981' : order.photoStatus === 'New Shoot - Photo Box' ? '3b82f6' : 'f59e0b'};color:white;padding:2px 8px;border-radius:4px;font-size:12px;">${order.photoStatus || 'Not Set'}</span></div>
-                ${order.cloudinaryUrl ? `<div><strong>Cloudinary:</strong> <a href="${order.cloudinaryUrl}" target="_blank" style="color:#c48b5a;">View Image</a></div>` : ''}
-              </div>
-            </div>
-            ` : `
-            <div style="background:#fdf4e6;padding:16px;border-radius:8px;">
-              <h3 style="margin:0 0 12px;font-size:16px;color:#4b3b2a;">📝 Project Brief</h3>
-              <div style="background:white;padding:12px;border-radius:6px;line-height:1.5;max-height:200px;overflow-y:auto;">
-                ${order.brief}
-              </div>
-            </div>
-            `}
-          </div>
-          
-          ${!order.eventId ? `
-          <div style="background:#fdf4e6;padding:16px;border-radius:8px;margin-bottom:24px;">
-            <h3 style="margin:0 0 12px;font-size:16px;color:#4b3b2a;">📝 Project Brief</h3>
-            <div style="background:white;padding:12px;border-radius:6px;line-height:1.5;max-height:200px;overflow-y:auto;">
-              ${order.brief}
-            </div>
-          </div>
-          ` : ''}
-          
-          <!-- Articles, Buyers and Deliverables -->
-          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;margin-bottom:24px;">
-            <div style="background:#f0fdf4;padding:16px;border-radius:8px;">
-              <h3 style="margin:0 0 12px;font-size:16px;color:#4b3b2a;">📦 Articles (${articlesCount})</h3>
-              <div style="max-height:220px;overflow-y:auto;padding-right:4px;">
-                ${articleCards}
-              </div>
-            </div>
-            
-            ${order.buyers ? `
-            <div style="background:#fef7ff;padding:16px;border-radius:8px;">
-              <h3 style="margin:0 0 12px;font-size:16px;color:#4b3b2a;">👥 Buyers (${order.buyers.length})</h3>
-              <div style="max-height:120px;overflow-y:auto;">
-                ${order.buyers.map(buyer => `
-                  <div style="background:white;margin:4px 0;padding:8px 12px;border-radius:6px;border-left:4px solid #bfa3d6;">
-                    <div style="font-weight:600;font-size:12px;color:#4b3b2a;">${buyer.name}</div>
-                    <div style="font-size:11px;color:#6b5440;margin-top:2px;">${buyer.items.join(', ')}</div>
-                  </div>
-                `).join('')}
-              </div>
-            </div>
-            ` : ''}
-            
-            <div style="background:#fef3f2;padding:16px;border-radius:8px;">
-              <h3 style="margin:0 0 12px;font-size:16px;color:#4b3b2a;">🎯 Deliverables</h3>
-              <div style="max-height:120px;overflow-y:auto;">
-                ${order.deliverables ? order.deliverables.map(deliverable => `
-                  <div style="background:white;margin:4px 0;padding:8px 12px;border-radius:6px;border-left:4px solid #f59e0b;">
-                    ${deliverable}
-                  </div>
-                `).join('') : '<div style="color:#6b5440;font-style:italic;">No deliverables specified</div>'}
-              </div>
-            </div>
-          </div>
-          
-          <!-- DAM Assets Section -->
-          ${(() => {
-            const damAssets = window.getDAMAssets();
-            const linkedAssets = damAssets.filter(asset => asset.orderNumber === order.orderNumber);
-            return `
-              <div style="background:#f0fdf4;padding:16px;border-radius:8px;margin-bottom:20px;">
-                <h3 style="margin:0 0 12px;font-size:16px;color:#4b3b2a;">🗂️ DAM Assets (${linkedAssets.length})</h3>
-                ${linkedAssets.length > 0 ? `
-                  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;margin-bottom:12px;">
-                    ${linkedAssets.map(asset => `
-                      <div style="border:1px solid #d1fae5;border-radius:6px;padding:8px;background:white;">
-                        <div style="aspect-ratio:16/9;background:#f1e8dc;border-radius:4px;margin-bottom:6px;display:flex;align-items:center;justify-content:center;overflow:hidden;">
-                          ${asset.type === 'image' && asset.url ? 
-                            '<img src="' + asset.url + '" alt="' + asset.filename + '" style="width:100%;height:100%;object-fit:cover;" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\';">' +
-                             '<div style="display:none;width:100%;height:100%;align-items:center;justify-content:center;color:#6b5440;font-size:12px;">🖼️</div>' :
-                            '<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#6b5440;font-size:12px;">' +
-                               (asset.type === 'video' ? '🎬' : '📄') +
-                             '</div>'
-                          }
-                        </div>
-                        <div style="font-size:11px;font-weight:500;margin-bottom:2px;">${asset.filename.length > 18 ? asset.filename.substring(0, 15) + '...' : asset.filename}</div>
-                        <div style="font-size:9px;color:#6b5440;margin-bottom:4px;">${asset.category} • ${asset.size}</div>
-                        <div style="display:flex;gap:2px;">
-                          <button onclick="window.viewDAMAsset('${asset.id}')" style="flex:1;padding:3px;background:#7fa284;color:white;border:none;border-radius:2px;font-size:8px;cursor:pointer;">View</button>
-                          <button onclick="window.downloadDAMAsset('${asset.id}')" style="flex:1;padding:3px;background:#c48b5a;color:white;border:none;border-radius:2px;font-size:8px;cursor:pointer;">Get</button>
-                        </div>
-                      </div>
-                    `).join('')}
-                  </div>
-                ` : `
-                  <p style="margin:0 0 12px;font-size:12px;color:#7fa284;font-style:italic;">No assets linked to this order yet.</p>
-                `}
-                <button onclick="window.showDAMIntegrationModal()" style="padding:6px 12px;background:#7fa284;color:white;border:none;border-radius:4px;font-size:12px;cursor:pointer;">
-                  📤 ${linkedAssets.length > 0 ? 'Upload More Assets' : 'Upload Assets'}
-                </button>
-              </div>
-            `;
-          })()}
-          
-          <!-- Comments Section -->
-          <div style="background:#f9fafb;padding:16px;border-radius:8px;margin-bottom:20px;">
-            <h3 style="margin:0 0 16px;font-size:16px;color:#4b3b2a;">📁 Uploaded Content</h3>
-            
-            <!-- Upload Section (for photographers) -->
-            ${authSystem.canEditOrder(order) ? `
-              <div style="background:white;padding:12px;border-radius:6px;margin-bottom:16px;border:2px dashed #d1d5db;">
-                <div style="text-align:center;color:#6b5440;margin-bottom:12px;">
-                  <span style="font-size:24px;">📸</span>
-                  <div>Upload content for this order</div>
-                </div>
-                <input type="file" id="contentUpload-${orderNumber}" accept="image/*,video/*,.pdf,.zip,.rar" multiple style="width:100%;padding:8px;border:1px solid #d1d5db;border-radius:4px;margin-bottom:8px;">
-                <div style="text-align:right;">
-                  <button onclick="uploadContent('${orderNumber}')" style="background:#7fa284;color:white;border:none;padding:6px 16px;border-radius:4px;cursor:pointer;font-size:14px;">Upload Files</button>
-                </div>
-              </div>
-            ` : ''}
-            
-            <!-- Uploaded Files Display -->
-            <div id="uploadedContent-${orderNumber}" style="max-height:250px;overflow-y:auto;">
-              ${order.uploadedContent && order.uploadedContent.length > 0 ? 
-                order.uploadedContent.map((file, index) => `
-                  <div style="background:white;padding:12px;border-radius:6px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;border-left:4px solid #7fa284;">
-                    <div style="display:flex;align-items:center;">
-                      <div style="font-size:20px;margin-right:12px;">
-                        ${file.type.startsWith('image/') ? '🖼️' : 
-                          file.type.startsWith('video/') ? '🎥' : 
-                          file.type === 'application/pdf' ? '📄' : '📁'}
-                      </div>
-                      <div>
-                        <div style="font-weight:600;color:#4b3b2a;">${file.name}</div>
-                        <div style="font-size:12px;color:#6b5440;">
-                          ${(file.size / 1024 / 1024).toFixed(2)} MB • 
-                          Uploaded by ${file.uploadedBy} • 
-                          ${new Date(file.uploadedAt).toLocaleDateString()}
-                        </div>
-                      </div>
-                    </div>
-                    <div>
-                      <button onclick="previewContent('${orderNumber}', ${index})" style="background:#c48b5a;color:white;border:none;padding:4px 12px;border-radius:4px;cursor:pointer;font-size:12px;margin-right:8px;">Preview</button>
-                      <button onclick="downloadContent('${orderNumber}', ${index})" style="background:#6b5440;color:white;border:none;padding:4px 12px;border-radius:4px;cursor:pointer;font-size:12px;">Download</button>
-                    </div>
-                  </div>
-                `).join('') :
-                '<div style="text-align:center;color:#6b5440;font-style:italic;padding:20px;">No content uploaded yet</div>'
-              }
-            </div>
-          </div>
-          
-          <!-- Comments Section -->
-          <div style="background:#f9fafb;padding:16px;border-radius:8px;">
-            <h3 style="margin:0 0 16px;font-size:16px;color:#4b3b2a;">💬 Comments (${comments.length})</h3>
-            
-            <!-- Add Comment Form -->
-            <div style="background:white;padding:12px;border-radius:6px;margin-bottom:16px;">
-              <textarea id="newComment-${orderNumber}" placeholder="Add a comment..." style="width:100%;padding:8px;border:1px solid #d1d5db;border-radius:4px;resize:vertical;min-height:60px;font-family:inherit;"></textarea>
-              <div style="margin-top:8px;text-align:right;">
-                <button onclick="addComment('${orderNumber}')" style="background:#c48b5a;color:white;border:none;padding:6px 16px;border-radius:4px;cursor:pointer;font-size:14px;">Add Comment</button>
-              </div>
-            </div>
-            
-            <!-- Comments List -->
-            <div style="max-height:300px;overflow-y:auto;">
-              ${comments.length === 0 ? 
-                '<div style="text-align:center;color:#6b5440;font-style:italic;padding:20px;">No comments yet</div>' :
-                comments.map(comment => `
-                  <div style="background:white;padding:12px;border-radius:6px;margin-bottom:8px;border-left:4px solid #c48b5a;">
-                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-                      <div style="font-weight:600;color:#4b3b2a;">${comment.userName} <span style="font-size:12px;color:#6b5440;">(${comment.userRole})</span></div>
-                      <div style="font-size:12px;color:#6b5440;">${new Date(comment.createdAt).toLocaleDateString()} ${new Date(comment.createdAt).toLocaleTimeString()}</div>
-                    </div>
-                    <div style="color:#4b3b2a;line-height:1.5;">${comment.message}</div>
-                  </div>
-                `).join('')
-              }
-            </div>
-          </div>
-        </div>
-      `;
-      document.body.appendChild(modal);
-      modal.addEventListener('click', (e) => { if(e.target === modal) modal.remove(); });
     }
 
     // Function to add comment from the order details modal
@@ -11281,7 +11610,7 @@
         console.log('User can create orders - calling addArticleToOrder');
         // For users who can create orders: add to order creation form
         addArticleToOrder(articleName, eanCode);
-      } else if (currentUser.role === 'Photographer' || currentUser.role === 'Photo Box') {
+      } else if (currentUser.role === 'Photographer' || currentUser.role === 'Photo Box' || currentUser.role === 'Agency') {
         console.log('User is photographer/photo box - calling searchOrdersByArticle');
         // For photographers/photo box: search for orders with this article
         searchOrdersByArticle(articleName, eanCode);
@@ -15566,6 +15895,7 @@
     // ============================================================================
     (function initScannerTestMenu() {
       let contextMenu = null;
+      let ignoreNextClick = false;
       
       // Sample article codes from demo data
       const existingArticles = [
@@ -15952,18 +16282,29 @@
       
       // Listen for right-click
       document.addEventListener('contextmenu', (e) => {
-        // Only show our menu in specific views
-        const dashboardActive = document.getElementById('dashboardView')?.classList.contains('view-active');
-        const ordersActive = document.getElementById('ordersView')?.classList.contains('view-active');
-        
-        if (dashboardActive || ordersActive) {
+        const withinApp = e.target instanceof Element ? e.target.closest('#app') : null;
+        if (!withinApp) {
+          removeContextMenu();
+          return;
+        }
+
+        const viewIds = ['dashboardView', 'ordersView', 'kanbanView', 'calendarView', 'workflowView', 'samplesView', 'createOrderView'];
+        const activeView = viewIds.some(id => document.getElementById(id)?.classList.contains('view-active'));
+
+        if (activeView) {
           e.preventDefault();
+          ignoreNextClick = true;
           createContextMenu(e.clientX, e.clientY);
         }
       });
       
       // Close menu on any click outside
       document.addEventListener('click', (e) => {
+        if (ignoreNextClick) {
+          ignoreNextClick = false;
+          return;
+        }
+
         if (contextMenu && !contextMenu.contains(e.target)) {
           removeContextMenu();
         }
