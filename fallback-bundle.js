@@ -4574,8 +4574,8 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
           <div class="content-header">
             <h1 class="content-title" id="contentTitle">Dashboard Overview</h1>
             <div class="content-actions">
-              <button class="content-pill-btn content-pill-btn--export" onclick="exportToCsv()">📊 <span>Export</span></button>
-              <button class="content-pill-btn content-pill-btn--refresh" onclick="refreshData()">🔄 <span>Refresh</span></button>
+              <button class="content-pill-btn content-pill-btn--export content-pill-btn--compact" onclick="exportToCsv()">📊 <span>Export</span></button>
+              <button class="content-pill-btn content-pill-btn--refresh content-pill-btn--compact" onclick="refreshData()">🔄 <span>Refresh</span></button>
               <div style="position: relative; display: flex; align-items: center; gap: 12px;">
                 <span style="color: #6b5440; font-weight: 500; font-size: 14px;">
                   ${currentUser.name} (${currentUser.role})
