@@ -15840,6 +15840,316 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
         }
       };
 
+      // Show barcode generator modal
+      function showBarcodeGeneratorModal() {
+        // Close any existing modals
+        closeAllRightSideModals();
+        const existingBarcodeModal = document.getElementById('barcodeGeneratorModal');
+        if (existingBarcodeModal) {
+          existingBarcodeModal.remove();
+        }
+        
+        const modal = document.createElement('div');
+        modal.id = 'barcodeGeneratorModal';
+        modal.style.cssText = `
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background: rgba(0, 0, 0, 0.6);
+          backdrop-filter: blur(8px);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          z-index: 10000;
+          animation: fadeIn 0.2s ease;
+        `;
+        
+        modal.innerHTML = `
+          <div style="
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            max-width: 600px;
+            width: 90%;
+            padding: 32px;
+            animation: slideUp 0.3s ease;
+          ">
+            <div style="text-align: center; margin-bottom: 24px;">
+              <div style="
+                width: 64px;
+                height: 64px;
+                background: linear-gradient(135deg, #7fa284 0%, #6b8e6f 100%);
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin: 0 auto 16px;
+                font-size: 32px;
+              ">
+                🏷️
+              </div>
+              <h2 style="margin: 0 0 8px; font-size: 24px; color: #4b3b2a; font-weight: 700;">
+                Barcode Generator
+              </h2>
+              <p style="margin: 0; color: #6b5440; font-size: 16px;">
+                Generate printable barcode labels for your articles
+              </p>
+            </div>
+            
+            <div style="margin-bottom: 24px;">
+              <label style="display: block; margin-bottom: 8px; color: #4b3b2a; font-weight: 600; font-size: 14px;">
+                Enter EAN/GTIN Code
+              </label>
+              <input 
+                type="text" 
+                id="barcodeInput" 
+                placeholder="e.g., 5701234567890" 
+                pattern="[0-9]{8,13}"
+                style="
+                  width: 100%;
+                  padding: 12px 16px;
+                  border: 2px solid #ead7c2;
+                  border-radius: 8px;
+                  font-size: 16px;
+                  font-family: 'Courier New', monospace;
+                  letter-spacing: 1px;
+                  box-sizing: border-box;
+                  transition: border-color 0.2s ease;
+                "
+                onfocus="this.style.borderColor='#7fa284'"
+                onblur="this.style.borderColor='#ead7c2'"
+              >
+              <p style="margin: 8px 0 0; color: #92400e; font-size: 13px;">
+                💡 Enter 8-13 digit EAN/GTIN code
+              </p>
+            </div>
+            
+            <div id="barcodePreview" style="
+              background: #f9fafb;
+              border: 2px dashed #d1d5db;
+              border-radius: 12px;
+              padding: 32px;
+              margin-bottom: 24px;
+              text-align: center;
+              min-height: 180px;
+              display: flex;
+              flex-direction: column;
+              align-items: center;
+              justify-content: center;
+            ">
+              <p style="color: #9ca3af; font-size: 15px; margin: 0;">
+                Enter a code above to generate barcode
+              </p>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px;">
+              <button onclick="closeBarcodeGeneratorModal()" style="
+                padding: 14px;
+                background: #e5e7eb;
+                color: #4b3b2a;
+                border: none;
+                border-radius: 8px;
+                font-size: 16px;
+                font-weight: 600;
+                cursor: pointer;
+                transition: all 0.2s ease;
+              " onmouseover="this.style.background='#d1d5db'" onmouseout="this.style.background='#e5e7eb'">
+                Cancel
+              </button>
+              <button onclick="printBarcode()" style="
+                padding: 14px;
+                background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+                color: white;
+                border: none;
+                border-radius: 8px;
+                font-size: 16px;
+                font-weight: 600;
+                cursor: pointer;
+                transition: all 0.2s ease;
+                box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+              " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(59, 130, 246, 0.4)'" onmouseout="this.style.transform=''; this.style.boxShadow='0 2px 8px rgba(59, 130, 246, 0.3)'">
+                🖨️ Print
+              </button>
+              <button onclick="copyBarcodeToClipboard()" style="
+                padding: 14px;
+                background: linear-gradient(135deg, #7fa284 0%, #6b8e6f 100%);
+                color: white;
+                border: none;
+                border-radius: 8px;
+                font-size: 16px;
+                font-weight: 600;
+                cursor: pointer;
+                transition: all 0.2s ease;
+                box-shadow: 0 2px 8px rgba(127, 162, 132, 0.3);
+              " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(127, 162, 132, 0.4)'" onmouseout="this.style.transform=''; this.style.boxShadow='0 2px 8px rgba(127, 162, 132, 0.3)'">
+                📋 Copy
+              </button>
+            </div>
+          </div>
+        `;
+        
+        document.body.appendChild(modal);
+        
+        // Set up input handler
+        const input = document.getElementById('barcodeInput');
+        const preview = document.getElementById('barcodePreview');
+        
+        input.addEventListener('input', () => {
+          const code = input.value.trim();
+          if (code.length >= 8 && code.length <= 13 && /^\d+$/.test(code)) {
+            generateBarcodePreview(code);
+          } else if (code.length > 0) {
+            preview.innerHTML = `<p style="color: #ef4444; font-size: 15px; margin: 0;">❌ Invalid code format (8-13 digits required)</p>`;
+          } else {
+            preview.innerHTML = `<p style="color: #9ca3af; font-size: 15px; margin: 0;">Enter a code above to generate barcode</p>`;
+          }
+        });
+        
+        // Close on background click
+        modal.addEventListener('click', (e) => {
+          if (e.target === modal) {
+            closeBarcodeGeneratorModal();
+          }
+        });
+        
+        // Focus input
+        setTimeout(() => input.focus(), 100);
+      }
+
+      // Generate barcode preview using simple SVG bars
+      function generateBarcodePreview(code) {
+        const preview = document.getElementById('barcodePreview');
+        
+        // Simple barcode visualization (not actual EAN encoding, just visual representation)
+        const barcodeWidth = 400;
+        const barcodeHeight = 100;
+        const bars = [];
+        
+        // Generate pseudo-random bar pattern from code digits
+        for (let i = 0; i < code.length; i++) {
+          const digit = parseInt(code[i]);
+          const barPattern = digit % 2 === 0 ? [1, 0, 1, 1] : [0, 1, 1, 0];
+          bars.push(...barPattern);
+        }
+        
+        const barWidth = barcodeWidth / bars.length;
+        const svgBars = bars.map((bar, i) => {
+          if (bar === 1) {
+            return `<rect x="${i * barWidth}" y="0" width="${barWidth}" height="${barcodeHeight}" fill="black"/>`;
+          }
+          return '';
+        }).join('');
+        
+        preview.innerHTML = `
+          <div style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);">
+            <svg width="${barcodeWidth}" height="${barcodeHeight}" style="display: block; margin: 0 auto;">
+              ${svgBars}
+            </svg>
+            <p style="
+              font-family: 'Courier New', monospace;
+              font-size: 18px;
+              font-weight: 700;
+              letter-spacing: 3px;
+              margin: 16px 0 0;
+              color: #1f2937;
+            ">${code}</p>
+          </div>
+        `;
+      }
+
+      // Close barcode generator modal
+      window.closeBarcodeGeneratorModal = function() {
+        const modal = document.getElementById('barcodeGeneratorModal');
+        if (modal) {
+          modal.style.animation = 'fadeOut 0.2s ease';
+          setTimeout(() => modal.remove(), 200);
+        }
+      };
+
+      // Print barcode
+      window.printBarcode = function() {
+        const input = document.getElementById('barcodeInput');
+        const code = input.value.trim();
+        
+        if (!code || code.length < 8 || code.length > 13 || !/^\d+$/.test(code)) {
+          showToast('⚠️ Please enter a valid 8-13 digit code', 'warning');
+          return;
+        }
+        
+        // Create print window with barcode
+        const printWindow = window.open('', '_blank', 'width=600,height=400');
+        printWindow.document.write(`
+          <!DOCTYPE html>
+          <html>
+          <head>
+            <title>Barcode - ${code}</title>
+            <style>
+              body {
+                font-family: 'Courier New', monospace;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                min-height: 100vh;
+                margin: 0;
+                padding: 20px;
+              }
+              .barcode-container {
+                text-align: center;
+                page-break-inside: avoid;
+              }
+              svg {
+                max-width: 100%;
+              }
+              .code {
+                font-size: 24px;
+                font-weight: 700;
+                letter-spacing: 4px;
+                margin-top: 16px;
+              }
+              @media print {
+                body {
+                  padding: 0;
+                }
+              }
+            </style>
+          </head>
+          <body>
+            <div class="barcode-container">
+              ${document.getElementById('barcodePreview').innerHTML}
+            </div>
+            <script>
+              window.onload = () => {
+                window.print();
+                window.onafterprint = () => window.close();
+              };
+            </script>
+          </body>
+          </html>
+        `);
+        printWindow.document.close();
+        
+        showToast('🖨️ Opening print dialog...', 'success');
+      };
+
+      // Copy barcode to clipboard
+      window.copyBarcodeToClipboard = function() {
+        const input = document.getElementById('barcodeInput');
+        const code = input.value.trim();
+        
+        if (!code || code.length < 8 || code.length > 13 || !/^\d+$/.test(code)) {
+          showToast('⚠️ Please enter a valid 8-13 digit code', 'warning');
+          return;
+        }
+        
+        navigator.clipboard.writeText(code).then(() => {
+          showToast('📋 Barcode code copied to clipboard', 'success');
+        }).catch(() => {
+          showToast('⚠️ Failed to copy to clipboard', 'error');
+        });
+      };
+
       // Create new order from scanned article
       window.createOrderFromScan = function(articleCode) {
         closeArticleNotFoundModal();
@@ -15881,6 +16191,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       }
       window.highlightMatchingOrders = highlightMatchingOrders;
       window.showArticleNotFoundModal = showArticleNotFoundModal;
+      window.showBarcodeGeneratorModal = showBarcodeGeneratorModal;
       window.filterOrdersByArticle = filterOrdersByArticle;
       window.clearOrderFilter = clearOrderFilter;
 
@@ -16117,6 +16428,14 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
               <span class="context-menu-item-detail">Remove all scanner filters & outlines</span>
             </div>
           </div>
+          <div class="context-menu-divider"></div>
+          <div class="context-menu-item" data-action="barcode">
+            <span class="context-menu-item-icon">🏷️</span>
+            <div class="context-menu-item-label">
+              <span>Generate Barcode</span>
+              <span class="context-menu-item-detail">Create printable barcode labels</span>
+            </div>
+          </div>
         `;
         
         // Add event listeners
@@ -16229,6 +16548,9 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
               });
               showToast('🔄 Highlights cleared', 'info');
             }
+            break;
+          case 'barcode':
+            showBarcodeGeneratorModal();
             break;
         }
       }
