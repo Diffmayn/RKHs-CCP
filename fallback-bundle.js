@@ -4582,8 +4582,8 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
                       <button onclick="openStyleGuide()" class="support-menu-item">
                         <span class="support-menu-icon">🎨</span>
                         <div class="support-menu-content">
-                          <span class="support-menu-label">Style Guide</span>
-                          <span class="support-menu-desc">View design guidelines</span>
+                          <span class="support-menu-label">Photo Reference Guide</span>
+                          <span class="support-menu-desc">Textile photography standards</span>
                         </div>
                       </button>
                       <button onclick="openUserManual()" class="support-menu-item">
@@ -14971,10 +14971,8 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
     });
 
     window.openStyleGuide = function() {
-      // This will be updated to open the PDF
-      showToast('📄 Opening Style Guide...', 'info');
-      // Placeholder for PDF opening
-      window.open('assets/style-guide.pdf', '_blank');
+      showToast('📄 Opening Textile Photo Reference Guide...', 'info');
+      window.open('assets/TEXTILE_PHOTO_REFERENCE_GUIDE.pdf', '_blank');
       document.getElementById('supportMenuDropdown').style.display = 'none';
     };
 
