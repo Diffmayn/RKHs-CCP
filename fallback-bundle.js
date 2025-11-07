@@ -8503,16 +8503,26 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
                 </select>
               </div>
               <div style="min-width: 0;">
+                <label style="display: block; font-weight: 600; margin-bottom: 6px; color: #4b3b2a; font-size: 14px;">Order Type</label>
+    <select name="orderType" required style="width: 100%; box-sizing: border-box; padding: 14px; border: 2px solid #ead7c2; border-radius: 8px; font-size: 16px; transition: border-color 0.2s ease;"
+      onfocus="this.style.borderColor='#c48b5a'" onblur="this.style.borderColor='#ead7c2'">
+                  <option value="PO" selected>PO - Photo Order</option>
+                  <option value="PS">PS - Photo Service</option>
+                </select>
+              </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px;">
+              <div style="min-width: 0;">
                 <label style="display: block; font-weight: 600; margin-bottom: 6px; color: #4b3b2a; font-size: 14px;">Deadline</label>
       <input name="deadline" type="date" required style="width: 100%; box-sizing: border-box; padding: 14px; border: 2px solid #ead7c2; border-radius: 8px; font-size: 16px; transition: border-color 0.2s ease;"
         onfocus="this.style.borderColor='#c48b5a'" onblur="this.style.borderColor='#ead7c2'">
               </div>
-            </div>
-
-            <div style="margin-bottom: 20px;">
-              <label style="display: block; font-weight: 600; margin-bottom: 6px; color: #4b3b2a; font-size: 14px;">Budget (DKK)</label>
+              <div style="min-width: 0;">
+                <label style="display: block; font-weight: 600; margin-bottom: 6px; color: #4b3b2a; font-size: 14px;">Budget (DKK)</label>
       <input name="budget" type="number" min="0" style="width: 100%; box-sizing: border-box; padding: 14px; border: 2px solid #ead7c2; border-radius: 8px; font-size: 16px; transition: border-color 0.2s ease;" placeholder="0"
         onfocus="this.style.borderColor='#c48b5a'" onblur="this.style.borderColor='#ead7c2'">
+              </div>
             </div>
 
             <div style="margin-bottom: 20px;">
