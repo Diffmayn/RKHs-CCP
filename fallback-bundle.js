@@ -1586,7 +1586,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
     900: 'Baby & Kids'
   };
 
-  function createNormalizedArticle({ name, ean, articleNumber, variant, quantity, status, notes, raw }) {
+  function createNormalizedArticle({ name, ean, articleNumber, variant, quantity, status, notes, combinedPhoto, fileName, raw }) {
     const cleanName = (name || '').toString().trim();
     const cleanEAN = (ean || '').toString().replace(/\s+/g, '');
     const cleanArticleNumber = (articleNumber || '').toString().trim();
@@ -1594,6 +1594,8 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
     const cleanQuantity = quantity === 0 || quantity ? quantity : '';
     const cleanStatus = (status || '').toString().trim();
     const cleanNotes = (notes || '').toString().trim();
+    const cleanCombinedPhoto = (combinedPhoto || '').toString().trim();
+    const cleanFileName = (fileName || '').toString().trim();
 
     const primaryLabel = cleanName || cleanArticleNumber || cleanEAN || 'Article';
     const detailParts = [];
@@ -1611,6 +1613,8 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       quantity: cleanQuantity,
       status: cleanStatus,
       notes: cleanNotes,
+      combinedPhoto: cleanCombinedPhoto,
+      fileName: cleanFileName,
       displayText,
       raw
     };
@@ -1633,6 +1637,8 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
           const quantity = item.quantity ?? item.qty ?? '';
           const status = item.status || '';
           const notes = item.notes || item.comment || item.details || '';
+          const combinedPhoto = item.combinedPhoto || '';
+          const fileName = item.fileName || '';
 
           return createNormalizedArticle({
             name,
@@ -1642,6 +1648,8 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
             quantity,
             status,
             notes,
+            combinedPhoto,
+            fileName,
             raw: item
           });
         }
@@ -2182,6 +2190,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       eventId: 'A4025052', // Week 40, 2025, Bilka format
       purchaseGroup: 101, // Groceries
       group: 99,
+      costCenter: 'Bilka Marketing',
       offerId: '10763319',
       articleNumber: '1234575511',
       articleName: 'Premium Dog Food 2kg',
@@ -2272,6 +2281,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       eventId: 'A4125053', // Week 41, 2025, Netto format
       purchaseGroup: 101, // Fresh Products
       group: 99,
+      costCenter: 'føtex Marketing',
       offerId: '10763320',
       articleNumber: 'ART-COF-002',
       articleName: 'Espresso Beans 500g',
@@ -2332,7 +2342,10 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       costCenter:'PG-300',
       priority:'Medium',
       brief:'Professional studio photography for new tech product launch. High-end product photography and lifestyle shots for electronics catalog.',
-      articles: ['Wireless Bluetooth Speaker [EAN: 4061234567890]', 'USB-C Cable [EAN: 8901234567891]'],
+      articles: [
+        { name: 'Wireless Bluetooth Speaker [EAN: 4061234567890]', combinedPhoto: 'AA' },
+        { name: 'USB-C Cable [EAN: 8901234567891]', combinedPhoto: 'BB' }
+      ],
       budget: 8000,
       deliverables: ['Product Photography', 'Lifestyle Shots', 'Technical Details'],
       
@@ -2340,6 +2353,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       eventId: 'A3825054', // Week 38, 2025, Føtex format
       purchaseGroup: 101, // Electronics
       group: 99,
+      costCenter: 'Bilka.dk',
       offerId: '10763321',
       articleNumber: 'ART-ELEC-003',
       articleName: 'Wireless Bluetooth Speaker Premium',
@@ -2392,13 +2406,16 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       title:'Garden Tools - Product Showcase', 
       status:'Approved', 
       method:'Photographer',
-      orderType: 'PS',
+      orderType: 'PO',
       photographer:'Emily Chen', 
       deadline:'2025-09-07', 
       costCenter:'PG-400',
       priority:'Critical',
       brief:'Dynamic product shots of garden tools. Focus on durability, functionality, and outdoor lifestyle for spring catalog.',
-      articles: ['Electric Hedge Trimmer', 'Garden Gloves Set'],
+      articles: [
+        { name: 'Electric Hedge Trimmer', fileName: 'ENV.000010.jpg' },
+        { name: 'Garden Gloves Set', fileName: 'ENV.000011.jpg' }
+      ],
       budget: 6500,
       deliverables: ['Product Shots', 'Lifestyle Photography', 'Detail Shots'],
       
@@ -2406,6 +2423,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       eventId: 'A3725055', // Week 37, 2025, Bilka format
       purchaseGroup: 101, // Home & Garden
       group: 99,
+      costCenter: 'PDG',
       offerId: '10763322',
       articleNumber: '1234575512',
       articleName: 'Electric Hedge Trimmer Pro',
@@ -2465,7 +2483,10 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       costCenter:'PG-100',
       priority:'Critical',
       brief:'Organic pasta product line photography for new health-focused marketing campaign. Clean, fresh styling.',
-      articles: ['Organic Penne Pasta 500g', 'Organic Linguine 400g'],
+      articles: [
+        { name: 'Organic Penne Pasta 500g', combinedPhoto: 'CC' },
+        { name: 'Organic Linguine 400g', combinedPhoto: 'CC' }
+      ],
       budget: 3200,
       deliverables: ['Product Shots', 'Lifestyle Photography'],
       
@@ -2473,6 +2494,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       eventId: 'A3925056', // Week 39, 2025, Netto format
       purchaseGroup: 101, // Groceries
       group: 99,
+      costCenter: 'Bilka Marketing',
       offerId: '10763323',
       articleNumber: 'ART-PAST-005',
       articleName: 'Organic Penne Pasta Premium',
@@ -2525,13 +2547,16 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       title:'Fresh Dairy - E-commerce Photos', 
       status:'Review', 
       method:'Photo Box',
-      orderType: 'PS',
+      orderType: 'PO',
       photographer:'Mike Rodriguez', 
       deadline:'2025-08-28', 
       costCenter:'PG-200',
       priority:'Medium',
       brief:'Fresh dairy products for e-commerce catalog. Clean, appetizing shots with consistent lighting.',
-      articles: ['Organic Milk 1L', 'Greek Yogurt 500g'],
+      articles: [
+        { name: 'Organic Milk 1L', fileName: 'ENV.000012.jpg' },
+        { name: 'Greek Yogurt 500g', fileName: 'ENV.000013.jpg' }
+      ],
       budget: 2800,
       deliverables: ['E-commerce Photos', 'Detail Shots'],
       
@@ -2539,6 +2564,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       eventId: 'A3525057', // Week 35, 2025, Føtex format
       purchaseGroup: 101, // Fresh Products
       group: 99,
+      costCenter: 'føtex Marketing',
       offerId: '10763324',
       articleNumber: 'ART-DAIRY-006',
       articleName: 'Organic Milk Premium 1L',
@@ -2597,14 +2623,18 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       costCenter:'PG-300',
       priority:'Medium',
       brief:'Smart home devices photography for holiday campaign preview. Modern, tech-focused styling.',
-      articles: ['Smart Thermostat', 'Security Camera Set'],
+      articles: [
+        { name: 'Smart Thermostat', combinedPhoto: 'DD' },
+        { name: 'Security Camera Set', combinedPhoto: 'EE' }
+      ],
       budget: 5200,
       deliverables: ['Product Shots', 'Lifestyle Integration'],
       
       // SAP PMR fields
-      eventId: 'A4825058', // Week 48, 2025, Bilka format
-      purchaseGroup: 101, // Electronics
+      eventId: 'B3625066', // Week 36, 2025, Bilka format
+      purchaseGroup: 103, // Marketing Materials
       group: 99,
+      costCenter: 'Bilka.dk',
       offerId: '10763325',
       articleNumber: '1234575513',
       articleName: 'Smart Thermostat Pro',
@@ -2657,13 +2687,16 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       title:'Patio Furniture - Seasonal Showcase', 
       status:'Delivered', 
       method:'Photographer',
-      orderType: 'PS',
+      orderType: 'PO',
       photographer:'Emily Chen', 
       deadline:'2025-08-20', 
       costCenter:'PG-400',
       priority:'Medium',
       brief:'Outdoor patio furniture for summer/fall transition catalog. Lifestyle shots with outdoor setting.',
-      articles: ['Outdoor Dining Set', 'Cushion Covers'],
+      articles: [
+        { name: 'Outdoor Dining Set', fileName: 'ENV.000014.jpg' },
+        { name: 'Cushion Covers', fileName: 'ENV.000015.jpg' }
+      ],
       budget: 7200,
       deliverables: ['Lifestyle Photos', 'Product Details'],
       
@@ -2671,6 +2704,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       eventId: 'A3425059', // Week 34, 2025, Netto format
       purchaseGroup: 101, // Home & Garden
       group: 99,
+      costCenter: 'PDG',
       offerId: '10763326',
       articleNumber: 'ART-PATIO-008',
       articleName: 'Outdoor Dining Set Premium',
@@ -2732,12 +2766,18 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       costCenter:'PG-100',
       priority:'High',
       brief:'New organic baby food line launch. Need hero shots, ingredient close-ups, and lifestyle photography with babies.',
-      articles: ['Organic Baby Food Puree [EAN: 5901234567901]', 'Baby Food Spoon Set [EAN: 5901234567902]'],
+      articles: [
+        { name: 'Organic Baby Food Puree [EAN: 5901234567901]', combinedPhoto: 'FF' },
+        { name: 'Baby Food Spoon Set [EAN: 5901234567902]', combinedPhoto: 'GG' }
+      ],
       budget: 8500,
       deliverables: ['Hero Product Shots', 'Ingredient Photography', 'Lifestyle with Babies'],
+      
+      // SAP PMR fields
       eventId: 'A4125060', 
       purchaseGroup: 101,
       group: 99,
+      costCenter: 'Bilka Marketing',
       offerId: '10763327',
       articleNumber: 'ART-BABY-009',
       articleName: 'Organic Baby Food Variety Pack',
@@ -2760,12 +2800,18 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       costCenter:'PG-300',
       priority:'Critical',
       brief:'High-end gaming laptop with RGB lighting. Need dramatic tech shots with special lighting effects.',
-      articles: ['Gaming Laptop Pro X1 [EAN: 5901234567903]', 'Gaming Mouse [EAN: 5901234567904]'],
+      articles: [
+        { name: 'Gaming Laptop Pro X1 [EAN: 5901234567903]', combinedPhoto: 'HH' },
+        { name: 'Gaming Mouse [EAN: 5901234567904]', combinedPhoto: 'HH' }
+      ],
       budget: 12000,
       deliverables: ['Tech Hero Shots', 'RGB Lighting Effects', 'Detail Macro Shots'],
+      
+      // SAP PMR fields
       eventId: 'A4225061', 
       purchaseGroup: 101,
       group: 99,
+      costCenter: 'føtex Marketing',
       offerId: '10763328',
       articleNumber: 'ART-LAPTOP-010',
       articleName: 'Gaming Laptop Pro X1',
@@ -2788,12 +2834,19 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       costCenter:'PG-200',
       priority:'Medium',
       brief:'Winter fashion collection for upcoming season. Need model shots and flat lay product photography.',
-      articles: ['Winter Puffer Jacket [EAN: 5901234567905]', 'Wool Scarf [EAN: 5901234567906]', 'Winter Boots [EAN: 5901234567907]'],
+      articles: [
+        { name: 'Winter Puffer Jacket [EAN: 5901234567905]', combinedPhoto: 'II' },
+        { name: 'Wool Scarf [EAN: 5901234567906]', combinedPhoto: 'JJ' },
+        { name: 'Winter Boots [EAN: 5901234567907]', combinedPhoto: 'II' }
+      ],
       budget: 15000,
       deliverables: ['Model Photography', 'Flat Lay Styling', 'Detail Shots'],
+      
+      // SAP PMR fields
       eventId: 'A4325062', 
       purchaseGroup: 101,
       group: 99,
+      costCenter: 'Bilka.dk',
       offerId: '10763329',
       articleNumber: 'ART-JACKET-011',
       articleName: 'Winter Jacket Collection',
@@ -2810,18 +2863,24 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       title:'Kitchen Appliances - Modern Design', 
       status:'Approved', 
       method:'Photo Box',
-      orderType: 'PS',
+      orderType: 'PO',
       photographer:'David Kim', 
       deadline:'2025-09-15', 
       costCenter:'PG-400',
       priority:'Low',
       brief:'Modern kitchen appliance series. Clean, minimalist photography with lifestyle context.',
-      articles: ['Stand Mixer Pro [EAN: 5901234567908]', 'Coffee Machine Deluxe [EAN: 5901234567909]'],
+      articles: [
+        { name: 'Stand Mixer Pro [EAN: 5901234567908]', combinedPhoto: 'KK', fileName: 'ENV.000016.jpg' },
+        { name: 'Coffee Machine Deluxe [EAN: 5901234567909]', combinedPhoto: 'LL', fileName: 'ENV.000017.jpg' }
+      ],
       budget: 9500,
       deliverables: ['Product Photography', 'Lifestyle Kitchen Scenes', 'Technical Detail Shots'],
+      
+      // SAP PMR fields
       eventId: 'A4425063', 
       purchaseGroup: 101,
       group: 99,
+      costCenter: 'PDG',
       offerId: '10763330',
       articleNumber: 'ART-KITCHEN-012',
       articleName: 'Kitchen Appliance Set',
@@ -2844,12 +2903,18 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       costCenter:'PG-100',
       priority:'High',
       brief:'Luxury organic skincare products. Need elegant beauty photography with natural lighting.',
-      articles: ['Organic Face Serum [EAN: 5901234567910]', 'Natural Moisturizer [EAN: 5901234567911]'],
+      articles: [
+        { name: 'Organic Face Serum [EAN: 5901234567910]', combinedPhoto: 'MM' },
+        { name: 'Natural Moisturizer [EAN: 5901234567911]', combinedPhoto: 'MM' }
+      ],
       budget: 11000,
       deliverables: ['Beauty Product Shots', 'Ingredient Close-ups', 'Lifestyle Beauty'],
+      
+      // SAP PMR fields
       eventId: 'A4525064', 
       purchaseGroup: 101,
       group: 99,
+      costCenter: 'Bilka Marketing',
       offerId: '10763331',
       articleNumber: 'ART-SKINCARE-013',
       articleName: 'Organic Skincare Collection',
@@ -2872,12 +2937,18 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       costCenter:'PG-300',
       priority:'Medium',
       brief:'Smart home security cameras and sensors. Need tech shots showing installation and features.',
-      articles: ['Security Camera 4K [EAN: 5901234567912]', 'Motion Sensor [EAN: 5901234567913]'],
+      articles: [
+        { name: 'Security Camera 4K [EAN: 5901234567912]', combinedPhoto: 'NN' },
+        { name: 'Motion Sensor [EAN: 5901234567913]', combinedPhoto: 'OO' }
+      ],
       budget: 7500,
       deliverables: ['Tech Product Shots', 'Installation Demo', 'App Interface'],
+      
+      // SAP PMR fields
       eventId: 'A4625065', 
       purchaseGroup: 101,
       group: 99,
+      costCenter: 'føtex Marketing',
       offerId: '10763332',
       articleNumber: 'ART-SECURITY-014',
       articleName: 'Smart Security System',
@@ -2900,12 +2971,18 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       costCenter:'PG-100',
       priority:'Low',
       brief:'Artisan bakery products for autumn catalog. Warm, rustic food photography.',
-      articles: ['Sourdough Loaf [EAN: 5901234567914]', 'Whole Grain Bread [EAN: 5901234567915]'],
+      articles: [
+        { name: 'Sourdough Loaf [EAN: 5901234567914]', combinedPhoto: 'PP' },
+        { name: 'Whole Grain Bread [EAN: 5901234567915]', combinedPhoto: 'PP' }
+      ],
       budget: 6000,
       deliverables: ['Food Photography', 'Lifestyle Bakery Scenes', 'Ingredient Shots'],
+      
+      // SAP PMR fields
       eventId: 'A4725066', 
       purchaseGroup: 101,
       group: 99,
+      costCenter: 'Bilka.dk',
       offerId: '10763333',
       articleNumber: 'ART-BREAD-015',
       articleName: 'Artisan Bread Selection',
@@ -2922,18 +2999,24 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       title:'Fitness Equipment - Home Gym', 
       status:'Review', 
       method:'Photographer',
-      orderType: 'PS',
+      orderType: 'PO',
       photographer:'James Wilson', 
       deadline:'2025-09-18', 
       costCenter:'PG-400',
       priority:'High',
       brief:'Home fitness equipment showcase. Action shots with models using equipment.',
-      articles: ['Adjustable Dumbbells [EAN: 5901234567916]', 'Yoga Mat Pro [EAN: 5901234567917]'],
+      articles: [
+        { name: 'Adjustable Dumbbells [EAN: 5901234567916]', combinedPhoto: 'QQ', fileName: 'ENV.000018.jpg' },
+        { name: 'Yoga Mat Pro [EAN: 5901234567917]', combinedPhoto: 'RR', fileName: 'ENV.000019.jpg' }
+      ],
       budget: 13500,
       deliverables: ['Action Photography', 'Product Detail Shots', 'Home Gym Lifestyle'],
+      
+      // SAP PMR fields
       eventId: 'A4825067', 
       purchaseGroup: 101,
       group: 99,
+      costCenter: 'PDG',
       offerId: '10763334',
       articleNumber: 'ART-FITNESS-016',
       articleName: 'Home Fitness Set',
@@ -2956,12 +3039,18 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       costCenter:'PG-300',
       priority:'Medium',
       brief:'Smartphone case, charger, and screen protector bundle. Clean tech photography.',
-      articles: ['Phone Case Clear [EAN: 5901234567918]', 'Wireless Charger [EAN: 5901234567919]'],
+      articles: [
+        { name: 'Phone Case Clear [EAN: 5901234567918]', combinedPhoto: 'SS' },
+        { name: 'Wireless Charger [EAN: 5901234567919]', combinedPhoto: 'TT' }
+      ],
       budget: 4500,
       deliverables: ['Tech Product Shots', 'Compatibility Demo', 'Lifestyle Tech'],
+      
+      // SAP PMR fields
       eventId: 'A4925068', 
       purchaseGroup: 101,
       group: 99,
+      costCenter: 'Bilka Marketing',
       offerId: '10763335',
       articleNumber: 'ART-PHONE-017',
       articleName: 'Smartphone Accessory Bundle',
@@ -2984,12 +3073,18 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       costCenter:'PG-200',
       priority:'Critical',
       brief:'High-end luxury watches. Dramatic lighting with reflections and detail macro shots.',
-      articles: ['Luxury Watch Gold [EAN: 5901234567920]', 'Watch Box Premium [EAN: 5901234567921]'],
+      articles: [
+        { name: 'Luxury Watch Gold [EAN: 5901234567920]', combinedPhoto: 'UU' },
+        { name: 'Watch Box Premium [EAN: 5901234567921]', combinedPhoto: 'VV' }
+      ],
       budget: 18000,
       deliverables: ['Luxury Product Photography', 'Macro Detail Shots', 'Lifestyle Luxury'],
+      
+      // SAP PMR fields
       eventId: 'A5025069', 
       purchaseGroup: 101,
       group: 99,
+      costCenter: 'føtex Marketing',
       offerId: '10763336',
       articleNumber: 'ART-WATCH-018',
       articleName: 'Luxury Watch Collection',
@@ -3006,18 +3101,24 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       title:'Garden Tool Set - Spring Collection', 
       status:'Processing', 
       method:'Photo Box',
-      orderType: 'PS',
+      orderType: 'PO',
       photographer:'Robert Chen', 
       deadline:'2025-09-11', 
       costCenter:'PG-400',
       priority:'Medium',
       brief:'Garden tools and equipment for spring gardening season. Outdoor lifestyle shots.',
-      articles: ['Garden Spade [EAN: 5901234567922]', 'Pruning Shears [EAN: 5901234567923]'],
+      articles: [
+        { name: 'Garden Spade [EAN: 5901234567922]', combinedPhoto: 'XX', fileName: 'ENV.000020.jpg' },
+        { name: 'Pruning Shears [EAN: 5901234567923]', combinedPhoto: 'XX', fileName: 'ENV.000021.jpg' }
+      ],
       budget: 7800,
       deliverables: ['Product Photography', 'Garden Lifestyle', 'Tool Detail Shots'],
+      
+      // SAP PMR fields
       eventId: 'A5125070', 
       purchaseGroup: 101,
       group: 99,
+      costCenter: 'Bilka.dk',
       offerId: '10763337',
       articleNumber: 'ART-GARDEN-019',
       articleName: 'Garden Tool Collection',
@@ -3040,12 +3141,18 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       costCenter:'PG-100',
       priority:'Low',
       brief:'Premium coffee beans from different regions. Warm, appetizing food photography.',
-      articles: ['Ethiopian Coffee Beans [EAN: 5901234567924]', 'Colombian Roast [EAN: 5901234567925]'],
+      articles: [
+        { name: 'Ethiopian Coffee Beans [EAN: 5901234567924]', combinedPhoto: 'YY' },
+        { name: 'Colombian Roast [EAN: 5901234567925]', combinedPhoto: 'ZZ' }
+      ],
       budget: 5500,
       deliverables: ['Food Photography', 'Lifestyle Coffee Scenes', 'Bean Close-ups'],
+      
+      // SAP PMR fields
       eventId: 'A5225071', 
       purchaseGroup: 101,
       group: 99,
+      costCenter: 'PDG',
       offerId: '10763338',
       articleNumber: 'ART-COFFEE-020',
       articleName: 'Gourmet Coffee Selection',
@@ -3074,9 +3181,12 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       articles: ['Building Blocks Set [EAN: 5901234567926]', 'Learning Tablet Kids [EAN: 5901234567927]'],
       budget: 10500,
       deliverables: ['Toy Photography', 'Kids Playing Lifestyle', 'Educational Demo'],
+      
+      // SAP PMR fields
       eventId: 'A5325072', 
       purchaseGroup: 101,
       group: 99,
+      costCenter: 'Bilka Marketing',
       offerId: '10763339',
       articleNumber: 'ART-TOYS-021',
       articleName: 'Educational Toy Set',
@@ -3102,9 +3212,12 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       articles: ['Wireless Headphones Pro [EAN: 5901234567928]', 'Charging Case [EAN: 5901234567929]'],
       budget: 14000,
       deliverables: ['Tech Hero Shots', 'Feature Highlights', 'Lifestyle Music'],
+      
+      // SAP PMR fields
       eventId: 'A5425073', 
       purchaseGroup: 101,
       group: 99,
+      costCenter: 'føtex Marketing',
       offerId: '10763340',
       articleNumber: 'ART-HEADPHONES-022',
       articleName: 'Wireless Headphones Premium',
@@ -3130,9 +3243,12 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       articles: ['Camping Tent 4-Person [EAN: 5901234567930]', 'Sleeping Bag Winter [EAN: 5901234567931]'],
       budget: 12500,
       deliverables: ['Outdoor Photography', 'Camping Lifestyle', 'Product Features'],
+      
+      // SAP PMR fields
       eventId: 'A5525074', 
       purchaseGroup: 101,
       group: 99,
+      costCenter: 'Bilka.dk',
       offerId: '10763341',
       articleNumber: 'ART-CAMPING-023',
       articleName: 'Camping Gear Set',
@@ -3158,9 +3274,12 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       articles: ['Dark Chocolate Truffles [EAN: 5901234567932]', 'Chocolate Gift Box [EAN: 5901234567933]'],
       budget: 8800,
       deliverables: ['Luxury Food Photography', 'Lifestyle Gifting', 'Chocolate Close-ups'],
+      
+      // SAP PMR fields
       eventId: 'A5625075', 
       purchaseGroup: 101,
       group: 99,
+      costCenter: 'PDG',
       offerId: '10763342',
       articleNumber: 'ART-CHOCOLATE-024',
       articleName: 'Artisan Chocolate Collection',
@@ -3186,9 +3305,12 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       articles: ['Smart TV 75 inch [EAN: 5901234567934]', 'TV Mount Wall [EAN: 5901234567935]'],
       budget: 16000,
       deliverables: ['Tech Product Shots', 'Living Room Lifestyle', 'Screen Quality Demo'],
+      
+      // SAP PMR fields
       eventId: 'A5725076', 
       purchaseGroup: 101,
       group: 99,
+      costCenter: 'Bilka Marketing',
       offerId: '10763343',
       articleNumber: 'ART-TV-025',
       articleName: 'Smart TV Ultra HD',
@@ -4801,6 +4923,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
                         <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: #4b3b2a; border-bottom: 1px solid rgba(196, 139, 90, 0.22);">Page</th>
                         <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: #4b3b2a; border-bottom: 1px solid rgba(196, 139, 90, 0.22);">Offer ID</th>
                         <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: #4b3b2a; border-bottom: 1px solid rgba(196, 139, 90, 0.22);">Group</th>
+                        <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: #4b3b2a; border-bottom: 1px solid rgba(196, 139, 90, 0.22);">Cost Center</th>
                         <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: #4b3b2a; border-bottom: 1px solid rgba(196, 139, 90, 0.22);">Order Type</th>
                         <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: #4b3b2a; border-bottom: 1px solid rgba(196, 139, 90, 0.22);">Offer Name</th>
                         <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: #4b3b2a; border-bottom: 1px solid rgba(196, 139, 90, 0.22);">Shot Type</th>
@@ -4810,6 +4933,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
                         <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: #4b3b2a; border-bottom: 1px solid rgba(196, 139, 90, 0.22);">File Name</th>
                         <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: #4b3b2a; border-bottom: 1px solid rgba(196, 139, 90, 0.22); width: 92px;">Comments</th>
                         <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: #4b3b2a; border-bottom: 1px solid rgba(196, 139, 90, 0.22);">Status</th>
+                        <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: #4b3b2a; border-bottom: 1px solid rgba(196, 139, 90, 0.22); width: 80px;">Briefing</th>
                         <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: #4b3b2a; border-bottom: 1px solid rgba(196, 139, 90, 0.22);">Deadline</th>
                       </tr>
                     </thead>
@@ -6960,6 +7084,17 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
               </div>
 
               <div>
+                <label style="display: block; font-weight: 500; margin-bottom: 4px;">Cost Center</label>
+                <select name="costCenter" style="width: 100%; padding: 8px; border: 1px solid #d1d5db; border-radius: 4px;">
+                  <option value="">Select cost center...</option>
+                  <option value="Bilka.dk">Bilka.dk</option>
+                  <option value="føtex Marketing">føtex Marketing</option>
+                  <option value="Bilka Marketing">Bilka Marketing</option>
+                  <option value="PDG">PDG</option>
+                </select>
+              </div>
+
+              <div>
                 <label style="display: block; font-weight: 500; margin-bottom: 4px;">Photo Reference / Shooting Type</label>
                 <select name="imageRequestId" style="width: 100%; padding: 8px; border: 1px solid #d1d5db; border-radius: 4px;">
                   <option value="">Select photo reference...</option>
@@ -7029,6 +7164,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
               <th style="width: 60px;">Page</th>
               <th style="width: 100px;">Offer ID</th>
               <th style="width: 60px;">Group</th>
+              <th style="width: 120px;">Cost Center</th>
               <th style="width: 200px;">Offer</th>
               <th style="width: 150px;">Type</th>
               <th style="width: 120px;">Photo Reference</th>
@@ -9407,12 +9543,14 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
               ${order.cloudinaryUrl ? `<div><strong>Cloudinary:</strong> <a href="${order.cloudinaryUrl}" target="_blank" style="color:#b15d1d;">View Image</a></div>` : ''}
             </div>
           </div>
-        ` : (order.brief ? `
+        ` : '';
+        
+      const briefBlock = order.brief ? `
           <div style="padding:20px;border-radius:16px;background:rgba(253,250,246,0.85);border:1px solid rgba(196,139,90,0.35);box-shadow:0 18px 36px rgba(62,44,30,0.12);">
             <h3 style="margin:0 0 12px;font-size:16px;color:#3b2b1a;font-weight:700;">📝 Creative Brief</h3>
             <div style="font-size:14px;line-height:1.6;color:#3b2b1a;white-space:pre-wrap;">${order.brief}</div>
           </div>
-        ` : '');
+        ` : '';
 
       const damSection = (() => {
         if (typeof window.getDAMAssets !== 'function') {
@@ -9576,6 +9714,8 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
           </div>
 
           ${eventOrBriefBlock}
+          
+          ${briefBlock}
 
           <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:26px;">
             <div style="padding:20px;border-radius:16px;background:rgba(253,250,246,0.88);border:1px solid rgba(196,139,90,0.3);box-shadow:0 14px 28px rgba(62,44,30,0.1);">
@@ -10012,6 +10152,21 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
             const netContent = raw.netContent || raw.netWeight || raw.size || order.netContent || placeholderSpan;
             const purchaseGroupValue = raw.purchaseGroup ?? order.purchaseGroup;
             const purchaseGroup = formatPurchaseGroupDisplay(purchaseGroupValue);
+            const combinedPhoto = raw.combinedPhoto || article.combinedPhoto || placeholderSpan;
+            const fileName = raw.fileName || article.fileName || placeholderSpan;
+
+            // Check for duplicates in combined photo values
+            const allCombinedPhotos = dataSource.map(a => {
+              const r = a && typeof a.raw === 'object' ? a.raw : {};
+              return r.combinedPhoto || a.combinedPhoto;
+            }).filter(cp => cp && cp !== placeholderSpan);
+            
+            const isDuplicate = combinedPhoto && combinedPhoto !== placeholderSpan && 
+                                allCombinedPhotos.filter(cp => cp === combinedPhoto).length > 1;
+            
+            const combinedPhotoStyle = isDuplicate 
+              ? 'background:#fef3c7;border-left:3px solid #f59e0b;font-weight:600;color:#92400e;'
+              : '';
 
             return `
               <tr>
@@ -10021,11 +10176,13 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
                 <td style="padding:6px 10px;border-bottom:1px solid rgba(196, 139, 90, 0.18);font-size:11px;">${articleName || placeholderSpan}</td>
                 <td style="padding:6px 10px;border-bottom:1px solid rgba(196, 139, 90, 0.18);font-size:11px;">${netContent || placeholderSpan}</td>
                 <td style="padding:6px 10px;border-bottom:1px solid rgba(196, 139, 90, 0.18);font-size:11px;">${purchaseGroup || placeholderSpan}</td>
+                <td style="padding:6px 10px;border-bottom:1px solid rgba(196, 139, 90, 0.18);font-size:11px;${combinedPhotoStyle}">${combinedPhoto || placeholderSpan}</td>
+                <td style="padding:6px 10px;border-bottom:1px solid rgba(196, 139, 90, 0.18);font-size:11px;">${fileName || placeholderSpan}</td>
               </tr>
             `;
           }).join('') : `
             <tr>
-              <td colspan="6" style="padding:12px;color:#9ca3af;text-align:center;border-bottom:1px solid rgba(196, 139, 90, 0.2);">No article details available for this order.</td>
+              <td colspan="8" style="padding:12px;color:#9ca3af;text-align:center;border-bottom:1px solid rgba(196, 139, 90, 0.2);">No article details available for this order.</td>
             </tr>
           `;
 
@@ -10040,6 +10197,8 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
                     <th style="text-align:left;padding:8px 10px;font-size:11px;color:#6b5440;font-weight:600;">Article Name</th>
                     <th style="text-align:left;padding:8px 10px;font-size:11px;color:#6b5440;font-weight:600;">Net Content</th>
                     <th style="text-align:left;padding:8px 10px;font-size:11px;color:#6b5440;font-weight:600;">Purchase Group</th>
+                    <th style="text-align:left;padding:8px 10px;font-size:11px;color:#6b5440;font-weight:600;">Combined Photo</th>
+                    <th style="text-align:left;padding:8px 10px;font-size:11px;color:#6b5440;font-weight:600;">File Name</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -10061,6 +10220,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
           const expandLabel = isExpanded ? 'Collapse line items' : 'Expand line items';
 
           const groupDisplay = o.group || placeholderSpan;
+          const costCenterDisplay = o.costCenter || placeholderSpan;
           const orderTypeDisplay = (o.orderType || 'PS');
           const rawPage = o.page ?? o.pageNumber ?? o.pageNo ?? o.catalogPage ?? o.pamPage ?? o.pageReference ?? '';
           const parsedPage = parseInt(rawPage, 10);
@@ -10076,7 +10236,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
           const articleDetailsRow = isExpanded ? `
             <tr class="order-articles-row" data-parent-order="${o.orderNumber}">
               <td class="bulk-checkbox" style="display:none;"></td>
-              <td colspan="15" style="background:#fffaf3;padding:10px 18px 16px;border-bottom:1px solid rgba(196, 139, 90, 0.2);">
+              <td colspan="17" style="background:#fffaf3;padding:10px 18px 16px;border-bottom:1px solid rgba(196, 139, 90, 0.2);">
                 ${buildChildDetailsTable(o, normalizedArticles)}
               </td>
             </tr>
@@ -10092,6 +10252,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
             <td style="padding:6px 8px;color: #4b3b2a !important;font-size:12px;">${pageDisplay}</td>
             <td style="padding:6px 8px;color: #4b3b2a !important;font-size:12px;">${offerId}</td>
             <td style="padding:6px 8px;color: #4b3b2a !important;font-size:12px;">${groupDisplay}</td>
+            <td style="padding:6px 8px;color: #4b3b2a !important;font-size:12px;">${costCenterDisplay}</td>
             <td style="padding:6px 8px;color: #4b3b2a !important;font-size:12px;">${orderTypeDisplay}</td>
             <td style="padding:6px 8px;color: #4b3b2a !important;min-width:150px;font-size:12px;">${offerName}</td>
             <td style="padding:6px 8px;color: #4b3b2a !important;font-size:12px;">${shotType}</td>
@@ -10107,6 +10268,9 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
               </button>
             </td>
             <td style="padding:6px 8px;"><span class="status ${o.status.replace(/\s+/g, '')}">${o.status || 'Unknown'}</span></td>
+            <td style="padding:6px 8px;text-align:center;" title="${o.brief ? o.brief.substring(0, 150) + (o.brief.length > 150 ? '...' : '') : 'No briefing available'}">
+              ${o.brief ? '<span style="color:#10b981;font-size:18px;cursor:help;">📋</span>' : '<span style="color:#d1d5db;font-size:18px;">—</span>'}
+            </td>
             <td style="padding:6px 8px;${deadlineStyle} font-size:12px;">${o.deadline || placeholderSpan}${isOverdue ? ' ⚠️' : ''}</td>
           </tr>
           ${articleDetailsRow}`;
