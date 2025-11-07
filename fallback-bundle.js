@@ -2094,22 +2094,30 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       const newOrders = sapData.map((item, index) => {
         const order = {
         orderNumber: item.imageRequestId || `IMG-${Date.now()}-${Math.random().toString(36).substr(2, 5)}`,
-        title: `${item.articleName || 'Product Photography'}`,
+        title: `${item.offerName || item.articleName || 'Product Photography'}`,
         status: item.photoStatus === 'Archive' ? 'Completed' : 'New Request',
-        method: item.photoStatus === 'New Shoot - Photo Box' ? 'Photo Box' : 'Photographer',
+        orderType: 'PS', // Always PS for SAP imports
+        method: item.production || 'M&B', // Use production field (excluding Photo Box)
         photographer: 'Unassigned',
         deadline: getEventDeadline(item.eventId),
-        costCenter: `PG-${item.purchaseGroup}`,
+        costCenter: item.costCenter || `PG-${item.purchaseGroup}`,
+        purchaseGroup: item.purchaseGroup || 100,
         priority: 'Medium',
-        brief: `Photography for ${item.articleName} (Article: ${item.articleNumber}) as part of Event ${item.eventId}`,
+        brief: `Photography for ${item.offerName || item.articleName} (Article: ${item.articleNumber}) as part of Event ${item.eventId}\nPage: ${item.page || 'N/A'} | Group: ${item.group || 99} | Shot Type: ${item.shotType || 'N/A'} | Photo Ref: ${item.photoRef || 'N/A'}`,
         articles: [item.articleName],
         budget: 1500,
         deliverables: ['Product Photography'],
         
         // SAP PMR specific fields
+        page: item.page || 1,
+        offerId: item.offerId || 'N/A',
+        group: item.group || 99,
+        offerName: item.offerName || item.articleName || 'N/A',
+        shotType: item.shotType || item.photoStatus || 'N/A',
+        photoRef: item.photoRef || item.imageRequestId || 'N/A',
+        
+        // Legacy SAP fields
         eventId: item.eventId,
-        purchaseGroup: item.purchaseGroup,
-        offerId: item.offerId,
         articleNumber: item.articleNumber,
         articleName: item.articleName,
         imageRequestId: item.imageRequestId,
@@ -11829,13 +11837,20 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
             <div style="background:#f8fafc;padding:16px;border-radius:8px;border-left:4px solid #c48b5a;">
               <p style="margin:0 0 12px;font-size:14px;color:#4b3b2a;"><strong>JSON Array with following fields:</strong></p>
               <ul style="margin:0;padding-left:20px;font-size:14px;color:#6b5440;">
-                <li><strong>eventId</strong>: Event identifier (e.g., "A4025052")</li>
-                <li><strong>purchaseGroup</strong>: Purchase group number (100-999)</li>
+                <li><strong>page</strong>: Catalog page number (1-48)</li>
                 <li><strong>offerId</strong>: Offer identifier (e.g., "10763319")</li>
+                <li><strong>group</strong>: Group classification (always 99 for PS orders)</li>
+                <li><strong>costCenter</strong>: Cost center (e.g., "Bilka.dk", "PG-100")</li>
+                <li><strong>orderType</strong>: Always "PS" for SAP imports</li>
+                <li><strong>offerName</strong>: Offer/product name</li>
+                <li><strong>shotType</strong>: Photography style (e.g., "#11 PACKSHOT", "Lifestyle")</li>
+                <li><strong>photoRef</strong>: Photo reference ID</li>
+                <li><strong>production</strong>: Production method (M&B, GILS, MERRILD - never Photo Box)</li>
+                <li><strong>eventId</strong>: Event identifier (e.g., "A4025052")</li>
+                <li><strong>purchaseGroup</strong>: Purchase group number (100-400)</li>
                 <li><strong>articleNumber</strong>: Article number</li>
                 <li><strong>articleName</strong>: Article name</li>
-                <li><strong>imageRequestId</strong>: Image request ID (e.g., "123456")</li>
-                <li><strong>photoStatus</strong>: "Archive", "New Shoot - Photographer", or "New Shoot - Photo Box"</li>
+                <li><strong>imageRequestId</strong>: Image request ID</li>
                 <li><strong>cloudinaryUrl</strong>: (Optional) Existing image URL</li>
               </ul>
             </div>
@@ -11845,13 +11860,20 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
             <h3 style="margin:0 0 16px;font-size:18px;color:#4b3b2a;">Sample Data</h3>
             <div style="background:#f1f5f9;padding:16px;border-radius:8px;font-family:monospace;font-size:12px;max-height:200px;overflow-y:auto;">
 [{
+  "page": 15,
+  "offerId": "10763319",
+  "group": 99,
+  "costCenter": "Bilka.dk",
+  "orderType": "PS",
+  "offerName": "Premium Dog Food 2kg",
+  "shotType": "#11 PACKSHOT",
+  "photoRef": "123456",
+  "production": "M&B",
   "eventId": "A4025052",
   "purchaseGroup": 100,
-  "offerId": "10763319",
   "articleNumber": "ART-DOG-001",
   "articleName": "Premium Dog Food 2kg",
   "imageRequestId": "123456",
-  "photoStatus": "New Shoot - Photographer",
   "cloudinaryUrl": null
 }]
             </div>
@@ -11929,6 +11951,15 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
         ]
       };
 
+      // Cost centers
+      const costCenters = ['Bilka.dk', 'Bilka Marketing', 'Føtex', 'Netto', 'PG-100', 'PG-200', 'PG-300', 'PG-400'];
+      
+      // Shot types
+      const shotTypes = ['#13 EMBALLAGE', '#12 FRI OPSTILLING', '#11 PACKSHOT', 'Archive', 'Lifestyle', 'Detail Macro', 'Environment'];
+      
+      // Production methods (excluding Photo Box)
+      const productionMethods = ['M&B', 'GILS', 'MERRILD'];
+
       // Get current week for event ID
       const now = new Date();
       const weekNum = Math.ceil((now.getTime() - new Date(now.getFullYear(), 0, 1).getTime()) / (7 * 24 * 60 * 60 * 1000));
@@ -11949,19 +11980,25 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
         }
       }
 
-      // Random photo status (only new shoot options)
-      const photoStatuses = ['New Shoot - Photographer', 'New Shoot - Photo Box'];
-      const randomPhotoStatus = photoStatuses[Math.floor(Math.random() * photoStatuses.length)];
-      
-      // Create realistic PMR data
+      // Create realistic PMR data with new fields
       const simulatedData = articles.map(article => ({
+        page: Math.floor(Math.random() * 48) + 1, // Random page 1-48
+        offerId: `1076${Math.floor(Math.random() * 10000).toString().padStart(4, '0')}`,
+        group: 99,
+        costCenter: costCenters[Math.floor(Math.random() * costCenters.length)],
+        orderType: 'PS',
+        offerName: article.name,
+        shotType: shotTypes[Math.floor(Math.random() * shotTypes.length)],
+        photoRef: Math.floor(Math.random() * 1000000).toString(),
+        production: productionMethods[Math.floor(Math.random() * productionMethods.length)],
+        
+        // Legacy fields for backward compatibility
         eventId: `A${weekNum.toString().padStart(2, '0')}25${Math.floor(Math.random() * 100).toString().padStart(3, '0')}`,
         purchaseGroup: randomPG,
-        offerId: `1076${Math.floor(Math.random() * 10000).toString().padStart(4, '0')}`,
         articleNumber: article.number,
         articleName: article.name,
         imageRequestId: Math.floor(Math.random() * 1000000).toString(),
-        photoStatus: randomPhotoStatus,
+        photoStatus: 'New Shoot - Photographer',
         cloudinaryUrl: null,
         salesOrg: getRandomSalesOrg()
       }));
@@ -11971,8 +12008,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       textarea.value = JSON.stringify(simulatedData, null, 2);
       
       // Show success message
-      const purchaseGroupName = purchaseGroups[randomPG] || 'Unknown';
-      alert(`🎲 Generated ${articles.length} ${randomPhotoStatus.toLowerCase()} request(s) for Purchase Group ${randomPG} (${purchaseGroupName})`);
+      alert(`🎲 Generated ${articles.length} order(s) for Purchase Group ${randomPG}`);
     };
 
     // Filter orders by status from dashboard tiles and order view tiles
