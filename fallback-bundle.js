@@ -3,7 +3,9 @@
 // Runware API Integration Working - Simplified Implementation
 // All functions defined at top level, no dependency issues
 // Mock implementation with data URL images (no external dependencies)
+console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
 (function(){
+  console.log('[FALLBACK-BUNDLE] 🎬 IIFE STARTING...');
   
   // Global feature flags
   var featureFlags = (typeof window !== 'undefined' && window.featureFlags) ? window.featureFlags : {};
@@ -2166,10 +2168,7 @@
       status:'In Progress',
       
       method:'Photographer',
-      
-      
-      
-      
+      orderType: 'PS',
       photographer:'Mike Rodriguez', 
       deadline:'2025-09-06', 
       costCenter:'PG-100',
@@ -2586,9 +2585,7 @@
       title:'Smart Home Devices - Tech Showcase', 
       status:'Complete', 
       method:'Photographer',
-      
-      
-      
+      orderType: 'PS',
       photographer:'Mike Rodriguez', 
       deadline:'2025-09-02', 
       costCenter:'PG-300',
@@ -15271,6 +15268,7 @@
 
   // Smooth entrance
   setTimeout(() => {
+    console.log('[MAIN] 🎬 Main setTimeout executing, about to render...');
     render(); // This will now check authentication first
     
     // Update badges after initial render
@@ -15878,7 +15876,9 @@
       // Expose helper functions globally for testing
       window.processScan = processScan;
       window.clearOrderHighlights = clearOrderHighlights;
-      window.searchOrdersByArticle = searchOrdersByArticle;
+      if (typeof searchOrdersByArticle !== 'undefined') {
+        window.searchOrdersByArticle = searchOrdersByArticle;
+      }
       window.highlightMatchingOrders = highlightMatchingOrders;
       window.showArticleNotFoundModal = showArticleNotFoundModal;
       window.filterOrdersByArticle = filterOrdersByArticle;
@@ -15894,6 +15894,9 @@
     // SCANNER TESTING - Right-Click Context Menu for Emulating Scans
     // ============================================================================
     (function initScannerTestMenu() {
+      console.log('[Scanner Test] 🚀 SCANNER TEST MENU IIFE STARTING...');
+      window.scannerTestMenuLoaded = true;
+      
       let contextMenu = null;
       let ignoreNextClick = false;
       
@@ -15908,7 +15911,14 @@
         { code: '5901234567905', name: 'Winter Puffer Jacket', order: 'ORD-2025-011' },
         { code: '5901234567908', name: 'Stand Mixer Pro', order: 'ORD-2025-012' },
         { code: '5901234567910', name: 'Organic Face Serum', order: 'ORD-2025-013' },
-        { code: '5901234567912', name: 'Security Camera 4K', order: 'ORD-2025-014' }
+        { code: '5901234567912', name: 'Security Camera 4K', order: 'ORD-2025-014' },
+        { code: '5901234567914', name: 'Sourdough Loaf', order: 'ORD-2025-015' },
+        { code: '5901234567916', name: 'Adjustable Dumbbells', order: 'ORD-2025-016' },
+        { code: '5901234567918', name: 'Phone Case Clear', order: 'ORD-2025-017' },
+        { code: '5901234567920', name: 'Luxury Watch Gold', order: 'ORD-2025-018' },
+        { code: '5901234567922', name: 'Garden Spade', order: 'ORD-2025-019' },
+        { code: '5901234567924', name: 'Ethiopian Coffee Beans', order: 'ORD-2025-020' },
+        { code: '5901234567926', name: 'Building Blocks Set', order: 'ORD-2025-021' }
       ];
       
       // Non-existing article codes for testing "not found" scenario
@@ -16280,23 +16290,37 @@
         document.querySelectorAll('.submenu-container').forEach(el => el.remove());
       }
       
-      // Listen for right-click
+      // Listen for right-click with capture phase to ensure it fires first
       document.addEventListener('contextmenu', (e) => {
-        const withinApp = e.target instanceof Element ? e.target.closest('#app') : null;
+        console.log('[Scanner Test] Right-click detected');
+        const withinApp = e.target instanceof Element ? e.target.closest('#fallback-app') : null;
+        console.log('[Scanner Test] Within app?', !!withinApp);
         if (!withinApp) {
           removeContextMenu();
           return;
         }
 
         const viewIds = ['dashboardView', 'ordersView', 'kanbanView', 'calendarView', 'workflowView', 'samplesView', 'createOrderView'];
-        const activeView = viewIds.some(id => document.getElementById(id)?.classList.contains('view-active'));
+        const activeView = viewIds.some(id => {
+          const el = document.getElementById(id);
+          const hasClass = el?.classList.contains('view-active');
+          console.log(`[Scanner Test] View ${id}: exists=${!!el}, has view-active=${hasClass}`);
+          return hasClass;
+        });
+        
+        console.log('[Scanner Test] Active view found?', activeView);
 
         if (activeView) {
+          console.log('[Scanner Test] Preventing default and showing menu');
           e.preventDefault();
+          e.stopPropagation();
+          e.stopImmediatePropagation();
           ignoreNextClick = true;
           createContextMenu(e.clientX, e.clientY);
+        } else {
+          console.log('[Scanner Test] No active view, not showing menu');
         }
-      });
+      }, true); // Use capture phase
       
       // Close menu on any click outside
       document.addEventListener('click', (e) => {
@@ -16322,6 +16346,17 @@
       
       console.log('[Scanner Test] ✅ Test context menu initialized');
       console.log('[Scanner Test] 💡 Right-click in Dashboard or Orders view to test scanner');
+      console.log('[Scanner Test] 🔍 Testing event listener attachment...');
+      
+      // Verify the event listener was added
+      setTimeout(() => {
+        console.log('[Scanner Test] 🧪 Verification check:');
+        console.log('[Scanner Test] - Document exists:', !!document);
+        console.log('[Scanner Test] - fallback-app exists:', !!document.getElementById('fallback-app'));
+        console.log('[Scanner Test] - Dashboard view exists:', !!document.getElementById('dashboardView'));
+        console.log('[Scanner Test] - Orders view exists:', !!document.getElementById('ordersView'));
+        console.log('[Scanner Test] Event listener should be attached. Try right-clicking now.');
+      }, 1000);
     })();
     // ============================================================================
     // END SCANNER TESTING
