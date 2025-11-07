@@ -4592,6 +4592,10 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
                 <span class="nav-section-chevron">▾</span>
               </button>
               <div class="nav-section-items">
+                <div class="nav-item" data-tooltip="Mass Upload Images to Orders" onclick="showMassUploadModal()">
+                  <span class="nav-item-icon">📤</span>
+                  <span class="nav-item-text">Mass Upload</span>
+                </div>
                 <div class="nav-item nav-item-urgent" data-tooltip="View High & Critical Priority Orders" onclick="filterOrdersByStatus('urgent')">
                   <span class="nav-item-icon">🚨</span>
                   <span class="nav-item-text">Urgent Orders</span>
@@ -11302,6 +11306,240 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       document.body.removeChild(link);
       
       showToast(`Downloading "${file.name}"`, 'info');
+    }
+
+    // Function to show Mass Upload modal
+    window.showMassUploadModal = function() {
+      const modal = document.createElement('div');
+      modal.className = 'mass-upload-modal';
+      modal.style.cssText = 'position:fixed;inset:0;background:rgba(46,34,23,0.55);display:flex;align-items:center;justify-content:center;z-index:1000;padding:32px 18px;';
+
+      modal.innerHTML = `
+        <div style="position:relative;width:min(720px,95vw);max-height:88vh;overflow-y:auto;border-radius:18px;padding:36px 32px 30px;background:linear-gradient(135deg,rgba(255,255,255,0.96),rgba(249,245,240,0.92));box-shadow:0 40px 70px rgba(34,25,18,0.3);border:1px solid rgba(194,147,104,0.4);backdrop-filter:blur(26px);">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;">
+            <div>
+              <h2 style="margin:0;font-size:28px;color:#372614;font-weight:700;">📤 Mass Upload Images</h2>
+              <p style="margin:8px 0 0;color:#715b43;font-size:14px;">Upload multiple images and auto-match them to orders by filename</p>
+            </div>
+            <button onclick="this.closest('.mass-upload-modal').remove()" style="background:rgba(255,255,255,0.45);border:1px solid rgba(117,90,58,0.25);width:42px;height:42px;border-radius:12px;color:#5c4631;font-size:24px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(12px);">×</button>
+          </div>
+
+          <div style="background:rgba(255,255,255,0.9);padding:24px;border-radius:12px;border:2px dashed rgba(196,139,90,0.4);margin-bottom:20px;">
+            <div style="text-align:center;margin-bottom:16px;">
+              <div style="font-size:48px;margin-bottom:12px;">📸</div>
+              <h3 style="margin:0 0 8px;color:#4b3b2a;font-size:18px;">Upload Images</h3>
+              <p style="margin:0;color:#6b5440;font-size:14px;">Select multiple image files to upload. Files will be matched to orders based on the filename matching the "File Name" column.</p>
+            </div>
+            
+            <input type="file" id="massUploadInput" accept="image/*" multiple style="width:100%;padding:14px;border:2px solid rgba(196,139,90,0.4);border-radius:10px;font-size:14px;margin-bottom:16px;background:rgba(255,255,255,0.95);">
+            
+            <div style="display:flex;gap:12px;justify-content:center;">
+              <button onclick="processMassUpload()" style="background:linear-gradient(135deg,#7fa284 0%,#689271 100%);color:white;border:none;padding:14px 28px;border-radius:10px;cursor:pointer;font-size:16px;font-weight:600;box-shadow:0 8px 20px rgba(127,162,132,0.35);">Process Upload</button>
+              <button onclick="this.closest('.mass-upload-modal').remove()" style="background:#6b5440;color:white;border:none;padding:14px 28px;border-radius:10px;cursor:pointer;font-size:16px;">Cancel</button>
+            </div>
+          </div>
+
+          <div id="massUploadResults" style="display:none;background:rgba(255,255,255,0.9);padding:20px;border-radius:12px;margin-top:20px;">
+            <h3 style="margin:0 0 16px;color:#4b3b2a;font-size:16px;">Upload Results</h3>
+            <div id="massUploadResultsList"></div>
+          </div>
+        </div>
+      `;
+
+      document.body.appendChild(modal);
+    }
+
+    // Function to process mass upload
+    window.processMassUpload = function() {
+      const fileInput = document.getElementById('massUploadInput');
+      const files = fileInput.files;
+
+      if (!files || files.length === 0) {
+        showToast('Please select files to upload', 'error');
+        return;
+      }
+
+      const currentUser = window.authSystem ? authSystem.getCurrentUser() : { name: 'Guest', role: 'viewer' };
+      const resultsDiv = document.getElementById('massUploadResults');
+      const resultsListDiv = document.getElementById('massUploadResultsList');
+      
+      resultsDiv.style.display = 'block';
+      resultsListDiv.innerHTML = '<div style="text-align:center;color:#6b5440;padding:20px;">Processing files...</div>';
+
+      const results = {
+        matched: [],
+        unmatched: [],
+        errors: []
+      };
+
+      let processedCount = 0;
+      const totalFiles = files.length;
+
+      Array.from(files).forEach((file, index) => {
+        const reader = new FileReader();
+        
+        reader.onload = function(e) {
+          const fileName = file.name;
+          let matched = false;
+
+          // Search through all orders for matching fileName
+          const baseOrders = Array.isArray(window.rkhOrders) && window.rkhOrders.length
+            ? window.rkhOrders
+            : (typeof allOrders !== 'undefined' ? allOrders : []);
+
+          for (const order of baseOrders) {
+            // Check parent level (for PS orders)
+            if (order.fileName && order.fileName === fileName) {
+              if (!order.uploadedContent) order.uploadedContent = [];
+              
+              order.uploadedContent.push({
+                id: 'file_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
+                name: file.name,
+                type: file.type,
+                size: file.size,
+                data: e.target.result,
+                uploadedBy: currentUser.name,
+                uploadedAt: new Date().toISOString(),
+                uploadedByRole: currentUser.role
+              });
+
+              results.matched.push({
+                fileName: fileName,
+                orderNumber: order.orderNumber,
+                level: 'parent',
+                orderTitle: order.title
+              });
+              matched = true;
+              break;
+            }
+
+            // Check child level (for PO orders with articles)
+            if (Array.isArray(order.articles)) {
+              for (let i = 0; i < order.articles.length; i++) {
+                const article = order.articles[i];
+                if (article && typeof article === 'object' && article.fileName && article.fileName === fileName) {
+                  if (!article.uploadedImages) article.uploadedImages = [];
+                  
+                  article.uploadedImages.push({
+                    id: 'file_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
+                    name: file.name,
+                    type: file.type,
+                    size: file.size,
+                    data: e.target.result,
+                    uploadedBy: currentUser.name,
+                    uploadedAt: new Date().toISOString(),
+                    uploadedByRole: currentUser.role
+                  });
+
+                  results.matched.push({
+                    fileName: fileName,
+                    orderNumber: order.orderNumber,
+                    level: 'child',
+                    articleName: article.name || `Article ${i + 1}`,
+                    orderTitle: order.title
+                  });
+                  matched = true;
+                  break;
+                }
+              }
+              if (matched) break;
+            }
+          }
+
+          if (!matched) {
+            results.unmatched.push(fileName);
+          }
+
+          processedCount++;
+
+          // When all files are processed, show results
+          if (processedCount === totalFiles) {
+            displayMassUploadResults(results);
+          }
+        };
+
+        reader.onerror = function() {
+          results.errors.push(file.name);
+          processedCount++;
+          
+          if (processedCount === totalFiles) {
+            displayMassUploadResults(results);
+          }
+        };
+
+        reader.readAsDataURL(file);
+      });
+    }
+
+    // Function to display mass upload results
+    window.displayMassUploadResults = function(results) {
+      const resultsListDiv = document.getElementById('massUploadResultsList');
+      
+      let html = '';
+
+      if (results.matched.length > 0) {
+        html += `
+          <div style="margin-bottom:20px;">
+            <h4 style="margin:0 0 12px;color:#10b981;font-size:14px;display:flex;align-items:center;gap:8px;">
+              <span style="font-size:20px;">✅</span>
+              Successfully Matched (${results.matched.length})
+            </h4>
+            <div style="display:grid;gap:8px;">
+              ${results.matched.map(match => `
+                <div style="background:#f0fdf4;padding:12px;border-radius:8px;border-left:4px solid #10b981;font-size:13px;">
+                  <div style="font-weight:600;color:#064e3b;margin-bottom:4px;">${match.fileName}</div>
+                  <div style="color:#065f46;">
+                    → ${match.orderNumber}: ${match.orderTitle}
+                    <span style="background:#dcfce7;padding:2px 8px;border-radius:4px;margin-left:8px;font-size:11px;">
+                      ${match.level === 'parent' ? 'Parent Level' : `Child Level (${match.articleName})`}
+                    </span>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        `;
+      }
+
+      if (results.unmatched.length > 0) {
+        html += `
+          <div style="margin-bottom:20px;">
+            <h4 style="margin:0 0 12px;color:#f59e0b;font-size:14px;display:flex;align-items:center;gap:8px;">
+              <span style="font-size:20px;">⚠️</span>
+              No Match Found (${results.unmatched.length})
+            </h4>
+            <div style="background:#fffbeb;padding:12px;border-radius:8px;border-left:4px solid #f59e0b;font-size:13px;">
+              ${results.unmatched.map(name => `<div style="color:#78350f;margin:4px 0;">• ${name}</div>`).join('')}
+            </div>
+          </div>
+        `;
+      }
+
+      if (results.errors.length > 0) {
+        html += `
+          <div style="margin-bottom:20px;">
+            <h4 style="margin:0 0 12px;color:#ef4444;font-size:14px;display:flex;align-items:center;gap:8px;">
+              <span style="font-size:20px;">❌</span>
+              Errors (${results.errors.length})
+            </h4>
+            <div style="background:#fef2f2;padding:12px;border-radius:8px;border-left:4px solid #ef4444;font-size:13px;">
+              ${results.errors.map(name => `<div style="color:#7f1d1d;margin:4px 0;">• ${name}</div>`).join('')}
+            </div>
+          </div>
+        `;
+      }
+
+      html += `
+        <div style="text-align:center;margin-top:20px;">
+          <button onclick="this.closest('.mass-upload-modal').remove();renderOrders();" style="background:#c48b5a;color:white;border:none;padding:12px 24px;border-radius:8px;cursor:pointer;font-weight:600;">Close & Refresh</button>
+        </div>
+      `;
+
+      resultsListDiv.innerHTML = html;
+
+      // Show toast summary
+      showToast(`Uploaded: ${results.matched.length} matched, ${results.unmatched.length} unmatched`, 
+                results.unmatched.length === 0 ? 'success' : 'info');
     }
 
     window.showSampleDetails = function(sampleId) {
