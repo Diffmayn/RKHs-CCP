@@ -15871,7 +15871,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
             background: white;
             border-radius: 16px;
             box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-            max-width: 600px;
+            max-width: 560px;
             width: 90%;
             padding: 32px;
             animation: slideUp 0.3s ease;
@@ -15880,7 +15880,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
               <div style="
                 width: 64px;
                 height: 64px;
-                background: linear-gradient(135deg, #7fa284 0%, #6b8e6f 100%);
+                background: linear-gradient(135deg, #c48b5a 0%, #a67550 100%);
                 border-radius: 50%;
                 display: flex;
                 align-items: center;
@@ -15898,10 +15898,17 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
               </p>
             </div>
             
-            <div style="margin-bottom: 24px;">
-              <label style="display: block; margin-bottom: 8px; color: #4b3b2a; font-weight: 600; font-size: 14px;">
-                Enter EAN/GTIN Code
-              </label>
+            <div style="
+              background: #fef9f3;
+              border: 2px solid #ead7c2;
+              border-radius: 12px;
+              padding: 16px;
+              margin-bottom: 24px;
+            ">
+              <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 10px;">
+                <span style="font-size: 20px;">📊</span>
+                <strong style="color: #4b3b2a; font-size: 15px;">Enter EAN/GTIN Code:</strong>
+              </div>
               <input 
                 type="text" 
                 id="barcodeInput" 
@@ -15912,23 +15919,26 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
                   padding: 12px 16px;
                   border: 2px solid #ead7c2;
                   border-radius: 8px;
-                  font-size: 16px;
+                  font-size: 17px;
                   font-family: 'Courier New', monospace;
-                  letter-spacing: 1px;
+                  font-weight: 600;
+                  letter-spacing: 2px;
                   box-sizing: border-box;
-                  transition: border-color 0.2s ease;
+                  transition: all 0.2s ease;
+                  background: white;
+                  color: #4b3b2a;
                 "
-                onfocus="this.style.borderColor='#7fa284'"
-                onblur="this.style.borderColor='#ead7c2'"
+                onfocus="this.style.borderColor='#c48b5a'; this.style.boxShadow='0 0 0 3px rgba(196, 139, 90, 0.1)'"
+                onblur="this.style.borderColor='#ead7c2'; this.style.boxShadow='none'"
               >
-              <p style="margin: 8px 0 0; color: #92400e; font-size: 13px;">
-                💡 Enter 8-13 digit EAN/GTIN code
+              <p style="margin: 10px 0 0; color: #92400e; font-size: 13px;">
+                💡 Tip: Enter 8-13 digit EAN/GTIN barcode number
               </p>
             </div>
             
             <div id="barcodePreview" style="
-              background: #f9fafb;
-              border: 2px dashed #d1d5db;
+              background: white;
+              border: 2px dashed #ead7c2;
               border-radius: 12px;
               padding: 32px;
               margin-bottom: 24px;
@@ -15940,50 +15950,50 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
               justify-content: center;
             ">
               <p style="color: #9ca3af; font-size: 15px; margin: 0;">
-                Enter a code above to generate barcode
+                📦 Enter a code above to generate barcode preview
               </p>
             </div>
             
             <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px;">
               <button onclick="closeBarcodeGeneratorModal()" style="
-                padding: 14px;
-                background: #e5e7eb;
+                padding: 14px 20px;
+                background: #f4ecdf;
                 color: #4b3b2a;
-                border: none;
-                border-radius: 8px;
-                font-size: 16px;
+                border: 2px solid #ead7c2;
+                border-radius: 25px;
+                font-size: 15px;
                 font-weight: 600;
                 cursor: pointer;
                 transition: all 0.2s ease;
-              " onmouseover="this.style.background='#d1d5db'" onmouseout="this.style.background='#e5e7eb'">
+              " onmouseover="this.style.background='#ead7c2'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(75, 59, 42, 0.15)'" onmouseout="this.style.background='#f4ecdf'; this.style.transform=''; this.style.boxShadow=''">
                 Cancel
               </button>
               <button onclick="printBarcode()" style="
-                padding: 14px;
-                background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+                padding: 14px 20px;
+                background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
                 color: white;
                 border: none;
-                border-radius: 8px;
-                font-size: 16px;
+                border-radius: 25px;
+                font-size: 15px;
                 font-weight: 600;
                 cursor: pointer;
                 transition: all 0.2s ease;
-                box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
-              " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(59, 130, 246, 0.4)'" onmouseout="this.style.transform=''; this.style.boxShadow='0 2px 8px rgba(59, 130, 246, 0.3)'">
+                box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3);
+              " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(99, 102, 241, 0.5)'" onmouseout="this.style.transform=''; this.style.boxShadow='0 2px 8px rgba(99, 102, 241, 0.3)'">
                 🖨️ Print
               </button>
               <button onclick="copyBarcodeToClipboard()" style="
-                padding: 14px;
-                background: linear-gradient(135deg, #7fa284 0%, #6b8e6f 100%);
+                padding: 14px 20px;
+                background: linear-gradient(135deg, #7fa284 0%, #7fa284 100%);
                 color: white;
                 border: none;
-                border-radius: 8px;
-                font-size: 16px;
+                border-radius: 25px;
+                font-size: 15px;
                 font-weight: 600;
                 cursor: pointer;
                 transition: all 0.2s ease;
                 box-shadow: 0 2px 8px rgba(127, 162, 132, 0.3);
-              " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(127, 162, 132, 0.4)'" onmouseout="this.style.transform=''; this.style.boxShadow='0 2px 8px rgba(127, 162, 132, 0.3)'">
+              " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(127, 162, 132, 0.5)'" onmouseout="this.style.transform=''; this.style.boxShadow='0 2px 8px rgba(127, 162, 132, 0.3)'">
                 📋 Copy
               </button>
             </div>
@@ -16001,9 +16011,15 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
           if (code.length >= 8 && code.length <= 13 && /^\d+$/.test(code)) {
             generateBarcodePreview(code);
           } else if (code.length > 0) {
-            preview.innerHTML = `<p style="color: #ef4444; font-size: 15px; margin: 0;">❌ Invalid code format (8-13 digits required)</p>`;
+            preview.innerHTML = `
+              <div style="text-align: center;">
+                <span style="font-size: 48px;">⚠️</span>
+                <p style="color: #dc2626; font-size: 15px; margin: 12px 0 0; font-weight: 600;">Invalid code format</p>
+                <p style="color: #92400e; font-size: 13px; margin: 8px 0 0;">Please enter 8-13 digits only</p>
+              </div>
+            `;
           } else {
-            preview.innerHTML = `<p style="color: #9ca3af; font-size: 15px; margin: 0;">Enter a code above to generate barcode</p>`;
+            preview.innerHTML = `<p style="color: #9ca3af; font-size: 15px; margin: 0;">📦 Enter a code above to generate barcode preview</p>`;
           }
         });
         
@@ -16043,18 +16059,30 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
         }).join('');
         
         preview.innerHTML = `
-          <div style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);">
-            <svg width="${barcodeWidth}" height="${barcodeHeight}" style="display: block; margin: 0 auto;">
+          <div style="
+            background: #fef9f3;
+            padding: 24px;
+            border-radius: 12px;
+            border: 2px solid #ead7c2;
+          ">
+            <svg width="${barcodeWidth}" height="${barcodeHeight}" style="display: block; margin: 0 auto; max-width: 100%;">
               ${svgBars}
             </svg>
             <p style="
               font-family: 'Courier New', monospace;
-              font-size: 18px;
+              font-size: 20px;
               font-weight: 700;
               letter-spacing: 3px;
-              margin: 16px 0 0;
-              color: #1f2937;
+              margin: 20px 0 0;
+              color: #4b3b2a;
+              text-align: center;
             ">${code}</p>
+            <p style="
+              font-size: 12px;
+              color: #92400e;
+              margin: 8px 0 0;
+              text-align: center;
+            ">✓ Ready to print or copy</p>
           </div>
         `;
       }
