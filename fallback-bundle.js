@@ -8463,6 +8463,35 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
 
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px;">
               <div style="min-width: 0;">
+                <label style="display: block; font-weight: 600; margin-bottom: 6px; color: #4b3b2a; font-size: 14px;">Cost Center</label>
+    <select name="costCenter" required style="width: 100%; box-sizing: border-box; padding: 14px; border: 2px solid #ead7c2; border-radius: 8px; font-size: 16px; transition: border-color 0.2s ease;"
+      onfocus="this.style.borderColor='#c48b5a'" onblur="this.style.borderColor='#ead7c2'">
+                  <option value="">Select cost center...</option>
+                  <option value="Bilka.dk">Bilka.dk</option>
+                  <option value="Bilka Marketing">Bilka Marketing</option>
+                  <option value="Føtex">Føtex</option>
+                  <option value="Netto">Netto</option>
+                  <option value="PG-100">PG-100</option>
+                  <option value="PG-200">PG-200</option>
+                  <option value="PG-300">PG-300</option>
+                  <option value="PG-400">PG-400</option>
+                </select>
+              </div>
+              <div style="min-width: 0;">
+                <label style="display: block; font-weight: 600; margin-bottom: 6px; color: #4b3b2a; font-size: 14px;">Purchase Group</label>
+    <select name="purchaseGroup" required style="width: 100%; box-sizing: border-box; padding: 14px; border: 2px solid #ead7c2; border-radius: 8px; font-size: 16px; transition: border-color 0.2s ease;"
+      onfocus="this.style.borderColor='#c48b5a'" onblur="this.style.borderColor='#ead7c2'">
+                  <option value="">Select purchase group...</option>
+                  <option value="101">101 - Groceries</option>
+                  <option value="102">102 - Fresh Produce</option>
+                  <option value="103">103 - Marketing Materials</option>
+                  <option value="104">104 - Seasonal Items</option>
+                </select>
+              </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px;">
+              <div style="min-width: 0;">
                 <label style="display: block; font-weight: 600; margin-bottom: 6px; color: #4b3b2a; font-size: 14px;">Production</label>
     <select name="method" required style="width: 100%; box-sizing: border-box; padding: 14px; border: 2px solid #ead7c2; border-radius: 8px; font-size: 16px; transition: border-color 0.2s ease;"
       onfocus="this.style.borderColor='#c48b5a'" onblur="this.style.borderColor='#ead7c2'">
@@ -8474,40 +8503,16 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
                 </select>
               </div>
               <div style="min-width: 0;">
-                <label style="display: block; font-weight: 600; margin-bottom: 6px; color: #4b3b2a; font-size: 14px;">Priority</label>
-    <select name="priority" required style="width: 100%; box-sizing: border-box; padding: 14px; border: 2px solid #ead7c2; border-radius: 8px; font-size: 16px; transition: border-color 0.2s ease;"
-      onfocus="this.style.borderColor='#c48b5a'" onblur="this.style.borderColor='#ead7c2'">
-                  <option value="Low">Low</option>
-                  <option value="Medium" selected>Medium</option>
-                  <option value="High">High</option>
-                  <option value="Urgent">Urgent</option>
-                </select>
-              </div>
-            </div>
-
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px;">
-              <div style="min-width: 0;">
                 <label style="display: block; font-weight: 600; margin-bottom: 6px; color: #4b3b2a; font-size: 14px;">Deadline</label>
       <input name="deadline" type="date" required style="width: 100%; box-sizing: border-box; padding: 14px; border: 2px solid #ead7c2; border-radius: 8px; font-size: 16px; transition: border-color 0.2s ease;"
-        onfocus="this.style.borderColor='#c48b5a'" onblur="this.style.borderColor='#ead7c2'">
-              </div>
-              <div style="min-width: 0;">
-                <label style="display: block; font-weight: 600; margin-bottom: 6px; color: #4b3b2a; font-size: 14px;">Budget (SEK)</label>
-      <input name="budget" type="number" min="0" style="width: 100%; box-sizing: border-box; padding: 14px; border: 2px solid #ead7c2; border-radius: 8px; font-size: 16px; transition: border-color 0.2s ease;" placeholder="0"
         onfocus="this.style.borderColor='#c48b5a'" onblur="this.style.borderColor='#ead7c2'">
               </div>
             </div>
 
             <div style="margin-bottom: 20px;">
-              <label style="display: block; font-weight: 600; margin-bottom: 6px; color: #4b3b2a; font-size: 14px;">Assign To</label>
-        <select name="photographer" style="width: 100%; box-sizing: border-box; padding: 14px; border: 2px solid #ead7c2; border-radius: 8px; font-size: 16px; transition: border-color 0.2s ease;"
-          onfocus="this.style.borderColor='#c48b5a'" onblur="this.style.borderColor='#ead7c2'">
-                <option value="">Select photographer/photo box...</option>
-                <option value="Mike Rodriguez">Mike Rodriguez (Photographer)</option>
-                <option value="Sarah Johnson">Sarah Johnson (Photographer)</option>
-                <option value="Emily Chen">Emily Chen (Photographer)</option>
-                <option value="Alex Turner">Alex Turner (Photo Box)</option>
-              </select>
+              <label style="display: block; font-weight: 600; margin-bottom: 6px; color: #4b3b2a; font-size: 14px;">Budget (DKK)</label>
+      <input name="budget" type="number" min="0" style="width: 100%; box-sizing: border-box; padding: 14px; border: 2px solid #ead7c2; border-radius: 8px; font-size: 16px; transition: border-color 0.2s ease;" placeholder="0"
+        onfocus="this.style.borderColor='#c48b5a'" onblur="this.style.borderColor='#ead7c2'">
             </div>
 
             <div style="margin-bottom: 20px;">
@@ -8517,27 +8522,19 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
                         onfocus="this.style.borderColor='#c48b5a'" onblur="this.style.borderColor='#ead7c2'"></textarea>
             </div>
 
-            <div style="margin-bottom: 20px;">
+            <div style="margin-bottom: 24px;">
               <label style="display: block; font-weight: 600; margin-bottom: 6px; color: #4b3b2a; font-size: 14px;">
                 <span style="display: flex; align-items: center; gap: 8px;">
-                  <span>Article Code (EAN/GTIN)</span>
-                  <span style="font-size: 18px;" title="Scan barcode or enter manually">📦</span>
+                  <span>Article Numbers (EAN/GTIN)</span>
+                  <span style="font-size: 18px;" title="Scan or enter multiple article numbers">📦</span>
                 </span>
               </label>
-    <input name="articleCode" type="text" style="width: 100%; box-sizing: border-box; padding: 14px; border: 2px solid #ead7c2; border-radius: 8px; font-size: 16px; transition: border-color 0.2s ease; font-family: 'Courier New', monospace; letter-spacing: 1px;" 
-                     placeholder="e.g., 5901234567890"
-      onfocus="this.style.borderColor='#c48b5a'" onblur="this.style.borderColor='#ead7c2'"
-                     oninput="updateArticleFieldFromCode(this.value)">
-              <div style="margin-top: 6px; font-size: 12px; color: #6b5440;">
-                💡 Tip: You can scan a barcode directly into this field, or type the code manually
-              </div>
-            </div>
-
-            <div style="margin-bottom: 24px;">
-              <label style="display: block; font-weight: 600; margin-bottom: 6px; color: #4b3b2a; font-size: 14px;">Articles</label>
-              <textarea id="newOrderArticles" name="articles" required rows="2" style="width: 100%; box-sizing: border-box; padding: 14px; border: 2px solid #ead7c2; border-radius: 8px; font-size: 16px; resize: vertical; transition: border-color 0.2s ease;" 
-                        placeholder="Articles with EAN codes will appear here...&#10;Format: Article Name [EAN: 1234567890123]"
+              <textarea id="newOrderArticles" name="articles" required rows="4" style="width: 100%; box-sizing: border-box; padding: 14px; border: 2px solid #ead7c2; border-radius: 8px; font-size: 16px; resize: vertical; transition: border-color 0.2s ease; font-family: 'Courier New', monospace;" 
+                        placeholder="Scan or enter article numbers here (one per line)...&#10;Example:&#10;5901234567890&#10;5901234567891&#10;5901234567892"
                         onfocus="this.style.borderColor='#c48b5a'" onblur="this.style.borderColor='#ead7c2'"></textarea>
+              <div style="margin-top: 6px; font-size: 12px; color: #6b5440;">
+                💡 Tip: You can scan barcodes directly into this field, or type article numbers manually (one per line)
+              </div>
             </div>
 
             <div style="display: flex; gap: 12px; justify-content: flex-end;">
