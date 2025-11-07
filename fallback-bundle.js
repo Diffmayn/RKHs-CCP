@@ -2184,7 +2184,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       offerId: '10763319',
       articleNumber: '1234575511',
       articleName: 'Premium Dog Food 2kg',
-      imageRequestId: '123456',
+      imageRequestId: '#13 EMBALLAGE',
       photoStatus: 'New Shoot - Photographer',
       cloudinaryUrl: null,
       page: 1,
@@ -2273,7 +2273,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       offerId: '10763320',
       articleNumber: 'ART-COF-002',
       articleName: 'Espresso Beans 500g',
-      imageRequestId: '123457',
+      imageRequestId: '#02 OPLÆGNING',
       photoStatus: 'New Shoot - Photo Box',
       cloudinaryUrl: null,
       page: 2,
@@ -2340,7 +2340,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       offerId: '10763321',
       articleNumber: 'ART-ELEC-003',
       articleName: 'Wireless Bluetooth Speaker Premium',
-      imageRequestId: '123458',
+      imageRequestId: '#12 FRI OPSTILLING',
       photoStatus: 'New Shoot - Photographer',
       cloudinaryUrl: null,
       page: 3,
@@ -2405,7 +2405,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       offerId: '10763322',
       articleNumber: '1234575512',
       articleName: 'Electric Hedge Trimmer Pro',
-      imageRequestId: '123459',
+      imageRequestId: '#15 DETALJESKUD',
       photoStatus: 'New Shoot - Photographer',
       cloudinaryUrl: null,
       page: 4,
@@ -2471,7 +2471,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       offerId: '10763323',
       articleNumber: 'ART-PAST-005',
       articleName: 'Organic Penne Pasta Premium',
-      imageRequestId: '123460',
+      imageRequestId: '#02 OPLÆGNING',
       photoStatus: 'New Shoot - Photo Box',
       cloudinaryUrl: null,
       page: 5,
@@ -2536,7 +2536,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       offerId: '10763324',
       articleNumber: 'ART-DAIRY-006',
       articleName: 'Organic Milk Premium 1L',
-      imageRequestId: '123461',
+      imageRequestId: '#13 EMBALLAGE',
       photoStatus: 'Archive',
       cloudinaryUrl: 'https://res.cloudinary.com/demo/image/upload/organic_milk.jpg',
       page: 6,
@@ -2601,7 +2601,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       offerId: '10763325',
       articleNumber: '1234575513',
       articleName: 'Smart Thermostat Pro',
-      imageRequestId: '123462',
+      imageRequestId: '#12 FRI OPSTILLING',
       photoStatus: 'Archive',
       cloudinaryUrl: 'https://res.cloudinary.com/demo/image/upload/smart_thermostat.jpg',
       page: 7,
@@ -2666,7 +2666,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       offerId: '10763326',
       articleNumber: 'ART-PATIO-008',
       articleName: 'Outdoor Dining Set Premium',
-      imageRequestId: '123463',
+      imageRequestId: '1/1 Model',
       photoStatus: 'Archive',
       cloudinaryUrl: 'https://res.cloudinary.com/demo/image/upload/patio_furniture.jpg',
       page: 8,
@@ -2732,7 +2732,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       offerId: '10763327',
       articleNumber: 'ART-BABY-009',
       articleName: 'Organic Baby Food Variety Pack',
-      imageRequestId: '123470',
+      imageRequestId: '#13 EMBALLAGE',
       photoStatus: 'New',
       page: 9,
       createdBy: 'user-promo1',
@@ -2759,7 +2759,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       offerId: '10763328',
       articleNumber: 'ART-LAPTOP-010',
       articleName: 'Gaming Laptop Pro X1',
-      imageRequestId: '123471',
+      imageRequestId: '#12 FRI OPSTILLING',
       photoStatus: 'Samples Requested',
       page: 10,
       createdBy: 'user-promo2',
@@ -2786,7 +2786,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       offerId: '10763329',
       articleNumber: 'ART-JACKET-011',
       articleName: 'Winter Jacket Collection',
-      imageRequestId: '123472',
+      imageRequestId: '1/1 Model',
       photoStatus: 'Pending',
       page: 11,
       createdBy: 'user-promo1',
@@ -2813,7 +2813,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       offerId: '10763330',
       articleNumber: 'ART-KITCHEN-012',
       articleName: 'Kitchen Appliance Set',
-      imageRequestId: '123473',
+      imageRequestId: '#12 FRI OPSTILLING',
       photoStatus: 'Approved',
       page: 12,
       createdBy: 'user-promo2',
@@ -2840,7 +2840,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       offerId: '10763331',
       articleNumber: 'ART-SKINCARE-013',
       articleName: 'Organic Skincare Collection',
-      imageRequestId: '123474',
+      imageRequestId: '#11 OPLÆGNING GRAFISK',
       photoStatus: 'In Progress',
       page: 13,
       createdBy: 'user-promo1',
@@ -2867,7 +2867,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       offerId: '10763332',
       articleNumber: 'ART-SECURITY-014',
       articleName: 'Smart Security System',
-      imageRequestId: '123475',
+      imageRequestId: '#12 FRI OPSTILLING',
       photoStatus: 'Samples in Transit',
       page: 14,
       createdBy: 'user-promo2',
@@ -2894,7 +2894,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       offerId: '10763333',
       articleNumber: 'ART-BREAD-015',
       articleName: 'Artisan Bread Selection',
-      imageRequestId: '123476',
+      imageRequestId: '#02 OPLÆGNING',
       photoStatus: 'Archive',
       page: 15,
       createdBy: 'user-promo1',
@@ -2921,7 +2921,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       offerId: '10763334',
       articleNumber: 'ART-FITNESS-016',
       articleName: 'Home Fitness Set',
-      imageRequestId: '123477',
+      imageRequestId: '1/2 Model',
       photoStatus: 'Review',
       page: 16,
       createdBy: 'user-promo2',
@@ -2948,7 +2948,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       offerId: '10763335',
       articleNumber: 'ART-PHONE-017',
       articleName: 'Smartphone Accessory Bundle',
-      imageRequestId: '123478',
+      imageRequestId: '#02 OPLÆGNING',
       photoStatus: 'New',
       page: 17,
       createdBy: 'user-promo1',
@@ -2975,7 +2975,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       offerId: '10763336',
       articleNumber: 'ART-WATCH-018',
       articleName: 'Luxury Watch Collection',
-      imageRequestId: '123479',
+      imageRequestId: '#15 DETALJESKUD',
       photoStatus: 'Samples Received',
       page: 18,
       createdBy: 'user-promo2',
@@ -3002,7 +3002,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       offerId: '10763337',
       articleNumber: 'ART-GARDEN-019',
       articleName: 'Garden Tool Collection',
-      imageRequestId: '123480',
+      imageRequestId: '#15 DETALJESKUD',
       photoStatus: 'Processing',
       page: 19,
       createdBy: 'user-promo1',
@@ -3029,7 +3029,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       offerId: '10763338',
       articleNumber: 'ART-COFFEE-020',
       articleName: 'Gourmet Coffee Selection',
-      imageRequestId: '123481',
+      imageRequestId: '#16 BUNKE',
       photoStatus: 'Archive',
       page: 20,
       createdBy: 'user-promo2',
@@ -3059,7 +3059,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       offerId: '10763339',
       articleNumber: 'ART-TOYS-021',
       articleName: 'Educational Toy Set',
-      imageRequestId: '123482',
+      imageRequestId: '#11 OPLÆGNING GRAFISK',
       photoStatus: 'New',
       page: 21,
       createdBy: 'user-promo1',
@@ -3086,7 +3086,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       offerId: '10763340',
       articleNumber: 'ART-HEADPHONES-022',
       articleName: 'Wireless Headphones Premium',
-      imageRequestId: '123483',
+      imageRequestId: '#12 FRI OPSTILLING',
       photoStatus: 'Urgent',
       page: 22,
       createdBy: 'user-promo2',
@@ -3113,7 +3113,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       offerId: '10763341',
       articleNumber: 'ART-CAMPING-023',
       articleName: 'Camping Gear Set',
-      imageRequestId: '123484',
+      imageRequestId: '#17 STAK STYLET',
       photoStatus: 'Pending',
       page: 23,
       createdBy: 'user-promo1',
@@ -3140,7 +3140,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       offerId: '10763342',
       articleNumber: 'ART-CHOCOLATE-024',
       articleName: 'Artisan Chocolate Collection',
-      imageRequestId: '123485',
+      imageRequestId: '#11 OPLÆGNING GRAFISK',
       photoStatus: 'Approved',
       page: 24,
       createdBy: 'user-promo2',
@@ -3167,7 +3167,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       offerId: '10763343',
       articleNumber: 'ART-TV-025',
       articleName: 'Smart TV Ultra HD',
-      imageRequestId: '123486',
+      imageRequestId: '1/1 Model',
       photoStatus: 'In Progress',
       page: 25,
       createdBy: 'user-promo1',
@@ -6932,6 +6932,31 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
                 <label style="display: block; font-weight: 500; margin-bottom: 4px;">Deliverables (comma-separated)</label>
                 <input name="deliverables" style="width: 100%; padding: 8px; border: 1px solid #d1d5db; border-radius: 4px;" 
                        placeholder="e.g., Product Photos, Lifestyle Shots, Social Media Assets">
+              </div>
+
+              <div>
+                <label style="display: block; font-weight: 500; margin-bottom: 4px;">Photo Reference / Shooting Type</label>
+                <select name="imageRequestId" style="width: 100%; padding: 8px; border: 1px solid #d1d5db; border-radius: 4px;">
+                  <option value="">Select photo reference...</option>
+                  <option value="1/1 Model">1/1 Model</option>
+                  <option value="1/2 Model">1/2 Model</option>
+                  <option value="#01 GINE">#01 GINE</option>
+                  <option value="#02 OPLÆGNING">#02 OPLÆGNING</option>
+                  <option value="#03 OPLÆGNING FOLDET">#03 OPLÆGNING FOLDET</option>
+                  <option value="#04 OPLÆGNING OVERLAP">#04 OPLÆGNING OVERLAP</option>
+                  <option value="#05 OPLÆGNING STYLET">#05 OPLÆGNING STYLET</option>
+                  <option value="#06 STAK LIGE">#06 STAK LIGE</option>
+                  <option value="#07 LIGE FRA SIDEN">#07 LIGE FRA SIDEN</option>
+                  <option value="#08 SKRÅT FRA SIDEN">#08 SKRÅT FRA SIDEN</option>
+                  <option value="#10 KONSTRUERET SÆT">#10 KONSTRUERET SÆT</option>
+                  <option value="#11 OPLÆGNING GRAFISK">#11 OPLÆGNING GRAFISK</option>
+                  <option value="#12 FRI OPSTILLING">#12 FRI OPSTILLING</option>
+                  <option value="#13 EMBALLAGE">#13 EMBALLAGE</option>
+                  <option value="#15 DETALJESKUD">#15 DETALJESKUD</option>
+                  <option value="#16 BUNKE">#16 BUNKE</option>
+                  <option value="#17 STAK STYLET">#17 STAK STYLET</option>
+                  <option value="#18 BØJLE STYLET">#18 BØJLE STYLET</option>
+                </select>
               </div>
 
               <div style="display: flex; gap: 8px; justify-content: flex-end; margin-top: 8px;">
