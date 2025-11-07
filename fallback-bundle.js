@@ -2181,6 +2181,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       // SAP PMR fields
       eventId: 'A4025052', // Week 40, 2025, Bilka format
       purchaseGroup: 101, // Groceries
+      group: 99,
       offerId: '10763319',
       articleNumber: '1234575511',
       articleName: 'Premium Dog Food 2kg',
@@ -2270,6 +2271,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       // SAP PMR fields
       eventId: 'A4125053', // Week 41, 2025, Netto format
       purchaseGroup: 101, // Fresh Products
+      group: 99,
       offerId: '10763320',
       articleNumber: 'ART-COF-002',
       articleName: 'Espresso Beans 500g',
@@ -2337,6 +2339,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       // SAP PMR fields
       eventId: 'A3825054', // Week 38, 2025, Føtex format
       purchaseGroup: 101, // Electronics
+      group: 99,
       offerId: '10763321',
       articleNumber: 'ART-ELEC-003',
       articleName: 'Wireless Bluetooth Speaker Premium',
@@ -2402,6 +2405,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       // SAP PMR fields
       eventId: 'A3725055', // Week 37, 2025, Bilka format
       purchaseGroup: 101, // Home & Garden
+      group: 99,
       offerId: '10763322',
       articleNumber: '1234575512',
       articleName: 'Electric Hedge Trimmer Pro',
@@ -2468,6 +2472,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       // SAP PMR fields
       eventId: 'A3925056', // Week 39, 2025, Netto format
       purchaseGroup: 101, // Groceries
+      group: 99,
       offerId: '10763323',
       articleNumber: 'ART-PAST-005',
       articleName: 'Organic Penne Pasta Premium',
@@ -2533,6 +2538,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       // SAP PMR fields
       eventId: 'A3525057', // Week 35, 2025, Føtex format
       purchaseGroup: 101, // Fresh Products
+      group: 99,
       offerId: '10763324',
       articleNumber: 'ART-DAIRY-006',
       articleName: 'Organic Milk Premium 1L',
@@ -2598,6 +2604,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       // SAP PMR fields
       eventId: 'A4825058', // Week 48, 2025, Bilka format
       purchaseGroup: 101, // Electronics
+      group: 99,
       offerId: '10763325',
       articleNumber: '1234575513',
       articleName: 'Smart Thermostat Pro',
@@ -2663,6 +2670,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       // SAP PMR fields
       eventId: 'A3425059', // Week 34, 2025, Netto format
       purchaseGroup: 101, // Home & Garden
+      group: 99,
       offerId: '10763326',
       articleNumber: 'ART-PATIO-008',
       articleName: 'Outdoor Dining Set Premium',
@@ -2729,6 +2737,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       deliverables: ['Hero Product Shots', 'Ingredient Photography', 'Lifestyle with Babies'],
       eventId: 'A4125060', 
       purchaseGroup: 101,
+      group: 99,
       offerId: '10763327',
       articleNumber: 'ART-BABY-009',
       articleName: 'Organic Baby Food Variety Pack',
@@ -2756,6 +2765,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       deliverables: ['Tech Hero Shots', 'RGB Lighting Effects', 'Detail Macro Shots'],
       eventId: 'A4225061', 
       purchaseGroup: 101,
+      group: 99,
       offerId: '10763328',
       articleNumber: 'ART-LAPTOP-010',
       articleName: 'Gaming Laptop Pro X1',
@@ -2783,6 +2793,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       deliverables: ['Model Photography', 'Flat Lay Styling', 'Detail Shots'],
       eventId: 'A4325062', 
       purchaseGroup: 101,
+      group: 99,
       offerId: '10763329',
       articleNumber: 'ART-JACKET-011',
       articleName: 'Winter Jacket Collection',
@@ -2810,6 +2821,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       deliverables: ['Product Photography', 'Lifestyle Kitchen Scenes', 'Technical Detail Shots'],
       eventId: 'A4425063', 
       purchaseGroup: 101,
+      group: 99,
       offerId: '10763330',
       articleNumber: 'ART-KITCHEN-012',
       articleName: 'Kitchen Appliance Set',
@@ -2837,6 +2849,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       deliverables: ['Beauty Product Shots', 'Ingredient Close-ups', 'Lifestyle Beauty'],
       eventId: 'A4525064', 
       purchaseGroup: 101,
+      group: 99,
       offerId: '10763331',
       articleNumber: 'ART-SKINCARE-013',
       articleName: 'Organic Skincare Collection',
@@ -2864,6 +2877,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       deliverables: ['Tech Product Shots', 'Installation Demo', 'App Interface'],
       eventId: 'A4625065', 
       purchaseGroup: 101,
+      group: 99,
       offerId: '10763332',
       articleNumber: 'ART-SECURITY-014',
       articleName: 'Smart Security System',
@@ -2891,6 +2905,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       deliverables: ['Food Photography', 'Lifestyle Bakery Scenes', 'Ingredient Shots'],
       eventId: 'A4725066', 
       purchaseGroup: 101,
+      group: 99,
       offerId: '10763333',
       articleNumber: 'ART-BREAD-015',
       articleName: 'Artisan Bread Selection',
@@ -2918,6 +2933,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       deliverables: ['Action Photography', 'Product Detail Shots', 'Home Gym Lifestyle'],
       eventId: 'A4825067', 
       purchaseGroup: 101,
+      group: 99,
       offerId: '10763334',
       articleNumber: 'ART-FITNESS-016',
       articleName: 'Home Fitness Set',
@@ -2945,6 +2961,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       deliverables: ['Tech Product Shots', 'Compatibility Demo', 'Lifestyle Tech'],
       eventId: 'A4925068', 
       purchaseGroup: 101,
+      group: 99,
       offerId: '10763335',
       articleNumber: 'ART-PHONE-017',
       articleName: 'Smartphone Accessory Bundle',
@@ -2972,6 +2989,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       deliverables: ['Luxury Product Photography', 'Macro Detail Shots', 'Lifestyle Luxury'],
       eventId: 'A5025069', 
       purchaseGroup: 101,
+      group: 99,
       offerId: '10763336',
       articleNumber: 'ART-WATCH-018',
       articleName: 'Luxury Watch Collection',
@@ -2999,6 +3017,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       deliverables: ['Product Photography', 'Garden Lifestyle', 'Tool Detail Shots'],
       eventId: 'A5125070', 
       purchaseGroup: 101,
+      group: 99,
       offerId: '10763337',
       articleNumber: 'ART-GARDEN-019',
       articleName: 'Garden Tool Collection',
@@ -3026,6 +3045,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       deliverables: ['Food Photography', 'Lifestyle Coffee Scenes', 'Bean Close-ups'],
       eventId: 'A5225071', 
       purchaseGroup: 101,
+      group: 99,
       offerId: '10763338',
       articleNumber: 'ART-COFFEE-020',
       articleName: 'Gourmet Coffee Selection',
@@ -3056,6 +3076,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       deliverables: ['Toy Photography', 'Kids Playing Lifestyle', 'Educational Demo'],
       eventId: 'A5325072', 
       purchaseGroup: 101,
+      group: 99,
       offerId: '10763339',
       articleNumber: 'ART-TOYS-021',
       articleName: 'Educational Toy Set',
@@ -3083,6 +3104,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       deliverables: ['Tech Hero Shots', 'Feature Highlights', 'Lifestyle Music'],
       eventId: 'A5425073', 
       purchaseGroup: 101,
+      group: 99,
       offerId: '10763340',
       articleNumber: 'ART-HEADPHONES-022',
       articleName: 'Wireless Headphones Premium',
@@ -3110,6 +3132,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       deliverables: ['Outdoor Photography', 'Camping Lifestyle', 'Product Features'],
       eventId: 'A5525074', 
       purchaseGroup: 101,
+      group: 99,
       offerId: '10763341',
       articleNumber: 'ART-CAMPING-023',
       articleName: 'Camping Gear Set',
@@ -3137,6 +3160,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       deliverables: ['Luxury Food Photography', 'Lifestyle Gifting', 'Chocolate Close-ups'],
       eventId: 'A5625075', 
       purchaseGroup: 101,
+      group: 99,
       offerId: '10763342',
       articleNumber: 'ART-CHOCOLATE-024',
       articleName: 'Artisan Chocolate Collection',
@@ -3164,6 +3188,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       deliverables: ['Tech Product Shots', 'Living Room Lifestyle', 'Screen Quality Demo'],
       eventId: 'A5725076', 
       purchaseGroup: 101,
+      group: 99,
       offerId: '10763343',
       articleNumber: 'ART-TV-025',
       articleName: 'Smart TV Ultra HD',
@@ -10035,7 +10060,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
           const expandIcon = `<span class="order-expand-arrow ${isExpanded ? 'is-open' : ''}">◀</span>`;
           const expandLabel = isExpanded ? 'Collapse line items' : 'Expand line items';
 
-          const groupDisplay = formatPurchaseGroupDisplay(o.purchaseGroup);
+          const groupDisplay = o.group || placeholderSpan;
           const orderTypeDisplay = (o.orderType || 'PS');
           const rawPage = o.page ?? o.pageNumber ?? o.pageNo ?? o.catalogPage ?? o.pamPage ?? o.pageReference ?? '';
           const parsedPage = parseInt(rawPage, 10);
