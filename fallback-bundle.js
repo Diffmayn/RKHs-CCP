@@ -4555,6 +4555,62 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
                 <span style="color: #6b5440; font-weight: 500; font-size: 14px;">
                   ${currentUser.name} (${currentUser.role})
                 </span>
+                <div style="position: relative;">
+                  <button id="supportMenuBtn" onclick="toggleSupportMenu()" class="content-pill-btn content-pill-btn--support content-pill-btn--compact" style="background: linear-gradient(135deg, #c48b5a 0%, #a67550 100%); color: white;">
+                    <span>📚 Support</span>
+                  </button>
+                  <div id="supportMenuDropdown" style="
+                    display: none;
+                    position: absolute;
+                    top: calc(100% + 8px);
+                    right: 0;
+                    background: #fffaf3;
+                    border: 2px solid #ead7c2;
+                    border-radius: 12px;
+                    box-shadow: 0 12px 24px rgba(79, 59, 37, 0.18);
+                    min-width: 220px;
+                    z-index: 1000;
+                    overflow: hidden;
+                  ">
+                    <div style="padding: 12px 16px; background: linear-gradient(135deg, #f7eedf, #efe0cf); border-bottom: 1px solid #ead7c2;">
+                      <div style="font-weight: 700; font-size: 14px; color: #4b3b2a; display: flex; align-items: center; gap: 8px;">
+                        <span>📚</span>
+                        <span>Support & Resources</span>
+                      </div>
+                    </div>
+                    <div style="padding: 8px;">
+                      <button onclick="openStyleGuide()" class="support-menu-item">
+                        <span class="support-menu-icon">🎨</span>
+                        <div class="support-menu-content">
+                          <span class="support-menu-label">Style Guide</span>
+                          <span class="support-menu-desc">View design guidelines</span>
+                        </div>
+                      </button>
+                      <button onclick="openUserManual()" class="support-menu-item">
+                        <span class="support-menu-icon">📖</span>
+                        <div class="support-menu-content">
+                          <span class="support-menu-label">User Manual</span>
+                          <span class="support-menu-desc">Complete documentation</span>
+                        </div>
+                      </button>
+                      <button onclick="openScannerGuide()" class="support-menu-item">
+                        <span class="support-menu-icon">📷</span>
+                        <div class="support-menu-content">
+                          <span class="support-menu-label">Scanner Guide</span>
+                          <span class="support-menu-desc">Barcode scanning help</span>
+                        </div>
+                      </button>
+                      <div style="height: 1px; background: #ead7c2; margin: 8px 4px;"></div>
+                      <button onclick="showAboutModal()" class="support-menu-item">
+                        <span class="support-menu-icon">ℹ️</span>
+                        <div class="support-menu-content">
+                          <span class="support-menu-label">About</span>
+                          <span class="support-menu-desc">App version & info</span>
+                        </div>
+                      </button>
+                    </div>
+                  </div>
+                </div>
                 <button onclick="logout()" class="content-pill-btn content-pill-btn--logout content-pill-btn--compact"><span>Logout</span></button>
               </div>
             </div>
@@ -5364,6 +5420,54 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
         .content-pill-btn--compact {
           padding: 8px 18px;
           font-size: 13px;
+        }
+
+        /* Support Menu Styles */
+        .support-menu-item {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          padding: 12px;
+          background: transparent;
+          border: none;
+          border-radius: 8px;
+          cursor: pointer;
+          transition: all 0.2s ease;
+          width: 100%;
+          text-align: left;
+        }
+
+        .support-menu-item:hover {
+          background: #f4ecdf;
+          transform: translateX(4px);
+        }
+
+        .support-menu-icon {
+          font-size: 20px;
+          width: 28px;
+          height: 28px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-shrink: 0;
+        }
+
+        .support-menu-content {
+          display: flex;
+          flex-direction: column;
+          gap: 2px;
+          flex: 1;
+        }
+
+        .support-menu-label {
+          font-weight: 600;
+          font-size: 14px;
+          color: #4b3b2a;
+        }
+
+        .support-menu-desc {
+          font-size: 12px;
+          color: #92400e;
         }
 
         .content-body {
@@ -14840,6 +14944,155 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       authSystem.logout();
       showToast('Logged out successfully', 'info');
       render(); // Show login screen
+    };
+
+    // Support menu functions
+    window.toggleSupportMenu = function() {
+      const dropdown = document.getElementById('supportMenuDropdown');
+      const isVisible = dropdown.style.display !== 'none';
+      
+      if (isVisible) {
+        dropdown.style.display = 'none';
+      } else {
+        dropdown.style.display = 'block';
+      }
+    };
+
+    // Close support menu when clicking outside
+    document.addEventListener('click', function(event) {
+      const supportBtn = document.getElementById('supportMenuBtn');
+      const dropdown = document.getElementById('supportMenuDropdown');
+      
+      if (supportBtn && dropdown && 
+          !supportBtn.contains(event.target) && 
+          !dropdown.contains(event.target)) {
+        dropdown.style.display = 'none';
+      }
+    });
+
+    window.openStyleGuide = function() {
+      // This will be updated to open the PDF
+      showToast('📄 Opening Style Guide...', 'info');
+      // Placeholder for PDF opening
+      window.open('assets/style-guide.pdf', '_blank');
+      document.getElementById('supportMenuDropdown').style.display = 'none';
+    };
+
+    window.openUserManual = function() {
+      showToast('📖 Opening User Manual...', 'info');
+      window.open('USER-MANUAL.md', '_blank');
+      document.getElementById('supportMenuDropdown').style.display = 'none';
+    };
+
+    window.openScannerGuide = function() {
+      showToast('📷 Opening Scanner Guide...', 'info');
+      window.open('SCANNER-FEATURE.md', '_blank');
+      document.getElementById('supportMenuDropdown').style.display = 'none';
+    };
+
+    window.showAboutModal = function() {
+      document.getElementById('supportMenuDropdown').style.display = 'none';
+      
+      const modal = document.createElement('div');
+      modal.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(8px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 10000;
+        animation: fadeIn 0.2s ease;
+      `;
+
+      modal.innerHTML = `
+        <div style="
+          background: white;
+          border-radius: 16px;
+          box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+          max-width: 500px;
+          width: 90%;
+          padding: 32px;
+          animation: slideUp 0.3s ease;
+        ">
+          <div style="text-align: center; margin-bottom: 24px;">
+            <div style="
+              width: 80px;
+              height: 80px;
+              background: linear-gradient(135deg, #c48b5a 0%, #a67550 100%);
+              border-radius: 50%;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              margin: 0 auto 16px;
+              font-size: 40px;
+            ">
+              📸
+            </div>
+            <h2 style="margin: 0 0 8px; font-size: 24px; color: #4b3b2a; font-weight: 700;">
+              RKH's Photo Order System
+            </h2>
+            <p style="margin: 0; color: #6b5440; font-size: 16px;">
+              Comprehensive Campaign Portal
+            </p>
+          </div>
+          
+          <div style="
+            background: #fef9f3;
+            border: 2px solid #ead7c2;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 24px;
+          ">
+            <div style="display: grid; gap: 12px;">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span style="color: #6b5440; font-weight: 600;">Version:</span>
+                <span style="color: #4b3b2a; font-family: monospace; font-weight: 700;">2.0.0</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span style="color: #6b5440; font-weight: 600;">Build Date:</span>
+                <span style="color: #4b3b2a; font-family: monospace;">November 2025</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span style="color: #6b5440; font-weight: 600;">Environment:</span>
+                <span style="color: #4b3b2a; font-family: monospace;">${window.isElectron ? 'Desktop' : 'Web'}</span>
+              </div>
+            </div>
+          </div>
+
+          <p style="color: #92400e; font-size: 13px; text-align: center; margin: 0 0 24px;">
+            © 2025 RKH's Campaign Portal. All rights reserved.
+          </p>
+
+          <button onclick="this.closest('div[style*=\"fixed\"]').remove()" style="
+            width: 100%;
+            padding: 14px 20px;
+            background: linear-gradient(135deg, #7fa284 0%, #7fa284 100%);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 8px rgba(127, 162, 132, 0.3);
+          " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(127, 162, 132, 0.5)'" onmouseout="this.style.transform=''; this.style.boxShadow='0 2px 8px rgba(127, 162, 132, 0.3)'">
+            Close
+          </button>
+        </div>
+      `;
+
+      document.body.appendChild(modal);
+
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+          modal.remove();
+        }
+      });
     };
 
     // Notification functions
