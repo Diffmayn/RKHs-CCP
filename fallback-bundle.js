@@ -23,6 +23,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
     model: 'google:4@1' // Nano Banana - Google Gemini Flash Image 2.5
   };
   if (typeof window !== 'undefined') window.runwareConfig = runwareConfig;
+
   // Load saved API key as early as possible
   try {
     var _savedRunwareKey = (typeof localStorage !== 'undefined') ? localStorage.getItem('runwareApiKey') : null;
@@ -2126,47 +2127,51 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       
       // Convert SAP data to our order format
       const newOrders = sapData.map((item, index) => {
-        const order = {
-        orderNumber: item.imageRequestId || `IMG-${Date.now()}-${Math.random().toString(36).substr(2, 5)}`,
-        title: `${item.offerName || item.articleName || 'Product Photography'}`,
-        status: item.photoStatus === 'Archive' ? 'Completed' : 'New Request',
-        orderType: 'PS', // Always PS for SAP imports
-        method: item.production || 'M&B', // Use production field (excluding Photo Box)
-        photographer: 'Unassigned',
-        deadline: getEventDeadline(item.eventId),
-        costCenter: item.costCenter || `PG-${item.purchaseGroup}`,
-        purchaseGroup: item.purchaseGroup || 100,
-        priority: 'Medium',
-        brief: `Photography for ${item.offerName || item.articleName} (Article: ${item.articleNumber}) as part of Event ${item.eventId}\nPage: ${item.page || 'N/A'} | Group: ${item.group || 99} | Shot Type: ${item.shotType || 'N/A'} | Photo Ref: ${item.photoRef || 'N/A'}`,
-        articles: [item.articleName],
-        budget: 1500,
-        deliverables: ['Product Photography'],
-        
-        // SAP PMR specific fields
-        page: item.page || 1,
-        offerId: item.offerId || 'N/A',
-        group: item.group || 99,
-        offerName: item.offerName || item.articleName || 'N/A',
-        shotType: item.shotType || item.photoStatus || 'N/A',
-        photoRef: item.photoRef || item.imageRequestId || 'N/A',
-        
-        // Legacy SAP fields
-        eventId: item.eventId,
-        articleNumber: item.articleNumber,
-        articleName: item.articleName,
-        imageRequestId: item.imageRequestId,
-        photoStatus: item.photoStatus,
-        cloudinaryUrl: item.cloudinaryUrl || null,
-        
-        // Standard fields
-        createdAt: new Date().toISOString(),
-        createdBy: 'sap-import',
-        assignedTo: null,
-        samples: [],
-        comments: [],
-        uploadedContent: []
-      };
+  const initialPhotoReference = item.photoReference || item.photoRef || item.shotType || null;
+        const rawImageRequestId = item.imageRequestId || '';
 
+        const order = {
+          orderNumber: item.imageRequestId || `IMG-${Date.now()}-${Math.random().toString(36).substr(2, 5)}`,
+          title: `${item.offerName || item.articleName || 'Product Photography'}`,
+          status: item.photoStatus === 'Archive' ? 'Completed' : 'New Request',
+          orderType: 'PS', // Always PS for SAP imports
+          method: item.production || 'M&B', // Use production field (excluding Photo Box)
+          photographer: 'Unassigned',
+          deadline: getEventDeadline(item.eventId),
+          costCenter: item.costCenter || `PG-${item.purchaseGroup}`,
+          purchaseGroup: item.purchaseGroup || 100,
+          priority: 'Medium',
+          articles: [item.articleName],
+          budget: 1500,
+          deliverables: ['Product Photography'],
+          
+          // SAP PMR specific fields
+          page: item.page || 1,
+          offerId: item.offerId || 'N/A',
+          group: item.group || 99,
+          offerName: item.offerName || item.articleName || 'N/A',
+          shotType: item.shotType || item.photoStatus || 'N/A',
+          photoReference: initialPhotoReference,
+          
+          // Legacy SAP fields
+          eventId: item.eventId,
+          articleNumber: item.articleNumber,
+          articleName: item.articleName,
+          imageRequestId: rawImageRequestId,
+          photoStatus: item.photoStatus,
+          cloudinaryUrl: item.cloudinaryUrl || null,
+          
+          // Standard fields
+          createdAt: new Date().toISOString(),
+          createdBy: 'sap-import',
+          assignedTo: null,
+          samples: [],
+          comments: [],
+          uploadedContent: []
+        };
+
+        ensureOrderPhotoMetadata([order]);
+        order.brief = `Photography for ${order.offerName || order.articleName || 'Product Photography'} (Article: ${order.articleNumber || 'N/A'}) as part of Event ${order.eventId || 'N/A'}\nPage: ${order.page || 'N/A'} | Group: ${order.group || 99} | Shot Type: ${order.shotType || 'N/A'} | Photo Ref: ${order.photoReference || 'N/A'}`;
         assignSalesOrgToOrder(order, allOrders.length + index);
         return order;
       });
@@ -2210,6 +2215,127 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
     return '2025-09-30';
   }
 
+  const PHOTO_REFERENCE_OPTIONS = [
+    '1/1 Model',
+    '1/2 Model',
+    '#01 GINE',
+    '#02 OPLÆGNING',
+    '#03 OPLÆGNING FOLDET',
+    '#04 OPLÆGNING OVERLAP',
+    '#05 OPLÆGNING STYLET',
+    '#06 STAK LIGE',
+    '#07 LIGE FRA SIDEN',
+    '#08 SKRÅT FRA SIDEN',
+    '#10 KONSTRUERET SÆT',
+    '#11 OPLÆGNING GRAFISK',
+    '#12 FRI OPSTILLING',
+    '#13 EMBALLAGE',
+    '#15 DETALJESKUD',
+    '#16 BUNKE',
+    '#17 STAK STYLET',
+    '#18 BØJLE STYLET'
+  ];
+
+  const ORDER_PHOTO_REFERENCE_OVERRIDES = {
+    'ORD-2025-001': '#13 EMBALLAGE',
+    'ORD-2025-002': '#02 OPLÆGNING',
+    'ORD-2025-003': '#12 FRI OPSTILLING',
+    'ORD-2025-004': '#15 DETALJESKUD',
+    'ORD-2025-005': '#02 OPLÆGNING',
+    'ORD-2025-006': '#13 EMBALLAGE',
+    'ORD-2025-007': '#12 FRI OPSTILLING',
+    'ORD-2025-008': '1/1 Model',
+    'ORD-2025-009': '#13 EMBALLAGE',
+    'ORD-2025-010': '#12 FRI OPSTILLING',
+    'ORD-2025-011': '1/1 Model',
+    'ORD-2025-012': '#12 FRI OPSTILLING',
+    'ORD-2025-013': '#11 OPLÆGNING GRAFISK',
+    'ORD-2025-014': '#12 FRI OPSTILLING',
+    'ORD-2025-015': '#02 OPLÆGNING',
+    'ORD-2025-016': '1/2 Model',
+    'ORD-2025-017': '#02 OPLÆGNING',
+    'ORD-2025-018': '#15 DETALJESKUD',
+    'ORD-2025-019': '#15 DETALJESKUD',
+    'ORD-2025-020': '#16 BUNKE',
+    'ORD-2025-021': '#11 OPLÆGNING GRAFISK',
+    'ORD-2025-022': '#12 FRI OPSTILLING',
+    'ORD-2025-023': '#17 STAK STYLET',
+    'ORD-2025-024': '#11 OPLÆGNING GRAFISK',
+    'ORD-2025-025': '1/1 Model'
+  };
+
+  const imageRequestIdRegistry = new Set();
+
+  function looksLikePhotoReference(value) {
+    if (!value) {
+      return false;
+    }
+    const text = value.toString().trim();
+    if (!text) {
+      return false;
+    }
+    const referencePatterns = [/^#/i, /^\d\/\d/, /Model/i, /OPLÆGNING/i, /DETALJE/i, /BUNKE/i, /STAK/i];
+    return referencePatterns.some((pattern) => pattern.test(text));
+  }
+
+  function formatImageRequestId(rawValue, fallbackSeed = 0) {
+    const fallbackBase = 200000 + fallbackSeed;
+    let numericCandidate = fallbackBase;
+
+    if (rawValue) {
+      const text = rawValue.toString().trim();
+      if (/^IR(\d{1,})$/i.test(text)) {
+        numericCandidate = parseInt(text.slice(2), 10);
+      } else {
+        const digits = text.replace(/\D/g, '');
+        if (digits) {
+          numericCandidate = parseInt(digits.slice(-6), 10);
+        }
+      }
+    }
+
+    if (!Number.isFinite(numericCandidate)) {
+      numericCandidate = fallbackBase;
+    }
+
+    let formatted = `IR${String(numericCandidate).padStart(6, '0')}`;
+    while (imageRequestIdRegistry.has(formatted)) {
+      numericCandidate += 1;
+      formatted = `IR${String(numericCandidate).padStart(6, '0')}`;
+    }
+
+    imageRequestIdRegistry.add(formatted);
+    return formatted;
+  }
+
+  function ensureOrderPhotoMetadata(orders) {
+    if (!Array.isArray(orders)) {
+      return;
+    }
+
+    orders.forEach((order, index) => {
+      const overrideReference = ORDER_PHOTO_REFERENCE_OVERRIDES[order.orderNumber];
+      const rawImageRequest = order.imageRequestId || '';
+      let resolvedPhotoReference = order.photoReference || order.photoRef || overrideReference || '';
+
+      if (!resolvedPhotoReference && looksLikePhotoReference(rawImageRequest)) {
+        resolvedPhotoReference = rawImageRequest;
+      }
+
+      if (!resolvedPhotoReference) {
+        resolvedPhotoReference = PHOTO_REFERENCE_OPTIONS[index % PHOTO_REFERENCE_OPTIONS.length];
+      }
+
+      order.photoReference = resolvedPhotoReference;
+      order.imageRequestId = formatImageRequestId(rawImageRequest, index);
+      order.photoRef = order.photoReference;
+    });
+  }
+
+  function getNextImageRequestId(inputValue, fallbackSeed = imageRequestIdRegistry.size + 1) {
+    return formatImageRequestId(inputValue, fallbackSeed);
+  }
+
   const allOrders = [
     
     {
@@ -2236,7 +2362,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       offerId: '10763319',
       articleNumber: '1234575511',
       articleName: 'Premium Dog Food 2kg',
-      imageRequestId: '#13 EMBALLAGE',
+      imageRequestId: '123456',
       photoStatus: 'New Shoot - Photographer',
       cloudinaryUrl: null,
       page: 1,
@@ -2337,7 +2463,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       offerId: '10763320',
       articleNumber: 'ART-COF-002',
       articleName: 'Espresso Beans 500g',
-      imageRequestId: '#02 OPLÆGNING',
+      imageRequestId: '123457',
       photoStatus: 'New Shoot - Photo Box',
       cloudinaryUrl: null,
       page: 2,
@@ -2409,7 +2535,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       offerId: '10763321',
       articleNumber: 'ART-ELEC-003',
       articleName: 'Wireless Bluetooth Speaker Premium',
-      imageRequestId: '#12 FRI OPSTILLING',
+      imageRequestId: '123458',
       photoStatus: 'New Shoot - Photographer',
       cloudinaryUrl: null,
       page: 3,
@@ -2479,7 +2605,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       offerId: '10763322',
       articleNumber: '1234575512',
       articleName: 'Electric Hedge Trimmer Pro',
-      imageRequestId: '#15 DETALJESKUD',
+      imageRequestId: '123459',
       photoStatus: 'New Shoot - Photographer',
       cloudinaryUrl: null,
       page: 4,
@@ -2550,7 +2676,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       offerId: '10763323',
       articleNumber: 'ART-PAST-005',
       articleName: 'Organic Penne Pasta Premium',
-      imageRequestId: '#02 OPLÆGNING',
+      imageRequestId: '123460',
       photoStatus: 'New Shoot - Photo Box',
       cloudinaryUrl: null,
       page: 5,
@@ -2620,7 +2746,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       offerId: '10763324',
       articleNumber: 'ART-DAIRY-006',
       articleName: 'Organic Milk Premium 1L',
-      imageRequestId: '#13 EMBALLAGE',
+      imageRequestId: '123461',
       photoStatus: 'Archive',
       cloudinaryUrl: 'https://res.cloudinary.com/demo/image/upload/organic_milk.jpg',
       page: 6,
@@ -2690,7 +2816,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       offerId: '10763325',
       articleNumber: '1234575513',
       articleName: 'Smart Thermostat Pro',
-      imageRequestId: '#12 FRI OPSTILLING',
+      imageRequestId: '123462',
       photoStatus: 'Archive',
       cloudinaryUrl: 'https://res.cloudinary.com/demo/image/upload/smart_thermostat.jpg',
       page: 7,
@@ -2760,7 +2886,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       offerId: '10763326',
       articleNumber: 'ART-PATIO-008',
       articleName: 'Outdoor Dining Set Premium',
-      imageRequestId: '1/1 Model',
+      imageRequestId: '123463',
       photoStatus: 'Archive',
       cloudinaryUrl: 'https://res.cloudinary.com/demo/image/upload/patio_furniture.jpg',
       page: 8,
@@ -2833,7 +2959,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       offerId: '10763327',
       articleNumber: 'ART-BABY-009',
       articleName: 'Organic Baby Food Variety Pack',
-      imageRequestId: '#13 EMBALLAGE',
+      imageRequestId: '123470',
       photoStatus: 'New',
       page: 9,
       createdBy: 'user-promo1',
@@ -2899,7 +3025,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       offerId: '10763328',
       articleNumber: 'ART-LAPTOP-010',
       articleName: 'Gaming Laptop Pro X1',
-      imageRequestId: '#12 FRI OPSTILLING',
+      imageRequestId: '123471',
       photoStatus: 'Samples Requested',
       page: 10,
       createdBy: 'user-promo2',
@@ -2966,7 +3092,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       offerId: '10763329',
       articleNumber: 'ART-JACKET-011',
       articleName: 'Winter Jacket Collection',
-      imageRequestId: '1/1 Model',
+      imageRequestId: '123472',
       photoStatus: 'Pending',
       page: 11,
       createdBy: 'user-promo1',
@@ -3000,7 +3126,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       offerId: '10763330',
       articleNumber: 'ART-KITCHEN-012',
       articleName: 'Kitchen Appliance Set',
-      imageRequestId: '#12 FRI OPSTILLING',
+      imageRequestId: '123473',
       photoStatus: 'Approved',
       page: 12,
       createdBy: 'user-promo2',
@@ -3034,7 +3160,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       offerId: '10763331',
       articleNumber: 'ART-SKINCARE-013',
       articleName: 'Organic Skincare Collection',
-      imageRequestId: '#11 OPLÆGNING GRAFISK',
+      imageRequestId: '123474',
       photoStatus: 'In Progress',
       page: 13,
       createdBy: 'user-promo1',
@@ -3068,7 +3194,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       offerId: '10763332',
       articleNumber: 'ART-SECURITY-014',
       articleName: 'Smart Security System',
-      imageRequestId: '#12 FRI OPSTILLING',
+      imageRequestId: '123475',
       photoStatus: 'Samples in Transit',
       page: 14,
       createdBy: 'user-promo2',
@@ -3102,7 +3228,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       offerId: '10763333',
       articleNumber: 'ART-BREAD-015',
       articleName: 'Artisan Bread Selection',
-      imageRequestId: '#02 OPLÆGNING',
+      imageRequestId: '123476',
       photoStatus: 'Archive',
       page: 15,
       createdBy: 'user-promo1',
@@ -3136,7 +3262,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       offerId: '10763334',
       articleNumber: 'ART-FITNESS-016',
       articleName: 'Home Fitness Set',
-      imageRequestId: '1/2 Model',
+      imageRequestId: '123477',
       photoStatus: 'Review',
       page: 16,
       createdBy: 'user-promo2',
@@ -3170,7 +3296,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       offerId: '10763335',
       articleNumber: 'ART-PHONE-017',
       articleName: 'Smartphone Accessory Bundle',
-      imageRequestId: '#02 OPLÆGNING',
+      imageRequestId: '123478',
       photoStatus: 'New',
       page: 17,
       createdBy: 'user-promo1',
@@ -3204,7 +3330,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       offerId: '10763336',
       articleNumber: 'ART-WATCH-018',
       articleName: 'Luxury Watch Collection',
-      imageRequestId: '#15 DETALJESKUD',
+      imageRequestId: '123479',
       photoStatus: 'Samples Received',
       page: 18,
       createdBy: 'user-promo2',
@@ -3238,7 +3364,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       offerId: '10763337',
       articleNumber: 'ART-GARDEN-019',
       articleName: 'Garden Tool Collection',
-      imageRequestId: '#15 DETALJESKUD',
+      imageRequestId: '123480',
       photoStatus: 'Processing',
       page: 19,
       createdBy: 'user-promo1',
@@ -3272,7 +3398,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       offerId: '10763338',
       articleNumber: 'ART-COFFEE-020',
       articleName: 'Gourmet Coffee Selection',
-      imageRequestId: '#16 BUNKE',
+      imageRequestId: '123481',
       photoStatus: 'Archive',
       page: 20,
       createdBy: 'user-promo2',
@@ -3303,7 +3429,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       offerId: '10763339',
       articleNumber: 'ART-TOYS-021',
       articleName: 'Educational Toy Set',
-      imageRequestId: '#11 OPLÆGNING GRAFISK',
+      imageRequestId: '123482',
       photoStatus: 'New',
       page: 21,
       createdBy: 'user-promo1',
@@ -3334,7 +3460,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       offerId: '10763340',
       articleNumber: 'ART-HEADPHONES-022',
       articleName: 'Wireless Headphones Premium',
-      imageRequestId: '#12 FRI OPSTILLING',
+      imageRequestId: '123483',
       photoStatus: 'Urgent',
       page: 22,
       createdBy: 'user-promo2',
@@ -3365,7 +3491,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       offerId: '10763341',
       articleNumber: 'ART-CAMPING-023',
       articleName: 'Camping Gear Set',
-      imageRequestId: '#17 STAK STYLET',
+      imageRequestId: '123484',
       photoStatus: 'Pending',
       page: 23,
       createdBy: 'user-promo1',
@@ -3396,7 +3522,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       offerId: '10763342',
       articleNumber: 'ART-CHOCOLATE-024',
       articleName: 'Artisan Chocolate Collection',
-      imageRequestId: '#11 OPLÆGNING GRAFISK',
+      imageRequestId: '123485',
       photoStatus: 'Approved',
       page: 24,
       createdBy: 'user-promo2',
@@ -3427,7 +3553,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       offerId: '10763343',
       articleNumber: 'ART-TV-025',
       articleName: 'Smart TV Ultra HD',
-      imageRequestId: '1/1 Model',
+      imageRequestId: '123486',
       photoStatus: 'In Progress',
       page: 25,
       createdBy: 'user-promo1',
@@ -4329,6 +4455,8 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
   
   ];
 
+  ensureOrderPhotoMetadata(allOrders);
+
   // Expose orders globally for access from other scopes
   window.rkhOrders = allOrders;
 
@@ -4645,23 +4773,23 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
                 <span class="nav-section-chevron">▾</span>
               </button>
               <div class="nav-section-items">
-                <div class="nav-item" data-tooltip="Dashboard Overview" onclick="showView('dashboard')">
-                  <span class="nav-item-icon">🏠</span>
-                  <span class="nav-item-text">Dashboard</span>
+                <div class="nav-item" data-tooltip="View All Orders" onclick="showView('orders')">
+                  <span class="nav-item-icon">📋</span>
+                  <span class="nav-item-text">Orders Overview</span>
                 </div>
                 ${authSystem.canCreateOrders() ? `
                   <div class="nav-item" data-tooltip="Create New Order" onclick="showNewOrderModal()">
-                    <span class="nav-item-icon">📋</span>
-                    <span class="nav-item-text">New Order</span>
+                    <span class="nav-item-icon">🆕</span>
+                    <span class="nav-item-text">Create New Order</span>
                   </div>
                   <div class="nav-item" data-tooltip="Create/Edit Content with Runware AI (Google Gemini Flash Image 2.5)" onclick="showContentCreationModal()">
                     <span class="nav-item-icon">🚀</span>
                     <span class="nav-item-text">Create/Edit Content</span>
                   </div>
                 ` : ''}
-                <div class="nav-item" data-tooltip="View All Orders" onclick="showView('orders')">
-                  <span class="nav-item-icon">📋</span>
-                  <span class="nav-item-text">Orders</span>
+                <div class="nav-item" data-tooltip="Mass Upload Images to Orders" onclick="showMassUploadModal()">
+                  <span class="nav-item-icon">📤</span>
+                  <span class="nav-item-text">Mass Upload</span>
                 </div>
               </div>
             </div>
@@ -4701,10 +4829,6 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
                 <span class="nav-section-chevron">▾</span>
               </button>
               <div class="nav-section-items">
-                <div class="nav-item" data-tooltip="Mass Upload Images to Orders" onclick="showMassUploadModal()">
-                  <span class="nav-item-icon">📤</span>
-                  <span class="nav-item-text">Mass Upload</span>
-                </div>
                 <div class="nav-item nav-item-urgent" data-tooltip="View High & Critical Priority Orders" onclick="filterOrdersByStatus('urgent')">
                   <span class="nav-item-icon">🚨</span>
                   <span class="nav-item-text">Urgent Orders</span>
@@ -4811,10 +4935,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
             <div class="content-actions">
               <button class="content-pill-btn content-pill-btn--export content-pill-btn--compact" onclick="exportToCsv()">📊 <span>Export</span></button>
               <button class="content-pill-btn content-pill-btn--refresh content-pill-btn--compact" onclick="refreshData()">🔄 <span>Refresh</span></button>
-              <div style="position: relative; display: flex; align-items: center; gap: 12px;">
-                <span style="color: #6b5440; font-weight: 500; font-size: 14px;">
-                  ${currentUser.name} (${currentUser.role})
-                </span>
+              <div style="display: flex; align-items: center; gap: 12px;">
                 <div style="position: relative;">
                   <button id="supportMenuBtn" onclick="toggleSupportMenu()" class="content-pill-btn content-pill-btn--support content-pill-btn--compact" style="background: linear-gradient(135deg, #c48b5a 0%, #a67550 100%); color: white;">
                     <span>📚 Support</span>
@@ -4872,6 +4993,10 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
                   </div>
                 </div>
                 <button onclick="logout()" class="content-pill-btn content-pill-btn--logout content-pill-btn--compact"><span>Logout</span></button>
+                <div style="display: flex; flex-direction: column; align-items: flex-end; line-height: 1.2;">
+                  <span style="color: #4b3b2a; font-weight: 600; font-size: 14px;">${currentUser.name}</span>
+                  <span style="color: #7b5a3d; font-weight: 500; font-size: 12px; text-transform: capitalize;">${currentUser.role}</span>
+                </div>
               </div>
             </div>
           </div>
@@ -5030,7 +5155,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
                   <table class="orders-table">
                     <thead>
                       <tr style="background: linear-gradient(135deg, #f7eedf, #efe0cf);">
-                        <th style="width: 40px; display: none;" class="bulk-checkbox"><input type="checkbox" id="selectAllOrders"></th>
+                        <th style="width: 55px; min-width: 55px; max-width: 55px; height: 55px; display: none; padding: 0; text-align: center;" class="bulk-checkbox"><input type="checkbox" id="selectAllOrders"></th>
                         <th style="padding: 4px; text-align: center; border-bottom: 1px solid rgba(196, 139, 90, 0.22); width: 32px;" aria-label="Expand"></th>
                         <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: #4b3b2a; border-bottom: 1px solid rgba(196, 139, 90, 0.22);">Order Number</th>
                         <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: #4b3b2a; border-bottom: 1px solid rgba(196, 139, 90, 0.22);">Page</th>
@@ -5569,12 +5694,14 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
           gap: 12px;
           row-gap: 12px;
           width: 100%;
-          margin: 0 0 24px;
+          margin: 0;
           padding: 16px 24px;
           background: #fdf8f1;
-          border-radius: 12px;
+          border-radius: 16px 16px 0 0;
           border: 1px solid rgba(196, 139, 90, 0.18);
-          box-shadow: 0 8px 18px rgba(79, 59, 37, 0.08);
+          border-bottom: 1px solid rgba(196, 139, 90, 0.24);
+          box-shadow: 0 10px 24px rgba(79, 59, 37, 0.1);
+          box-sizing: border-box;
         }
 
         .orders-table-container {
@@ -5587,6 +5714,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
           margin: 0 0 24px;
           border-top-left-radius: 0;
           border-top-right-radius: 0;
+          border-top: none;
         }
 
         @media (max-width: 768px) {
@@ -5597,15 +5725,15 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
 
           .orders-filter-bar {
             width: 100%;
-            margin: 12px 0 20px;
+            margin: 0;
             padding: 16px;
-            border-radius: 12px;
-            border-top: 1px solid rgba(196, 139, 90, 0.18);
+            border-radius: 16px 16px 0 0;
+            border-bottom: 1px solid rgba(196, 139, 90, 0.24);
           }
 
           .orders-table-container {
             width: 100%;
-            margin: -8px 0 20px;
+            margin: 0 0 20px;
             border-top-left-radius: 0;
             border-top-right-radius: 0;
           }
@@ -5941,6 +6069,31 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
           font-size: 12px;
           text-transform: uppercase;
           letter-spacing: 0.02em;
+        }
+
+        .orders-table .bulk-checkbox {
+          width: 55px;
+          min-width: 55px;
+          max-width: 55px;
+          height: 55px;
+          min-height: 55px;
+          max-height: 55px;
+          padding: 0 !important;
+          vertical-align: middle;
+          position: relative;
+        }
+
+        .orders-table .bulk-checkbox input[type="checkbox"] {
+          width: 18px;
+          height: 18px;
+          margin: 0;
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          accent-color: #c48b5a;
+          border: 1px solid rgba(196, 139, 90, 0.65);
+          border-radius: 4px;
         }
 
         .orders-table tbody td {
@@ -7219,27 +7372,16 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
 
               <div>
                 <label style="display: block; font-weight: 500; margin-bottom: 4px;">Photo Reference / Shooting Type</label>
-                <select name="imageRequestId" style="width: 100%; padding: 8px; border: 1px solid #d1d5db; border-radius: 4px;">
+                <select name="photoReference" style="width: 100%; padding: 8px; border: 1px solid #d1d5db; border-radius: 4px;">
                   <option value="">Select photo reference...</option>
-                  <option value="1/1 Model">1/1 Model</option>
-                  <option value="1/2 Model">1/2 Model</option>
-                  <option value="#01 GINE">#01 GINE</option>
-                  <option value="#02 OPLÆGNING">#02 OPLÆGNING</option>
-                  <option value="#03 OPLÆGNING FOLDET">#03 OPLÆGNING FOLDET</option>
-                  <option value="#04 OPLÆGNING OVERLAP">#04 OPLÆGNING OVERLAP</option>
-                  <option value="#05 OPLÆGNING STYLET">#05 OPLÆGNING STYLET</option>
-                  <option value="#06 STAK LIGE">#06 STAK LIGE</option>
-                  <option value="#07 LIGE FRA SIDEN">#07 LIGE FRA SIDEN</option>
-                  <option value="#08 SKRÅT FRA SIDEN">#08 SKRÅT FRA SIDEN</option>
-                  <option value="#10 KONSTRUERET SÆT">#10 KONSTRUERET SÆT</option>
-                  <option value="#11 OPLÆGNING GRAFISK">#11 OPLÆGNING GRAFISK</option>
-                  <option value="#12 FRI OPSTILLING">#12 FRI OPSTILLING</option>
-                  <option value="#13 EMBALLAGE">#13 EMBALLAGE</option>
-                  <option value="#15 DETALJESKUD">#15 DETALJESKUD</option>
-                  <option value="#16 BUNKE">#16 BUNKE</option>
-                  <option value="#17 STAK STYLET">#17 STAK STYLET</option>
-                  <option value="#18 BØJLE STYLET">#18 BØJLE STYLET</option>
+                  ${PHOTO_REFERENCE_OPTIONS.map(option => `<option value="${option}">${option}</option>`).join('')}
                 </select>
+              </div>
+
+              <div>
+                <label style="display: block; font-weight: 500; margin-bottom: 4px;">Image Request ID</label>
+                <input name="imageRequestId" type="text" style="width: 100%; padding: 8px; border: 1px solid #d1d5db; border-radius: 4px;" placeholder="IR123456" autocomplete="off">
+                <div style="font-size: 11px; color: #6b5440; margin-top: 4px;">Leave blank to auto-generate the next available ID.</div>
               </div>
 
               <div style="display: flex; gap: 8px; justify-content: flex-end; margin-top: 8px;">
@@ -8655,6 +8797,23 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
                         onfocus="this.style.borderColor='#c48b5a'" onblur="this.style.borderColor='#ead7c2'"></textarea>
             </div>
 
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px;">
+              <div style="min-width: 0;">
+                <label style="display: block; font-weight: 600; margin-bottom: 6px; color: #4b3b2a; font-size: 14px;">Photo Reference / Shooting Type</label>
+                <select name="photoReference" style="width: 100%; box-sizing: border-box; padding: 14px; border: 2px solid #ead7c2; border-radius: 8px; font-size: 16px; transition: border-color 0.2s ease;"
+      onfocus="this.style.borderColor='#c48b5a'" onblur="this.style.borderColor='#ead7c2'">
+                  <option value="">Select photo reference...</option>
+                  ${PHOTO_REFERENCE_OPTIONS.map(option => `<option value="${option}">${option}</option>`).join('')}
+                </select>
+              </div>
+              <div style="min-width: 0;">
+                <label style="display: block; font-weight: 600; margin-bottom: 6px; color: #4b3b2a; font-size: 14px;">Image Request ID</label>
+                <input name="imageRequestId" type="text" style="width: 100%; box-sizing: border-box; padding: 14px; border: 2px solid #ead7c2; border-radius: 8px; font-size: 16px; transition: border-color 0.2s ease;" placeholder="IR123456" autocomplete="off"
+      onfocus="this.style.borderColor='#c48b5a'" onblur="this.style.borderColor='#ead7c2'">
+                <div style="margin-top: 6px; font-size: 12px; color: #6b5440;">Leave blank to auto-generate the next available ID.</div>
+              </div>
+            </div>
+
             <div style="margin-bottom: 24px;">
               <label style="display: block; font-weight: 600; margin-bottom: 6px; color: #4b3b2a; font-size: 14px;">
                 <span style="display: flex; align-items: center; gap: 8px;">
@@ -8741,6 +8900,8 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
 
       const formData = new FormData(event.target);
       const currentUser = authSystem.getCurrentUser();
+  const selectedPhotoReference = (formData.get('photoReference') || '').trim();
+  const rawImageRequestInput = (formData.get('imageRequestId') || '').trim();
 
       // Generate order number
       const orderNumber = 'ORD-' + Date.now();
@@ -8761,8 +8922,13 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
         createdDate: new Date().toLocaleDateString(),
         updatedAt: new Date().toISOString(),
         comments: [],
-        deliverables: ['Product Photos', 'High-Resolution Images']
+        deliverables: ['Product Photos', 'High-Resolution Images'],
+        photoReference: selectedPhotoReference || null,
+        imageRequestId: rawImageRequestInput,
+        photoStatus: 'New Request'
       };
+
+      ensureOrderPhotoMetadata([newOrder]);
 
       assignSalesOrgToOrder(newOrder);
 
@@ -10302,14 +10468,14 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
           const offerId = o.offerId || placeholderSpan;
           const offerName = o.title || placeholderSpan;
           const shotType = o.photoStatus || placeholderSpan;
-          const photoRef = o.imageRequestId || placeholderSpan;
+          const photoRef = o.photoReference || placeholderSpan;
           const principle = o.salesOrg || placeholderSpan;
           const productionInfo = buildProductionInfo(o);
           const previewCell = buildPreviewCell(o);
 
           const articleDetailsRow = isExpanded ? `
             <tr class="order-articles-row" data-parent-order="${o.orderNumber}">
-              <td class="bulk-checkbox" style="display:none;"></td>
+              <td class="bulk-checkbox" style="display: none; width: 55px; min-width: 55px; max-width: 55px; height: 55px; padding: 0; text-align: center;"></td>
               <td colspan="17" style="background:#fffaf3;padding:10px 18px 16px;border-bottom:1px solid rgba(196, 139, 90, 0.2);">
                 ${buildChildDetailsTable(o, normalizedArticles)}
               </td>
@@ -10318,7 +10484,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
 
           return `
           <tr onclick="showOrderDetails('${o.orderNumber}')" style="cursor: pointer; color: #4b3b2a !important;" class="${window.selectedItems && window.selectedItems.has(o.orderNumber) ? 'selected-row' : ''}">
-            <td class="bulk-checkbox" style="display: none;"><input type="checkbox" class="item-checkbox" data-id="${o.orderNumber}" onclick="event.stopPropagation()"></td>
+            <td class="bulk-checkbox" style="display: none; width: 55px; min-width: 55px; max-width: 55px; height: 55px; padding: 0; text-align: center;"><input type="checkbox" class="item-checkbox" data-id="${o.orderNumber}" onclick="event.stopPropagation()"></td>
             <td style="padding:4px;text-align:center;width:32px;">
               <button type="button" class="order-expand-button" aria-label="${expandLabel}" title="${expandLabel}" onclick="toggleOrderExpansion('${o.orderNumber}', event)">${expandIcon}</button>
             </td>
@@ -11062,7 +11228,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
           const orderTypeDisplay = o.orderType || 'PS';
           const offerName = o.title || placeholderSpan;
           const shotType = o.photoStatus || placeholderSpan;
-          const photoRef = o.imageRequestId || placeholderSpan;
+          const photoRef = o.photoReference || placeholderSpan;
           const productionInfo = buildQuickProductionInfo(o);
           const principle = o.salesOrg || placeholderSpan;
           const previewCell = buildQuickPreviewCell(o);
@@ -11073,7 +11239,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
 
           const articleDetailsRow = isExpanded ? `
             <tr class="order-articles-row" data-parent-order="${o.orderNumber}">
-              <td class="bulk-checkbox" style="display:none;"></td>
+              <td class="bulk-checkbox" style="display: none; width: 55px; min-width: 55px; max-width: 55px; height: 55px; padding: 0; text-align: center;"></td>
               <td colspan="15" style="background:#fffaf3;padding:16px 24px 24px;border-bottom:1px solid rgba(196, 139, 90, 0.2);">
                 ${articleDetailsContent}
               </td>
@@ -11082,7 +11248,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
 
           return `
           <tr onclick="showOrderDetails('${o.orderNumber}')" style="cursor: pointer; background: #fef3c7; color:#4b3b2a !important;">
-            <td class="bulk-checkbox" style="display: none;"><input type="checkbox" class="item-checkbox" data-id="${o.orderNumber}" onclick="event.stopPropagation()"></td>
+            <td class="bulk-checkbox" style="display: none; width: 55px; min-width: 55px; max-width: 55px; height: 55px; padding: 0; text-align: center;"><input type="checkbox" class="item-checkbox" data-id="${o.orderNumber}" onclick="event.stopPropagation()"></td>
             <td style="text-align:center;">
               <button type="button" class="order-expand-button" aria-label="${expandLabel}" title="${expandLabel}" onclick="toggleOrderExpansion('${o.orderNumber}', event)">${expandIcon}</button>
             </td>
@@ -11391,13 +11557,17 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
             <div style="text-align:center;margin-bottom:16px;">
               <div style="font-size:48px;margin-bottom:12px;">📸</div>
               <h3 style="margin:0 0 8px;color:#4b3b2a;font-size:18px;">Upload Images</h3>
-              <p style="margin:0;color:#6b5440;font-size:14px;">Select multiple image files to upload. Files will be matched to orders based on the filename matching the "File Name" column.</p>
+              <p style="margin:0 0 12px;color:#6b5440;font-size:14px;line-height:1.5;">Select multiple image files to upload. Filenames must match the "Reference To File" value for the order or article they belong to.</p>
+              <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(127,162,132,0.12);border:1px solid rgba(127,162,132,0.35);border-radius:10px;padding:10px 14px;font-size:12px;color:#466b4f;">
+                <span style="font-size:16px;">💡</span>
+                <span>Matched assets will highlight the Photo Reference and Image Request ID so you can confirm everything lines up.</span>
+              </div>
             </div>
             
             <input type="file" id="massUploadInput" accept="image/*" multiple style="width:100%;padding:14px;border:2px solid rgba(196,139,90,0.4);border-radius:10px;font-size:14px;margin-bottom:16px;background:rgba(255,255,255,0.95);">
             
             <div style="display:flex;gap:12px;justify-content:center;">
-              <button onclick="processMassUpload()" style="background:linear-gradient(135deg,#7fa284 0%,#689271 100%);color:white;border:none;padding:14px 28px;border-radius:10px;cursor:pointer;font-size:16px;font-weight:600;box-shadow:0 8px 20px rgba(127,162,132,0.35);">Process Upload</button>
+              <button onclick="processMassUpload()" style="background:linear-gradient(135deg,#7fa284 0%,#5f7f66 100%);color:white;border:none;padding:14px 28px;border-radius:10px;cursor:pointer;font-size:16px;font-weight:600;box-shadow:0 8px 20px rgba(127,162,132,0.35);">Match & Upload</button>
               <button onclick="this.closest('.mass-upload-modal').remove()" style="background:#6b5440;color:white;border:none;padding:14px 28px;border-radius:10px;cursor:pointer;font-size:16px;">Cancel</button>
             </div>
           </div>
@@ -11437,69 +11607,106 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
 
       let processedCount = 0;
       const totalFiles = files.length;
+      const baseOrders = Array.isArray(window.rkhOrders) && window.rkhOrders.length
+        ? window.rkhOrders
+        : (typeof allOrders !== 'undefined' ? allOrders : []);
 
-      Array.from(files).forEach((file, index) => {
+      const finalizeProcessing = () => {
+        try {
+          if (typeof localStorage !== 'undefined') {
+            localStorage.setItem('photoOrders', JSON.stringify(baseOrders));
+          }
+        } catch (storageError) {
+          console.warn('Mass upload storage sync failed', storageError);
+        }
+
+        displayMassUploadResults(results);
+      };
+
+      Array.from(files).forEach((file) => {
         const reader = new FileReader();
         
         reader.onload = function(e) {
           const fileName = file.name;
           let matched = false;
-
-          // Search through all orders for matching fileName
-          const baseOrders = Array.isArray(window.rkhOrders) && window.rkhOrders.length
-            ? window.rkhOrders
-            : (typeof allOrders !== 'undefined' ? allOrders : []);
+          const timestamp = new Date().toISOString();
 
           for (const order of baseOrders) {
-            // Check parent level (for PS orders)
+            const orderTitle = order?.title || 'Untitled Order';
+            const orderPhotoReference = order?.photoReference || order?.fileName || '—';
+            const orderImageRequestId = order?.imageRequestId || order?.imageRequest || '—';
+            const orderStatus = order?.status || 'Pending';
+            const orderPriority = order?.priority || 'Medium';
+
             if (order.fileName && order.fileName === fileName) {
               if (!order.uploadedContent) order.uploadedContent = [];
-              
-              order.uploadedContent.push({
+
+              const record = {
                 id: 'file_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
                 name: file.name,
                 type: file.type,
                 size: file.size,
                 data: e.target.result,
                 uploadedBy: currentUser.name,
-                uploadedAt: new Date().toISOString(),
+                uploadedAt: timestamp,
                 uploadedByRole: currentUser.role
-              });
+              };
+
+              order.uploadedContent.push(record);
 
               results.matched.push({
-                fileName: fileName,
+                fileName,
                 orderNumber: order.orderNumber,
                 level: 'parent',
-                orderTitle: order.title
+                orderTitle,
+                photoReference: orderPhotoReference,
+                imageRequestId: orderImageRequestId,
+                status: orderStatus,
+                priority: orderPriority,
+                assetCount: order.uploadedContent.length,
+                assetLocationLabel: 'Order attachments',
+                uploadedBy: currentUser.name,
+                uploadedAt: timestamp
               });
               matched = true;
               break;
             }
 
-            // Check child level (for PO orders with articles)
             if (Array.isArray(order.articles)) {
               for (let i = 0; i < order.articles.length; i++) {
                 const article = order.articles[i];
                 if (article && typeof article === 'object' && article.fileName && article.fileName === fileName) {
                   if (!article.uploadedImages) article.uploadedImages = [];
-                  
-                  article.uploadedImages.push({
+
+                  const record = {
                     id: 'file_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
                     name: file.name,
                     type: file.type,
                     size: file.size,
                     data: e.target.result,
                     uploadedBy: currentUser.name,
-                    uploadedAt: new Date().toISOString(),
+                    uploadedAt: timestamp,
                     uploadedByRole: currentUser.role
-                  });
+                  };
+
+                  article.uploadedImages.push(record);
+
+                  const articleName = article.name || `Article ${i + 1}`;
 
                   results.matched.push({
-                    fileName: fileName,
+                    fileName,
                     orderNumber: order.orderNumber,
                     level: 'child',
-                    articleName: article.name || `Article ${i + 1}`,
-                    orderTitle: order.title
+                    articleName,
+                    orderTitle,
+                    photoReference: article.photoReference || orderPhotoReference,
+                    imageRequestId: article.imageRequestId || orderImageRequestId,
+                    status: orderStatus,
+                    priority: orderPriority,
+                    assetCount: article.uploadedImages.length,
+                    assetLocationLabel: `Article • ${articleName}`,
+                    uploadedBy: currentUser.name,
+                    uploadedAt: timestamp
                   });
                   matched = true;
                   break;
@@ -11510,23 +11717,28 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
           }
 
           if (!matched) {
-            results.unmatched.push(fileName);
+            results.unmatched.push({
+              fileName,
+              size: file.size
+            });
           }
 
           processedCount++;
 
-          // When all files are processed, show results
           if (processedCount === totalFiles) {
-            displayMassUploadResults(results);
+            finalizeProcessing();
           }
         };
 
         reader.onerror = function() {
-          results.errors.push(file.name);
+          results.errors.push({
+            fileName: file.name,
+            size: file.size
+          });
           processedCount++;
           
           if (processedCount === totalFiles) {
-            displayMassUploadResults(results);
+            finalizeProcessing();
           }
         };
 
@@ -11537,73 +11749,164 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
     // Function to display mass upload results
     window.displayMassUploadResults = function(results) {
       const resultsListDiv = document.getElementById('massUploadResultsList');
-      
-      let html = '';
+      if (!resultsListDiv) return;
 
-      if (results.matched.length > 0) {
+      const formatSize = (bytes) => {
+        if (typeof bytes !== 'number' || !isFinite(bytes)) return '—';
+        if (bytes === 0) return '0 B';
+        const units = ['B', 'KB', 'MB', 'GB', 'TB'];
+        let size = bytes;
+        let unitIndex = 0;
+        while (size >= 1024 && unitIndex < units.length - 1) {
+          size /= 1024;
+          unitIndex++;
+        }
+        const precision = unitIndex === 0 ? 0 : 1;
+        return `${size.toFixed(precision)} ${units[unitIndex]}`;
+      };
+
+      const matchedCount = results.matched.length;
+      const unmatchedCount = results.unmatched.length;
+      const errorCount = results.errors.length;
+
+      let html = `
+        <div style="display:flex;flex-wrap:wrap;gap:12px;margin-bottom:20px;">
+          <span style="display:flex;align-items:center;gap:6px;background:rgba(16,185,129,0.14);color:#047857;padding:6px 14px;border-radius:999px;font-size:12px;font-weight:600;">
+            ✅ Matched <span style="font-size:13px;">${matchedCount}</span>
+          </span>
+          <span style="display:flex;align-items:center;gap:6px;background:rgba(245,158,11,0.14);color:#b45309;padding:6px 14px;border-radius:999px;font-size:12px;font-weight:600;">
+            ⚠️ Unmatched <span style="font-size:13px;">${unmatchedCount}</span>
+          </span>
+          <span style="display:flex;align-items:center;gap:6px;background:rgba(239,68,68,0.14);color:#b91c1c;padding:6px 14px;border-radius:999px;font-size:12px;font-weight:600;">
+            ❌ Errors <span style="font-size:13px;">${errorCount}</span>
+          </span>
+        </div>
+      `;
+
+      if (matchedCount > 0) {
         html += `
-          <div style="margin-bottom:20px;">
-            <h4 style="margin:0 0 12px;color:#10b981;font-size:14px;display:flex;align-items:center;gap:8px;">
-              <span style="font-size:20px;">✅</span>
-              Successfully Matched (${results.matched.length})
-            </h4>
-            <div style="display:grid;gap:8px;">
-              ${results.matched.map(match => `
-                <div style="background:#f0fdf4;padding:12px;border-radius:8px;border-left:4px solid #10b981;font-size:13px;">
-                  <div style="font-weight:600;color:#064e3b;margin-bottom:4px;">${match.fileName}</div>
-                  <div style="color:#065f46;">
-                    → ${match.orderNumber}: ${match.orderTitle}
-                    <span style="background:#dcfce7;padding:2px 8px;border-radius:4px;margin-left:8px;font-size:11px;">
-                      ${match.level === 'parent' ? 'Parent Level' : `Child Level (${match.articleName})`}
-                    </span>
+          <div style="display:grid;gap:16px;margin-bottom:28px;">
+            ${results.matched.map(match => {
+              const encodedOrderNumber = encodeURIComponent(match.orderNumber || '');
+              const uploadedStamp = match.uploadedAt ? new Date(match.uploadedAt).toLocaleString() : '';
+              const locationLabel = match.assetLocationLabel || (match.level === 'parent' ? 'Order attachments' : `Article • ${match.articleName || '—'}`);
+              return `
+                <div style="background:linear-gradient(135deg,rgba(255,255,255,0.95),rgba(250,244,236,0.9));border:1px solid rgba(196,139,90,0.28);border-radius:16px;padding:18px 20px;box-shadow:0 14px 28px rgba(47,33,21,0.12);">
+                  <div style="display:flex;justify-content:space-between;gap:12px;align-items:flex-start;">
+                    <div>
+                      <div style="font-size:12px;letter-spacing:0.8px;text-transform:uppercase;color:rgba(71,53,35,0.65);font-weight:600;">${match.level === 'parent' ? 'Order Match' : 'Article Match'}</div>
+                      <div style="font-size:17px;font-weight:600;color:#3b2a18;margin-top:4px;word-break:break-all;">${match.fileName}</div>
+                    </div>
+                    <div style="background:rgba(196,139,90,0.12);color:#7a5231;padding:6px 12px;border-radius:8px;font-size:13px;font-weight:600;white-space:nowrap;">${match.orderNumber || '—'}</div>
+                  </div>
+                  <div style="margin-top:12px;display:grid;gap:6px;font-size:13px;color:#574330;">
+                    <div><span style="color:#8b6f54;">Order:</span> ${match.orderTitle || '—'}</div>
+                    <div><span style="color:#8b6f54;">Photo Reference:</span> ${match.photoReference || '—'}</div>
+                    <div><span style="color:#8b6f54;">Image Request ID:</span> ${match.imageRequestId || '—'}</div>
+                    <div><span style="color:#8b6f54;">Location:</span> ${locationLabel}</div>
+                    <div><span style="color:#8b6f54;">Assets in location:</span> ${typeof match.assetCount === 'number' ? match.assetCount : '—'}</div>
+                  </div>
+                  <div style="margin-top:14px;display:flex;flex-wrap:wrap;gap:8px;font-size:12px;">
+                    <span style="background:rgba(127,162,132,0.16);color:#3f6950;padding:4px 10px;border-radius:999px;">Status: ${match.status || '—'}</span>
+                    <span style="background:rgba(196,139,90,0.16);color:#7a5231;padding:4px 10px;border-radius:999px;">Priority: ${match.priority || '—'}</span>
+                  </div>
+                  <div style="margin-top:16px;display:flex;justify-content:space-between;align-items:center;gap:12px;font-size:12px;color:#82694e;">
+                    <div>Uploaded by ${match.uploadedBy || '—'}${uploadedStamp ? ` • ${uploadedStamp}` : ''}</div>
+                    <button onclick="if (typeof showOrderDetails === 'function') { showOrderDetails(decodeURIComponent('${encodedOrderNumber}')); }" style="background:linear-gradient(135deg,#7fa284 0%,#5f7f66 100%);color:#ffffff;border:none;padding:10px 18px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600;">View Order</button>
                   </div>
                 </div>
-              `).join('')}
+              `;
+            }).join('')}
+          </div>
+        `;
+      }
+
+      if (unmatchedCount > 0) {
+        html += `
+          <div style="margin-bottom:24px;">
+            <h4 style="margin:0 0 12px;color:#b45309;font-size:14px;display:flex;align-items:center;gap:8px;font-weight:600;">
+              <span style="font-size:18px;">⚠️</span>
+              ${unmatchedCount} file${unmatchedCount === 1 ? '' : 's'} need attention
+            </h4>
+            <div style="display:grid;gap:10px;">
+              ${results.unmatched.map(item => {
+                const fileName = typeof item === 'string' ? item : (item.fileName || item.name || 'Unknown file');
+                const fileSize = typeof item === 'string' ? null : item.size;
+                return `
+                  <div style="background:rgba(255,240,219,0.85);border:1px solid rgba(217,119,6,0.25);border-radius:12px;padding:12px 16px;">
+                    <div style="font-weight:600;color:#92400e;word-break:break-all;">${fileName}</div>
+                    ${fileSize ? `<div style="font-size:12px;color:#b45309;margin-top:4px;">Size: ${formatSize(fileSize)}</div>` : ''}
+                  </div>
+                `;
+              }).join('')}
+            </div>
+            <div style="margin-top:12px;font-size:12px;color:#7c4a03;background:rgba(217,119,6,0.14);border-radius:10px;padding:10px 14px;line-height:1.6;">
+              Double-check that the filename exactly matches the "Reference To File" value on the target order or article. Consider renaming the asset and trying again.
+              <div style="margin-top:10px;display:flex;gap:10px;flex-wrap:wrap;">
+                <button onclick="if (typeof showOrdersModal === 'function') { showOrdersModal(); }" style="background:rgba(180,112,32,0.18);color:#92400e;border:1px solid rgba(180,112,32,0.28);padding:8px 14px;border-radius:8px;font-weight:600;cursor:pointer;font-size:12px;">Open Orders List</button>
+              </div>
             </div>
           </div>
         `;
       }
 
-      if (results.unmatched.length > 0) {
+      if (errorCount > 0) {
         html += `
-          <div style="margin-bottom:20px;">
-            <h4 style="margin:0 0 12px;color:#f59e0b;font-size:14px;display:flex;align-items:center;gap:8px;">
-              <span style="font-size:20px;">⚠️</span>
-              No Match Found (${results.unmatched.length})
+          <div style="margin-bottom:24px;">
+            <h4 style="margin:0 0 12px;color:#b91c1c;font-size:14px;display:flex;align-items:center;gap:8px;font-weight:600;">
+              <span style="font-size:18px;">❌</span>
+              ${errorCount} file${errorCount === 1 ? '' : 's'} could not be processed
             </h4>
-            <div style="background:#fffbeb;padding:12px;border-radius:8px;border-left:4px solid #f59e0b;font-size:13px;">
-              ${results.unmatched.map(name => `<div style="color:#78350f;margin:4px 0;">• ${name}</div>`).join('')}
+            <div style="display:grid;gap:10px;">
+              ${results.errors.map(item => {
+                const fileName = typeof item === 'string' ? item : (item.fileName || item.name || 'Unknown file');
+                const fileSize = typeof item === 'string' ? null : item.size;
+                return `
+                  <div style="background:rgba(254,226,226,0.9);border:1px solid rgba(239,68,68,0.28);border-radius:12px;padding:12px 16px;">
+                    <div style="font-weight:600;color:#991b1b;word-break:break-all;">${fileName}</div>
+                    ${fileSize ? `<div style="font-size:12px;color:#b91c1c;margin-top:4px;">Size: ${formatSize(fileSize)}</div>` : ''}
+                  </div>
+                `;
+              }).join('')}
             </div>
-          </div>
-        `;
-      }
-
-      if (results.errors.length > 0) {
-        html += `
-          <div style="margin-bottom:20px;">
-            <h4 style="margin:0 0 12px;color:#ef4444;font-size:14px;display:flex;align-items:center;gap:8px;">
-              <span style="font-size:20px;">❌</span>
-              Errors (${results.errors.length})
-            </h4>
-            <div style="background:#fef2f2;padding:12px;border-radius:8px;border-left:4px solid #ef4444;font-size:13px;">
-              ${results.errors.map(name => `<div style="color:#7f1d1d;margin:4px 0;">• ${name}</div>`).join('')}
+            <div style="margin-top:12px;font-size:12px;color:#991b1b;background:rgba(239,68,68,0.12);border-radius:10px;padding:10px 14px;line-height:1.6;">
+              Try re-uploading these files. If the issue persists, verify the file format and size.
             </div>
           </div>
         `;
       }
 
       html += `
-        <div style="text-align:center;margin-top:20px;">
-          <button onclick="this.closest('.mass-upload-modal').remove();renderOrders();" style="background:#c48b5a;color:white;border:none;padding:12px 24px;border-radius:8px;cursor:pointer;font-weight:600;">Close & Refresh</button>
+        <div style="text-align:center;margin-top:24px;display:flex;justify-content:center;">
+          <button onclick="finishMassUpload()" style="background:#c48b5a;color:white;border:none;padding:14px 28px;border-radius:10px;cursor:pointer;font-weight:600;font-size:14px;box-shadow:0 12px 24px rgba(166,107,56,0.25);">Close & Refresh Orders</button>
         </div>
       `;
 
       resultsListDiv.innerHTML = html;
 
-      // Show toast summary
-      showToast(`Uploaded: ${results.matched.length} matched, ${results.unmatched.length} unmatched`, 
-                results.unmatched.length === 0 ? 'success' : 'info');
+      const toastType = unmatchedCount === 0 && errorCount === 0 ? 'success' : 'info';
+      const toastMessage = `Mass upload complete • ${matchedCount} matched, ${unmatchedCount} unmatched, ${errorCount} error${errorCount === 1 ? '' : 's'}`;
+      showToast(toastMessage, toastType);
     }
+
+    function finishMassUpload() {
+      const modal = document.querySelector('.mass-upload-modal');
+      if (modal) {
+        modal.remove();
+      }
+
+      if (typeof drawOrderRows === 'function') {
+        drawOrderRows();
+      } else if (typeof renderOrders === 'function') {
+        renderOrders();
+      }
+
+      if (typeof updateQuickActionBadges === 'function') {
+        updateQuickActionBadges();
+      }
+    }
+
+    window.finishMassUpload = finishMassUpload;
 
     window.showSampleDetails = function(sampleId) {
       const sample = samples.find(s => s.id === sampleId);
@@ -11899,7 +12202,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
                 <li><strong>orderType</strong>: Always "PS" for SAP imports</li>
                 <li><strong>offerName</strong>: Offer/product name</li>
                 <li><strong>shotType</strong>: Photography style (e.g., "#11 PACKSHOT", "Lifestyle")</li>
-                <li><strong>photoRef</strong>: Photo reference ID</li>
+                <li><strong>photoReference</strong>: Photo reference ID</li>
                 <li><strong>production</strong>: Production method (M&B, GILS, MERRILD - never Photo Box)</li>
                 <li><strong>eventId</strong>: Event identifier (e.g., "A4025052")</li>
                 <li><strong>purchaseGroup</strong>: Purchase group number (100-400)</li>
@@ -11922,7 +12225,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
   "orderType": "PS",
   "offerName": "Premium Dog Food 2kg",
   "shotType": "#11 PACKSHOT",
-  "photoRef": "123456",
+  "photoReference": "#12 FRI OPSTILLING",
   "production": "M&B",
   "eventId": "A4025052",
   "purchaseGroup": 100,
@@ -12044,7 +12347,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
         orderType: 'PS',
         offerName: article.name,
         shotType: shotTypes[Math.floor(Math.random() * shotTypes.length)],
-        photoRef: Math.floor(Math.random() * 1000000).toString(),
+  photoReference: PHOTO_REFERENCE_OPTIONS[Math.floor(Math.random() * PHOTO_REFERENCE_OPTIONS.length)],
         production: productionMethods[Math.floor(Math.random() * productionMethods.length)],
         
         // Legacy fields for backward compatibility
@@ -12052,7 +12355,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
         purchaseGroup: randomPG,
         articleNumber: article.number,
         articleName: article.name,
-        imageRequestId: Math.floor(Math.random() * 1000000).toString(),
+  imageRequestId: `IR${String(Math.floor(Math.random() * 900000) + 100000).padStart(6, '0')}`,
         photoStatus: 'New Shoot - Photographer',
         cloudinaryUrl: null,
         salesOrg: getRandomSalesOrg()
@@ -12579,7 +12882,8 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
             offerId: `1076${Math.floor(Math.random() * 9000) + 1000}`,
             articleNumber: `ART-IMP-${String(importedCount + 1).padStart(3, '0')}`,
             articleName: row.Articles ? row.Articles.split(';')[0] : row.Title,
-            imageRequestId: String(Math.floor(Math.random() * 900000) + 100000),
+            photoReference: row['Photo Reference'] || row.PhotoReference || null,
+            imageRequestId: row['Image Request ID'] || row.ImageRequestId || '',
             photoStatus: 'New Request',
             cloudinaryUrl: null,
             
@@ -12592,6 +12896,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
           };
           
           assignSalesOrgToOrder(newOrder, allOrders.length + importedCount);
+          ensureOrderPhotoMetadata([newOrder]);
 
           // Add to orders array
           allOrders.unshift(newOrder);
@@ -13075,8 +13380,10 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
     // Create order form handler
     document.getElementById('createOrderForm')?.addEventListener('submit', (e) => {
       e.preventDefault();
-      const formData = new FormData(e.target);
-      const buyersData = collectBuyersData();
+    const formData = new FormData(e.target);
+    const buyersData = collectBuyersData();
+    const photoReferenceSelection = (formData.get('photoReference') || '').trim();
+    const rawImageRequestInput = (formData.get('imageRequestId') || '').trim();
       
       // Collect selected photo types
       const selectedPhotoTypes = Array.from(document.querySelectorAll('input[name="photoTypes"]:checked')).map(cb => cb.value);
@@ -13097,11 +13404,15 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
         budget: formData.get('budget') ? Number(formData.get('budget')) : null,
         deliverables: formData.get('deliverables') ? formData.get('deliverables').split(',').map(d => d.trim()).filter(d => d) : [],
         photoTypes: selectedPhotoTypes.length > 0 ? selectedPhotoTypes : ['Product'], // Default to Product if none selected
+        photoReference: photoReferenceSelection || null,
+        imageRequestId: rawImageRequestInput,
         createdBy: authSystem.getCurrentUser().id,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
         comments: []
       };
+
+      ensureOrderPhotoMetadata([newOrder]);
 
       assignSalesOrgToOrder(newOrder, allOrders.length + 1);
 
@@ -15793,9 +16104,12 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
     // Handler functions for modal interactions
     function handleCreateOrder(event) {
       event.preventDefault();
-      const formData = new FormData(event.target);
-      
-      // Build the new order object
+  const formData = new FormData(event.target);
+
+  // Build the new order object
+  const selectedPhotoReference = (formData.get('photoReference') || '').trim();
+  const rawImageRequestInput = (formData.get('imageRequestId') || '').trim();
+
       const newOrder = {
         orderNumber: 'ORD-' + Date.now(),
         title: formData.get('title'),
@@ -15815,12 +16129,15 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
         tactic: formData.get('tactic') || null,  // Capture Tactic from form
         offerId: '10' + Math.floor(Math.random() * 900000 + 100000),
         articleNumber: 'ART-' + Date.now().toString().slice(-6),
-        imageRequestId: Math.floor(Math.random() * 900000 + 100000).toString(),
+  photoReference: selectedPhotoReference || null,
+  imageRequestId: rawImageRequestInput,
         photoStatus: 'New',
         articles: formData.get('articles') ? formData.get('articles').split('\n').filter(a => a.trim()) : [],
         deliverables: ['Product Photography'],
         comments: []
       };
+
+      ensureOrderPhotoMetadata([newOrder]);
 
       assignSalesOrgToOrder(newOrder, window.rkhOrders ? window.rkhOrders.length : null);
 
