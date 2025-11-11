@@ -1415,24 +1415,58 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
     getFilteredOrders(allOrders) {
       if (!this.currentUser) return [];
       
+      console.log('🔍 Filtering orders for user:', this.currentUser.id, this.currentUser.role);
+      console.log('📊 Total orders to filter:', allOrders.length);
+      
       switch (this.currentUser.role) {
         case 'Admin':
         case 'Marketing Manager':
         case 'Agency':
+          console.log('✅ Admin/Marketing/Agency user - returning all orders');
           return allOrders; // Can see all orders
-        case 'Promo Coordinator':
-          // Filter by purchase groups assigned to the promo coordinator
-          if (this.currentUser.purchaseGroups && this.currentUser.purchaseGroups.length > 0) {
-            return allOrders.filter(order => 
-              order.purchaseGroup && this.currentUser.purchaseGroups.includes(order.purchaseGroup)
-            );
-          }
-          // Fallback to old behavior if no purchase groups defined
-          return allOrders.filter(order => order.createdBy === this.currentUser.id);
+        case 'Promo Coordinator': {
+          const userGroups = Array.isArray(this.currentUser.purchaseGroups) ? this.currentUser.purchaseGroups : [];
+          console.log('📋 Promo Coordinator view (no filtering by purchase group). User groups:', userGroups);
+
+          // Annotate orders with access metadata while keeping full visibility.
+          const augmentedOrders = allOrders.map(order => {
+            if (!order || typeof order !== 'object') {
+              return order;
+            }
+
+            const hasAccess = userGroups.length === 0 || !order.purchaseGroup || userGroups.includes(order.purchaseGroup);
+
+            if (Object.prototype.hasOwnProperty.call(order, 'hasPurchaseGroupAccess')) {
+              order.hasPurchaseGroupAccess = hasAccess;
+            } else {
+              try {
+                Object.defineProperty(order, 'hasPurchaseGroupAccess', {
+                  value: hasAccess,
+                  writable: true,
+                  configurable: true,
+                  enumerable: false
+                });
+              } catch (defineError) {
+                console.warn('⚠️ Unable to define non-enumerable access flag, falling back to direct assignment.', defineError);
+                order.hasPurchaseGroupAccess = hasAccess;
+              }
+            }
+
+            return order;
+          });
+
+          console.log('📋 Returning all orders for promo coordinator. ORD-2025-009 included:', augmentedOrders.some(o => o && o.orderNumber === 'ORD-2025-009'));
+          return augmentedOrders;
+        }
         case 'Photographer':
         case 'Photo Box':
-          return allOrders.filter(order => order.assignedTo === this.currentUser.id);
+          console.log('📷 Photographer/Photo Box filtering by assigned orders');
+          const assignedFiltered = allOrders.filter(order => order.assignedTo === this.currentUser.id);
+          console.log('📷 Assigned orders count:', assignedFiltered.length);
+          console.log('📷 ORD-2025-009 included for photographer:', assignedFiltered.some(o => o.orderNumber === 'ORD-2025-009'));
+          return assignedFiltered;
         default:
+          console.log('❌ Unknown role - returning empty array');
           return [];
       }
     }
@@ -2250,23 +2284,33 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       uploadedContent: [
         {
           id: 'file_bilka_001_1',
-          name: 'ENV.000001.jpg',
+          name: 'Premium_Dog_Food_Hero_Shot.jpg',
           type: 'image/jpeg',
           size: 2456789,
-          data: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R+IRjWjBqO6O2mhP//Z',
-          uploadedBy: 'Bilka Auto-Generator',
+          data: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAMCAgMCAgMDAwMEAwMEBQgFBQQEBQoHBwYIDAoMDAsKCwsNDhIQDQ4RDgsLEBYQERMUFRUVDA8XGBYUGBIUFRT/2wBDAQMEBAUEBQkFBQkUDQsNFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBT/wAARCADIAMgDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlbaWmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD9U6KKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooA//Z',
+          uploadedBy: 'Mike Rodriguez',
           uploadedAt: '2025-08-25T10:30:00Z',
-          uploadedByRole: 'System'
+          uploadedByRole: 'Photographer'
         },
         {
           id: 'file_bilka_001_2',
-          name: 'ENV.000002.jpg',
+          name: 'Premium_Dog_Food_Lifestyle.jpg',
           type: 'image/jpeg',
           size: 1987654,
-          data: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R+IRjWjBqO6O2mhP//Z',
-          uploadedBy: 'Bilka Auto-Generator',
+          data: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAMCAgMCAgMDAwMEAwMEBQgFBQQEBQoHBwYIDAoMDAsKCwsNDhIQDQ4RDgsLEBYQERMUFRUVDA8XGBYUGBIUFRT/2wBDAQMEBAUEBQkFBQkUDQsNFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBT/wAARCAC0ALQDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD9U6KKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooA//Z',
+          uploadedBy: 'Mike Rodriguez',
           uploadedAt: '2025-08-25T11:15:00Z',
-          uploadedByRole: 'System'
+          uploadedByRole: 'Photographer'
+        },
+        {
+          id: 'file_bilka_001_3',
+          name: 'Premium_Dog_Food_Detail.jpg',
+          type: 'image/jpeg',
+          size: 2456789,
+          data: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAMCAgMCAgMDAwMEAwMEBQgFBQQEBQoHBwYIDAoMDAsKCwsNDhIQDQ4RDgsLEBYQERMUFRUVDA8XGBYUGBIUFRT/2wBDAQMEBAUEBQkFBQkUDQsNFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBT/wAARCADIAMgDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD9U6KKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooA//Z',
+          uploadedBy: 'Mike Rodriguez',
+          uploadedAt: '2025-08-25T12:30:00Z',
+          uploadedByRole: 'Photographer'
         }
       ]
     },
@@ -2663,30 +2707,30 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
           name: 'ENV.000006.jpg',
           type: 'image/jpeg',
           size: 3123456,
-          data: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R+IRjWjBqO6O2mhP//Z',
-          uploadedBy: 'Bilka Auto-Generator',
+          data: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTAwIiBoZWlnaHQ9IjQwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iNTAwIiBoZWlnaHQ9IjQwMCIgZmlsbD0iI2ZmZTZjYyIvPjx0ZXh0IHg9IjI1MCIgeT0iMTQwIiBmb250LXNpemU9IjI0IiBmb250LXdlaWdodD0iYm9sZCIgZmlsbD0iIzMzMzMzMyIgdGV4dC1hbmNob3I9Im1pZGRsZSI+T1JELVR5cGU6IFNtYXJ0IEhvbWU8L3RleHQ+PHRleHQgeD0iMjUwIiB5PSIxOTAiIGZvbnQtc2l6ZT0iMjAiIGZpbGw9IiMzMzMzMzMiIHRleHQtYW5jaG9yPSJtaWRkbGUiPk9SRC0yMDI1LTAwNzwvdGV4dD48dGV4dCB4PSIyNTAiIHk9IjI1MCIgZm9udC1zaXplPSIzMiIgZmlsbD0iI2ZmYjMxYiIgdGV4dC1hbmNob3I9Im1pZGRsZSI+U1lTVEVNIDE8L3RleHQ+PHRleHQgeD0iMjUwIiB5PSIzMTAiIGZvbnQtc2l6ZT0iMTYiIGZpbGw9IiMzMzMzMzMiIHRleHQtYW5jaG9yPSJtaWRkbGUiPlNtYXJ0IFRoZXJtb3N0YXQgUGhvdG8gMTwvdGV4dD48L3N2Zz4=',
+          uploadedBy: 'Mike Rodriguez',
           uploadedAt: '2025-08-27T12:30:00Z',
-          uploadedByRole: 'System'
+          uploadedByRole: 'Photographer'
         },
         {
           id: 'file_bilka_007_2',
           name: 'ENV.000007.jpg',
           type: 'image/jpeg',
           size: 2456789,
-          data: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R+IRjWjBqO6O2mhP//Z',
-          uploadedBy: 'Bilka Auto-Generator',
+          data: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTAwIiBoZWlnaHQ9IjQwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iNTAwIiBoZWlnaHQ9IjQwMCIgZmlsbD0iI2ZmZTZjYyIvPjx0ZXh0IHg9IjI1MCIgeT0iMTQwIiBmb250LXNpemU9IjI0IiBmb250LXdlaWdodD0iYm9sZCIgZmlsbD0iIzMzMzMzMyIgdGV4dC1hbmNob3I9Im1pZGRsZSI+T1JELVR5cGU6IFNtYXJ0IEhvbWU8L3RleHQ+PHRleHQgeD0iMjUwIiB5PSIxOTAiIGZvbnQtc2l6ZT0iMjAiIGZpbGw9IiMzMzMzMzMiIHRleHQtYW5jaG9yPSJtaWRkbGUiPk9SRC0yMDI1LTAwNzwvdGV4dD48dGV4dCB4PSIyNTAiIHk9IjI1MCIgZm9udC1zaXplPSIzMiIgZmlsbD0iI2ZmYjMxYiIgdGV4dC1hbmNob3I9Im1pZGRsZSI+Q0FNRVJBIDE8L3RleHQ+PHRleHQgeD0iMjUwIiB5PSIzMTAiIGZvbnQtc2l6ZT0iMTYiIGZpbGw9IiMzMzMzMzMiIHRleHQtYW5jaG9yPSJtaWRkbGUiPkNhbWVyYSBQaG90byAyPC90ZXh0Pjwvc3ZnPg==',
+          uploadedBy: 'Mike Rodriguez',
           uploadedAt: '2025-08-27T13:15:00Z',
-          uploadedByRole: 'System'
+          uploadedByRole: 'Photographer'
         },
         {
           id: 'file_bilka_007_3',
           name: 'ENV.000008.jpg',
           type: 'image/jpeg',
           size: 3789456,
-          data: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R+IRjWjBqO6O2mhP//Z',
-          uploadedBy: 'Bilka Auto-Generator',
+          data: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTAwIiBoZWlnaHQ9IjQwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iNTAwIiBoZWlnaHQ9IjQwMCIgZmlsbD0iI2ZmZTZjYyIvPjx0ZXh0IHg9IjI1MCIgeT0iMTQwIiBmb250LXNpemU9IjI0IiBmb250LXdlaWdodD0iYm9sZCIgZmlsbD0iIzMzMzMzMyIgdGV4dC1hbmNob3I9Im1pZGRsZSI+T1JELVR5cGU6IFNtYXJ0IEhvbWU8L3RleHQ+PHRleHQgeD0iMjUwIiB5PSIxOTAiIGZvbnQtc2l6ZT0iMjAiIGZpbGw9IiMzMzMzMzMiIHRleHQtYW5jaG9yPSJtaWRkbGUiPk9SRC0yMDI1LTAwNzwvdGV4dD48dGV4dCB4PSIyNTAiIHk9IjI1MCIgZm9udC1zaXplPSIzMiIgZmlsbD0iI2ZmYjMxYiIgdGV4dC1hbmNob3I9Im1pZGRsZSI+U0VUIExBWU9VVDwvdGV4dD48dGV4dCB4PSIyNTAiIHk9IjMxMCIgZm9udC1zaXplPSIxNiIgZmlsbD0iIzMzMzMzMyIgdGV4dC1hbmNob3I9Im1pZGRsZSI+U2V0dXAgQ29udGV4dCBQaG90byAzPC90ZXh0Pjwvc3ZnPg==',
+          uploadedBy: 'Mike Rodriguez',
           uploadedAt: '2025-08-27T14:00:00Z',
-          uploadedByRole: 'System'
+          uploadedByRole: 'Photographer'
         }
       ]
     },
@@ -2783,7 +2827,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       
       // SAP PMR fields
       eventId: 'A4125060', 
-      purchaseGroup: 101,
+      purchaseGroup: 100,
       group: 99,
       costCenter: 'Bilka Marketing',
       offerId: '10763327',
@@ -2795,6 +2839,38 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       createdBy: 'user-promo1',
       createdAt: '2025-09-01T08:30:00Z',
       assignedTo: 'user-photo1',
+      uploadedContent: [
+        {
+          id: 'file_baby_009_1',
+          name: 'Organic_Baby_Food_Hero_Shot.jpg',
+          type: 'image/jpeg',
+          size: 2845672,
+          data: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTAwIiBoZWlnaHQ9IjQwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iNTAwIiBoZWlnaHQ9IjQwMCIgZmlsbD0iI2ZmZDcwMCIvPjx0ZXh0IHg9IjI1MCIgeT0iMTQwIiBmb250LXNpemU9IjI0IiBmb250LXdlaWdodD0iYm9sZCIgZmlsbD0id2hpdGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiPk9SRC0yMDI1LTAwOTwvdGV4dD48dGV4dCB4PSIyNTAiIHk9IjE5MCIgZm9udC1zaXplPSIyMCIgZmlsbD0iI2ZmZiIgdGV4dC1hbmNob3I9Im1pZGRsZSI+QmFieSBGb29kIExpbmU8L3RleHQ+PHRleHQgeD0iMjUwIiB5PSIyNTAiIGZvbnQtc2l6ZT0iMzIiIGZpbGw9IiNmZjY2MDAiIHRleHQtYW5jaG9yPSJtaWRkbGUiPkpBUiBIT1JP5L4b/OWeAu+A9+S+HOSeAjwvdGV4dD48dGV4dCB4PSIyNTAiIHk9IjMxMCIgZm9udC1zaXplPSIxNiIgZmlsbD0iI2ZmZiIgdGV4dC1hbmNob3I9Im1pZGRsZSI+UHJvZHVjdCBIZXJvIFNob3QgMTwvdGV4dD48L3N2Zz4=',
+          uploadedBy: 'Sarah Johnson',
+          uploadedAt: '2025-09-01T09:00:00Z',
+          uploadedByRole: 'Photographer'
+        },
+        {
+          id: 'file_baby_009_2',
+          name: 'Baby_Food_Ingredients_Detail.jpg',
+          type: 'image/jpeg',
+          size: 2234567,
+          data: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTAwIiBoZWlnaHQ9IjQwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iNTAwIiBoZWlnaHQ9IjQwMCIgZmlsbD0iIzk2YmY2YiIvPjx0ZXh0IHg9IjI1MCIgeT0iMTQwIiBmb250LXNpemU9IjI0IiBmb250LXdlaWdodD0iYm9sZCIgZmlsbD0id2hpdGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiPk9SRC0yMDI1LTAwOTwvdGV4dD48dGV4dCB4PSIyNTAiIHk9IjE5MCIgZm9udC1zaXplPSIyMCIgZmlsbD0iI2ZmZiIgdGV4dC1hbmNob3I9Im1pZGRsZSI+QmFieSBGb29kIExpbmU8L3RleHQ+PHRleHQgeD0iMjUwIiB5PSIyNTAiIGZvbnQtc2l6ZT0iMzIiIGZpbGw9IiNmZmQiIHRleHQtYW5jaG9yPSJtaWRkbGUiPklOR1JFRElFTlQ8L3RleHQ+PHRleHQgeD0iMjUwIiB5PSIzMTAiIGZvbnQtc2l6ZT0iMTYiIGZpbGw9IiNmZmYiIHRleHQtYW5jaG9yPSJtaWRkbGUiPkluZ3JlZGllbnQgQ2xvc2UtdXAgUGhvdG8gMjwvdGV4dD48L3N2Zz4=',
+          uploadedBy: 'Sarah Johnson',
+          uploadedAt: '2025-09-01T09:30:00Z',
+          uploadedByRole: 'Photographer'
+        },
+        {
+          id: 'file_baby_009_3',
+          name: 'Baby_Food_Lifestyle_Shot.jpg',
+          type: 'image/jpeg',
+          size: 3456789,
+          data: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTAwIiBoZWlnaHQ9IjQwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iNTAwIiBoZWlnaHQ9IjQwMCIgZmlsbD0iI2ZmYjNiMyIvPjx0ZXh0IHg9IjI1MCIgeT0iMTQwIiBmb250LXNpemU9IjI0IiBmb250LXdlaWdodD0iYm9sZCIgZmlsbD0id2hpdGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiPk9SRC0yMDI1LTAwOTwvdGV4dD48dGV4dCB4PSIyNTAiIHk9IjE5MCIgZm9udC1zaXplPSIyMCIgZmlsbD0iI2ZmZiIgdGV4dC1hbmNob3I9Im1pZGRsZSI+QmFieSBGb29kIExpbmU8L3RleHQ+PHRleHQgeD0iMjUwIiB5PSIyNTAiIGZvbnQtc2l6ZT0iMzIiIGZpbGw9IiNmZmYiIHRleHQtYW5jaG9yPSJtaWRkbGUiPkxJRkVTVFlMRTwvdGV4dD48dGV4dCB4PSIyNTAiIHk9IjMxMCIgZm9udC1zaXplPSIxNiIgZmlsbD0iI2ZmZiIgdGV4dC1hbmNob3I9Im1pZGRsZSI+QmFieSBMaWZlc3R5bGUgUGhvdG8gMzwvdGV4dD48L3N2Zz4=',
+          uploadedBy: 'Sarah Johnson',
+          uploadedAt: '2025-09-01T10:00:00Z',
+          uploadedByRole: 'Photographer'
+        }
+      ],
       comments: []
     },
     {
@@ -2829,6 +2905,38 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       createdBy: 'user-promo2',
       createdAt: '2025-09-02T10:15:00Z',
       assignedTo: 'user-photo3',
+      uploadedContent: [
+        {
+          id: 'file_laptop_010_1',
+          name: 'Gaming_Laptop_Hero_Shot.jpg',
+          type: 'image/jpeg',
+          size: 3456789,
+          data: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTAwIiBoZWlnaHQ9IjQwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iNTAwIiBoZWlnaHQ9IjQwMCIgZmlsbD0iIzEwMGEwYSIvPjx0ZXh0IHg9IjI1MCIgeT0iMTQwIiBmb250LXNpemU9IjI0IiBmb250LXdlaWdodD0iYm9sZCIgZmlsbD0iI2ZmMDAwMCIgdGV4dC1hbmNob3I9Im1pZGRsZSI+T1JELVR5cGU6IEdBTUlORzwvdGV4dD48dGV4dCB4PSIyNTAiIHk9IjE5MCIgZm9udC1zaXplPSIyMCIgZmlsbD0iI2ZmZiIgdGV4dC1hbmNob3I9Im1pZGRsZSI+T1JELVR5cGU6IFBybyBYMTwvdGV4dD48dGV4dCB4PSIyNTAiIHk9IjI1MCIgZm9udC1zaXplPSIzMiIgZmlsbD0iI2ZmMDAwMCIgdGV4dC1hbmNob3I9Im1pZGRsZSI+TEFDIFE8L3RleHQ+PHRleHQgeD0iMjUwIiB5PSIzMTAiIGZvbnQtc2l6ZT0iMTYiIGZpbGw9IiNmZmYiIHRleHQtYW5jaG9yPSJtaWRkbGUiPkdhbWluZyBMYXB0b3AgSGVybyBQaG90byAxPC90ZXh0Pjwvc3ZnPg==',
+          uploadedBy: 'Marcus Thompson',
+          uploadedAt: '2025-09-02T10:45:00Z',
+          uploadedByRole: 'Photographer'
+        },
+        {
+          id: 'file_laptop_010_2',
+          name: 'RGB_Lighting_Effects_Demo.jpg',
+          type: 'image/jpeg',
+          size: 2987654,
+          data: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTAwIiBoZWlnaHQ9IjQwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iNTAwIiBoZWlnaHQ9IjQwMCIgZmlsbD0iIzIwMjAyMCIvPjxjaXJjbGUgY3g9IjE1MCIgY3k9IjEwMCIgcj0iMzAiIGZpbGw9IiNmZjAwMDAiLz48Y2lyY2xlIGN4PSIyNTAiIGN5PSIxMDAiIHI9IjMwIiBmaWxsPSIjMDBmZjAwIi8+PGNpcmNsZSBjeD0iMzUwIiBjeT0iMTAwIiByPSIzMCIgZmlsbD0iIzAwMDBmZiIvPjx0ZXh0IHg9IjI1MCIgeT0iMjAwIiBmb250LXNpemU9IjI4IiBmaWxsPSIjZmZmIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXdlaWdodD0iYm9sZCI+UkdCIExJR0hUSU5HPC90ZXh0Pjx0ZXh0IHg9IjI1MCIgeT0iMzAwIiBmb250LXNpemU9IjE2IiBmaWxsPSIjZmZmIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5FZmZlY3RzIERlbW8gUGhvdG8gMjwvdGV4dD48L3N2Zz4=',
+          uploadedBy: 'Marcus Thompson',
+          uploadedAt: '2025-09-02T11:15:00Z',
+          uploadedByRole: 'Photographer'
+        },
+        {
+          id: 'file_laptop_010_3',
+          name: 'Macro_Detail_Shots.jpg',
+          type: 'image/jpeg',
+          size: 2456789,
+          data: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTAwIiBoZWlnaHQ9IjQwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iNTAwIiBoZWlnaHQ9IjQwMCIgZmlsbD0iIzMwMzAzMCIvPjx0ZXh0IHg9IjI1MCIgeT0iMTQwIiBmb250LXNpemU9IjI0IiBmb250LXdlaWdodD0iYm9sZCIgZmlsbD0iI2ZmMDAwMCIgdGV4dC1hbmNob3I9Im1pZGRsZSI+T1JEVHR5cGU6IFBybyBYMTwvdGV4dD48dGV4dCB4PSIyNTAiIHk9IjI1MCIgZm9udC1zaXplPSIzMiIgZmlsbD0iI2ZmZiIgdGV4dC1hbmNob3I9Im1pZGRsZSI+TUFDQ08gRkxBU0g8L3RleHQ+PHRleHQgeD0iMjUwIiB5PSIzMTAiIGZvbnQtc2l6ZT0iMTYiIGZpbGw9IiNmZmYiIHRleHQtYW5jaG9yPSJtaWRkbGUiPkRldGFpbCBQaG90byAzPC90ZXh0Pjwvc3ZnPg==',
+          uploadedBy: 'Marcus Thompson',
+          uploadedAt: '2025-09-02T11:45:00Z',
+          uploadedByRole: 'Photographer'
+        }
+      ],
       comments: []
     },
     {
@@ -3178,9 +3286,6 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       status:'Draft', 
       method:'Photographer',
       orderType: 'PS',
-      
-      
-      
       photographer:'Sophie Turner', 
       deadline:'2025-09-22', 
       costCenter:'PG-200',
@@ -4558,10 +4663,6 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
                   <span class="nav-item-icon">📋</span>
                   <span class="nav-item-text">Orders</span>
                 </div>
-                <div class="nav-item" data-tooltip="Scan Article" onclick="showScanArticleRightModal()">
-                  <span class="nav-item-icon">📷</span>
-                  <span class="nav-item-text">Scan Article</span>
-                </div>
               </div>
             </div>
 
@@ -5454,6 +5555,12 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
           color: #a8703f !important;
         }
 
+        #ordersView {
+          width: calc(100% + 64px);
+          margin-left: -32px;
+          margin-right: -32px;
+        }
+
         .orders-filter-bar {
           position: relative;
           display: flex;
@@ -5461,13 +5568,12 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
           align-items: center;
           gap: 12px;
           row-gap: 12px;
-          width: calc(100% + 64px);
-          margin: -32px -32px 24px;
+          width: 100%;
+          margin: 0 0 24px;
           padding: 16px 24px;
           background: #fdf8f1;
-          border-radius: 0 0 16px 16px;
+          border-radius: 12px;
           border: 1px solid rgba(196, 139, 90, 0.18);
-          border-top: none;
           box-shadow: 0 8px 18px rgba(79, 59, 37, 0.08);
         }
 
@@ -5477,13 +5583,18 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
           border: 1px solid rgba(196, 139, 90, 0.18);
           box-shadow: 0 10px 24px rgba(79, 59, 37, 0.1);
           overflow: hidden;
-          width: calc(100% + 64px);
-          margin: -8px -32px 24px;
+          width: 100%;
+          margin: 0 0 24px;
           border-top-left-radius: 0;
           border-top-right-radius: 0;
         }
 
         @media (max-width: 768px) {
+          #ordersView {
+            width: 100%;
+            margin: 0;
+          }
+
           .orders-filter-bar {
             width: 100%;
             margin: 12px 0 20px;
@@ -9474,26 +9585,39 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
 
     // Show order details function (unified modal)
     function showOrderDetails(orderNumber) {
+      console.log('[DEBUG] showOrderDetails called with:', orderNumber);
+
       const baseOrders = Array.isArray(window.rkhOrders) && window.rkhOrders.length
         ? window.rkhOrders
         : (typeof allOrders !== 'undefined' ? allOrders : []);
 
+      console.log('[DEBUG] Base orders count:', baseOrders.length);
+      console.log('[DEBUG] Available order numbers:', baseOrders.map(o => o.orderNumber));
+
       // Prefer finding from base orders so we mutate the canonical object
       let order = baseOrders.find(o => String(o.orderNumber) === String(orderNumber));
+
+      console.log('[DEBUG] Found order in base orders:', !!order);
 
       if (!order && window.authSystem && typeof authSystem.getFilteredOrders === 'function') {
         try {
           const filtered = authSystem.getFilteredOrders(baseOrders) || [];
+          console.log('[DEBUG] Filtered orders count:', filtered.length);
+          console.log('[DEBUG] Filtered order numbers:', filtered.map(o => o.orderNumber));
           order = filtered.find(o => String(o.orderNumber) === String(orderNumber)) || order;
+          console.log('[DEBUG] Found order in filtered orders:', !!order);
         } catch (err) {
           console.error('[Orders] Unable to resolve order from filtered list:', err);
         }
       }
 
       if (!order) {
+        console.error('[DEBUG] Order not found:', orderNumber);
         alert('Order not found: ' + orderNumber);
         return;
       }
+
+      console.log('[DEBUG] Opening modal for order:', order.orderNumber, order.title);
 
       const safeAuth = window.authSystem || {};
       const currentUser = typeof safeAuth.getCurrentUser === 'function' ? safeAuth.getCurrentUser() : { name: 'Guest', role: 'viewer' };
@@ -9531,24 +9655,6 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       const assignedOwner = order.photographer || 'Unassigned';
       const salesOrgLabel = order.salesOrg || 'Not set';
       const budgetMarkup = order.budget ? `<div style="display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-radius:10px;background:rgba(255,255,255,0.6);margin-top:10px;border:1px solid rgba(196,139,90,0.25);"><span style="font-size:12px;letter-spacing:0.05em;color:#82694c;text-transform:uppercase;">Budget</span><span style="font-weight:600;color:#3a2a1d;">${order.budget}</span></div>` : '';
-      const deliverablesList = Array.isArray(order.deliverables) ? order.deliverables : (order.deliverables ? [order.deliverables] : []);
-      const deliverablesMarkup = deliverablesList.length
-        ? deliverablesList.map(item => `
-              <div style="background:rgba(255,255,255,0.85);margin:4px 0;padding:10px 12px;border-radius:10px;border-left:4px solid #f59e0b;color:#3a2a1d;font-size:13px;">
-                ${item}
-              </div>
-            `).join('')
-        : '<div style="color:#7c6248;font-style:italic;">No deliverables specified</div>';
-
-      const buyersMarkup = Array.isArray(order.buyers) && order.buyers.length
-        ? order.buyers.map(buyer => `
-              <div style="background:rgba(255,255,255,0.85);margin:4px 0;padding:10px 12px;border-radius:10px;border-left:4px solid #bfa3d6;">
-                <div style="font-weight:600;color:#3a2a1d;font-size:13px;">${buyer.name}</div>
-                <div style="font-size:12px;color:#7c6248;margin-top:4px;">${Array.isArray(buyer.items) ? buyer.items.join(', ') : (buyer.items || '')}</div>
-              </div>
-            `).join('')
-        : '<div style="color:#7c6248;font-style:italic;">No buyers recorded</div>';
-
       const eventOrBriefBlock = order.eventId ? `
           <div style="padding:20px;border-radius:16px;background:rgba(254,243,199,0.85);border:1px solid rgba(212,163,94,0.35);box-shadow:0 18px 36px rgba(62,44,30,0.12);">
             <h3 style="margin:0 0 16px;font-size:16px;color:#3b2b1a;display:flex;align-items:center;gap:8px;font-weight:700;">🏢 SAP PMR Integration</h3>
@@ -9570,43 +9676,6 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
             <div style="font-size:14px;line-height:1.6;color:#3b2b1a;white-space:pre-wrap;">${order.brief}</div>
           </div>
         ` : '';
-
-      const damSection = (() => {
-        if (typeof window.getDAMAssets !== 'function') {
-          return '';
-        }
-        const damAssets = window.getDAMAssets();
-        const linkedAssets = damAssets.filter(asset => asset.orderNumber === order.orderNumber);
-        const assetsGrid = linkedAssets.length ? `
-          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px;margin-bottom:16px;">
-            ${linkedAssets.map(asset => `
-              <div style="border:1px solid rgba(127,162,132,0.35);border-radius:10px;padding:10px;background:white;">
-                <div style="aspect-ratio:16/9;background:#f1e8dc;border-radius:8px;margin-bottom:8px;display:flex;align-items:center;justify-content:center;overflow:hidden;">
-                  ${asset.type === 'image' && asset.url
-                    ? `<img src="${asset.url}" alt="${asset.filename}" style="width:100%;height:100%;object-fit:cover;" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">` +
-                      `<div style="display:none;width:100%;height:100%;align-items:center;justify-content:center;color:#6b5440;font-size:12px;">🖼️</div>`
-                    : `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#6b5440;font-size:16px;">${asset.type === 'video' ? '🎬' : '📄'}</div>`}
-                </div>
-                <div style="font-size:12px;font-weight:600;color:#3a2a1d;margin-bottom:4px;">${asset.filename && asset.filename.length > 22 ? asset.filename.substring(0, 19) + '...' : (asset.filename || 'Asset')}</div>
-                <div style="font-size:11px;color:#7c6248;margin-bottom:8px;">${asset.category || 'General'} • ${asset.size || ''}</div>
-                <div style="display:flex;gap:6px;">
-                  <button onclick="window.viewDAMAsset('${asset.id}')" style="flex:1;padding:6px 8px;background:#7fa284;color:white;border:none;border-radius:6px;font-size:11px;cursor:pointer;">View</button>
-                  <button onclick="window.downloadDAMAsset('${asset.id}')" style="flex:1;padding:6px 8px;background:#c48b5a;color:white;border:none;border-radius:6px;font-size:11px;cursor:pointer;">Get</button>
-                </div>
-              </div>
-            `).join('')}
-          </div>
-        ` : '<p style="margin:0;font-size:13px;color:#7c6248;font-style:italic;">No assets linked to this order yet.</p>';
-        return `
-          <div style="padding:20px;border-radius:16px;background:rgba(240,253,244,0.85);border:1px solid rgba(127,162,132,0.35);box-shadow:0 18px 36px rgba(62,44,30,0.12);">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
-              <h3 style="margin:0;font-size:16px;color:#3b2b1a;font-weight:700;">🗂️ DAM Assets (${linkedAssets.length})</h3>
-              <button onclick="window.showDAMIntegrationModal()" style="padding:8px 14px;background:#7fa284;color:white;border:none;border-radius:10px;font-size:12px;font-weight:600;cursor:pointer;">${linkedAssets.length > 0 ? 'Upload More' : 'Upload Assets'}</button>
-            </div>
-            ${assetsGrid}
-          </div>
-        `;
-      })();
 
       const uploadFormMarkup = canEditOrder ? `
             <div style="background:rgba(255,255,255,0.9);padding:16px;border-radius:12px;margin-bottom:16px;border:2px dashed rgba(196,139,90,0.4);">
@@ -9674,20 +9743,6 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
                 <span class="status ${order.status.replace(/\s+/g, '')}" style="display:inline-flex;align-items:center;padding:6px 12px;border-radius:999px;font-size:12px;">${order.status}</span>
               </div>
             </div>
-            <div style="padding:18px;border-radius:14px;background:rgba(255,255,255,0.7);border:1px solid rgba(196,139,90,0.25);box-shadow:0 16px 30px rgba(62,44,30,0.12);">
-              <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.12em;color:#7c6248;font-weight:600;">Priority</div>
-              <div style="margin-top:10px;">
-                <span class="status ${order.priority}" style="display:inline-flex;align-items:center;padding:6px 12px;border-radius:999px;font-size:12px;">${order.priority}</span>
-              </div>
-            </div>
-            <div style="padding:18px;border-radius:14px;background:rgba(255,255,255,0.7);border:1px solid rgba(196,139,90,0.25);box-shadow:0 16px 30px rgba(62,44,30,0.12);">
-              <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.12em;color:#7c6248;font-weight:600;">Assigned To</div>
-              <div style="margin-top:10px;font-weight:600;color:#3a2a1d;font-size:14px;">${assignedOwner}</div>
-            </div>
-            <div style="padding:18px;border-radius:14px;background:rgba(255,255,255,0.7);border:1px solid rgba(196,139,90,0.25);box-shadow:0 16px 30px rgba(62,44,30,0.12);">
-              <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.12em;color:#7c6248;font-weight:600;">Production</div>
-              <div style="margin-top:10px;font-weight:600;color:#3a2a1d;font-size:14px;">${order.production || 'Not set'}</div>
-            </div>
           </div>
 
           <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:26px;align-items:start;">
@@ -9744,17 +9799,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
               </div>
               <div>${articlesMarkup}</div>
             </div>
-            <div style="padding:20px;border-radius:16px;background:rgba(255,255,255,0.85);border:1px solid rgba(196,139,90,0.3);box-shadow:0 14px 28px rgba(62,44,30,0.1);">
-              <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.1em;color:#7c6248;font-weight:600;margin-bottom:12px;">Buyers</div>
-              <div style="max-height:220px;overflow-y:auto;">${buyersMarkup}</div>
-            </div>
-            <div style="padding:20px;border-radius:16px;background:rgba(255,255,255,0.85);border:1px solid rgba(196,139,90,0.3);box-shadow:0 14px 28px rgba(62,44,30,0.1);">
-              <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.1em;color:#7c6248;font-weight:600;margin-bottom:12px;">Deliverables</div>
-              <div style="max-height:220px;overflow-y:auto;">${deliverablesMarkup}</div>
-            </div>
           </div>
-
-          ${damSection}
 
           <div style="padding:20px;border-radius:16px;background:rgba(249,250,251,0.9);border:1px solid rgba(196,139,90,0.25);box-shadow:0 14px 28px rgba(62,44,30,0.08);">
             <h3 style="margin:0 0 16px;font-size:16px;color:#3b2b1a;display:flex;align-items:center;gap:8px;font-weight:700;">📁 Uploaded Content</h3>
@@ -10069,6 +10114,11 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
 
       updateOrderFilterSummary(filteredByActiveFilters);
 
+      // Debug: Log filtered orders to see if ORD-2025-009 is included
+      console.log('DEBUG: Total filtered orders:', filteredByActiveFilters.length);
+      console.log('DEBUG: Filtered order numbers:', filteredByActiveFilters.map(o => o.orderNumber));
+      console.log('DEBUG: Looking for ORD-2025-009:', filteredByActiveFilters.find(o => o.orderNumber === 'ORD-2025-009'));
+
       const term = searchBox?.value.toLowerCase() || '';
       const filtered = filteredByActiveFilters.filter(o => 
         !term || 
@@ -10229,6 +10279,11 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
         };
 
         tbody.innerHTML = filtered.map(o => {
+          // Debug: Log each order being rendered
+          console.log('DEBUG: Rendering order:', o.orderNumber, o.title);
+          if (o.orderNumber === 'ORD-2025-009') {
+            console.log('DEBUG: Found ORD-2025-009 in render list:', o);
+          }
           const isOverdue = o.deadline ? (new Date(o.deadline) < new Date() && o.status !== 'Complete' && o.status !== 'Delivered') : false;
           const deadlineStyle = isOverdue ? 'color: #dc2626; font-weight: bold;' : 'color: #4b3b2a;';
           const commentCount = (o.comments || []).length;
