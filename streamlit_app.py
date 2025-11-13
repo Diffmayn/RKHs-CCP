@@ -73,6 +73,13 @@ if asset_base:
 else:
     st.sidebar.info("Using relative 'assets/' paths (works when running locally).")
 
+st.sidebar.markdown(
+  """**Latest updates**
+- Coastal Breeze and Aurora themes now feature refreshed orders table styling.
+- Support menu layering improved so resources stay accessible across themes.
+"""
+)
+
 fallback_literal = json.dumps(fallback_bundle)
 tactics_literal = json.dumps(tactics_config)
 gemini_literal = json.dumps(gemini_config)

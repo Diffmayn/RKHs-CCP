@@ -23,26 +23,511 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
     model: 'google:4@1' // Nano Banana - Google Gemini Flash Image 2.5
   };
   if (typeof window !== 'undefined') window.runwareConfig = runwareConfig;
+const __fallbackThemeCSS = `
+  :root {
+          --theme-app-bg: #f3f4f6;
+          --theme-shell-bg: #f3f4f6;
+          --theme-surface-bg: #fffaf3;
+          --theme-surface-alt-bg: #f7eedf;
+          --theme-border: rgba(196, 139, 90, 0.3);
+          --theme-text: #4b3b2a;
+          --theme-muted: #6b5440;
+          --theme-support-btn: linear-gradient(135deg, #c48b5a 0%, #a67550 100%);
+          --theme-support-btn-text: #ffffff;
+          --theme-input-bg: rgba(255, 250, 243, 0.94);
+          --theme-pane-bg: rgba(255, 250, 243, 0.94);
+          --theme-pane-blur: blur(6px);
+          --theme-pane-border: rgba(196, 139, 90, 0.22);
+          --theme-pane-shadow: 0 16px 30px rgba(79, 59, 37, 0.12);
+          --theme-accent: #e2b684;
+          --theme-accent-soft: #c7925b;
+          --theme-btn-text: #fffaf3;
+          --theme-highlight: rgba(255, 255, 255, 0.35);
+          --theme-surface-gloss: inset 0 1px 0 rgba(255, 255, 255, 0.15);
+          --theme-glow-accent: rgba(196, 139, 90, 0.35);
+          --theme-blur-strength: blur(6px);
+          --theme-export-gradient: linear-gradient(135deg, #efc892, #c48b5a);
+          --theme-refresh-gradient: linear-gradient(135deg, #d2c3ac, #a3876a);
+          --theme-logout-gradient: linear-gradient(135deg, #c76f5c, #a85544);
+        }
 
-  // Load saved API key as early as possible
+        body {
+          background: var(--theme-app-bg) !important;
+          color: var(--theme-text);
+          font-family: 'Inter', 'Segoe UI', sans-serif;
+          transition: background 0.6s ease, color 0.6s ease;
+        }
+
+        body[data-theme='warm'] {
+          --theme-app-bg: #f3f4f6;
+          --theme-shell-bg: #f3f4f6;
+          --theme-surface-bg: #fffaf3;
+          --theme-surface-alt-bg: #f7eedf;
+          --theme-border: rgba(196, 139, 90, 0.3);
+          --theme-text: #4b3b2a;
+          --theme-muted: #6b5440;
+          --theme-support-btn: linear-gradient(135deg, #c48b5a 0%, #a67550 100%);
+          --theme-support-btn-text: #ffffff;
+          --theme-input-bg: rgba(255, 250, 243, 0.94);
+          --theme-pane-bg: rgba(255, 250, 243, 0.94);
+          --theme-pane-blur: blur(6px);
+          --theme-pane-border: rgba(196, 139, 90, 0.22);
+          --theme-pane-shadow: 0 16px 30px rgba(79, 59, 37, 0.12);
+          --theme-accent: #e2b684;
+          --theme-accent-soft: #c7925b;
+          --theme-btn-text: #fffaf3;
+          --theme-highlight: rgba(255, 255, 255, 0.35);
+          --theme-surface-gloss: inset 0 1px 0 rgba(255, 255, 255, 0.12);
+          --theme-glow-accent: rgba(196, 139, 90, 0.45);
+          --theme-blur-strength: blur(6px);
+          --theme-export-gradient: linear-gradient(135deg, #efc892, #c48b5a);
+          --theme-refresh-gradient: linear-gradient(135deg, #d2c3ac, #a3876a);
+          --theme-logout-gradient: linear-gradient(135deg, #c76f5c, #a85544);
+        }
+
+        body[data-theme='cool'] {
+          --theme-app-bg: linear-gradient(160deg, #e9f2ff 0%, #d7e6ff 55%, #f5f9ff 100%);
+          --theme-shell-bg: rgba(233, 242, 255, 0.75);
+          --theme-surface-bg: rgba(248, 251, 255, 0.96);
+          --theme-surface-alt-bg: rgba(224, 236, 255, 0.85);
+          --theme-border: rgba(96, 165, 250, 0.28);
+          --theme-text: #1e293b;
+          --theme-muted: #334155;
+          --theme-support-btn: linear-gradient(135deg, rgba(96, 165, 250, 0.92) 0%, rgba(37, 99, 235, 0.92) 100%);
+          --theme-support-btn-text: #f8fafc;
+          --theme-input-bg: rgba(248, 251, 255, 0.92);
+          --theme-pane-bg: rgba(248, 251, 255, 0.92);
+          --theme-pane-blur: blur(10px);
+          --theme-pane-border: rgba(96, 165, 250, 0.22);
+          --theme-pane-shadow: 0 26px 42px rgba(37, 99, 235, 0.16);
+          --theme-accent: rgba(96, 165, 250, 0.95);
+          --theme-accent-soft: rgba(59, 130, 246, 0.85);
+          --theme-btn-text: #f8fbff;
+          --theme-highlight: rgba(255, 255, 255, 0.5);
+          --theme-surface-gloss: inset 0 1px 0 rgba(255, 255, 255, 0.2);
+          --theme-glow-accent: rgba(96, 165, 250, 0.35);
+          --theme-blur-strength: blur(10px);
+          --theme-export-gradient: linear-gradient(135deg, rgba(147, 197, 253, 0.9), rgba(59, 130, 246, 0.85));
+          --theme-refresh-gradient: linear-gradient(135deg, rgba(134, 239, 172, 0.85), rgba(16, 185, 129, 0.78));
+          --theme-logout-gradient: linear-gradient(135deg, rgba(248, 113, 113, 0.9), rgba(220, 38, 38, 0.82));
+        }
+
+        body[data-theme='midnight'] {
+          --theme-app-bg: radial-gradient(circle at top, rgba(79, 70, 229, 0.12) 0%, rgba(17, 24, 39, 0.95) 55%, rgba(15, 23, 42, 1) 100%);
+          --theme-shell-bg: rgba(17, 24, 39, 0.9);
+          --theme-surface-bg: rgba(30, 41, 59, 0.9);
+          --theme-surface-alt-bg: rgba(17, 24, 39, 0.9);
+          --theme-border: rgba(148, 163, 184, 0.35);
+          --theme-text: #e2e8f0;
+          --theme-muted: #94a3b8;
+          --theme-support-btn: linear-gradient(135deg, rgba(99, 102, 241, 0.95) 0%, rgba(67, 56, 202, 0.95) 100%);
+          --theme-support-btn-text: #f8fafc;
+          --theme-input-bg: rgba(17, 24, 39, 0.8);
+          --theme-pane-bg: rgba(17, 24, 39, 0.88);
+          --theme-pane-blur: blur(12px);
+          --theme-pane-border: rgba(148, 163, 184, 0.32);
+          --theme-pane-shadow: 0 28px 48px rgba(15, 23, 42, 0.45);
+          --theme-accent: rgba(99, 102, 241, 0.95);
+          --theme-accent-soft: rgba(76, 81, 191, 0.82);
+          --theme-btn-text: #f4f7ff;
+          --theme-highlight: rgba(255, 255, 255, 0.28);
+          --theme-surface-gloss: inset 0 1px 0 rgba(148, 163, 184, 0.22);
+          --theme-glow-accent: rgba(99, 102, 241, 0.4);
+          --theme-blur-strength: blur(14px);
+          --theme-export-gradient: linear-gradient(135deg, rgba(99, 102, 241, 0.9), rgba(14, 116, 144, 0.85));
+          --theme-refresh-gradient: linear-gradient(135deg, rgba(56, 189, 248, 0.85), rgba(14, 165, 233, 0.78));
+          --theme-logout-gradient: linear-gradient(135deg, rgba(248, 113, 113, 0.88), rgba(190, 24, 93, 0.8));
+        }
+
+        body[data-theme='aurora'] {
+          --theme-app-bg: radial-gradient(140% 140% at 15% 0%, rgba(217, 228, 255, 0.52), rgba(148, 163, 255, 0.18) 40%, rgba(45, 212, 191, 0.12) 65%, rgba(17, 24, 39, 0.76) 100%);
+          --theme-shell-bg: rgba(14, 23, 42, 0.35);
+          --theme-surface-bg: rgba(255, 255, 255, 0.18);
+          --theme-surface-alt-bg: rgba(173, 216, 255, 0.15);
+          --theme-border: rgba(255, 255, 255, 0.28);
+          --theme-text: rgba(244, 248, 255, 0.98);
+          --theme-muted: rgba(209, 219, 236, 0.85);
+          --theme-support-btn: linear-gradient(135deg, rgba(168, 180, 248, 0.85) 0%, rgba(129, 140, 248, 0.72) 35%, rgba(56, 189, 248, 0.65) 100%);
+          --theme-support-btn-text: #f8fbff;
+          --theme-input-bg: rgba(255, 255, 255, 0.2);
+          --theme-pane-bg: rgba(255, 255, 255, 0.16);
+          --theme-pane-blur: blur(20px);
+          --theme-pane-border: rgba(255, 255, 255, 0.32);
+          --theme-pane-shadow: 0 35px 65px rgba(45, 98, 197, 0.25);
+          --theme-accent: rgba(168, 180, 248, 0.92);
+          --theme-accent-soft: rgba(135, 206, 250, 0.75);
+          --theme-btn-text: rgba(248, 252, 255, 0.98);
+          --theme-highlight: rgba(255, 255, 255, 0.65);
+          --theme-surface-gloss: inset 0 1px 0 rgba(255, 255, 255, 0.42);
+          --theme-glow-accent: rgba(148, 180, 255, 0.45);
+          --theme-blur-strength: blur(20px);
+          --theme-export-gradient: linear-gradient(135deg, rgba(196, 210, 255, 0.92), rgba(148, 180, 255, 0.78));
+          --theme-refresh-gradient: linear-gradient(135deg, rgba(125, 211, 252, 0.82), rgba(45, 212, 191, 0.75));
+          --theme-logout-gradient: linear-gradient(135deg, rgba(251, 191, 36, 0.82), rgba(248, 113, 113, 0.85));
+        }
+
+        #fallback-app {
+          background: var(--theme-shell-bg) !important;
+          color: var(--theme-text);
+        }
+
+        .main-content {
+          background: var(--theme-surface-bg) !important;
+          color: var(--theme-text);
+        }
+
+        #supportMenuDropdown {
+          background: var(--theme-surface-bg) !important;
+          border-color: var(--theme-border) !important;
+          color: var(--theme-text) !important;
+        }
+
+        .support-menu-item {
+          color: var(--theme-text) !important;
+        }
+
+        .support-menu-item:hover {
+          background: var(--theme-surface-alt-bg) !important;
+        }
+
+        .support-menu-label {
+          color: var(--theme-text) !important;
+        }
+
+        .support-menu-desc {
+          color: var(--theme-muted) !important;
+        }
+
+        .support-menu-theme {
+          display: flex;
+          flex-direction: column;
+          gap: 6px;
+          padding: 8px 4px 12px;
+        }
+
+        .support-menu-theme label {
+          font-size: 11px;
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+          font-weight: 600;
+          color: var(--theme-muted) !important;
+        }
+
+        .support-menu-theme select {
+          width: 100%;
+          padding: 9px 12px;
+          border-radius: 12px;
+          border: 1px solid var(--theme-border) !important;
+          background: var(--theme-input-bg) !important;
+          color: var(--theme-text) !important;
+          font-size: 13px;
+          font-weight: 500;
+          cursor: pointer;
+          backdrop-filter: var(--theme-blur-strength);
+          transition: box-shadow 0.2s ease, transform 0.2s ease;
+        }
+
+        .support-menu-theme select:focus {
+          outline: none;
+          box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
+          transform: translateY(-1px);
+        }
+
+        .support-menu-divider {
+          height: 1px;
+          background: var(--theme-border);
+          margin: 8px 4px;
+        }
+
+        .auth-viewport {
+          background: linear-gradient(135deg, #f4e8d8 0%, #e7d2b8 100%);
+        }
+
+        body[data-theme='cool'] .auth-viewport {
+          background: linear-gradient(135deg, rgba(219, 234, 254, 0.9), rgba(191, 219, 254, 0.8));
+        }
+
+        body[data-theme='midnight'] .auth-viewport {
+          background: radial-gradient(circle at top, rgba(79, 70, 229, 0.35), rgba(15, 23, 42, 0.95));
+        }
+
+        body[data-theme='aurora'] .auth-viewport {
+          background: radial-gradient(140% 140% at 15% 0%, rgba(226, 232, 255, 0.4), rgba(148, 163, 255, 0.2) 45%, rgba(45, 212, 191, 0.18) 70%, rgba(17, 24, 39, 0.8) 100%);
+        }
+
+        .support-menu-panel {
+          border-radius: 16px;
+        }
+
+        .auth-card {
+          background: var(--theme-pane-bg) !important;
+          border: 1px solid var(--theme-pane-border) !important;
+          box-shadow: var(--theme-pane-shadow);
+          backdrop-filter: var(--theme-pane-blur);
+        }
+
+        .auth-input {
+          background: var(--theme-input-bg) !important;
+          border: 1px solid var(--theme-border) !important;
+          color: var(--theme-text) !important;
+          border-radius: 12px !important;
+          transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+        }
+
+        .auth-input:focus {
+          border-color: var(--theme-accent);
+          box-shadow: 0 0 0 3px rgba(148, 180, 255, 0.25);
+          outline: none;
+          transform: translateY(-1px);
+        }
+
+        body[data-theme='aurora'] .auth-card {
+          box-shadow: 0 42px 82px rgba(17, 23, 47, 0.45) !important;
+          border-color: rgba(255, 255, 255, 0.28) !important;
+        }
+
+        body[data-theme='aurora'] .auth-input {
+          border-color: rgba(255, 255, 255, 0.24) !important;
+          box-shadow: 0 12px 28px rgba(148, 180, 255, 0.18);
+        }
+
+        .content-pill-btn--support {
+          background: var(--theme-support-btn) !important;
+          color: var(--theme-support-btn-text) !important;
+        }
+
+        .sidebar {
+          background: var(--theme-shell-bg) !important;
+        }
+
+        .glass-surface {
+          position: relative;
+          background: var(--theme-pane-bg);
+          border: 1px solid var(--theme-pane-border);
+          border-radius: inherit;
+          box-shadow: var(--theme-pane-shadow);
+          backdrop-filter: var(--theme-pane-blur);
+        }
+
+        .glass-surface::before {
+          content: '';
+          position: absolute;
+          inset: 0;
+          border-radius: inherit;
+          pointer-events: none;
+          opacity: 0;
+        }
+
+        body[data-theme='aurora'] .glass-surface::before {
+          opacity: 1;
+          background: linear-gradient(135deg, rgba(255, 255, 255, 0.48), transparent 68%);
+          mix-blend-mode: screen;
+        }
+
+        body[data-theme='aurora'] .glass-surface > * {
+          position: relative;
+          z-index: 1;
+        }
+
+        .glass-floating {
+          transition: transform 0.45s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.45s ease;
+        }
+
+        .glass-floating:hover {
+          transform: translateY(-4px);
+        }
+
+        @keyframes auroraPulse {
+          0%, 100% {
+            transform: translateY(0) scale(1);
+            box-shadow: var(--theme-pane-shadow);
+          }
+          50% {
+            transform: translateY(-3px) scale(1.01);
+            box-shadow: 0 40px 65px rgba(96, 165, 250, 0.25);
+          }
+        }
+
+        .content-pill-btn {
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          padding: 10px 22px;
+          font-size: 14px;
+          font-weight: 600;
+          color: var(--theme-btn-text);
+          background: linear-gradient(135deg, var(--theme-accent), var(--theme-accent-soft));
+          border-radius: 999px;
+          border: 1px solid var(--theme-pane-border);
+          box-shadow: 0 12px 24px var(--theme-glow-accent);
+          cursor: pointer;
+          transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+          text-shadow: 0 1px 0 rgba(0, 0, 0, 0.12);
+          backdrop-filter: var(--theme-blur-strength);
+          position: relative;
+          overflow: hidden;
+        }
+
+        .content-pill-btn::after {
+          content: '';
+          position: absolute;
+          inset: 0;
+          border-radius: inherit;
+          background: radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.45), transparent 55%);
+          opacity: 0;
+          transition: opacity 0.25s ease;
+          pointer-events: none;
+        }
+
+        .content-pill-btn:hover::after {
+          opacity: 1;
+        }
+
+        .content-pill-btn:hover {
+          transform: translateY(-1px);
+          box-shadow: 0 20px 34px rgba(79, 59, 37, 0.22);
+          filter: brightness(1.04);
+        }
+
+        .content-pill-btn:active {
+          transform: translateY(0);
+          box-shadow: 0 8px 16px rgba(79, 59, 37, 0.18);
+          filter: brightness(0.98);
+        }
+
+        body[data-theme='aurora'] .content-pill-btn {
+          animation: auroraPulse 9s ease-in-out infinite;
+          box-shadow: 0 28px 54px rgba(96, 165, 250, 0.28);
+        }
+
+        body[data-theme='aurora'] .content-pill-btn:hover {
+          box-shadow: 0 46px 78px rgba(148, 180, 255, 0.4);
+          filter: brightness(1.08);
+        }
+
+        body[data-theme='cool'] .orders-table-container {
+          background: rgba(248, 251, 255, 0.95) !important;
+          border-color: rgba(96, 165, 250, 0.28) !important;
+          box-shadow: 0 30px 55px rgba(37, 99, 235, 0.18) !important;
+        }
+
+        body[data-theme='cool'] .orders-table thead tr {
+          background: linear-gradient(135deg, rgba(147, 197, 253, 0.92), rgba(59, 130, 246, 0.82)) !important;
+          color: #0f172a !important;
+        }
+
+        body[data-theme='cool'] .orders-table tbody {
+          background: transparent !important;
+        }
+
+        body[data-theme='cool'] .orders-table tbody tr {
+          background: rgba(224, 236, 255, 0.55) !important;
+          border-bottom: 1px solid rgba(96, 165, 250, 0.28) !important;
+          color: #1e293b !important;
+        }
+
+        body[data-theme='cool'] .orders-table tbody tr:hover {
+          background: rgba(191, 219, 254, 0.65) !important;
+        }
+
+        body[data-theme='cool'] .orders-table tbody tr.selected-row {
+          background: rgba(96, 165, 250, 0.35) !important;
+          color: #0f172a !important;
+        }
+
+        body[data-theme='aurora'] .content-header {
+          box-shadow: 0 28px 60px rgba(45, 98, 197, 0.22);
+          border-bottom-color: rgba(255, 255, 255, 0.24);
+          position: relative;
+          z-index: 8;
+        }
+
+        body[data-theme='aurora'] .content-header .content-actions {
+          position: relative;
+          z-index: 10;
+        }
+
+        body[data-theme='aurora'] .main-content {
+          box-shadow: 0 60px 120px rgba(17, 23, 47, 0.45);
+          border-color: rgba(255, 255, 255, 0.26);
+        }
+
+        body[data-theme='aurora'] .orders-table-container {
+          background: rgba(173, 216, 255, 0.08) !important;
+          border: 1px solid rgba(173, 216, 255, 0.35) !important;
+          box-shadow: 0 55px 110px rgba(45, 98, 197, 0.32) !important;
+          backdrop-filter: blur(26px) saturate(160%);
+        }
+
+        body[data-theme='aurora'] .orders-table thead tr {
+          background: linear-gradient(135deg, rgba(196, 210, 255, 0.78), rgba(148, 180, 255, 0.6), rgba(56, 189, 248, 0.48)) !important;
+          color: rgba(244, 248, 255, 0.98) !important;
+          text-shadow: 0 4px 12px rgba(17, 24, 39, 0.35);
+        }
+
+        body[data-theme='aurora'] .orders-table tbody {
+          background: transparent !important;
+        }
+
+        body[data-theme='aurora'] .orders-table tbody tr {
+          background: rgba(255, 255, 255, 0.12) !important;
+          border-bottom: 1px solid rgba(148, 180, 255, 0.26) !important;
+          color: rgba(236, 242, 255, 0.95) !important;
+          transition: background 0.25s ease, transform 0.25s ease;
+        }
+
+        body[data-theme='aurora'] .orders-table tbody tr:hover {
+          background: rgba(148, 180, 255, 0.24) !important;
+          transform: translateY(-1px);
+        }
+
+        body[data-theme='aurora'] .orders-table tbody tr.selected-row {
+          background: linear-gradient(135deg, rgba(125, 211, 252, 0.4), rgba(45, 212, 191, 0.38)) !important;
+          color: rgba(244, 248, 255, 1) !important;
+          border-bottom-color: rgba(125, 211, 252, 0.6) !important;
+        }
+
+        body[data-theme='aurora'] .orders-table tbody tr td {
+          border-color: rgba(148, 180, 255, 0.18) !important;
+        }
+
+        body[data-theme='aurora'] .support-menu-item {
+          border: 1px solid transparent;
+        }
+
+        body[data-theme='aurora'] .support-menu-item:hover {
+          box-shadow: 0 18px 32px rgba(148, 180, 255, 0.28);
+          transform: translateY(-1px) scale(1.01);
+        }
+`;
+
+  // Restore Runware and Gemini configuration helpers
   try {
     var _savedRunwareKey = (typeof localStorage !== 'undefined') ? localStorage.getItem('runwareApiKey') : null;
     if (_savedRunwareKey) {
       runwareConfig.apiKey = _savedRunwareKey;
     }
-    if (typeof window !== 'undefined') window.runwareConfig = runwareConfig;
-  } catch (e) {
-    console.warn('[Runware] Unable to access saved configuration:', e);
-    if (typeof window !== 'undefined') window.runwareConfig = runwareConfig;
+    if (typeof window !== 'undefined') {
+      window.runwareConfig = runwareConfig;
+    }
+  } catch (error) {
+    console.warn('[Runware] Unable to access saved configuration:', error);
+    if (typeof window !== 'undefined') {
+      window.runwareConfig = runwareConfig;
+    }
   }
 
   var geminiConfig = (typeof window !== 'undefined' && window.geminiConfig) ? window.geminiConfig : {
     apiKey: '',
-    baseUrl: 'https://generativelanguage.googleapis.com/v1beta', // Google AI Studio endpoint for AIzaSy keys
-    vertexUrl: 'https://us-central1-aiplatform.googleapis.com/v1' // Vertex AI endpoint for OAuth tokens
+    baseUrl: 'https://generativelanguage.googleapis.com/v1beta',
+    vertexUrl: 'https://us-central1-aiplatform.googleapis.com/v1'
   };
-  if (typeof window !== 'undefined') window.geminiConfig = geminiConfig;
-  // Load saved Gemini API key
+  var googleAIConfig = geminiConfig;
+  if (typeof window !== 'undefined') {
+    window.geminiConfig = geminiConfig;
+    window.googleAIConfig = googleAIConfig;
+  }
+
   try {
     var _savedGeminiKey = (typeof localStorage !== 'undefined') ? localStorage.getItem('geminiApiKey') : null;
     var _savedProjectId = (typeof localStorage !== 'undefined') ? localStorage.getItem('geminiProjectId') : null;
@@ -56,123 +541,158 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
     if (_savedLocation) {
       geminiConfig.location = _savedLocation;
     }
-    if (typeof window !== 'undefined') window.geminiConfig = geminiConfig;
-  } catch (e) {
-    console.warn('[Gemini] Unable to access saved configuration:', e);
-    if (typeof window !== 'undefined') window.geminiConfig = geminiConfig;
+  } catch (error) {
+    console.warn('[Gemini] Unable to access saved configuration:', error);
   }
 
   function getRunwareConfig() {
     return (typeof window !== 'undefined' && window.runwareConfig) ? window.runwareConfig : runwareConfig;
   }
 
-  // Helper to always get the active Gemini config
   function getGeminiConfig() {
     return (typeof window !== 'undefined' && window.geminiConfig) ? window.geminiConfig : geminiConfig;
   }
 
-  // Initialize WebSocket stub immediately - will be replaced by full implementation
-  // This ensures window.RunwareWebSocketManager exists even if full code hasn't loaded yet
   if (typeof window !== 'undefined' && !window.RunwareWebSocketManager) {
-    console.log('[Init:0] 🚀 Starting WebSocket stub creation...');
-    console.log('[Init:0] ⏱️ Timestamp:', new Date().toISOString());
-    
-    // Temporary stub that will be replaced
+    console.log('[Init:0] Starting WebSocket stub creation...');
     window._runwareStub = true;
-    
-    // Create a promise that resolves when the real WebSocket class is ready
     window._runwareReady = new Promise((resolve) => {
-      console.log('[Init:0] 📝 Promise created, storing resolver...');
       window._runwareReadyResolver = resolve;
-      console.log('[Init:0] ✅ Resolver stored. Type:', typeof resolve);
     });
   }
 
-  // Simple preview modal - define immediately
-  function showGoogleAIPreviewModal(operation, instructions, result = null) {
-    const modal = document.createElement('div');
-    modal.id = 'googleAIPreviewModal';
-    modal.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: center; z-index: 10000;';
+  function showGoogleAISetupModal() {
+    const existingModal = document.getElementById('googleAISetupModal');
+    if (existingModal) {
+      existingModal.remove();
+    }
 
-    // Check if result has a text response instead of image
-    if (result?.textResponse) {
-      // Display text response for models that don't generate images
-      modal.innerHTML = 
-        '<div style="background: white; border-radius: 12px; padding: 24px; max-width: 600px; width: 90%; max-height: 80vh; overflow-y: auto;">' +
-          '<div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">' +
-            '<div style="display: flex; align-items: center;">' +
-              '<span style="font-size: 28px; margin-right: 12px;">🔮</span>' +
-              '<h3 style="margin: 0; color: #4b3b2a;">Gemini AI Response</h3>' +
-            '</div>' +
-            '<button onclick="document.getElementById(\'googleAIPreviewModal\').remove()" style="background: none; border: none; font-size: 24px; cursor: pointer; color: #6b5440;">&times;</button>' +
-          '</div>' +
-          '<div style="margin-bottom: 16px; padding: 12px; background: #f1e8dc; border-radius: 8px;">' +
-            '<strong>Operation:</strong> ' + operation + '<br>' +
-            '<strong>Instructions:</strong> ' + (instructions || 'No specific instructions provided') +
-          '</div>' +
-          '<div style="padding: 16px; background: #fef3c7; border-left: 4px solid #f59e0b; border-radius: 8px; margin-bottom: 16px;">' +
-            '<p style="margin: 0; color: #92400e;"><strong>⚠️ Note:</strong> Gemini 2.5 Flash is a vision/text model and cannot generate or edit images. It can only analyze and describe images.</p>' +
-            '<p style="margin: 8px 0 0 0; color: #92400e; font-size: 14px;">For image generation, use <strong>Imagen</strong> model or <strong>Runware AI</strong> instead.</p>' +
-          '</div>' +
-          '<div style="padding: 16px; background: #f9fafb; border-radius: 8px; white-space: pre-wrap; font-family: monospace; font-size: 14px;">' +
-            result.textResponse +
-          '</div>' +
-        '</div>';
-      document.body.appendChild(modal);
+    const modal = document.createElement('div');
+    modal.id = 'googleAISetupModal';
+    modal.style.cssText = 'position:fixed; inset:0; display:flex; align-items:center; justify-content:center; background:rgba(15,23,42,0.55); backdrop-filter:blur(6px); z-index:10000;';
+
+    modal.innerHTML = `
+      <div class="glass-surface glass-floating" style="max-width:420px; width:90%; border-radius:20px; padding:24px; background:var(--theme-pane-bg); color:var(--theme-text);">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+          <div>
+            <h2 style="margin:0; font-size:20px;">Runware API Setup</h2>
+            <p style="margin:4px 0 0; font-size:13px; color:var(--theme-muted);">Connect Google Gemini Flash Image 2.5 through Runware.</p>
+          </div>
+          <button type="button" data-role="close-google-ai-setup" style="border:none; background:transparent; color:var(--theme-muted); font-size:20px; cursor:pointer; line-height:1;">&times;</button>
+        </div>
+        <div style="display:grid; gap:12px;">
+          <div style="font-size:13px; color:var(--theme-muted); line-height:1.5;">
+            <strong>Quick steps:</strong>
+            <ol style="margin:8px 0 0 18px; padding:0;">
+              <li>Create or sign in at runware.ai</li>
+              <li>Copy your API key</li>
+              <li>Paste it below and save</li>
+            </ol>
+          </div>
+          <input id="googleAIApiKey" type="text" placeholder="Paste Runware API key" style="width:100%; padding:12px; border-radius:14px; border:1px solid var(--theme-border); background:var(--theme-input-bg); color:var(--theme-text); font-size:14px;">
+          <div style="display:flex; justify-content:flex-end; gap:12px;">
+            <button type="button" id="googleAISetupCancel" style="padding:10px 16px; border-radius:999px; border:1px solid var(--theme-border); background:transparent; color:var(--theme-muted); cursor:pointer;">Cancel</button>
+            <button type="button" id="googleAISetupSave" class="content-pill-btn" style="padding:10px 18px;">Save & Test</button>
+          </div>
+        </div>
+      </div>
+    `;
+
+    const closeButton = modal.querySelector('[data-role="close-google-ai-setup"]');
+    if (closeButton) {
+      closeButton.addEventListener('click', () => modal.remove());
+    }
+
+    const cancelButton = modal.querySelector('#googleAISetupCancel');
+    if (cancelButton) {
+      cancelButton.addEventListener('click', () => modal.remove());
+    }
+
+    const saveButton = modal.querySelector('#googleAISetupSave');
+    if (saveButton) {
+      saveButton.addEventListener('click', saveGoogleAIKey);
+    }
+
+    document.body.appendChild(modal);
+
+    const input = modal.querySelector('#googleAIApiKey');
+    if (input) {
+      input.value = runwareConfig.apiKey || '';
+      input.focus();
+    }
+  }
+
+  function saveGoogleAIKey() {
+    const keyInput = document.getElementById('googleAIApiKey');
+    const apiKey = keyInput ? keyInput.value.trim() : '';
+
+    if (!apiKey) {
+      showToast('Please enter your Runware API key.', 'warning');
       return;
     }
-    
-    // Extract image URL from result
-    let imageUrl = '';
-    if (result?.imageUrl) {
-      imageUrl = result.imageUrl;
-    } else if (result?.candidates?.[0]?.content?.parts?.[0]?.inline_data?.data) {
-      imageUrl = 'data:image/jpeg;base64,' + result.candidates[0].content.parts[0].inline_data.data;
-    } else {
-      // Fallback: create a simple colored div if no image using URL encoding instead of btoa
-      const svg = '<svg width="400" height="300" xmlns="http://www.w3.org/2000/svg"><rect width="400" height="300" fill="#7fa284"/><text x="200" y="150" text-anchor="middle" fill="white" font-family="Arial" font-size="24">Processed</text></svg>';
-      imageUrl = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
+
+    const cfg = getRunwareConfig();
+    cfg.apiKey = apiKey;
+
+    if (typeof localStorage !== 'undefined') {
+      try {
+        localStorage.setItem('runwareApiKey', apiKey);
+        localStorage.setItem('geminiAccessToken', apiKey);
+      } catch (error) {
+        console.warn('[Runware] Unable to persist API key:', error);
+      }
     }
-    
-    modal.innerHTML = 
-      '<div style="background: white; border-radius: 12px; padding: 24px; max-width: 600px; width: 90%; max-height: 80vh; overflow-y: auto;">' +
-        '<div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">' +
-          '<div style="display: flex; align-items: center;">' +
-            '<span style="font-size: 28px; margin-right: 12px;">🚀</span>' +
-            '<h3 style="margin: 0; color: #4b3b2a;">Runware AI Result</h3>' +
-          '</div>' +
-          '<button onclick="document.getElementById(\'googleAIPreviewModal\').remove()" style="background: none; border: none; font-size: 24px; cursor: pointer; color: #6b5440;">&times;</button>' +
-        '</div>' +
-        '<div style="margin-bottom: 16px; padding: 12px; background: #f1e8dc; border-radius: 8px;">' +
-          '<strong>Operation:</strong> ' + operation + '<br>' +
-          '<strong>Instructions:</strong> ' + (instructions || 'No specific instructions provided') + '<br>' +
-          '<strong>Processing Time:</strong> ' + (result?.processingTime || 'N/A') + '<br>' +
-          '<strong>Cost:</strong> ' + (result?.cost || 'N/A') +
-        '</div>' +
-        '<div style="text-align: center; margin-bottom: 20px;">' +
-          '<img src="' + imageUrl + '" style="max-width: 100%; max-height: 400px; border-radius: 8px; border: 2px solid #7fa284;" onload="console.log(\'Image loaded successfully\')" onerror="console.error(\'Image failed to load\', this.src)">' +
-        '</div>' +
-        '<div style="background: #eff6ff; padding: 16px; border-radius: 8px; margin-bottom: 16px;">' +
-          '<h4 style="margin: 0 0 8px; color: #a66b38;">🚀 Google Gemini Flash Image 2.5 Features:</h4>' +
-          '<ul style="margin: 0; padding-left: 20px; color: #a66b38; font-size: 14px;">' +
-            '<li>Advanced AI image generation and editing</li>' +
-            '<li>High-fidelity image processing with WebSocket</li>' +
-            '<li>Real-time image inference capabilities</li>' +
-            '<li>Professional-grade image enhancement</li>' +
-            '<li>Fast processing with Google Gemini Flash Image 2.5 model</li>' +
-            '<li>WebSocket-based real-time communication</li>' +
-          '</ul>' +
-        '</div>' +
-        '<div style="display: flex; gap: 12px; justify-content: flex-end;">' +
-          '<button onclick="document.getElementById(\'googleAIPreviewModal\').remove()" style="padding: 10px 20px; background: #6b5440; color: white; border: none; border-radius: 6px; cursor: pointer;">Close</button>' +
-          '<button onclick="window.saveProcessedImage(\'' + imageUrl + '\', \'' + operation + '\')" style="padding: 10px 20px; background: #c48b5a; color: white; border: none; border-radius: 6px; cursor: pointer;">💾 Save Image</button>' +
-          '<button onclick="alert(\'✅ Result saved successfully!\'); document.getElementById(\'googleAIPreviewModal\').remove();" style="padding: 10px 20px; background: #7fa284; color: white; border: none; border-radius: 6px; cursor: pointer;">✅ Use Result</button>' +
-        '</div>' +
-      '</div>';
-    
-    document.body.appendChild(modal);
+
+    document.getElementById('googleAISetupModal')?.remove();
+    showToast('Runware API configured. Testing connection...', 'success');
+
+    setTimeout(() => {
+      if (typeof testGoogleAIConnection === 'function') {
+        testGoogleAIConnection();
+      }
+    }, 400);
   }
-  window.showGoogleAIPreviewModal = showGoogleAIPreviewModal;
+
+  async function checkGoogleAIAvailability() {
+    const cfg = getRunwareConfig();
+    if (!cfg.apiKey) {
+      return false;
+    }
+    return true;
+  }
+
+  function testGoogleAIConnection() {
+    showToast('Testing Runware API connection...', 'info');
+
+    setTimeout(async () => {
+      const cfg = getRunwareConfig();
+      if (!cfg.apiKey) {
+        showToast('Runware API key is missing.', 'warning');
+        return;
+      }
+
+      try {
+        const isAvailable = await checkGoogleAIAvailability();
+        if (isAvailable) {
+          showToast('Runware API connection looks good!', 'success');
+        } else {
+          showToast('Runware API connection failed.', 'error');
+        }
+      } catch (error) {
+        console.error('Runware connection check failed:', error);
+        showToast('Runware API connection failed.', 'error');
+      }
+    }, 150);
+  }
+
+  window.showGoogleAISetupModal = showGoogleAISetupModal;
+  window.saveGoogleAIKey = saveGoogleAIKey;
+  window.checkGoogleAIAvailability = checkGoogleAIAvailability;
+  window.testGoogleAIConnection = testGoogleAIConnection;
+
+  window.testRunwareConnection = function() {
+    return testGoogleAIConnection();
+  };
 
   // Function to save/download processed images
   function saveProcessedImage(imageUrl, operation = 'processed') {
@@ -331,18 +851,11 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
     }
   };
 
-  window.testGoogleAIConnection = async function() {
-    console.log('ℹ️ Runware connection test skipped (AI integrations disabled).');
-    const cfg = getRunwareConfig();
-    if (!cfg.apiKey) {
-      console.log('ℹ️ No Runware API key present while tests are disabled.');
-    }
-    return false;
-  };
+  window.testGoogleAIConnection = testGoogleAIConnection;
 
   // Test Runware connection (alias for backward compatibility)
   window.testRunwareConnection = function() {
-    return window.testGoogleAIConnection();
+    return testGoogleAIConnection();
   };
 
 
@@ -1424,8 +1937,8 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
   function showLoginScreen() {
 
   root.innerHTML = `
-      <div style="min-height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #f4e8d8 0%, #e7d2b8 100%); padding: 20px; box-sizing: border-box;">
-        <div style="background: #fffaf3; padding: 48px; border-radius: 16px; box-shadow: 0 30px 60px rgba(79, 59, 37, 0.18); max-width: 420px; width: 100%; max-height: 90vh; overflow-y: auto; border: 1px solid rgba(196, 139, 90, 0.2);">
+  <div class="auth-viewport" style="min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; box-sizing: border-box;">
+        <div class="auth-card glass-surface glass-floating" style="background: #fffaf3; padding: 48px; border-radius: 20px; box-shadow: 0 30px 60px rgba(79, 59, 37, 0.18); max-width: 420px; width: 100%; max-height: 90vh; overflow-y: auto; border: 1px solid rgba(196, 139, 90, 0.2);">
           <div style="text-align: center; margin-bottom: 32px;">
             <div style="margin: 0 0 20px 0; text-align: center;">
               <div style="margin-bottom: 8px;">
@@ -1442,19 +1955,21 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
             <div style="margin-bottom: 24px;">
               <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #4b3b2a;">Username</label>
               <input type="text" id="username" required 
-                style="width: 100%; padding: 12px 16px; border: 1px solid rgba(196, 139, 90, 0.35); border-radius: 8px; font-size: 16px; transition: border-color 0.15s; background: #fffaf3; color: #4b3b2a;" 
+                class="auth-input"
+                style="width: 100%; padding: 12px 16px; border: 1px solid rgba(196, 139, 90, 0.35); border-radius: 12px; font-size: 16px; transition: border-color 0.15s; background: #fffaf3; color: #4b3b2a;" 
                 placeholder="Enter your username">
             </div>
 
             <div style="margin-bottom: 32px;">
               <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #4b3b2a;">Password</label>
               <input type="password" id="password" required 
-                style="width: 100%; padding: 12px 16px; border: 1px solid rgba(196, 139, 90, 0.35); border-radius: 8px; font-size: 16px; transition: border-color 0.15s; background: #fffaf3; color: #4b3b2a;" 
+                class="auth-input"
+                style="width: 100%; padding: 12px 16px; border: 1px solid rgba(196, 139, 90, 0.35); border-radius: 12px; font-size: 16px; transition: border-color 0.15s; background: #fffaf3; color: #4b3b2a;" 
                 placeholder="Enter your password">
             </div>
 
-            <button type="submit" 
-              style="width: 100%; background: linear-gradient(135deg, #dfb37d, #c48b5a); color: white; border: none; padding: 14px; border-radius: 10px; font-size: 16px; font-weight: 600; cursor: pointer; transition: transform 0.2s; margin-bottom: 16px; box-shadow: 0 12px 24px rgba(196, 139, 90, 0.35);">
+            <button type="submit" class="content-pill-btn content-pill-btn--export" 
+              style="width: 100%; border: none; padding: 14px; border-radius: 999px; font-size: 16px; font-weight: 600; cursor: pointer; transition: transform 0.2s; margin-bottom: 16px;">
               Sign In
             </button>
           </form>
@@ -4616,10 +5131,28 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
   };
 
   const THEME_STORAGE_KEY = 'rkhThemePreference';
+  const FALLBACK_THEME_STYLE_ID = 'fallback-theme-styles';
+
+  function ensureFallbackThemeCSS() {
+    if (typeof document === 'undefined') return;
+    let styleNode = document.getElementById(FALLBACK_THEME_STYLE_ID);
+    if (!styleNode) {
+      styleNode = document.createElement('style');
+      styleNode.id = FALLBACK_THEME_STYLE_ID;
+      styleNode.textContent = __fallbackThemeCSS;
+      document.head.appendChild(styleNode);
+      return;
+    }
+
+    if (styleNode.textContent !== __fallbackThemeCSS) {
+      styleNode.textContent = __fallbackThemeCSS;
+    }
+  }
   const AVAILABLE_THEMES = {
     warm: { label: 'Warm Classic' },
     cool: { label: 'Coastal Breeze' },
-    midnight: { label: 'Midnight Dusk' }
+    midnight: { label: 'Midnight Dusk' },
+    aurora: { label: 'Aurora Glass' }
   };
 
   let activeTheme = 'warm';
@@ -4642,7 +5175,9 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
   }
 
   function applyTheme(themeKey, options = {}) {
-    const resolvedTheme = Object.prototype.hasOwnProperty.call(AVAILABLE_THEMES, themeKey)
+  ensureFallbackThemeCSS();
+
+  const resolvedTheme = Object.prototype.hasOwnProperty.call(AVAILABLE_THEMES, themeKey)
       ? themeKey
       : 'warm';
 
@@ -4732,7 +5267,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
   <div id="fallback-app" style="min-height: 100vh; margin: 0; background: #f3f4f6; display: flex;">
         
         <!-- Modern Sidebar -->
-        <div class="sidebar" id="sidebar">
+  <div class="sidebar glass-surface glass-floating" id="sidebar">
           <div class="sidebar-header">
             <div class="sidebar-title-container">
                 <img src="/CCP_Logog.png" alt="CCP Logo" class="sidebar-logo" />
@@ -4907,8 +5442,8 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
         </div>
 
         <!-- Main Content Area -->
-        <div class="main-content">
-          <div class="content-header">
+        <div class="main-content glass-surface glass-floating">
+          <div class="content-header glass-surface glass-floating">
             <h1 class="content-title" id="contentTitle">Dashboard Overview</h1>
             <div class="content-actions">
               <button class="content-pill-btn content-pill-btn--export content-pill-btn--compact" onclick="exportToCsv()">📊 <span>Export</span></button>
@@ -4918,7 +5453,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
                   <button id="supportMenuBtn" onclick="toggleSupportMenu()" class="content-pill-btn content-pill-btn--support content-pill-btn--compact" style="background: linear-gradient(135deg, #c48b5a 0%, #a67550 100%); color: white;">
                     <span>📚 Support</span>
                   </button>
-                  <div id="supportMenuDropdown" style="
+                  <div id="supportMenuDropdown" class="support-menu-panel glass-surface glass-floating" style="
                     display: none;
                     position: absolute;
                     top: calc(100% + 8px);
@@ -4944,6 +5479,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
                           <option value="warm">Warm Classic</option>
                           <option value="cool">Coastal Breeze</option>
                           <option value="midnight">Midnight Dusk</option>
+                          <option value="aurora">Aurora Glass</option>
                         </select>
                       </div>
                       <div class="support-menu-divider"></div>
@@ -5349,18 +5885,21 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
         .support-menu-theme select {
           width: 100%;
           padding: 9px 12px;
-          border-radius: 8px;
+          border-radius: 12px;
           border: 1px solid var(--theme-border) !important;
           background: var(--theme-input-bg) !important;
           color: var(--theme-text) !important;
           font-size: 13px;
           font-weight: 500;
           cursor: pointer;
+          backdrop-filter: var(--theme-blur-strength);
+          transition: box-shadow 0.2s ease, transform 0.2s ease;
         }
 
         .support-menu-theme select:focus {
           outline: none;
-          box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+          box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
+          transform: translateY(-1px);
         }
 
         .support-menu-divider {
@@ -5375,26 +5914,11 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
         }
 
         .sidebar {
-          background: var(--theme-shell-bg) !important;
-        }
-
-        body[data-theme='warm'] .sidebar {
-          background: transparent !important;
-        }
-
-        body[data-theme='cool'] .main-content,
-        body[data-theme='midnight'] .main-content {
-          background: var(--theme-surface-bg) !important;
-          color: var(--theme-text);
-        }
-
-        /* Sidebar layout refinements */
-        .sidebar {
           width: 260px;
-          background: transparent;
-          backdrop-filter: none;
-          border: none;
-          box-shadow: none;
+          background: var(--theme-shell-bg);
+          backdrop-filter: var(--theme-pane-blur);
+          border: 1px solid var(--theme-pane-border);
+          box-shadow: var(--theme-pane-shadow);
           transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
           position: relative;
           z-index: 100;
@@ -5507,13 +6031,13 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
         }
 
         .sidebar-toggle {
-          background: transparent;
-          border: none;
+          background: rgba(255, 255, 255, 0.05);
+          border: 1px solid transparent;
           cursor: pointer;
           padding: 8px;
-          border-radius: 12px;
-          transition: color 0.2s ease, transform 0.2s ease;
-          color: #4b3b2a;
+          border-radius: 14px;
+          transition: color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+          color: var(--theme-text);
           font-size: 16px;
           display: flex;
           align-items: center;
@@ -5523,21 +6047,22 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
           top: 34px;
           width: 36px;
           height: 36px;
-          backdrop-filter: none;
-          box-shadow: none;
+          backdrop-filter: var(--theme-pane-blur);
+          box-shadow: 0 10px 18px rgba(15, 23, 42, 0.12);
         }
 
         .sidebar.collapsed .sidebar-toggle {
           right: 12px;
-          color: #3a2617;
+          color: var(--theme-text);
           transform: translateX(-6px);
         }
 
         .sidebar-toggle:hover,
         .sidebar-toggle:focus-visible {
-          color: #311f12;
+          color: var(--theme-text);
           outline: none;
           transform: translateY(-1px);
+          box-shadow: 0 16px 26px rgba(17, 24, 39, 0.18);
         }
 
         .sidebar.collapsed .sidebar-toggle:hover,
@@ -5547,6 +6072,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
 
         .sidebar-toggle:active {
           transform: translateY(1px);
+          box-shadow: 0 8px 14px rgba(17, 24, 39, 0.16);
         }
 
         .sidebar.collapsed .sidebar-toggle:active {
@@ -5567,16 +6093,19 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
         }
 
         .nav-section {
-          margin: 0 12px 10px;
-          border-radius: 12px;
-          background: transparent;
-          border: none;
+          margin: 0 12px 12px;
+          border-radius: 18px;
+          background: rgba(255, 255, 255, 0.02);
+          border: 1px solid transparent;
           overflow: hidden;
-          transition: background 0.2s ease;
+          transition: background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+          backdrop-filter: var(--theme-blur-strength);
         }
 
         .nav-section:hover {
-          background: rgba(75, 59, 42, 0.06);
+          background: var(--theme-surface-alt-bg);
+          border-color: var(--theme-border);
+          box-shadow: 0 16px 24px rgba(15, 23, 42, 0.12);
         }
 
         .nav-section-title {
@@ -5587,7 +6116,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
           gap: 12px;
           background: transparent;
           border: none;
-          color: #4b3b2a;
+          color: var(--theme-muted);
           padding: 14px 18px;
           font-size: 11px;
           font-weight: 600;
@@ -5599,8 +6128,8 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
 
         .nav-section-title:hover,
         .nav-section-title:focus-visible {
-          background: rgba(75, 59, 42, 0.08);
-          color: #3a2617;
+          background: rgba(255, 255, 255, 0.06);
+          color: var(--theme-text);
           outline: none;
         }
 
@@ -5648,29 +6177,58 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
           gap: 12px;
           padding: 10px 16px;
           margin: 2px 4px;
-          border-radius: 10px;
+          border-radius: 14px;
           cursor: pointer;
           transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
           text-decoration: none;
-          color: #4b3b2a;
-          background: transparent;
+          color: var(--theme-text);
+          background: rgba(255, 255, 255, 0.02);
           border: 1px solid transparent;
+          backdrop-filter: var(--theme-blur-strength);
         }
 
         .nav-item:hover,
         .nav-item:focus-visible {
-          background: rgba(75, 59, 42, 0.1);
-          border-color: rgba(75, 59, 42, 0.14);
-          color: #2f2115;
+          background: var(--theme-surface-alt-bg);
+          border-color: var(--theme-border);
+          color: var(--theme-text);
           transform: translateX(4px);
           outline: none;
+          box-shadow: 0 12px 22px rgba(17, 24, 39, 0.12);
         }
 
         .nav-item.active {
-          background: rgba(75, 59, 42, 0.18);
-          color: #2f2115;
-          box-shadow: none;
-          border-color: rgba(75, 59, 42, 0.22);
+          background: var(--theme-surface-alt-bg);
+          color: var(--theme-text);
+          box-shadow: 0 16px 30px rgba(17, 24, 39, 0.12);
+          border-color: var(--theme-border);
+        }
+
+        body[data-theme='aurora'] .nav-item {
+          background: rgba(255, 255, 255, 0.08);
+          border-color: rgba(255, 255, 255, 0.18);
+          box-shadow: 0 25px 45px rgba(45, 98, 197, 0.28);
+        }
+
+        body[data-theme='aurora'] .nav-item:hover,
+        body[data-theme='aurora'] .nav-item:focus-visible {
+          box-shadow: 0 42px 76px rgba(148, 180, 255, 0.35);
+        }
+
+        body[data-theme='aurora'] .nav-item-overdue,
+        body[data-theme='aurora'] .nav-item-overdue:hover {
+          background: rgba(248, 113, 113, 0.16) !important;
+          border-color: rgba(248, 113, 113, 0.28) !important;
+          color: rgba(254, 242, 242, 0.98) !important;
+          box-shadow: 0 28px 46px rgba(248, 113, 113, 0.25) !important;
+        }
+
+        body[data-theme='aurora'] .nav-item-today,
+        body[data-theme='aurora'] .nav-item-today:hover {
+          background: rgba(45, 212, 191, 0.18) !important;
+          border-color: rgba(45, 212, 191, 0.28) !important;
+          color: rgba(240, 253, 250, 0.98) !important;
+          box-shadow: 0 28px 46px rgba(45, 212, 191, 0.22) !important;
         }
 
         .nav-item-icon {
@@ -5826,19 +6384,21 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
           width: 100%;
           margin: 0;
           padding: 16px 24px;
-          background: #fdf8f1;
-          border-radius: 16px 16px 0 0;
-          border: 1px solid rgba(196, 139, 90, 0.18);
-          border-bottom: 1px solid rgba(196, 139, 90, 0.24);
-          box-shadow: 0 10px 24px rgba(79, 59, 37, 0.1);
+          background: var(--theme-surface-bg);
+          border-radius: 18px 18px 0 0;
+          border: 1px solid var(--theme-border);
+          border-bottom: 1px solid var(--theme-border);
+          box-shadow: var(--theme-pane-shadow);
+          backdrop-filter: var(--theme-pane-blur);
           box-sizing: border-box;
         }
 
         .orders-table-container {
-          background: #fffaf3;
-          border-radius: 16px;
-          border: 1px solid rgba(196, 139, 90, 0.18);
-          box-shadow: 0 10px 24px rgba(79, 59, 37, 0.1);
+          background: var(--theme-surface-bg);
+          border-radius: 18px;
+          border: 1px solid var(--theme-border);
+          box-shadow: var(--theme-pane-shadow);
+          backdrop-filter: var(--theme-pane-blur);
           overflow: hidden;
           width: 100%;
           margin: 0 0 24px;
@@ -5872,32 +6432,37 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
         /* Main content area */
         .main-content {
           flex: 1;
-          background: #f3f4f6;
-          backdrop-filter: none;
+          background: var(--theme-surface-bg);
+          backdrop-filter: var(--theme-pane-blur);
           margin: 20px;
           margin-left: 20px;
-          border-radius: 16px;
-          box-shadow: none;
+          border-radius: 20px;
+          border: 1px solid var(--theme-pane-border);
+          box-shadow: var(--theme-pane-shadow);
           overflow: hidden;
           display: flex;
           flex-direction: column;
-          transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1), background 0.4s ease;
         }
 
         .content-header {
-          background: linear-gradient(135deg, rgba(248, 232, 212, 0.95), rgba(237, 209, 179, 0.9));
+          background: linear-gradient(135deg, var(--theme-surface-bg), var(--theme-surface-alt-bg));
           padding: 24px 32px;
-          border-bottom: 1px solid rgba(156, 110, 60, 0.18);
+          border-bottom: 1px solid var(--theme-border);
           display: flex;
           justify-content: space-between;
           align-items: center;
+          backdrop-filter: var(--theme-pane-blur);
+          position: relative;
+          z-index: 5;
         }
 
         .content-title {
           font-size: 24px;
           font-weight: 700;
-          color: #4b3b2a;
+          color: var(--theme-text);
           margin: 0;
+          letter-spacing: -0.01em;
         }
 
         .content-actions {
@@ -5906,45 +6471,16 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
           align-items: center;
         }
 
-        .content-pill-btn {
-          display: inline-flex;
-          align-items: center;
-          gap: 8px;
-          padding: 10px 22px;
-          font-size: 14px;
-          font-weight: 600;
-          color: #fffaf3;
-          background: linear-gradient(135deg, #e2b684, #c7925b);
-          border-radius: 999px;
-          border: 1px solid rgba(108, 78, 52, 0.25);
-          box-shadow: 0 10px 20px rgba(79, 59, 37, 0.18);
-          cursor: pointer;
-          transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
-          text-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
-        }
-
-        .content-pill-btn:hover {
-          transform: translateY(-1px);
-          box-shadow: 0 12px 24px rgba(79, 59, 37, 0.22);
-          filter: brightness(1.02);
-        }
-
-        .content-pill-btn:active {
-          transform: translateY(0);
-          box-shadow: 0 6px 14px rgba(79, 59, 37, 0.18);
-          filter: brightness(0.98);
-        }
-
         .content-pill-btn--export {
-          background: linear-gradient(135deg, #efc892, #c48b5a);
+          background: var(--theme-export-gradient) !important;
         }
 
         .content-pill-btn--refresh {
-          background: linear-gradient(135deg, #d2c3ac, #a3876a);
+          background: var(--theme-refresh-gradient) !important;
         }
 
         .content-pill-btn--logout {
-          background: linear-gradient(135deg, #c76f5c, #a85544);
+          background: var(--theme-logout-gradient) !important;
         }
 
         .content-pill-btn--compact {
