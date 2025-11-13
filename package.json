@@ -32,7 +32,10 @@
     "security:audit": "npm audit",
     "security:fix": "npm audit fix",
     "validate": "npm run lint && npm run test",
-    "precommit": "npm run lint && npm run test"
+    "precommit": "npm run lint && npm run test",
+    "renderer:dev": "vite --config vite.config.ts",
+    "renderer:build": "vite build --config vite.config.ts",
+    "renderer:preview": "vite preview --config vite.config.ts"
   },
   "build": {
     "appId": "com.rkhs.photo-order-management",
@@ -43,7 +46,8 @@
     },
     "files": [
       "src/**/*",
-      "fallback-bundle.js",
+  "fallback-bundle.js",
+  "dist/renderer/**",
       "package.json",
       "!**/*.md",
       "!.git/**/*",
@@ -140,10 +144,14 @@
     "moment": "^2.29.4"
   },
   "devDependencies": {
-    "electron": "^27.0.0",
-    "electron-builder": "^24.6.4",
-    "electron-rebuild": "^3.2.9",
-    "rimraf": "^5.0.5"
+    "@types/node": "^20.12.7",
+  "electron": "^27.0.0",
+  "electron-builder": "^24.6.4",
+  "electron-rebuild": "^3.2.9",
+    "rimraf": "^5.0.5",
+    "tslib": "^2.6.2",
+    "typescript": "^5.4.5",
+  "vite": "^5.2.0"
   },
   "engines": {
     "node": ">=16.0.0",

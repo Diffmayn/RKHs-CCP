@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>RKH's Content Creation Program</title>
+    <link rel="icon" type="image/png" href="../CCP Logog.png" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self' 'unsafe-inline' 'unsafe-eval' data: blob: https:; img-src 'self' data: blob: https:; media-src 'self' data: blob:; script-src 'self' 'unsafe-inline' 'unsafe-eval'; connect-src 'self' https: wss: ws:;"
+    />
+    <meta name="application-name" content="RKH's Content Creation Program" />
+    <meta name="msapplication-TileColor" content="#2563eb" />
+    <meta name="theme-color" content="#2563eb" />
+    <style id="virtual-env-optimizations">
+      * {
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          animation-duration: 0.01ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.01ms !important;
+        }
+      }
+
+      @media (prefers-contrast: high) {
+        body {
+          filter: contrast(1.2);
+        }
+      }
+
+      .desktop-app .drag-region {
+        -webkit-app-region: drag;
+      }
+
+      .desktop-app .no-drag {
+        -webkit-app-region: no-drag;
+      }
+    </style>
+  </head>
+  <body class="h-full m-0 p-0">
+    <div
+      id="loading-screen"
+      class="fixed inset-0 bg-white z-50 flex items-center justify-center"
+      style="display: none;"
+    >
+      <div class="text-center">
+        <div class="relative">
+          <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+          <div
+            class="absolute inset-0 rounded-full h-12 w-12 border-t-2 border-blue-300 mx-auto animate-pulse"
+          ></div>
+        </div>
+        <p class="mt-4 text-gray-600 font-medium">
+          Loading Content Creation Program...
+        </p>
+        <div class="mt-2 text-xs text-gray-400" id="loading-progress">Initializing...</div>
+        <div id="desktop-loading-info" class="hidden mt-4 text-xs text-gray-500 space-y-1">
+          <div id="platform-info"></div>
+          <div id="version-info"></div>
+          <div id="update-status"></div>
+          <div id="network-check" class="text-blue-600"></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="app" class="h-full bg-gray-50"></div>
+
+    <style id="fallback-min-styles">
+      body {
+        font-family: system-ui, Arial, sans-serif;
+        margin: 0;
+        background: #f3f4f6;
+      }
+      .btn-primary {
+        background: #2563eb;
+        color: #fff;
+        padding: 8px 14px;
+        border-radius: 6px;
+        border: none;
+        cursor: pointer;
+      }
+      .btn-secondary {
+        background: #4b5563;
+        color: #fff;
+        padding: 8px 14px;
+        border-radius: 6px;
+        border: none;
+        cursor: pointer;
+      }
+    </style>
+    <noscript>
+      <div style="padding: 1rem; font-family: Arial;">
+        Enable JavaScript to use the application.
+      </div>
+    </noscript>
+    <script type="module" src="/main.ts"></script>
+  </body>
+</html>
