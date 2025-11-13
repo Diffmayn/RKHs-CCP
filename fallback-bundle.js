@@ -665,7 +665,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
 
   // Populate Event ID dropdown based on orders from PMR integration
   window.populateEventIdSuggestions = function() {
-  const ordersList = window.rkhOrders || [];
+    const ordersList = (typeof window.resolveOrdersSnapshot === 'function') ? window.resolveOrdersSnapshot() : (window.rkhOrders || []);
     const eventIds = [...new Set(ordersList.map(order => order.eventId).filter(id => id))];
     
     const filterSelect = document.getElementById('eventIdFilter');
@@ -837,7 +837,8 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       
       if (currentView === 'orders' || !currentView) {
         // Get the currently filtered and searched orders
-  let orders = window.authSystem ? window.authSystem.getFilteredOrders(window.rkhOrders || []) : (window.rkhOrders || []);
+        const baseOrders = (typeof window.resolveOrdersSnapshot === 'function') ? window.resolveOrdersSnapshot() : (window.rkhOrders || []);
+        let orders = window.authSystem ? window.authSystem.getFilteredOrders(baseOrders) : baseOrders;
         
         // Apply search filter if active
         const searchBox = document.getElementById('searchBox');
@@ -1483,8 +1484,13 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
   }
 
   // Initialize auth and check login
-  const authSystem = new AuthSystem();
-  
+  const AuthCtor = window.__AuthServiceCtor || AuthSystem;
+  const authSystem = new AuthCtor();
+
+  if (AuthCtor !== AuthSystem) {
+    console.log('[Auth] Using shimmed AuthService constructor from renderer bundle.');
+  }
+
   // Expose authSystem globally for access from other scopes
   window.authSystem = authSystem;
 
@@ -1608,10 +1614,14 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
   }
 
   // Enhanced sample data with comprehensive features
-  // SAP PMR Purchase Group Mappings
-  const purchaseGroups = {
+  const orderHelpers = window.__OrderHelpers || null;
+  if (!orderHelpers) {
+    console.warn('[OrderHelpers] Service shim was not detected. Falling back to limited inline helpers.');
+  }
+
+  const purchaseGroups = orderHelpers?.PURCHASE_GROUPS || {
     100: 'Groceries',
-    200: 'Fresh Products', 
+    200: 'Fresh Products',
     300: 'Electronics',
     400: 'Home & Garden',
     500: 'Fashion',
@@ -1621,152 +1631,31 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
     900: 'Baby & Kids'
   };
 
-  function createNormalizedArticle({ name, ean, articleNumber, variant, quantity, status, notes, combinedPhoto, fileName, raw }) {
-    const cleanName = (name || '').toString().trim();
-    const cleanEAN = (ean || '').toString().replace(/\s+/g, '');
-    const cleanArticleNumber = (articleNumber || '').toString().trim();
-    const cleanVariant = (variant || '').toString().trim();
-    const cleanQuantity = quantity === 0 || quantity ? quantity : '';
-    const cleanStatus = (status || '').toString().trim();
-    const cleanNotes = (notes || '').toString().trim();
-    const cleanCombinedPhoto = (combinedPhoto || '').toString().trim();
-    const cleanFileName = (fileName || '').toString().trim();
+  const createNormalizedArticle = orderHelpers?.createNormalizedArticle
+    ? (...args) => orderHelpers.createNormalizedArticle(...args)
+    : () => null;
 
-    const primaryLabel = cleanName || cleanArticleNumber || cleanEAN || 'Article';
-    const detailParts = [];
-    if (cleanArticleNumber) detailParts.push(`Article ${cleanArticleNumber}`);
-    if (cleanEAN) detailParts.push(`EAN ${cleanEAN}`);
-    if (cleanVariant) detailParts.push(cleanVariant);
-    if (cleanQuantity !== '' && cleanQuantity !== null) detailParts.push(`Qty ${cleanQuantity}`);
-    const displayText = detailParts.length ? `${primaryLabel} (${detailParts.join(' • ')})` : primaryLabel;
+  const normalizeArticles = orderHelpers?.normalizeArticles
+    ? (...args) => orderHelpers.normalizeArticles(...args)
+    : () => [];
 
-    return {
-      name: cleanName,
-      ean: cleanEAN,
-      articleNumber: cleanArticleNumber,
-      variant: cleanVariant,
-      quantity: cleanQuantity,
-      status: cleanStatus,
-      notes: cleanNotes,
-      combinedPhoto: cleanCombinedPhoto,
-      fileName: cleanFileName,
-      displayText,
-      raw
-    };
-  }
+  const getArticleTextList = orderHelpers?.getArticleTextList
+    ? (...args) => orderHelpers.getArticleTextList(...args)
+    : () => [];
 
-  function normalizeArticles(articles) {
-    if (!articles) {
-      return [];
-    }
+  const formatArticlesAsPlainText = orderHelpers?.formatArticlesAsPlainText
+    ? (...args) => orderHelpers.formatArticlesAsPlainText(...args)
+    : () => '';
 
-    const source = Array.isArray(articles) ? articles : [articles];
+  const renderArticleChips = orderHelpers?.renderArticleChips
+    ? (...args) => orderHelpers.renderArticleChips(...args)
+    : () => '<div style="margin-top:6px;font-size:12px;color:#9ca3af;">No articles linked</div>';
 
-    return source
-      .map((item) => {
-        if (item && typeof item === 'object' && !Array.isArray(item)) {
-          const name = item.name || item.articleName || item.title || item.description || '';
-          const ean = item.ean || item.EAN || item.barcode || item.gtin || '';
-          const articleNumber = item.articleNumber || item.articleNo || item.sku || item.id || '';
-          const variant = item.variant || item.variantName || '';
-          const quantity = item.quantity ?? item.qty ?? '';
-          const status = item.status || '';
-          const notes = item.notes || item.comment || item.details || '';
-          const combinedPhoto = item.combinedPhoto || '';
-          const fileName = item.fileName || '';
+  const renderArticleCards = orderHelpers?.renderArticleCards
+    ? (...args) => orderHelpers.renderArticleCards(...args)
+    : () => '<div style="padding:16px;background:rgba(255, 250, 243, 0.8);border:1px dashed rgba(196, 139, 90, 0.4);border-radius:12px;color:#6b5440;font-size:13px;">No article details available for this order.</div>';
 
-          return createNormalizedArticle({
-            name,
-            ean,
-            articleNumber,
-            variant,
-            quantity,
-            status,
-            notes,
-            combinedPhoto,
-            fileName,
-            raw: item
-          });
-        }
-
-        const text = String(item || '').trim();
-        if (!text) {
-          return null;
-        }
-
-        const eanMatch = text.match(/\[EAN:\s*([^\]]+)\]/i);
-        const articleMatch = text.match(/\[Article(?: Number)?:\s*([^\]]+)\]/i);
-        const cleanedName = text
-          .replace(/\[EAN:[^\]]+\]/i, '')
-          .replace(/\[Article(?: Number)?:[^\]]+\]/i, '')
-          .replace(/\s{2,}/g, ' ')
-          .trim();
-
-        return createNormalizedArticle({
-          name: cleanedName,
-          ean: eanMatch ? eanMatch[1].trim() : '',
-          articleNumber: articleMatch ? articleMatch[1].trim() : '',
-          raw: text
-        });
-      })
-      .filter(Boolean);
-  }
-
-  function getArticleTextList(articles) {
-    return normalizeArticles(articles).map((article) => article.displayText).filter(Boolean);
-  }
-
-  function formatArticlesAsPlainText(articles) {
-    const list = getArticleTextList(articles);
-    return list.length ? list.join(', ') : '';
-  }
-
-  function renderArticleChips(articles, limit = 2) {
-    const normalized = normalizeArticles(articles);
-    if (!normalized.length) {
-      return '<div style="margin-top:6px;font-size:12px;color:#9ca3af;">No articles linked</div>';
-    }
-
-    const chips = normalized.slice(0, limit).map((article) => `
-      <span style="display:inline-flex;align-items:center;padding:3px 10px;background:rgba(196, 139, 90, 0.12);color:#6b5440;border-radius:999px;font-size:11px;font-weight:600;">
-        ${article.name || article.articleNumber || article.ean || 'Article'}
-      </span>
-    `).join('');
-
-    const extra = normalized.length > limit
-      ? `<span style="display:inline-flex;align-items:center;padding:3px 10px;background:rgba(196, 139, 90, 0.12);color:#a66b38;border-radius:999px;font-size:11px;font-weight:600;">+${normalized.length - limit} more</span>`
-      : '';
-
-    return `<div style="margin-top:6px;display:flex;flex-wrap:wrap;gap:6px;">${chips}${extra}</div>`;
-  }
-
-  function renderArticleCards(articles) {
-    const normalized = normalizeArticles(articles);
-    if (!normalized.length) {
-      return '<div style="padding:16px;background:rgba(255, 250, 243, 0.8);border:1px dashed rgba(196, 139, 90, 0.4);border-radius:12px;color:#6b5440;font-size:13px;">No article details available for this order.</div>';
-    }
-
-    return `
-      <div style="background:white;border:1px solid rgba(196, 139, 90, 0.25);border-radius:10px;overflow:hidden;">
-        ${normalized.map((article, index) => {
-          const descriptor = article.name || article.displayText || `Article ${index + 1}`;
-          const details = [];
-          if (article.articleNumber) details.push(`#${article.articleNumber}`);
-          if (article.ean) details.push(`EAN ${article.ean}`);
-          if (article.variant) details.push(article.variant);
-          if (article.quantity !== '' && article.quantity !== null) details.push(`Qty ${article.quantity}`);
-          const baseText = [descriptor, ...details].join(' • ');
-          const noteText = article.notes ? ` – ${article.notes}` : '';
-          return `
-            <div style="display:flex;align-items:center;justify-content:space-between;padding:6px 12px;${index < normalized.length - 1 ? 'border-bottom:1px solid rgba(196, 139, 90, 0.18);' : ''}background:${index % 2 === 0 ? 'transparent' : 'rgba(253, 244, 230, 0.55)'};">
-              <div style="font-size:11px;color:#4b3b2a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${baseText}${noteText}</div>
-              ${article.status ? `<span style="margin-left:12px;background:rgba(127, 162, 132, 0.18);color:#54735d;border-radius:999px;padding:2px 8px;font-size:10px;font-weight:600;white-space:nowrap;">${article.status}</span>` : ''}
-            </div>
-          `;
-        }).join('')}
-      </div>
-    `;
-  }
+  window.purchaseGroups = purchaseGroups;
 
   // Runware API Configuration (already initialized at top). Ensure defaults remain consistent.
   runwareConfig.apiKey = runwareConfig.apiKey || '';
@@ -2124,44 +2013,55 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
   window.importSAPData = function(jsonData) {
     try {
       const sapData = typeof jsonData === 'string' ? JSON.parse(jsonData) : jsonData;
-      
-      // Convert SAP data to our order format
-      const newOrders = sapData.map((item, index) => {
-  const initialPhotoReference = item.photoReference || item.photoRef || item.shotType || null;
+      const parsedData = Array.isArray(sapData) ? sapData.filter(Boolean) : sapData ? [sapData] : [];
+
+      if (parsedData.length === 0) {
+        return { success: false, error: 'No SAP data to import.' };
+      }
+
+      const store = typeof window.__orderStoreInstance === 'object' ? window.__orderStoreInstance : null;
+      const existingOrders = window.getAllOrdersSnapshot
+        ? window.getAllOrdersSnapshot()
+        : (Array.isArray(window.rkhOrders)
+            ? window.rkhOrders
+            : (typeof allOrders !== 'undefined' && Array.isArray(allOrders) ? allOrders : []));
+      const baseLength = Array.isArray(existingOrders) ? existingOrders.length : 0;
+
+      const newOrders = parsedData.map((item, index) => {
+        const initialPhotoReference =
+          item.photoReference ||
+          item.photoRef ||
+          ORDER_PHOTO_REFERENCE_OVERRIDES[item.imageRequestId] ||
+          PHOTO_REFERENCE_OPTIONS[Math.floor(Math.random() * PHOTO_REFERENCE_OPTIONS.length)];
+
         const rawImageRequestId = item.imageRequestId || '';
 
         const order = {
-          orderNumber: item.imageRequestId || `IMG-${Date.now()}-${Math.random().toString(36).substr(2, 5)}`,
-          title: `${item.offerName || item.articleName || 'Product Photography'}`,
+          orderNumber: rawImageRequestId || `IMG-${Date.now()}-${Math.random().toString(36).substr(2, 5)}`,
+          title: item.offerName || item.articleName || 'Product Photography',
           status: item.photoStatus === 'Archive' ? 'Completed' : 'New Request',
-          orderType: 'PS', // Always PS for SAP imports
-          method: item.production || 'M&B', // Use production field (excluding Photo Box)
+          orderType: 'PS',
+          method: item.production || 'M&B',
           photographer: 'Unassigned',
           deadline: getEventDeadline(item.eventId),
-          costCenter: item.costCenter || `PG-${item.purchaseGroup}`,
+          costCenter: item.costCenter || `PG-${item.purchaseGroup || '100'}`,
           purchaseGroup: item.purchaseGroup || 100,
           priority: 'Medium',
-          articles: [item.articleName],
+          articles: [item.articleName || 'Article'],
           budget: 1500,
           deliverables: ['Product Photography'],
-          
-          // SAP PMR specific fields
           page: item.page || 1,
           offerId: item.offerId || 'N/A',
           group: item.group || 99,
           offerName: item.offerName || item.articleName || 'N/A',
           shotType: item.shotType || item.photoStatus || 'N/A',
           photoReference: initialPhotoReference,
-          
-          // Legacy SAP fields
           eventId: item.eventId,
           articleNumber: item.articleNumber,
           articleName: item.articleName,
           imageRequestId: rawImageRequestId,
           photoStatus: item.photoStatus,
           cloudinaryUrl: item.cloudinaryUrl || null,
-          
-          // Standard fields
           createdAt: new Date().toISOString(),
           createdBy: 'sap-import',
           assignedTo: null,
@@ -2172,19 +2072,47 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
 
         ensureOrderPhotoMetadata([order]);
         order.brief = `Photography for ${order.offerName || order.articleName || 'Product Photography'} (Article: ${order.articleNumber || 'N/A'}) as part of Event ${order.eventId || 'N/A'}\nPage: ${order.page || 'N/A'} | Group: ${order.group || 99} | Shot Type: ${order.shotType || 'N/A'} | Photo Ref: ${order.photoReference || 'N/A'}`;
-        assignSalesOrgToOrder(order, allOrders.length + index);
+        assignSalesOrgToOrder(order, baseLength + index);
         return order;
       });
-      
-      // Add new orders to existing orders
-      allOrders.push(...newOrders);
-      assignSalesOrgMetadata(allOrders);
-      
-      // Refresh the current view
-      if (window.currentView) {
-        window.currentView();
+
+      assignSalesOrgMetadata(newOrders);
+
+      if (store && typeof store.upsert === 'function') {
+        newOrders.forEach((order) => store.upsert(order));
+      } else if (Array.isArray(window.rkhOrders)) {
+        window.rkhOrders = [...window.rkhOrders, ...newOrders];
+      } else {
+        window.rkhOrders = [...(Array.isArray(existingOrders) ? existingOrders : []), ...newOrders];
       }
-      
+
+      if (store && typeof window.ensureOrderStoreSubscription === 'function') {
+        window.ensureOrderStoreSubscription();
+      } else if (Array.isArray(window.rkhOrders)) {
+        assignSalesOrgMetadata(window.rkhOrders);
+      }
+
+      try {
+        if (typeof localStorage !== 'undefined') {
+          const snapshot = (typeof window.resolveOrdersSnapshot === 'function') ? window.resolveOrdersSnapshot() : window.rkhOrders;
+          localStorage.setItem('photoOrders', JSON.stringify(snapshot));
+        }
+      } catch (storageError) {
+        console.warn('SAP import storage sync failed', storageError);
+      }
+
+      if (typeof window.drawOrderRows === 'function') {
+        window.drawOrderRows();
+      }
+
+      if (typeof window.populateDashboardContent === 'function') {
+        window.populateDashboardContent();
+      }
+
+      if (typeof window.updateQuickActionBadges === 'function') {
+        window.updateQuickActionBadges();
+      }
+
       return { success: true, imported: newOrders.length };
     } catch (error) {
       console.error('SAP Import Error:', error);
@@ -4457,12 +4385,120 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
 
   ensureOrderPhotoMetadata(allOrders);
 
-  // Expose orders globally for access from other scopes
-  window.rkhOrders = allOrders;
+  const OrderStoreCtor = window.__OrderStoreCtor || null;
+  if (OrderStoreCtor) {
+    if (!window.__orderStoreInstance) {
+      window.__orderStoreInstance = new OrderStoreCtor(allOrders);
+    } else {
+      window.__orderStoreInstance.setAll(allOrders);
+    }
+
+    window.rkhOrders = window.__orderStoreInstance.getAll();
+  } else {
+    window.rkhOrders = allOrders;
+  }
+
+  const getAllOrdersSnapshot = () => {
+    if (window.__orderStoreInstance && typeof window.__orderStoreInstance.getAll === 'function') {
+      return window.__orderStoreInstance.getAll();
+    }
+    return window.rkhOrders || [];
+  };
+
+  window.getAllOrdersSnapshot = getAllOrdersSnapshot;
+
+    function resolveOrdersSnapshot() {
+      if (typeof window.getAllOrdersSnapshot === 'function') {
+        const snapshot = window.getAllOrdersSnapshot();
+        if (Array.isArray(snapshot)) {
+          return snapshot;
+        }
+      }
+
+      if (Array.isArray(window.rkhOrders)) {
+        return window.rkhOrders;
+      }
+
+      if (typeof allOrders !== 'undefined' && Array.isArray(allOrders)) {
+        return allOrders;
+      }
+
+      return [];
+    }
+
+    window.resolveOrdersSnapshot = resolveOrdersSnapshot;
+
+  const ensureOrderStoreSubscription = () => {
+    if (window.__orderStoreSubscriptionActive) {
+      if (typeof window.__orderStoreNotify === 'function') {
+        setTimeout(() => {
+          const orders = getAllOrdersSnapshot();
+          window.__orderStoreNotify(orders);
+        }, 0);
+      }
+      return;
+    }
+
+    const store = window.__orderStoreInstance;
+    if (!store || typeof store.subscribe !== 'function') {
+      return;
+    }
+
+    const handleOrdersChange = (orders) => {
+      const safeOrders = Array.isArray(orders) ? orders : [];
+      window.rkhOrders = safeOrders;
+
+      if (typeof window.updateQuickActionBadges === 'function') {
+        window.updateQuickActionBadges();
+      }
+
+      if (typeof window.drawOrderRows === 'function') {
+        window.drawOrderRows();
+      }
+
+      if (typeof window.populateDashboardContent === 'function') {
+        const dashboardView = document.getElementById('dashboardView');
+        if (!dashboardView || dashboardView.classList.contains('view-active')) {
+          window.populateDashboardContent();
+        }
+      }
+
+      if (typeof window.drawKanbanBoard === 'function') {
+        const kanbanView = document.getElementById('kanbanView');
+        if (!kanbanView || kanbanView.classList.contains('view-active')) {
+          window.drawKanbanBoard();
+        }
+      }
+
+      if (typeof window.drawCalendarView === 'function') {
+        const calendarView = document.getElementById('calendarView');
+        if (!calendarView || calendarView.classList.contains('view-active')) {
+          window.drawCalendarView();
+        }
+      }
+
+      if (typeof window.drawWorkflowView === 'function') {
+        const workflowView = document.getElementById('workflowView');
+        if (!workflowView || workflowView.classList.contains('view-active')) {
+          window.drawWorkflowView();
+        }
+      }
+    };
+
+    const unsubscribe = store.subscribe(handleOrdersChange);
+    window.__orderStoreUnsubscribe = typeof unsubscribe === 'function' ? unsubscribe : null;
+    window.__orderStoreSubscriptionActive = true;
+    window.__orderStoreNotify = handleOrdersChange;
+
+  setTimeout(() => handleOrdersChange(getAllOrdersSnapshot()), 0);
+  };
+
+  window.ensureOrderStoreSubscription = ensureOrderStoreSubscription;
+  ensureOrderStoreSubscription();
 
   // Update quick action badges with real counts
   function updateQuickActionBadges() {
-  const allOrdersList = window.rkhOrders || [];
+  const allOrdersList = (typeof window.resolveOrdersSnapshot === 'function') ? window.resolveOrdersSnapshot() : (window.rkhOrders || []);
   const orders = window.authSystem ? window.authSystem.getFilteredOrders(allOrdersList) : allOrdersList;
     const today = new Date();
     today.setHours(0, 0, 0, 0);
@@ -4633,12 +4669,20 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
     document.head.appendChild(st);
   }
 
-  function getStats(ordersList = allOrders) {
-    const total = ordersList.length;
-    const complete = ordersList.filter(o => o.status === 'Complete' || o.status === 'Delivered').length;
-    const pending = ordersList.filter(o => o.status === 'Pending' || o.status === 'Draft').length;
-    const inProgress = ordersList.filter(o => o.status === 'In Progress').length;
-    const newRequests = ordersList.filter(o => o.status === 'New Request' || o.status === 'Draft').length;
+  function getStats(ordersList) {
+    const resolvedOrders = Array.isArray(ordersList)
+      ? ordersList
+      : (window.getAllOrdersSnapshot
+          ? window.getAllOrdersSnapshot()
+          : (Array.isArray(window.rkhOrders)
+              ? window.rkhOrders
+              : (typeof allOrders !== 'undefined' && Array.isArray(allOrders) ? allOrders : [])));
+
+    const total = resolvedOrders.length;
+    const complete = resolvedOrders.filter(o => o.status === 'Complete' || o.status === 'Delivered').length;
+    const pending = resolvedOrders.filter(o => o.status === 'Pending' || o.status === 'Draft').length;
+    const inProgress = resolvedOrders.filter(o => o.status === 'In Progress').length;
+    const newRequests = resolvedOrders.filter(o => o.status === 'New Request' || o.status === 'Draft').length;
     const totalSamples = samples.length;
     const samplesInTransit = samples.filter(s => s.status.includes('Transit')).length;
     return { total, complete, pending, inProgress, newRequests, totalSamples, samplesInTransit };
@@ -4740,12 +4784,20 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
     }
 
     const currentUser = authSystem.getCurrentUser();
-    let orders = authSystem.getFilteredOrders(allOrders); // Create global orders variable for compatibility
+    const resolveScopedOrders = () => (
+      window.getAllOrdersSnapshot
+        ? window.getAllOrdersSnapshot()
+        : (Array.isArray(window.rkhOrders)
+            ? window.rkhOrders
+            : (typeof allOrders !== 'undefined' && Array.isArray(allOrders) ? allOrders : []))
+    );
+
+    let orders = authSystem.getFilteredOrders(resolveScopedOrders());
     const stats = getStats(orders);
     
     // Function to refresh orders when needed
     function refreshOrders() {
-      orders = authSystem.getFilteredOrders(allOrders);
+      orders = authSystem.getFilteredOrders(resolveScopedOrders());
       return orders;
     }
     
@@ -6161,7 +6213,8 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
             
             if (currentView === 'orders' || !currentView) {
               // Get the currently filtered and searched orders
-              let orders = window.authSystem ? window.authSystem.getFilteredOrders(window.rkhOrders || []) : (window.rkhOrders || []);
+              const baseOrders = (typeof window.resolveOrdersSnapshot === 'function') ? window.resolveOrdersSnapshot() : (window.rkhOrders || []);
+              let orders = window.authSystem ? window.authSystem.getFilteredOrders(baseOrders) : baseOrders;
               
               // Apply search filter if active
               const searchBox = document.getElementById('searchBox');
@@ -7578,7 +7631,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
     };
 
     function getAccessibleOrders() {
-      const sourceOrders = window.rkhOrders || [];
+      const sourceOrders = (typeof window.resolveOrdersSnapshot === 'function') ? window.resolveOrdersSnapshot() : (window.rkhOrders || []);
       assignSalesOrgMetadata(sourceOrders);
       return authSystem && typeof authSystem.getFilteredOrders === 'function'
         ? authSystem.getFilteredOrders(sourceOrders)
@@ -7776,7 +7829,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       ensureBilkaOrdersHavePreview(orders);
     }
 
-    assignSalesOrgMetadata(window.rkhOrders || (typeof allOrders !== 'undefined' ? allOrders : []));
+  assignSalesOrgMetadata((typeof window.resolveOrdersSnapshot === 'function') ? window.resolveOrdersSnapshot() : (typeof allOrders !== 'undefined' ? allOrders : []));
 
     function getSalesOrgValue(order) {
       return normalizeFilterValue(order.salesOrg || order.salesOrganisation || order.salesOrganization || order.format || '');
@@ -8308,12 +8361,19 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
 
     // Function to populate dashboard content
     function populateDashboardContent() {
-      if (!window.rkhOrders || !window.authSystem) {
+      if (!window.authSystem) {
         console.error('Dashboard: Required data not available');
         return;
       }
 
-      const orders = window.authSystem.getFilteredOrders(window.rkhOrders);
+  const baseOrders = (typeof window.resolveOrdersSnapshot === 'function') ? window.resolveOrdersSnapshot() : window.rkhOrders;
+
+      if (!Array.isArray(baseOrders)) {
+        console.error('Dashboard: No orders snapshot available');
+        return;
+      }
+
+      const orders = window.authSystem.getFilteredOrders(baseOrders);
       
       // Calculate stats
       const stats = {
@@ -8393,6 +8453,9 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
 
     // Expose functions globally
     window.populateDashboardContent = populateDashboardContent;
+    if (typeof window.ensureOrderStoreSubscription === 'function') {
+      window.ensureOrderStoreSubscription();
+    }
     
     // Debug workflow button click
     console.log('Workflow functionality initialized');
@@ -8501,6 +8564,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
         modal.style.transform = 'translateX(-100%)';
         setTimeout(() => {
           modal.remove();
+          resetNewOrderArticleContentState();
         }, 300);
       }
 
@@ -8673,6 +8737,210 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
     window.showCreateOrderLeftModal = showCreateOrderLeftModal;
     window.closeCreateOrderLeftModal = closeCreateOrderLeftModal;
 
+    const ARTICLE_CONTENT_TYPE_OPTIONS = [
+      'Packshot',
+      'Hero',
+      'Lifestyle',
+      'Detail',
+      'Editorial',
+      'Campaign',
+      'Social',
+      'Video'
+    ];
+    const DEFAULT_ARTICLE_CONTENT_TYPE = ARTICLE_CONTENT_TYPE_OPTIONS[0];
+
+    if (typeof window !== 'undefined') {
+      window.ARTICLE_CONTENT_TYPE_OPTIONS = ARTICLE_CONTENT_TYPE_OPTIONS;
+    }
+
+    let newOrderArticleContentState = [];
+
+    function resetNewOrderArticleContentState() {
+      newOrderArticleContentState = [];
+      renderArticleContentTypeConfigurator();
+    }
+
+    function escapeHtml(value) {
+      if (value === null || value === undefined) {
+        return '';
+      }
+      return String(value)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    function getNewOrderArticleLines() {
+      const field = document.getElementById('newOrderArticles');
+      if (!field) {
+        return [];
+      }
+      return field.value
+        .split('\n')
+        .map(line => line.trim())
+        .filter(line => line.length > 0);
+    }
+
+    function parseArticleString(raw) {
+      const text = typeof raw === 'string' ? raw.trim() : '';
+      if (!text) {
+        return { name: '', ean: '', articleNumber: '' };
+      }
+
+      const eanMatch = text.match(/\[EAN:\s*([^\]]+)\]/i);
+      const articleMatch = text.match(/\[Article(?: Number)?:\s*([^\]]+)\]/i);
+
+      const cleanName = text
+        .replace(/\[EAN:[^\]]+\]/i, '')
+        .replace(/\[Article(?: Number)?:[^\]]+\]/i, '')
+        .replace(/\s{2,}/g, ' ')
+        .trim();
+
+      return {
+        name: cleanName,
+        ean: eanMatch ? eanMatch[1].trim() : '',
+        articleNumber: articleMatch ? articleMatch[1].trim() : ''
+      };
+    }
+
+    function buildArticlePayloadFromRaw(raw, index) {
+      const fallbackName = `Article ${index + 1}`;
+      let normalized = null;
+
+      if (typeof createNormalizedArticle === 'function') {
+        try {
+          normalized = createNormalizedArticle(raw);
+        } catch (error) {
+          console.warn('[Orders] Unable to normalize article payload', raw, error);
+        }
+      }
+
+      if (normalized) {
+        return {
+          name: normalized.name || fallbackName,
+          ean: normalized.ean || '',
+          articleNumber: normalized.articleNumber || '',
+          variant: normalized.variant || '',
+          quantity: normalized.quantity ?? '',
+          status: normalized.status || '',
+          notes: normalized.notes || '',
+          combinedPhoto: normalized.combinedPhoto || '',
+          fileName: normalized.fileName || ''
+        };
+      }
+
+      const manual = parseArticleString(raw);
+      return {
+        name: manual.name || fallbackName,
+        ean: manual.ean || '',
+        articleNumber: manual.articleNumber || '',
+        variant: '',
+        quantity: '',
+        status: '',
+        notes: '',
+        combinedPhoto: '',
+        fileName: ''
+      };
+    }
+
+    function syncNewOrderArticleContentState() {
+      const lines = getNewOrderArticleLines();
+      if (!lines.length) {
+        newOrderArticleContentState = [];
+        renderArticleContentTypeConfigurator();
+        return;
+      }
+
+      const previous = newOrderArticleContentState.map(entry => ({ ...entry, __used: false }));
+      const next = lines.map(raw => {
+        const matchIndex = previous.findIndex(entry => !entry.__used && entry.raw === raw);
+        if (matchIndex !== -1) {
+          previous[matchIndex].__used = true;
+          return {
+            raw,
+            contentType: previous[matchIndex].contentType || DEFAULT_ARTICLE_CONTENT_TYPE
+          };
+        }
+
+        return {
+          raw,
+          contentType: DEFAULT_ARTICLE_CONTENT_TYPE
+        };
+      });
+
+      newOrderArticleContentState = next;
+      renderArticleContentTypeConfigurator();
+    }
+
+    function renderArticleContentTypeConfigurator() {
+      const container = document.getElementById('articleContentTypeConfigurator');
+      if (!container) {
+        return;
+      }
+
+      if (!newOrderArticleContentState.length) {
+        container.innerHTML = `
+          <div style="padding:14px;border:1px dashed rgba(196, 139, 90, 0.35);border-radius:12px;background:rgba(255,250,243,0.6);color:#6b5440;font-size:12px;">
+            Add article numbers above to configure content type per article.
+          </div>
+        `;
+        return;
+      }
+
+      const rows = newOrderArticleContentState.map((entry, index) => {
+        const options = ARTICLE_CONTENT_TYPE_OPTIONS
+          .map(option => {
+            const selected = option === entry.contentType ? ' selected' : '';
+            return `<option value="${escapeHtml(option)}"${selected}>${escapeHtml(option)}</option>`;
+          })
+          .join('');
+
+        return `
+          <div style="display:grid;grid-template-columns:1fr 160px;gap:12px;align-items:center;padding:10px 12px;border-bottom:1px solid rgba(196, 139, 90, 0.18);">
+            <div style="font-size:12px;color:#4b3b2a;line-height:1.4;word-break:break-word;">
+              <div style="font-weight:600;margin-bottom:4px;">Article ${index + 1}</div>
+              <div style="font-family:'Courier New', monospace;font-size:11px;color:#6b5440;background:rgba(196, 139, 90, 0.08);padding:6px 8px;border-radius:6px;">${escapeHtml(entry.raw)}</div>
+            </div>
+            <div>
+              <label style="display:block;font-size:11px;font-weight:600;color:#6b5440;margin-bottom:4px;">Content Type</label>
+              <select style="width:100%;padding:10px;border:2px solid #ead7c2;border-radius:8px;font-size:12px;background:white;transition:border-color 0.2s ease;" 
+                      onfocus="this.style.borderColor='#c48b5a'" 
+                      onblur="this.style.borderColor='#ead7c2'"
+                      onchange="handleArticleContentTypeChange(${index}, this.value)">
+                ${options}
+              </select>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      container.innerHTML = `
+        <div style="border:1px solid rgba(196, 139, 90, 0.28);border-radius:12px;overflow:hidden;background:white;box-shadow:0 12px 24px rgba(112,82,50,0.08);">
+          <div style="background:rgba(253, 244, 230, 0.65);padding:10px 12px;font-size:12px;font-weight:600;color:#4b3b2a;">Article Content Types</div>
+          <div>${rows}</div>
+        </div>
+      `;
+    }
+
+    function handleNewOrderArticlesInput() {
+      syncNewOrderArticleContentState();
+    }
+
+    function handleArticleContentTypeChange(index, value) {
+      if (!newOrderArticleContentState[index]) {
+        return;
+      }
+
+      const nextValue = (value || '').trim();
+      newOrderArticleContentState[index].contentType = nextValue || DEFAULT_ARTICLE_CONTENT_TYPE;
+      renderArticleContentTypeConfigurator();
+    }
+
+    window.handleNewOrderArticlesInput = handleNewOrderArticlesInput;
+    window.handleArticleContentTypeChange = handleArticleContentTypeChange;
+
     // Show new order modal as large side panel
     function showNewOrderModal() {
       // Check if this modal is already open (toggle behavior)
@@ -8823,10 +9091,12 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
               </label>
               <textarea id="newOrderArticles" name="articles" required rows="4" style="width: 100%; box-sizing: border-box; padding: 14px; border: 2px solid #ead7c2; border-radius: 8px; font-size: 16px; resize: vertical; transition: border-color 0.2s ease; font-family: 'Courier New', monospace;" 
                         placeholder="Scan or enter article numbers here (one per line)...&#10;Example:&#10;5901234567890&#10;5901234567891&#10;5901234567892"
+                        oninput="handleNewOrderArticlesInput()"
                         onfocus="this.style.borderColor='#c48b5a'" onblur="this.style.borderColor='#ead7c2'"></textarea>
               <div style="margin-top: 6px; font-size: 12px; color: #6b5440;">
                 💡 Tip: You can scan barcodes directly into this field, or type article numbers manually (one per line)
               </div>
+              <div id="articleContentTypeConfigurator" style="margin-top: 16px;"></div>
             </div>
 
             <div style="display: flex; gap: 12px; justify-content: flex-end;">
@@ -8839,6 +9109,9 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       `;
 
       document.body.appendChild(modal);
+
+      resetNewOrderArticleContentState();
+      handleNewOrderArticlesInput();
 
       // Add ESC key event listener
       const escKeyHandler = function(event) {
@@ -8902,6 +9175,41 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       const currentUser = authSystem.getCurrentUser();
   const selectedPhotoReference = (formData.get('photoReference') || '').trim();
   const rawImageRequestInput = (formData.get('imageRequestId') || '').trim();
+      const rawArticlesValue = (formData.get('articles') || '').toString();
+
+      syncNewOrderArticleContentState();
+
+      let articleEntries = Array.isArray(newOrderArticleContentState)
+        ? newOrderArticleContentState.map((entry, index) => {
+            const base = buildArticlePayloadFromRaw(entry.raw, index);
+            return {
+              ...base,
+              contentType: entry.contentType || DEFAULT_ARTICLE_CONTENT_TYPE,
+              sourceLine: entry.raw
+            };
+          })
+        : [];
+
+      if (!articleEntries.length && rawArticlesValue.trim()) {
+        const fallbackLines = rawArticlesValue
+          .split('\n')
+          .map(line => line.trim())
+          .filter(Boolean);
+
+        articleEntries = fallbackLines.map((line, index) => {
+          const base = buildArticlePayloadFromRaw(line, index);
+          return {
+            ...base,
+            contentType: DEFAULT_ARTICLE_CONTENT_TYPE,
+            sourceLine: line
+          };
+        });
+      }
+
+      if (!articleEntries.length) {
+        alert('⚠️ Please add at least one article before creating the order.');
+        return;
+      }
 
       // Generate order number
       const orderNumber = 'ORD-' + Date.now();
@@ -8916,7 +9224,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
         budget: formData.get('budget') ? parseFloat(formData.get('budget')) : null,
         photographer: formData.get('photographer') || null,
         brief: formData.get('brief'),
-        articles: formData.get('articles').split('\n').filter(line => line.trim()),
+  articles: articleEntries,
         status: 'Draft',
         createdBy: currentUser.name,
         createdDate: new Date().toLocaleDateString(),
@@ -8930,14 +9238,39 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
 
       ensureOrderPhotoMetadata([newOrder]);
 
-      assignSalesOrgToOrder(newOrder);
+      const baseOrders = window.getAllOrdersSnapshot
+        ? window.getAllOrdersSnapshot()
+        : (Array.isArray(window.rkhOrders)
+            ? window.rkhOrders
+            : (typeof allOrders !== 'undefined' && Array.isArray(allOrders) ? allOrders : []));
 
-      // Add to orders array
-      allOrders.push(newOrder);
-      assignSalesOrgMetadata(allOrders);
+      assignSalesOrgToOrder(newOrder, Array.isArray(baseOrders) ? baseOrders.length : 0);
+      assignSalesOrgMetadata([newOrder]);
 
-      // Save to localStorage
-      localStorage.setItem('photoOrders', JSON.stringify(allOrders));
+      const store = typeof window.__orderStoreInstance === 'object' ? window.__orderStoreInstance : null;
+
+      if (store && typeof store.upsert === 'function') {
+        store.upsert(newOrder);
+      } else if (Array.isArray(window.rkhOrders)) {
+        window.rkhOrders = [...window.rkhOrders, newOrder];
+        assignSalesOrgMetadata(window.rkhOrders);
+      } else {
+        window.rkhOrders = [...(Array.isArray(baseOrders) ? baseOrders : []), newOrder];
+        assignSalesOrgMetadata(window.rkhOrders);
+      }
+
+      if (store && typeof window.ensureOrderStoreSubscription === 'function') {
+        window.ensureOrderStoreSubscription();
+      }
+
+      try {
+        if (typeof localStorage !== 'undefined') {
+          const snapshot = (typeof window.resolveOrdersSnapshot === 'function') ? window.resolveOrdersSnapshot() : window.rkhOrders;
+          localStorage.setItem('photoOrders', JSON.stringify(snapshot));
+        }
+      } catch (storageError) {
+        console.warn('New order storage sync failed', storageError);
+      }
 
       // Show success message
       alert(`✅ Order "${newOrder.title}" created successfully!\n\nOrder Number: ${orderNumber}`);
@@ -8948,6 +9281,13 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       // Refresh the orders view
       if (currentView === 'orders' || currentView === 'dashboard') {
         drawOrderRows();
+        if (typeof window.populateDashboardContent === 'function') {
+          window.populateDashboardContent();
+        }
+      }
+
+      if (typeof window.updateQuickActionBadges === 'function') {
+        window.updateQuickActionBadges();
       }
     }
 
@@ -8981,6 +9321,8 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       articlesField.style.borderColor = '#ead7c2';
         }, 1500);
       }
+
+      handleNewOrderArticlesInput();
     }
 
     // Expose functions globally
@@ -9486,8 +9828,13 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
         padding: 20px;
       `;
 
-      // Get orders data
-      const orders = authSystem.getFilteredOrders(allOrders);
+  // Get orders data
+  const baseOrders = window.getAllOrdersSnapshot
+    ? window.getAllOrdersSnapshot()
+    : (Array.isArray(window.rkhOrders)
+    ? window.rkhOrders
+    : (typeof allOrders !== 'undefined' && Array.isArray(allOrders) ? allOrders : []));
+  const orders = authSystem.getFilteredOrders(baseOrders);
       const searchBox = document.getElementById('searchBox');
       const term = searchBox?.value.toLowerCase() || '';
       const filtered = orders.filter(o =>
@@ -9632,8 +9979,13 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
         padding: 20px;
       `;
 
-      // Get dashboard data
-      const orders = authSystem.getFilteredOrders(allOrders);
+  // Get dashboard data
+  const baseOrders = window.getAllOrdersSnapshot
+    ? window.getAllOrdersSnapshot()
+    : (Array.isArray(window.rkhOrders)
+    ? window.rkhOrders
+    : (typeof allOrders !== 'undefined' && Array.isArray(allOrders) ? allOrders : []));
+  const orders = authSystem.getFilteredOrders(baseOrders);
       const totalOrders = orders.length;
       const newOrders = orders.filter(o => o.status === 'New Request' || o.status === 'Draft').length;
       const inProgressOrders = orders.filter(o => o.status === 'In Progress').length;
@@ -9753,9 +10105,11 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
     function showOrderDetails(orderNumber) {
       console.log('[DEBUG] showOrderDetails called with:', orderNumber);
 
-      const baseOrders = Array.isArray(window.rkhOrders) && window.rkhOrders.length
-        ? window.rkhOrders
-        : (typeof allOrders !== 'undefined' ? allOrders : []);
+      const baseOrders = window.getAllOrdersSnapshot
+        ? window.getAllOrdersSnapshot()
+        : (Array.isArray(window.rkhOrders) && window.rkhOrders.length
+            ? window.rkhOrders
+            : (typeof allOrders !== 'undefined' ? allOrders : []));
 
       console.log('[DEBUG] Base orders count:', baseOrders.length);
       console.log('[DEBUG] Available order numbers:', baseOrders.map(o => o.orderNumber));
@@ -10261,15 +10615,18 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       const tbody = document.getElementById('ordersBody');
       const searchBox = document.getElementById('searchBox');
       
-      if (!window.rkhOrders) {
-        return;
-      }
-      
       if (!window.authSystem) {
         return;
       }
 
-      const orders = window.authSystem.getFilteredOrders(window.rkhOrders);
+  const baseOrders = (typeof window.resolveOrdersSnapshot === 'function') ? window.resolveOrdersSnapshot() : window.rkhOrders;
+
+      if (!Array.isArray(baseOrders)) {
+        console.warn('drawOrderRows: no orders available to render');
+        return;
+      }
+
+      const orders = window.authSystem.getFilteredOrders(baseOrders);
       let filteredByActiveFilters = hasPrimaryOrderFilter() ? applyActiveOrderFilters(orders) : orders;
       let statusFiltered = { orders: filteredByActiveFilters, label: '' };
 
@@ -10281,8 +10638,8 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       updateOrderFilterSummary(filteredByActiveFilters);
 
       // Debug: Log filtered orders to see if ORD-2025-009 is included
-      console.log('DEBUG: Total filtered orders:', filteredByActiveFilters.length);
-      console.log('DEBUG: Filtered order numbers:', filteredByActiveFilters.map(o => o.orderNumber));
+  console.log('DEBUG: Total filtered orders:', filteredByActiveFilters.length);
+  console.log('DEBUG: Filtered order numbers:', filteredByActiveFilters.map(o => o.orderNumber));
       console.log('DEBUG: Looking for ORD-2025-009:', filteredByActiveFilters.find(o => o.orderNumber === 'ORD-2025-009'));
 
       const term = searchBox?.value.toLowerCase() || '';
@@ -10389,6 +10746,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
             const purchaseGroup = formatPurchaseGroupDisplay(purchaseGroupValue);
             const combinedPhoto = raw.combinedPhoto || article.combinedPhoto || placeholderSpan;
             const fileName = raw.fileName || article.fileName || placeholderSpan;
+            const contentType = article.contentType || raw.contentType || placeholderSpan;
 
             // Check for duplicates in combined photo values
             const allCombinedPhotos = dataSource.map(a => {
@@ -10411,13 +10769,14 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
                 <td style="padding:6px 10px;border-bottom:1px solid rgba(196, 139, 90, 0.18);font-size:11px;">${articleName || placeholderSpan}</td>
                 <td style="padding:6px 10px;border-bottom:1px solid rgba(196, 139, 90, 0.18);font-size:11px;">${netContent || placeholderSpan}</td>
                 <td style="padding:6px 10px;border-bottom:1px solid rgba(196, 139, 90, 0.18);font-size:11px;">${purchaseGroup || placeholderSpan}</td>
+                <td style="padding:6px 10px;border-bottom:1px solid rgba(196, 139, 90, 0.18);font-size:11px;">${contentType || placeholderSpan}</td>
                 <td style="padding:6px 10px;border-bottom:1px solid rgba(196, 139, 90, 0.18);font-size:11px;${combinedPhotoStyle}">${combinedPhoto || placeholderSpan}</td>
                 <td style="padding:6px 10px;border-bottom:1px solid rgba(196, 139, 90, 0.18);font-size:11px;">${fileName || placeholderSpan}</td>
               </tr>
             `;
           }).join('') : `
             <tr>
-              <td colspan="8" style="padding:12px;color:#9ca3af;text-align:center;border-bottom:1px solid rgba(196, 139, 90, 0.2);">No article details available for this order.</td>
+              <td colspan="9" style="padding:12px;color:#9ca3af;text-align:center;border-bottom:1px solid rgba(196, 139, 90, 0.2);">No article details available for this order.</td>
             </tr>
           `;
 
@@ -10432,6 +10791,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
                     <th style="text-align:left;padding:8px 10px;font-size:11px;color:#6b5440;font-weight:600;">Article Name</th>
                     <th style="text-align:left;padding:8px 10px;font-size:11px;color:#6b5440;font-weight:600;">Net Content</th>
                     <th style="text-align:left;padding:8px 10px;font-size:11px;color:#6b5440;font-weight:600;">Purchase Group</th>
+                    <th style="text-align:left;padding:8px 10px;font-size:11px;color:#6b5440;font-weight:600;">Content Type</th>
                     <th style="text-align:left;padding:8px 10px;font-size:11px;color:#6b5440;font-weight:600;">Combined Photo</th>
                     <th style="text-align:left;padding:8px 10px;font-size:11px;color:#6b5440;font-weight:600;">File Name</th>
                   </tr>
@@ -10566,21 +10926,37 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
 
     // Kanban Board Functions
     function drawKanbanBoard() {
-      const currentUser = authSystem.getCurrentUser();
-      const orders = authSystem.getFilteredOrders(allOrders);
       const board = document.getElementById('kanbanBoard');
-      
-      // Add visible debug info
+      if (!board) {
+        return;
+      }
+
+      const safeAuth = window.authSystem || null;
+      const baseOrders = window.getAllOrdersSnapshot
+        ? window.getAllOrdersSnapshot()
+        : (Array.isArray(window.rkhOrders)
+            ? window.rkhOrders
+            : (typeof allOrders !== 'undefined' && Array.isArray(allOrders) ? allOrders : []));
+      const orders = safeAuth && typeof safeAuth.getFilteredOrders === 'function'
+        ? safeAuth.getFilteredOrders(baseOrders)
+        : baseOrders;
+      const currentUser = safeAuth && typeof safeAuth.getCurrentUser === 'function'
+        ? safeAuth.getCurrentUser()
+        : null;
+
       if (!currentUser) {
         board.innerHTML = '<div style="color: red; padding: 20px;">ERROR: No current user found</div>';
         return;
       }
-      
+
       if (!orders || orders.length === 0) {
-        board.innerHTML = '<div style="color: red; padding: 20px;">ERROR: No orders found. Total orders: ' + (allOrders ? allOrders.length : 'undefined') + '</div>';
+        board.innerHTML = `<div style="color: red; padding: 20px;">ERROR: No orders found. Total orders: ${Array.isArray(baseOrders) ? baseOrders.length : '0'}</div>`;
         return;
       }
-      
+
+      const canEditOrder = (order) =>
+        safeAuth && typeof safeAuth.canEditOrder === 'function' ? safeAuth.canEditOrder(order) : false;
+
       const statuses = [
         { name: 'Draft', color: '#6b5440', icon: '📝' },
         { name: 'Pending Approval', color: '#f59e0b', icon: '⏳' },
@@ -10592,9 +10968,64 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
         { name: 'Delivered', color: '#7fa284', icon: '🚚' }
       ];
 
-      board.innerHTML = statuses.map(status => {
-        const statusOrders = orders.filter(o => o.status === status.name);
-        
+      board.innerHTML = statuses.map((status) => {
+        const statusOrders = orders.filter((o) => o.status === status.name);
+
+        if (statusOrders.length === 0) {
+          return `
+          <div class="kanban-column" data-status="${status.name}" 
+               style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px; min-height: 400px;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 2px solid ${status.color};">
+              <h4 style="margin: 0; color: #4b3b2a; font-size: 14px; font-weight: 600;">
+                ${status.icon} ${status.name}
+              </h4>
+              <span style="background: ${status.color}; color: white; border-radius: 12px; padding: 2px 8px; font-size: 12px; font-weight: 600;">
+                0
+              </span>
+            </div>
+            <div class="kanban-items" style="display: flex; flex-direction: column; gap: 12px;">
+              <div style="text-align: center; color: #9ca3af; font-style: italic; padding: 20px;">No orders</div>
+            </div>
+          </div>`;
+        }
+
+        const cards = statusOrders
+          .map((order) => {
+            const editable = canEditOrder(order);
+            const uploadedBadge = order.uploadedContent && order.uploadedContent.length > 0
+              ? `<span style="background: #7fa284; color: white; padding: 1px 4px; border-radius: 3px; font-size: 9px; margin-left: 4px;">📁 ${order.uploadedContent.length}</span>`
+              : '';
+
+            return `
+              <div class="kanban-card" draggable="true" data-order-id="${order.orderNumber}"
+                   style="background: white; border: 1px solid #e5e7eb; border-radius: 6px; padding: 12px; cursor: move; transition: all 0.15s;
+                          box-shadow: 0 1px 3px rgba(0,0,0,0.1);"
+                   onmouseover="this.style.boxShadow='0 4px 6px rgba(0,0,0,0.1)'; this.style.transform='translateY(-2px)';"
+                   onmouseout="this.style.boxShadow='0 1px 3px rgba(0,0,0,0.1)'; this.style.transform='translateY(0)';"
+                   onclick="showOrderDetails('${order.orderNumber}'); event.stopPropagation();">
+                <div style="font-weight: 600; color: #4b3b2a; font-size: 12px; margin-bottom: 4px;">
+                  ${order.orderNumber}
+                  ${uploadedBadge}
+                </div>
+                <div style="color: #4b3b2a; font-size: 13px; font-weight: 500; margin-bottom: 8px; line-height: 1.3;">${order.title}</div>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                  <span style="background: ${getPriorityColor(order.priority)}; color: white; padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: 600;">
+                    ${order.priority}
+                  </span>
+                  <span style="color: #6b5440; font-size: 11px;">${order.deadline || ''}</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                  <span style="color: #6b5440; font-size: 11px;">${order.photographer || 'Unassigned'}</span>
+                  <span style="color: #6b5440; font-size: 11px;">${order.method || '—'}</span>
+                </div>
+                ${editable
+                  ? '<div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid #f1e8dc; font-size: 10px; color: #9ca3af;">Drag to update status</div>'
+                  : '<div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid #f1e8dc; font-size: 10px; color: #9ca3af;">View only</div>'}
+              </div>
+            `;
+          })
+          .join('');
+
         return `
           <div class="kanban-column" data-status="${status.name}" 
                style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px; min-height: 400px;">
@@ -10607,57 +11038,41 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
               </span>
             </div>
             <div class="kanban-items" style="display: flex; flex-direction: column; gap: 12px;">
-              ${statusOrders.length === 0 ? 
-                `<div style="text-align: center; color: #9ca3af; font-style: italic; padding: 20px;">No orders</div>` :
-                statusOrders.map(order => `
-                <div class="kanban-card" draggable="true" data-order-id="${order.orderNumber}"
-                     style="background: white; border: 1px solid #e5e7eb; border-radius: 6px; padding: 12px; cursor: move; transition: all 0.15s;
-                            box-shadow: 0 1px 3px rgba(0,0,0,0.1);"
-                     onmouseover="this.style.boxShadow='0 4px 6px rgba(0,0,0,0.1)'; this.style.transform='translateY(-2px)';"
-                     onmouseout="this.style.boxShadow='0 1px 3px rgba(0,0,0,0.1)'; this.style.transform='translateY(0)';"
-                     onclick="showOrderDetails('${order.orderNumber}'); event.stopPropagation();">
-                  <div style="font-weight: 600; color: #4b3b2a; font-size: 12px; margin-bottom: 4px;">
-                    ${order.orderNumber}
-                    ${order.uploadedContent && order.uploadedContent.length > 0 ? 
-                      `<span style="background: #7fa284; color: white; padding: 1px 4px; border-radius: 3px; font-size: 9px; margin-left: 4px;">📁 ${order.uploadedContent.length}</span>` : 
-                      ''
-                    }
-                  </div>
-                  <div style="color: #4b3b2a; font-size: 13px; font-weight: 500; margin-bottom: 8px; line-height: 1.3;">${order.title}</div>
-                  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                    <span style="background: ${getPriorityColor(order.priority)}; color: white; padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: 600;">
-                      ${order.priority}
-                    </span>
-                    <span style="color: #6b5440; font-size: 11px;">${order.deadline}</span>
-                  </div>
-                  <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <span style="color: #6b5440; font-size: 11px;">${order.photographer}</span>
-                    <span style="color: #6b5440; font-size: 11px;">${order.method}</span>
-                  </div>
-                  ${authSystem.canEditOrder(order) ? 
-                    '<div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid #f1e8dc; font-size: 10px; color: #9ca3af;">Drag to update status</div>' : 
-                    '<div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid #f1e8dc; font-size: 10px; color: #9ca3af;">View only</div>'
-                  }
-                </div>
-              `).join('')
-              }
+              ${cards}
             </div>
           </div>
         `;
       }).join('');
 
-      // Add drag and drop functionality
       setupKanbanDragDrop();
     }
 
     function setupKanbanDragDrop() {
+      const safeAuth = window.authSystem || null;
+      const store = typeof window.__orderStoreInstance === 'object' ? window.__orderStoreInstance : null;
+
+      const resolveOrdersSnapshot = () => {
+        if (typeof window.resolveOrdersSnapshot === 'function') {
+          return window.resolveOrdersSnapshot();
+        }
+        return [];
+      };
+
+      const resolveOrderById = (orderId) => {
+        const orders = resolveOrdersSnapshot();
+        return orders.find((o) => String(o?.orderNumber) === String(orderId)) || null;
+      };
+
+      const canEditOrder = (order) =>
+        safeAuth && typeof safeAuth.canEditOrder === 'function' ? safeAuth.canEditOrder(order) : false;
+
       let draggedElement = null;
       let isDragging = false;
 
-      // Add drag event listeners to cards
-      document.querySelectorAll('.kanban-card').forEach(card => {
-        card.addEventListener('dragstart', function(e) {
-          if (!authSystem.canEditOrder(allOrders.find(o => o.orderNumber === this.dataset.orderId))) {
+      document.querySelectorAll('.kanban-card').forEach((card) => {
+        card.addEventListener('dragstart', function (e) {
+          const order = resolveOrderById(this.dataset.orderId);
+          if (!order || !canEditOrder(order)) {
             e.preventDefault();
             return;
           }
@@ -10666,81 +11081,120 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
           this.style.opacity = '0.5';
         });
 
-        card.addEventListener('dragend', function(e) {
+        card.addEventListener('dragend', function () {
           this.style.opacity = '1';
           draggedElement = null;
-          // Reset dragging flag after a short delay to allow click events
-          setTimeout(() => { isDragging = false; }, 100);
+          setTimeout(() => {
+            isDragging = false;
+          }, 100);
         });
 
-        // Prevent click event when dragging
-        card.addEventListener('click', function(e) {
+        card.addEventListener('click', function (e) {
           if (isDragging) {
             e.preventDefault();
             e.stopPropagation();
-            return false;
           }
         });
       });
 
-      // Add drop event listeners to columns
-      document.querySelectorAll('.kanban-column').forEach(column => {
-        column.addEventListener('dragover', function(e) {
+      document.querySelectorAll('.kanban-column').forEach((column) => {
+        column.addEventListener('dragover', function (e) {
           e.preventDefault();
           this.style.background = '#fdf4e6';
         });
 
-        column.addEventListener('dragleave', function(e) {
+        column.addEventListener('dragleave', function () {
           this.style.background = '#f8fafc';
         });
 
-        column.addEventListener('drop', function(e) {
+        column.addEventListener('drop', function (e) {
           e.preventDefault();
           this.style.background = '#f8fafc';
-          
+
           if (draggedElement) {
             const orderId = draggedElement.dataset.orderId;
             const newStatus = this.dataset.status;
-            const order = allOrders.find(o => o.orderNumber === orderId);
-            
-            if (order && authSystem.canEditOrder(order)) {
+            const order = resolveOrderById(orderId);
+
+            if (order && canEditOrder(order)) {
               const oldStatus = order.status;
-              order.status = newStatus;
-              order.updatedAt = new Date().toISOString();
-              
+              const timestampIso = new Date().toISOString();
+              const timestampDisplay = new Date(timestampIso).toLocaleString();
+              const currentUserName = safeAuth && typeof safeAuth.getCurrentUser === 'function'
+                ? (safeAuth.getCurrentUser()?.name || 'System User')
+                : 'System User';
+              const historyEntry = {
+                timestamp: timestampDisplay,
+                user: currentUserName,
+                action: 'Status Changed (Kanban)',
+                changes: [`Status: ${oldStatus} → ${newStatus}`],
+                details: `Status changed from "${oldStatus}" to "${newStatus}" via kanban board`
+              };
+              const nextHistory = Array.isArray(order.history) ? [...order.history, historyEntry] : [historyEntry];
+
               console.log('📋 Kanban drop:', orderId, 'from', oldStatus, 'to', newStatus);
-              
-              // Trigger confetti if order is moved to Complete
+
               if (newStatus === 'Complete') {
                 console.log('🎉 Triggering confetti for Complete status');
                 triggerConfetti();
               }
-              
-              // Trigger celebration if order is moved to Delivered
+
               if (newStatus === 'Delivered' && oldStatus !== 'Delivered') {
                 console.log('🎉 Triggering celebration for Delivered status');
                 setTimeout(() => {
                   celebrateOrderDelivery();
                 }, 200);
               }
-              
-              // Add to order history
-              if (!order.history) order.history = [];
-              order.history.push({
-                timestamp: new Date().toLocaleString(),
-                user: authSystem.getCurrentUser().name,
-                action: 'Status Changed (Kanban)',
-                changes: [`Status: ${oldStatus} → ${newStatus}`],
-                details: `Status changed from "${oldStatus}" to "${newStatus}" via kanban board`
-              });
-              
-              // Save changes
-              localStorage.setItem('photoOrders', JSON.stringify(allOrders));
-              
-              // Show success message
+
+              const applyPatchToCollection = (collection) => {
+                if (!Array.isArray(collection)) {
+                  return;
+                }
+                const index = collection.findIndex((item) => String(item?.orderNumber) === String(orderId));
+                if (index !== -1) {
+                  collection[index] = {
+                    ...collection[index],
+                    status: newStatus,
+                    updatedAt: timestampIso,
+                    history: nextHistory
+                  };
+                }
+              };
+
+              if (store && typeof store.patch === 'function') {
+                store.patch(order.orderNumber, {
+                  status: newStatus,
+                  updatedAt: timestampIso,
+                  history: nextHistory
+                });
+              } else {
+                applyPatchToCollection(window.rkhOrders);
+                if (typeof allOrders !== 'undefined' && Array.isArray(allOrders)) {
+                  applyPatchToCollection(allOrders);
+                }
+                if (typeof window.ensureOrderStoreSubscription === 'function') {
+                  window.ensureOrderStoreSubscription();
+                }
+              }
+
+              try {
+                if (typeof localStorage !== 'undefined') {
+                  localStorage.setItem('photoOrders', JSON.stringify(resolveOrdersSnapshot()));
+                }
+              } catch (storageError) {
+                console.warn('Kanban drop storage sync failed', storageError);
+              }
+
               showToast(`Order ${orderId} moved to ${newStatus}`, 'success');
-              
-              // Refresh kanban board
+
+              if (typeof window.drawOrderRows === 'function') {
+                window.drawOrderRows();
+              }
+
+              if (typeof window.updateQuickActionBadges === 'function') {
+                window.updateQuickActionBadges();
+              }
+
               drawKanbanBoard();
             }
           }
@@ -10751,11 +11205,22 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
     // Calendar Functions
     function drawCalendarView() {
       updateCalendarTitle();
-      
+
       const container = document.getElementById('calendarContainer');
-      const currentUser = authSystem.getCurrentUser();
-      const orders = authSystem.getFilteredOrders(allOrders);
-      
+      if (!container) {
+        return;
+      }
+
+      const safeAuth = window.authSystem || null;
+      const baseOrders = window.getAllOrdersSnapshot
+        ? window.getAllOrdersSnapshot()
+        : (Array.isArray(window.rkhOrders)
+            ? window.rkhOrders
+            : (typeof allOrders !== 'undefined' && Array.isArray(allOrders) ? allOrders : []));
+      const orders = safeAuth && typeof safeAuth.getFilteredOrders === 'function'
+        ? safeAuth.getFilteredOrders(baseOrders)
+        : baseOrders;
+
       if (calendarViewType === 'week') {
         drawWeekView(container, orders);
       } else if (calendarViewType === 'month') {
@@ -10989,9 +11454,19 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       return statusColors[status] || '#6b5440';
     }
 
+    window.drawOrderRows = drawOrderRows;
+    if (typeof window.ensureOrderStoreSubscription === 'function') {
+      window.ensureOrderStoreSubscription();
+    }
+
     function drawWorkflowView() {
       const currentUser = authSystem.getCurrentUser();
-      const orders = authSystem.getFilteredOrders(allOrders);
+      const baseOrders = window.getAllOrdersSnapshot
+        ? window.getAllOrdersSnapshot()
+        : (Array.isArray(window.rkhOrders)
+            ? window.rkhOrders
+            : (typeof allOrders !== 'undefined' && Array.isArray(allOrders) ? allOrders : []));
+      const orders = authSystem.getFilteredOrders(baseOrders);
       
       const draftOrders = orders.filter(o => o.status === 'Draft');
       const samplesRequestedOrders = orders.filter(o => o.status === 'Samples Requested');
@@ -11121,9 +11596,10 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
     function showQuickFilter(filterType) {
       const today = new Date().toISOString().split('T')[0];
       
-      let filtered = [];
-      setStatusFilterOverride(filterType, { skipRender: true });
-      const scopedOrders = applyActiveOrderFilters(authSystem.getFilteredOrders(window.rkhOrders || []));
+    let filtered = [];
+    setStatusFilterOverride(filterType, { skipRender: true });
+    const baseOrders = (typeof window.resolveOrdersSnapshot === 'function') ? window.resolveOrdersSnapshot() : (window.rkhOrders || []);
+    const scopedOrders = applyActiveOrderFilters(authSystem.getFilteredOrders(baseOrders));
       switch(filterType) {
         case 'urgent':
           filtered = scopedOrders.filter(o => o.priority === 'Urgent' || o.priority === 'High');
@@ -11607,20 +12083,34 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
 
       let processedCount = 0;
       const totalFiles = files.length;
-      const baseOrders = Array.isArray(window.rkhOrders) && window.rkhOrders.length
-        ? window.rkhOrders
-        : (typeof allOrders !== 'undefined' ? allOrders : []);
+      const store = typeof window.__orderStoreInstance === 'object' ? window.__orderStoreInstance : null;
+      const baseOrders = window.getAllOrdersSnapshot
+        ? window.getAllOrdersSnapshot()
+        : (Array.isArray(window.rkhOrders) && window.rkhOrders.length
+            ? window.rkhOrders
+            : (typeof allOrders !== 'undefined' ? allOrders : []));
 
-      const finalizeProcessing = () => {
+      const persistOrders = (ordersToPersist) => {
         try {
           if (typeof localStorage !== 'undefined') {
-            localStorage.setItem('photoOrders', JSON.stringify(baseOrders));
+            localStorage.setItem('photoOrders', JSON.stringify(ordersToPersist));
           }
         } catch (storageError) {
           console.warn('Mass upload storage sync failed', storageError);
         }
+      };
 
+      const finalizeProcessing = () => {
+        const snapshot = window.getAllOrdersSnapshot
+          ? window.getAllOrdersSnapshot()
+          : baseOrders;
+
+        persistOrders(snapshot);
         displayMassUploadResults(results);
+
+        if (typeof window.ensureOrderStoreSubscription === 'function') {
+          window.ensureOrderStoreSubscription();
+        }
       };
 
       Array.from(files).forEach((file) => {
@@ -11639,7 +12129,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
             const orderPriority = order?.priority || 'Medium';
 
             if (order.fileName && order.fileName === fileName) {
-              if (!order.uploadedContent) order.uploadedContent = [];
+              const existingContent = Array.isArray(order.uploadedContent) ? order.uploadedContent : [];
 
               const record = {
                 id: 'file_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
@@ -11652,7 +12142,21 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
                 uploadedByRole: currentUser.role
               };
 
-              order.uploadedContent.push(record);
+              const nextUploadedContent = [...existingContent, record];
+              order.uploadedContent = nextUploadedContent;
+
+              if (store && typeof store.patch === 'function') {
+                store.patch(order.orderNumber, { uploadedContent: nextUploadedContent });
+              } else if (Array.isArray(window.rkhOrders)) {
+                const windowOrderIndex = window.rkhOrders.findIndex((item) => String(item?.orderNumber) === String(order.orderNumber));
+                if (windowOrderIndex !== -1) {
+                  const currentOrder = window.rkhOrders[windowOrderIndex] || {};
+                  window.rkhOrders[windowOrderIndex] = {
+                    ...currentOrder,
+                    uploadedContent: nextUploadedContent
+                  };
+                }
+              }
 
               results.matched.push({
                 fileName,
@@ -11689,7 +12193,23 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
                     uploadedByRole: currentUser.role
                   };
 
-                  article.uploadedImages.push(record);
+                      const nextUploadedImages = Array.isArray(article.uploadedImages) ? [...article.uploadedImages, record] : [record];
+                      article.uploadedImages = nextUploadedImages;
+
+                      if (store && typeof store.patch === 'function') {
+                        const articlesPatch = Array.isArray(order.articles)
+                          ? order.articles.map((item, idx) => (idx === i ? { ...item, uploadedImages: nextUploadedImages } : item))
+                          : order.articles;
+                        store.patch(order.orderNumber, { articles: articlesPatch });
+                      } else if (Array.isArray(window.rkhOrders)) {
+                        const windowOrderIndex = window.rkhOrders.findIndex((item) => String(item?.orderNumber) === String(order.orderNumber));
+                        if (windowOrderIndex !== -1 && Array.isArray(window.rkhOrders[windowOrderIndex]?.articles)) {
+                          window.rkhOrders[windowOrderIndex].articles[i] = {
+                            ...window.rkhOrders[windowOrderIndex].articles[i],
+                            uploadedImages: nextUploadedImages
+                          };
+                        }
+                      }
 
                   const articleName = article.name || `Article ${i + 1}`;
 
@@ -12379,16 +12899,34 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       
       // Apply the filter after a short delay to ensure the view is loaded
       setTimeout(() => {
-        if (!window.rkhOrders) {
+        let availableOrders = window.getAllOrdersSnapshot
+          ? window.getAllOrdersSnapshot()
+          : (Array.isArray(window.rkhOrders) ? window.rkhOrders : []);
+
+        if (!availableOrders || availableOrders.length === 0) {
           // Create some sample data if orders are not available
-          window.rkhOrders = [
+          const sampleOrders = [
             { orderNumber: 'ORD001', title: 'Sample Order 1', status: 'Draft', priority: 'Medium', photographer: 'John Doe', method: 'Digital', deadline: '2025-09-10', purchaseGroup: 'PG1', eventId: 'E001' },
             { orderNumber: 'ORD002', title: 'Sample Order 2', status: 'Pending', priority: 'High', photographer: 'Jane Smith', method: 'Print', deadline: '2025-09-12', purchaseGroup: 'PG2', eventId: 'E002' },
             { orderNumber: 'ORD003', title: 'Sample Order 3', status: 'Approved', priority: 'Medium', photographer: 'Bob Wilson', method: 'Digital', deadline: '2025-09-15', purchaseGroup: 'PG1', eventId: 'E003' },
             { orderNumber: 'ORD004', title: 'Sample Order 4', status: 'In Progress', priority: 'Low', photographer: 'Alice Brown', method: 'Print', deadline: '2025-09-18', purchaseGroup: 'PG3', eventId: 'E004' },
             { orderNumber: 'ORD005', title: 'Sample Order 5', status: 'Complete', priority: 'High', photographer: 'Mike Davis', method: 'Digital', deadline: '2025-09-20', purchaseGroup: 'PG2', eventId: 'E005' }
           ];
-          assignSalesOrgMetadata(window.rkhOrders);
+
+          assignSalesOrgMetadata(sampleOrders);
+
+          const sampleStore = typeof window.__orderStoreInstance === 'object' ? window.__orderStoreInstance : null;
+          if (sampleStore && typeof sampleStore.setAll === 'function') {
+            sampleStore.setAll(sampleOrders);
+            availableOrders = sampleStore.getAll();
+          } else {
+            window.rkhOrders = sampleOrders;
+            availableOrders = sampleOrders;
+          }
+
+          if (typeof window.ensureOrderStoreSubscription === 'function') {
+            window.ensureOrderStoreSubscription();
+          }
         }
         
         if (!window.authSystem) {
@@ -12399,7 +12937,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
           };
         }
         
-        const ordersList = window.authSystem.getFilteredOrders(window.rkhOrders);
+        const ordersList = window.authSystem.getFilteredOrders(availableOrders);
         setStatusFilterOverride(statusFilter === 'all' ? '' : statusFilter, { skipRender: true });
         console.log('[DEBUG] filterOrdersByStatus - ordersList length:', ordersList.length);
         console.log('[DEBUG] First order in ordersList:', JSON.stringify(ordersList[0], null, 2));
@@ -12470,7 +13008,8 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
         });
       } else {
         // Calculate from ALL orders
-        ordersList = applyActiveOrderFilters(authSystem.getFilteredOrders(window.rkhOrders || []));
+        const allOrders = (typeof window.resolveOrdersSnapshot === 'function') ? window.resolveOrdersSnapshot() : (window.rkhOrders || []);
+        ordersList = applyActiveOrderFilters(authSystem.getFilteredOrders(allOrders));
       }
 
       if (statusFilterOverride) {
@@ -16069,7 +16608,12 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
 
     document.getElementById('exportCsv')?.addEventListener('click', () => {
       if (currentView === 'orders') {
-        const orders = authSystem.getFilteredOrders(allOrders); // Get filtered orders
+        const baseOrders = window.getAllOrdersSnapshot
+          ? window.getAllOrdersSnapshot()
+          : (Array.isArray(window.rkhOrders)
+              ? window.rkhOrders
+              : (typeof allOrders !== 'undefined' && Array.isArray(allOrders) ? allOrders : []));
+        const orders = authSystem.getFilteredOrders(baseOrders);
         const header = 'Order Number,Title,Status,Method,Purchase Group,Event ID,Photographer,Priority,Deadline';
         const rows = orders.map(o => [
           o.orderNumber, o.title, o.status, o.method, 
@@ -16110,6 +16654,10 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
   const selectedPhotoReference = (formData.get('photoReference') || '').trim();
   const rawImageRequestInput = (formData.get('imageRequestId') || '').trim();
 
+      const ordersBeforeCreate = window.getAllOrdersSnapshot
+        ? window.getAllOrdersSnapshot()
+        : (Array.isArray(window.rkhOrders) ? window.rkhOrders : []);
+
       const newOrder = {
         orderNumber: 'ORD-' + Date.now(),
         title: formData.get('title'),
@@ -16139,7 +16687,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
 
       ensureOrderPhotoMetadata([newOrder]);
 
-      assignSalesOrgToOrder(newOrder, window.rkhOrders ? window.rkhOrders.length : null);
+      assignSalesOrgToOrder(newOrder, Array.isArray(ordersBeforeCreate) ? ordersBeforeCreate.length : null);
 
       // Handle Post Production specific fields
       if (formData.get('method') === 'Post Production') {
@@ -16170,13 +16718,23 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
         }
       }
 
-      // Add the order to the global array
-      if (window.rkhOrders) {
-        window.rkhOrders.push(newOrder);
+      const store = typeof window.__orderStoreInstance === 'object' ? window.__orderStoreInstance : null;
+
+      if (store && typeof store.upsert === 'function') {
+        store.upsert(newOrder);
+      } else if (Array.isArray(window.rkhOrders)) {
+        window.rkhOrders = [...window.rkhOrders, newOrder];
       } else {
         window.rkhOrders = [newOrder];
       }
-      assignSalesOrgMetadata(window.rkhOrders);
+
+      if (Array.isArray(window.rkhOrders)) {
+        assignSalesOrgMetadata(window.rkhOrders);
+      }
+
+      if (typeof window.ensureOrderStoreSubscription === 'function') {
+        window.ensureOrderStoreSubscription();
+      }
 
       // Close the modal
       event.target.closest('.create-order-modal')?.remove();
@@ -16461,8 +17019,8 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       function processScan(articleCode) {
         console.log('[Scanner] Scanned article code:', articleCode);
         
-        // Search for orders containing this article
-  const matchingOrders = findOrdersByArticleCode(articleCode);
+    // Search for orders containing this article
+    const matchingOrders = findOrdersByArticleCode(articleCode);
         
         if (matchingOrders.length > 0) {
           // Highlight matching orders
@@ -16476,8 +17034,8 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
 
       // Search orders by article EAN/GTIN code
       function findOrdersByArticleCode(articleCode) {
-  const orders = window.rkhOrders || [];
-  const matches = [];
+        const orders = (typeof window.resolveOrdersSnapshot === 'function') ? window.resolveOrdersSnapshot() : (window.rkhOrders || []);
+        const matches = [];
   const normalizedCode = (articleCode || '').replace(/\s+/g, '');
         
         orders.forEach(order => {
@@ -17711,7 +18269,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
           window.processScan(articleCode);
         } else {
           // Fallback: manually trigger the scan logic
-          const orders = window.rkhOrders || [];
+          const orders = (typeof window.resolveOrdersSnapshot === 'function') ? window.resolveOrdersSnapshot() : (window.rkhOrders || []);
           const matches = [];
           const normalizedCode = (articleCode || '').replace(/\s+/g, '');
 

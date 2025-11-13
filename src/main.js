@@ -41,6 +41,30 @@ class PhotoOrderApp {
     this.setupAppEvents();
   }
 
+  resolveRendererEntry() {
+    const explicitUrl = process.env.CCP_RENDERER_URL || process.env.VITE_DEV_SERVER_URL;
+
+    if (explicitUrl) {
+      console.log('[Renderer] Loading from explicit URL:', explicitUrl);
+      return { type: 'url', value: explicitUrl };
+    }
+
+    const distIndexPath = path.join(__dirname, '../dist/renderer/index.html');
+
+    if (fs.existsSync(distIndexPath)) {
+      console.log('[Renderer] Loading bundled renderer from dist/renderer/index.html');
+      return { type: 'file', value: distIndexPath };
+    }
+
+    if (this.isDev) {
+      console.log('[Renderer] Falling back to local development server on port 8080');
+      return { type: 'url', value: 'http://localhost:8080' };
+    }
+
+    console.log('[Renderer] Falling back to legacy index.html');
+    return { type: 'file', value: path.join(__dirname, '../index.html') };
+  }
+
   setupAutoUpdater() {
     if (this.canCheckForUpdates()) {
       autoUpdater.checkForUpdatesAndNotify();
@@ -144,11 +168,13 @@ class PhotoOrderApp {
     });
 
     // Load the application
-    const startUrl = this.isDev 
-      ? 'http://localhost:8080' 
-      : `file://${path.join(__dirname, '../index.html')}`;
-    
-    this.mainWindow.loadURL(startUrl);
+    const rendererEntry = this.resolveRendererEntry();
+
+    if (rendererEntry.type === 'file') {
+      this.mainWindow.loadFile(rendererEntry.value);
+    } else {
+      this.mainWindow.loadURL(rendererEntry.value);
+    }
 
     // Show window when ready
     this.mainWindow.once('ready-to-show', () => {
