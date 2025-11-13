@@ -86,125 +86,14 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       window._runwareReadyResolver = resolve;
       console.log('[Init:0] ✅ Resolver stored. Type:', typeof resolve);
     });
-    
-    console.log('[Init:0] ✅ Stub complete. IIFE will now execute...');
   }
-
-  // Runware API Setup Modal - Define early for global access
-  window.showGoogleAISetupModal = function() {
-    const modal = document.createElement('div');
-    modal.id = 'googleAISetupModal';
-    modal.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: center; z-index: 10000;';
-    
-    modal.innerHTML = 
-      '<div style="background: white; border-radius: 12px; padding: 24px; max-width: 500px; width: 90%;">' +
-        '<div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">' +
-          '<div style="display: flex; align-items: center;">' +
-            '<span style="font-size: 28px; margin-right: 12px;">🚀</span>' +
-            '<h3 style="margin: 0; color: #4b3b2a;">Runware API Setup</h3>' +
-          '</div>' +
-          '<button onclick="document.getElementById(\'googleAISetupModal\').remove()" style="background: none; border: none; font-size: 24px; cursor: pointer; color: #6b5440;">&times;</button>' +
-        '</div>' +
-        '<div style="background: #fdf4e6; padding: 16px; border-radius: 8px; margin-bottom: 16px;">' +
-          '<h4 style="margin: 0 0 8px; color: #a66b38;">🚀 ADVANCED AI READY!</h4>' +
-          '<p style="margin: 0; color: #a66b38; font-size: 14px;">Runware API provides advanced AI image generation and editing with <strong>Nano Banana</strong> (Google Gemini Flash Image 2.5) model!</p>' +
-        '</div>' +
-        '<div style="margin-bottom: 16px;">' +
-          '<h4 style="margin: 0 0 8px; color: #4b3b2a;">Quick Setup (2 minutes):</h4>' +
-          '<ol style="margin: 0; padding-left: 20px; color: #6b5440; font-size: 14px;">' +
-            '<li>Visit <a href="https://runware.ai" target="_blank" style="color: #c48b5a;">Runware.ai</a></li>' +
-            '<li>Sign up for an account</li>' +
-            '<li>Get your API key from dashboard</li>' +
-            '<li>Copy the key and paste it below</li>' +
-          '</ol>' +
-        '</div>' +
-        '<div style="margin-bottom: 16px;">' +
-          '<input type="text" id="googleAIApiKey" placeholder="Paste your Runware API key here..." style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px;">' +
-        '</div>' +
-        '<div style="display: flex; gap: 12px; justify-content: flex-end;">' +
-          '<button onclick="document.getElementById(\'googleAISetupModal\').remove()" style="padding: 10px 20px; background: #6b5440; color: white; border: none; border-radius: 6px; cursor: pointer;">Cancel</button>' +
-          '<button onclick="saveGoogleAIKey()" style="padding: 10px 20px; background: #c48b5a; color: white; border: none; border-radius: 6px; cursor: pointer;">✅ Save & Test</button>' +
-        '</div>' +
-      '</div>';
-    
-    document.body.appendChild(modal);
-  };
-
-  // Save Runware API key function - Define early for modal access
-  window.saveGoogleAIKey = function() {
-    const keyInput = document.getElementById('googleAIApiKey');
-    const apiKey = keyInput.value.trim();
-    
-    if (!apiKey) {
-      showToast('⚠️ Please enter your API key', 'warning');
-      return;
-    }
-    
-    const cfg = getRunwareConfig();
-    cfg.apiKey = apiKey;
-    if (typeof localStorage !== 'undefined') {
-      localStorage.setItem('runwareApiKey', apiKey);
-      localStorage.setItem('geminiAccessToken', apiKey);
-    }
-    
-    document.getElementById('googleAISetupModal')?.remove();
-    showToast('✅ Runware API configured! Testing connection...', 'success');
-    
-    // Test the connection
-    setTimeout(() => {
-      if (typeof window.testGoogleAIConnection === 'function') {
-        window.testGoogleAIConnection();
-      }
-    }, 500);
-  };
-
-  // Simple prompt generator - define immediately
-  function generateImageEditingPrompt(operation, instructions) {
-    const safeInstructions = instructions || 'general image editing';
-    const safeOperation = operation || 'custom';
-    
-    const basePrompts = {
-      'color-change': 'Edit the provided image to change the color as requested: ' + safeInstructions + '. Maintain the original composition, lighting, and style while only changing the specified colors.',
-      'add-model': 'Add a model to the provided image as requested: ' + safeInstructions + '. Ensure the model fits naturally into the scene with appropriate lighting and perspective.',
-      'background-change': 'Modify the background of the provided image: ' + safeInstructions + '. Keep the main subject unchanged while updating the background environment.',
-      'lighting-adjustment': 'Adjust the lighting in the provided image: ' + safeInstructions + '. Modify the lighting conditions while preserving the main subject and composition.',
-      'object-removal': 'Remove objects from the provided image: ' + safeInstructions + '. Fill in the removed areas naturally to maintain a seamless appearance.',
-      'style-transfer': 'Transform the style of the provided image: ' + safeInstructions + '. Apply the requested artistic style while preserving the main subject and composition.',
-      'product-enhancement': 'Enhance the quality of the provided image: ' + safeInstructions + '. Improve clarity, sharpness, and overall visual appeal.',
-      'custom': 'Edit the provided image according to these instructions: ' + safeInstructions + '. Make the changes while maintaining natural lighting and composition.'
-    };
-    
-    return basePrompts[safeOperation] || basePrompts['custom'];
-  }
-  window.generateImageEditingPrompt = generateImageEditingPrompt;
-
-  // Simple availability checker - define immediately
-  async function checkGoogleAIAvailability() {
-    const cfg = getRunwareConfig();
-    if (!cfg.apiKey) {
-      return false;
-    }
-    
-    try {
-      // For now, just check if we have an API key - can be enhanced later
-      console.log('Checking Runware API availability with key:', cfg.apiKey ? 'present' : 'missing');
-      return true; // Assume available if key is present
-    } catch (error) {
-      console.error('Runware API availability check error:', error);
-      return false;
-    }
-  }
-  window.checkGoogleAIAvailability = checkGoogleAIAvailability;
-
-  // Simple API processor - define immediately
-
 
   // Simple preview modal - define immediately
   function showGoogleAIPreviewModal(operation, instructions, result = null) {
     const modal = document.createElement('div');
     modal.id = 'googleAIPreviewModal';
     modal.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: center; z-index: 10000;';
-    
+
     // Check if result has a text response instead of image
     if (result?.textResponse) {
       // Display text response for models that don't generate images
@@ -442,36 +331,13 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
     }
   };
 
-  window.testGoogleAIConnection = function() {
-    console.log('testGoogleAIConnection called');
-    showToast('🔄 Testing Runware API connection...', 'info');
-
-    // Check if API key is configured
-    setTimeout(async () => {
-      const cfg = getRunwareConfig();
-      console.log('API Key available:', !!cfg.apiKey);
-      console.log('API Key value:', cfg.apiKey ? 'configured' : 'not configured');
-      
-      if (cfg.apiKey) {
-        try {
-          const isAvailable = await checkGoogleAIAvailability();
-          if (isAvailable) {
-            console.log('✅ Runware API connection successful');
-            showToast('✅ Runware API connected successfully!', 'success');
-          } else {
-            console.log('❌ Runware API connection failed');
-            showToast('❌ Runware API connection failed', 'error');
-          }
-        } catch (error) {
-          console.error('Connection test error:', error);
-          showToast('❌ Connection test error: ' + error.message, 'error');
-        }
-      } else {
-        console.log('❌ API key not configured');
-        showToast('❌ Runware API key not configured', 'error');
-        console.log('Current config:', cfg);
-      }
-    }, 100);
+  window.testGoogleAIConnection = async function() {
+    console.log('ℹ️ Runware connection test skipped (AI integrations disabled).');
+    const cfg = getRunwareConfig();
+    if (!cfg.apiKey) {
+      console.log('ℹ️ No Runware API key present while tests are disabled.');
+    }
+    return false;
   };
 
   // Test Runware connection (alias for backward compatibility)
@@ -479,37 +345,6 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
     return window.testGoogleAIConnection();
   };
 
-  // Test Google Gemini connection
-  window.testGeminiConnection = function() {
-    console.log('testGeminiConnection called');
-    showToast('🔮 Testing Google Gemini API connection...', 'info');
-
-    // Check if API key is configured
-    setTimeout(async () => {
-      console.log('Gemini API Key available:', !!geminiConfig.apiKey);
-      console.log('Gemini API Key value:', geminiConfig.apiKey ? 'configured' : 'not configured');
-
-      if (geminiConfig.apiKey) {
-        try {
-          const isAvailable = await testGeminiConnection();
-          if (isAvailable) {
-            console.log('✅ Google Gemini API connection successful');
-            showToast('✅ Google Gemini API connected successfully!', 'success');
-          } else {
-            console.log('❌ Google Gemini API connection failed');
-            showToast('❌ Google Gemini API connection failed', 'error');
-          }
-        } catch (error) {
-          console.error('Gemini connection test error:', error);
-          showToast('❌ Gemini connection test error: ' + error.message, 'error');
-        }
-      } else {
-        console.log('❌ Gemini API key not configured');
-        showToast('❌ Google Gemini API key not configured', 'error');
-        console.log('Current Gemini config:', geminiConfig);
-      }
-    }, 100);
-  };
 
   // Post Production functions - Define immediately for global access
   window.handleMethodChange = function(selectElement) {
@@ -675,7 +510,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
     const currentValue = filterSelect.value;
     
     // Clear existing options except "All Events"
-    filterSelect.innerHTML = '<option value="">All Events</option>';
+  filterSelect.innerHTML = '<option value="">Events</option>';
     
     // Sort Event IDs alphabetically
     eventIds.sort();
@@ -1494,9 +1329,101 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
   // Expose authSystem globally for access from other scopes
   window.authSystem = authSystem;
 
+  // Data refresh tracking
+  let lastDataRefresh = null;
+
+  function loadPersistedRefreshState() {
+    if (typeof window !== 'undefined' && window.lastDataRefresh && window.lastDataRefresh.timestamp) {
+      return window.lastDataRefresh;
+    }
+    if (typeof localStorage === 'undefined') {
+      return null;
+    }
+    try {
+      const raw = localStorage.getItem('lastDataRefreshInfo');
+      if (!raw) {
+        return null;
+      }
+      const parsed = JSON.parse(raw);
+      if (parsed && parsed.timestamp) {
+        return parsed;
+      }
+    } catch (error) {
+      console.warn('[Refresh] Unable to read persisted refresh info:', error);
+    }
+    return null;
+  }
+
+  lastDataRefresh = loadPersistedRefreshState();
+  if (typeof window !== 'undefined') {
+    window.lastDataRefresh = lastDataRefresh;
+  }
+
+  function formatRefreshTimestamp(timestampIso) {
+    if (!timestampIso) {
+      return 'unknown time';
+    }
+    try {
+      const date = new Date(timestampIso);
+      if (!isNaN(date.getTime())) {
+        return date.toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' });
+      }
+    } catch (error) {
+      console.warn('[Refresh] Unable to format timestamp:', error);
+    }
+    return timestampIso;
+  }
+
+  function buildRefreshSummaryText(user) {
+    const userName = user && user.name ? user.name : 'current user';
+    if (!lastDataRefresh || !lastDataRefresh.timestamp) {
+      return `Awaiting first refresh for ${userName}. Includes PMR and CPT updates.`;
+    }
+    const formatted = formatRefreshTimestamp(lastDataRefresh.timestamp);
+    const sourceLabel = lastDataRefresh.source || 'Manual refresh';
+    return `Last refresh for ${userName}: ${formatted} (${sourceLabel}). Includes updates from other users, PMR, and CPT.`;
+  }
+
+  function updateLastRefreshDisplay() {
+    const infoNode = document.getElementById('lastRefreshInfo');
+    if (!infoNode) {
+      return;
+    }
+    const user = (authSystem && typeof authSystem.getCurrentUser === 'function') ? authSystem.getCurrentUser() : null;
+    infoNode.textContent = buildRefreshSummaryText(user);
+    if (lastDataRefresh && lastDataRefresh.timestamp) {
+      infoNode.title = `Latest refresh completed ${formatRefreshTimestamp(lastDataRefresh.timestamp)} via ${lastDataRefresh.source || 'Manual refresh'}.`;
+    } else {
+      infoNode.title = 'Click Refresh to pull the latest updates from other users, PMR, and CPT.';
+    }
+  }
+
+  function markDataRefreshed(source) {
+    const refreshRecord = {
+      timestamp: new Date().toISOString(),
+      source: source || 'Manual refresh',
+    };
+    lastDataRefresh = refreshRecord;
+    if (typeof window !== 'undefined') {
+      window.lastDataRefresh = refreshRecord;
+    }
+    if (typeof localStorage !== 'undefined') {
+      try {
+        localStorage.setItem('lastDataRefreshInfo', JSON.stringify(refreshRecord));
+      } catch (error) {
+        console.warn('[Refresh] Unable to persist refresh info:', error);
+      }
+    }
+    updateLastRefreshDisplay();
+  }
+
+  window.updateLastRefreshDisplay = updateLastRefreshDisplay;
+  window.markDataRefreshed = markDataRefreshed;
+
   // Show login screen if not authenticated
   function showLoginScreen() {
-    root.innerHTML = `
+
+  root.innerHTML = `
       <div style="min-height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #f4e8d8 0%, #e7d2b8 100%); padding: 20px; box-sizing: border-box;">
         <div style="background: #fffaf3; padding: 48px; border-radius: 16px; box-shadow: 0 30px 60px rgba(79, 59, 37, 0.18); max-width: 420px; width: 100%; max-height: 90vh; overflow-y: auto; border: 1px solid rgba(196, 139, 90, 0.2);">
           <div style="text-align: center; margin-bottom: 32px;">
@@ -1746,10 +1673,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
   console.log('Endpoint:', geminiConfig.apiKey?.startsWith('AIzaSy') || geminiConfig.apiKey?.startsWith('AQ.') ? 'Google AI Studio' : 'Vertex AI');
   console.log('Project ID:', geminiConfig.projectId || 'Not required for Google AI Studio keys');
   console.log('Location:', geminiConfig.location);
-  showToast('✅ Google Gemini API configured successfully!', 'success');
-
-    // Test the connection
-    testGeminiConnection();
+  console.log('ℹ️ Connection test skipped (AI integrations disabled).');
     return geminiConfig;
   };
 
@@ -1763,114 +1687,15 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
     return isGoogleAIKey(token);
   }
 
-  // Test Google Gemini connection - Supports Vertex AI (OAuth) and Google AI (AQ key)
+  // Test Google Gemini connection - disabled while AI integrations are paused
   async function testGeminiConnection() {
-    try {
-      if (!geminiConfig.apiKey) {
-        showToast('❌ Google Gemini API key not configured', 'error');
-        return false;
-      }
-
-      let url;
-      let headers;
-      let body;
-
-      if (isGoogleAIKey(geminiConfig.apiKey)) {
-        // Google AI Studio endpoint with API key query param
-        url = `${geminiConfig.baseUrl}/models/${geminiConfig.model}:generateContent?key=${geminiConfig.apiKey}`;
-        headers = { 'Content-Type': 'application/json' };
-        body = {
-          contents: [{
-            parts: [{ text: 'Hello, this is a test message for Google AI Studio Gemini.' }]
-          }],
-          generationConfig: {
-            temperature: geminiConfig.temperature,
-            maxOutputTokens: geminiConfig.maxTokens,
-          }
-        };
-
-        const keyTypeDisplay = geminiConfig.apiKey.startsWith('AIzaSy') ? 'AIzaSy API Key' : 'AQ. Token';
-        console.log('🔗 Testing Google AI Studio endpoint (aistudio.google.com)...');
-        console.log('URL:', url.replace(geminiConfig.apiKey, geminiConfig.apiKey.substring(0, 15) + '...'));
-        console.log('Using', keyTypeDisplay, 'via query param');
-      } else {
-        // Vertex AI with OAuth 2 access token
-        if (!geminiConfig.projectId) {
-          showToast('❌ Google Cloud Project ID not configured', 'error');
-          return false;
-        }
-        url = `${geminiConfig.baseUrl}/projects/${geminiConfig.projectId}/locations/${geminiConfig.location}/publishers/google/models/${geminiConfig.model}:generateContent`;
-        headers = {
-          'Authorization': `Bearer ${geminiConfig.apiKey}`,
-          'Content-Type': 'application/json',
-        };
-        body = {
-          contents: [{
-            parts: [ { text: 'Hello, this is a test message for Vertex AI Gemini.' } ]
-          }],
-          generationConfig: {
-            temperature: geminiConfig.temperature,
-            maxOutputTokens: geminiConfig.maxTokens,
-          }
-        };
-        console.log('🔗 Testing Vertex AI connection...');
-        console.log('URL:', url);
-        console.log('Using Bearer token authentication (expecting OAuth 2 access token)');
-      }
-
-      const response = await fetch(url, {
-        method: 'POST',
-        headers,
-        body: JSON.stringify(body)
-      });
-
-      if (response.ok) {
-        const result = await response.json();
-        console.log('✅ Google Gemini (Vertex AI) connection successful');
-        console.log('Response received:', result.candidates ? 'Yes' : 'No candidates');
-        showToast('✅ Google Gemini (Vertex AI) connected successfully!', 'success');
-        return true;
-      } else {
-        const errorData = await response.json().catch(() => ({}));
-        console.error('❌ Google Gemini connection failed:', response.status, response.statusText);
-        console.error('Error details:', errorData);
-        console.error('🔍 Authentication Debug Info:');
-        console.error('- API Key configured:', !!geminiConfig.apiKey);
-        console.error('- API Key starts with AIzaSy:', geminiConfig.apiKey?.startsWith('AIzaSy'));
-        console.error('- API Key starts with AQ.:', geminiConfig.apiKey?.startsWith('AQ.'));
-        console.error('- API Key length:', geminiConfig.apiKey?.length);
-        console.error('- Project ID:', geminiConfig.projectId);
-        console.error('- Location:', geminiConfig.location);
-        console.error('- Full URL:', url);
-        console.error('- Headers sent:', isGoogleAIKey(geminiConfig.apiKey)
-          ? { 'Content-Type': 'application/json', 'Auth': 'API key via query param' }
-          : { 'Content-Type': 'application/json', 'Authorization': `Bearer ${geminiConfig.apiKey ? geminiConfig.apiKey.substring(0, 10) + '...' : 'NOT SET'}` }
-        );
-
-        let errorMessage = `HTTP ${response.status}: ${response.statusText}`;
-        if (errorData.error) {
-          errorMessage += ` - ${errorData.error.message || 'Unknown error'}`;
-          // Provide friendlier guidance for common auth errors
-          const reason = errorData.error.details && errorData.error.details[0] && (errorData.error.details[0].reason || errorData.error.details[0]['@type']);
-          if (reason === 'API_KEY_SERVICE_BLOCKED') {
-            errorMessage += ' (Vertex AI does not accept API keys. Using Google AI endpoint with AQ key is supported.)';
-          } else if (reason === 'CREDENTIALS_MISSING' && isAQToken(geminiConfig.apiKey)) {
-            errorMessage += ' (This model may require OAuth even on Google AI. Try gemini-1.5-flash instead.)';
-          }
-          if (errorData.error.details) {
-            console.error('Error details from API:', errorData.error.details);
-            console.error('Full error object:', JSON.stringify(errorData, null, 2));
-          }
-        }
-
-        showToast(`❌ Google Gemini connection failed: ${errorMessage}`, 'error');
-        return false;
-      }
-    } catch (error) {
-      console.error('❌ Google Gemini connection test error:', error);
-      showToast('❌ Gemini connection test error: ' + error.message, 'error');
+    if (!geminiConfig.apiKey) {
+      console.log('ℹ️ Google Gemini connection test skipped (no API key configured).');
       return false;
     }
+
+    console.log('ℹ️ Google Gemini connection test skipped (AI integrations disabled).');
+    return false;
   }
 
   // Expose test function globally
@@ -2035,13 +1860,18 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
           PHOTO_REFERENCE_OPTIONS[Math.floor(Math.random() * PHOTO_REFERENCE_OPTIONS.length)];
 
         const rawImageRequestId = item.imageRequestId || '';
+        const resolvedSalesOrg = resolveSalesOrgFromSap(item);
+        const productionMethod = resolveProductionMethod(item) || 'M&B';
+        const createdTimestamp = new Date().toISOString();
 
         const order = {
           orderNumber: rawImageRequestId || `IMG-${Date.now()}-${Math.random().toString(36).substr(2, 5)}`,
           title: item.offerName || item.articleName || 'Product Photography',
           status: item.photoStatus === 'Archive' ? 'Completed' : 'New Request',
           orderType: 'PS',
-          method: item.production || 'M&B',
+          method: productionMethod,
+          production: productionMethod,
+          productionMethod: productionMethod,
           photographer: 'Unassigned',
           deadline: getEventDeadline(item.eventId),
           costCenter: item.costCenter || `PG-${item.purchaseGroup || '100'}`,
@@ -2062,13 +1892,18 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
           imageRequestId: rawImageRequestId,
           photoStatus: item.photoStatus,
           cloudinaryUrl: item.cloudinaryUrl || null,
-          createdAt: new Date().toISOString(),
+          createdAt: createdTimestamp,
+          updatedAt: createdTimestamp,
           createdBy: 'sap-import',
           assignedTo: null,
           samples: [],
           comments: [],
           uploadedContent: []
         };
+
+        if (resolvedSalesOrg) {
+          order.salesOrg = resolvedSalesOrg;
+        }
 
         ensureOrderPhotoMetadata([order]);
         order.brief = `Photography for ${order.offerName || order.articleName || 'Product Photography'} (Article: ${order.articleNumber || 'N/A'}) as part of Event ${order.eventId || 'N/A'}\nPage: ${order.page || 'N/A'} | Group: ${order.group || 99} | Shot Type: ${order.shotType || 'N/A'} | Photo Ref: ${order.photoReference || 'N/A'}`;
@@ -2111,6 +1946,10 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
 
       if (typeof window.updateQuickActionBadges === 'function') {
         window.updateQuickActionBadges();
+      }
+
+      if (typeof window.markDataRefreshed === 'function') {
+        window.markDataRefreshed('SAP PMR import');
       }
 
       return { success: true, imported: newOrders.length };
@@ -4776,6 +4615,92 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
     }
   };
 
+  const THEME_STORAGE_KEY = 'rkhThemePreference';
+  const AVAILABLE_THEMES = {
+    warm: { label: 'Warm Classic' },
+    cool: { label: 'Coastal Breeze' },
+    midnight: { label: 'Midnight Dusk' }
+  };
+
+  let activeTheme = 'warm';
+
+  function loadStoredTheme() {
+    if (typeof localStorage === 'undefined') {
+      return 'warm';
+    }
+
+    try {
+      const storedTheme = localStorage.getItem(THEME_STORAGE_KEY);
+      if (storedTheme && Object.prototype.hasOwnProperty.call(AVAILABLE_THEMES, storedTheme)) {
+        return storedTheme;
+      }
+    } catch (error) {
+      console.warn('[Theme] Unable to read stored theme preference:', error);
+    }
+
+    return 'warm';
+  }
+
+  function applyTheme(themeKey, options = {}) {
+    const resolvedTheme = Object.prototype.hasOwnProperty.call(AVAILABLE_THEMES, themeKey)
+      ? themeKey
+      : 'warm';
+
+    const bodyNode = typeof document !== 'undefined' ? document.body : null;
+    if (options.skipDuplicate && resolvedTheme === activeTheme && bodyNode && bodyNode.getAttribute('data-theme') === resolvedTheme) {
+      return;
+    }
+
+    activeTheme = resolvedTheme;
+    if (bodyNode) {
+      bodyNode.setAttribute('data-theme', resolvedTheme);
+    }
+
+    if (typeof localStorage !== 'undefined') {
+      try {
+        localStorage.setItem(THEME_STORAGE_KEY, resolvedTheme);
+      } catch (error) {
+        console.warn('[Theme] Unable to persist theme preference:', error);
+      }
+    }
+
+    const selector = document.getElementById('themeSelector');
+    if (selector && selector.value !== resolvedTheme) {
+      selector.value = resolvedTheme;
+    }
+
+    if (!options.silent && typeof window.showToast === 'function') {
+      window.showToast(`Theme updated to ${AVAILABLE_THEMES[resolvedTheme].label}`, 'info');
+    }
+  }
+
+  function initializeThemeSelector() {
+    if (typeof document === 'undefined') {
+      return;
+    }
+
+    const selector = document.getElementById('themeSelector');
+    if (!selector) {
+      return;
+    }
+
+    selector.value = activeTheme;
+
+    if (!selector.dataset.boundThemeListener) {
+      selector.addEventListener('change', (event) => {
+        applyTheme(event.target.value);
+      });
+      selector.dataset.boundThemeListener = 'true';
+    }
+  }
+
+  window.selectTheme = function(themeKey) {
+    applyTheme(themeKey);
+  };
+
+  activeTheme = loadStoredTheme();
+  applyTheme(activeTheme, { silent: true, skipDuplicate: true });
+
   function render() {
     // Check authentication
     if (!authSystem.isAuthenticated()) {
@@ -4784,6 +4709,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
     }
 
     const currentUser = authSystem.getCurrentUser();
+    const initialRefreshSummary = buildRefreshSummaryText(currentUser);
     const resolveScopedOrders = () => (
       window.getAllOrdersSnapshot
         ? window.getAllOrdersSnapshot()
@@ -5012,6 +4938,15 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
                       </div>
                     </div>
                     <div style="padding: 8px;">
+                      <div class="support-menu-theme">
+                        <label for="themeSelector">Theme</label>
+                        <select id="themeSelector">
+                          <option value="warm">Warm Classic</option>
+                          <option value="cool">Coastal Breeze</option>
+                          <option value="midnight">Midnight Dusk</option>
+                        </select>
+                      </div>
+                      <div class="support-menu-divider"></div>
                       <button onclick="openStyleGuide()" class="support-menu-item">
                         <span class="support-menu-icon">🎨</span>
                         <div class="support-menu-content">
@@ -5033,7 +4968,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
                           <span class="support-menu-desc">Barcode scanning help</span>
                         </div>
                       </button>
-                      <div style="height: 1px; background: #ead7c2; margin: 8px 4px;"></div>
+                      <div class="support-menu-divider"></div>
                       <button onclick="showAboutModal()" class="support-menu-item">
                         <span class="support-menu-icon">ℹ️</span>
                         <div class="support-menu-content">
@@ -5045,9 +4980,10 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
                   </div>
                 </div>
                 <button onclick="logout()" class="content-pill-btn content-pill-btn--logout content-pill-btn--compact"><span>Logout</span></button>
-                <div style="display: flex; flex-direction: column; align-items: flex-end; line-height: 1.2;">
+                <div style="display: flex; flex-direction: column; align-items: flex-end; line-height: 1.2; gap: 2px;">
                   <span style="color: #4b3b2a; font-weight: 600; font-size: 14px;">${currentUser.name}</span>
                   <span style="color: #7b5a3d; font-weight: 500; font-size: 12px; text-transform: capitalize;">${currentUser.role}</span>
+                  <span id="lastRefreshInfo" style="color: #85694c; font-weight: 500; font-size: 11px; max-width: 260px; text-align: right;">${initialRefreshSummary}</span>
                 </div>
               </div>
             </div>
@@ -5081,36 +5017,37 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
                   <select id="salesOrgFilter"
                           onchange="handleSalesOrgFilterChange(this.value)"
                           style="padding: 6px 10px; border: 1px solid rgba(216, 164, 88, 0.65); border-radius: 8px; font-size: 13px; font-family: monospace; font-weight: 500; background: #fffaf3; cursor: pointer; min-width: 140px; color: #6b5440; flex: 0 0 auto;">
-                    <option value="">All Sales Orgs</option>
+                    <option value="">Sales Orgs</option>
                     <!-- Sales org options populated on load -->
                   </select>
                   <select id="tacticTypeFilter"
                           onchange="handleTacticTypeFilterChange(this.value)"
                           style="padding: 6px 10px; border: 1px solid rgba(216, 164, 88, 0.65); border-radius: 8px; font-size: 13px; font-family: monospace; font-weight: 500; background: #fffaf3; cursor: pointer; min-width: 160px; color: #6b5440; flex: 0 0 auto;">
-                    <option value="">All Tactic Types</option>
+                    <option value="">Tactic Types</option>
                     <!-- Tactic types populated dynamically -->
                   </select>
                   <select id="tacticFilter"
                           onchange="handleTacticFilterChange(this.value)"
                           style="padding: 6px 10px; border: 1px solid rgba(216, 164, 88, 0.65); border-radius: 8px; font-size: 13px; font-family: monospace; font-weight: 500; background: #fffaf3; cursor: pointer; min-width: 150px; color: #6b5440; flex: 0 0 auto;">
-                    <option value="">All Tactics</option>
+                    <option value="">Tactics</option>
                     <!-- Tactics populated dynamically -->
                   </select>
                   <select id="eventIdFilter" 
                           onchange="handleEventFilterChange(this.value)" 
                           style="padding: 6px 10px; border: 1px solid rgba(216, 164, 88, 0.65); border-radius: 8px; font-size: 13px; font-family: monospace; font-weight: 500; background: #fffaf3; cursor: pointer; min-width: 150px; color: #6b5440; flex: 0 0 auto;">
-                    <option value="">All Events</option>
+                    <option value="">Events</option>
                     <!-- Event IDs from PMR will be populated here -->
                   </select>
-                  <div id="eventIdOrderCount" style="font-size: 12px; color: #78350f; font-weight: 600; white-space: nowrap; flex: 0 0 auto;">
-                    Select a Sales Org, Event, Status, Tactic Type, or Tactic to view orders
-                  </div>
                   <div style="width: 1px; height: 24px; background: rgba(196, 139, 90, 0.25); margin: 0 4px; flex: 0 0 auto;"></div>
                   <input id="searchBox" placeholder="🔍 Search orders..." 
                          style="flex: 1 1 220px; padding: 6px 12px; border: 1px solid rgba(196, 139, 90, 0.35); border-radius: 8px; font-size: 13px; background: #fffaf3; color: #4b3b2a;" />
                   <button id="quickFiltersToggle" onclick="toggleQuickFilters()" 
                           style="padding: 6px 12px; border: 1px solid rgba(196, 139, 90, 0.35); border-radius: 8px; background: linear-gradient(135deg, #fff0db, #f7e1c3); color: #7b5a3d; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 10px rgba(123, 90, 61, 0.18); flex: 0 0 auto;">
                     Quick Filters ▾
+                  </button>
+                  <button id="clearFiltersButton" onclick="window.clearOrderFilters && window.clearOrderFilters()"
+                          style="padding: 6px 12px; border: 1px solid rgba(196, 139, 90, 0.35); border-radius: 8px; background: linear-gradient(135deg, #fef3c7, #fde68a); color: #92400e; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 10px rgba(180, 140, 60, 0.18); flex: 0 0 auto;">
+                    Clear Filters ✕
                   </button>
                   <div id="quickFiltersPanel" style="display: none; position: absolute; top: calc(100% + 8px); left: 0; right: 0; z-index: 40; background: #fffaf3; border-radius: 12px; box-shadow: 0 12px 24px rgba(79, 59, 37, 0.18); border: 1px solid rgba(196, 139, 90, 0.22); padding: 18px; max-height: 320px; overflow-y: auto;">
                     <h3 style="margin: 0 0 12px; font-size: 14px; color: #4b3b2a; font-weight: 600; letter-spacing: 0.2px; text-transform: uppercase;">🔍 Quick Filters</h3>
@@ -5310,6 +5247,147 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       </div>
 
       <style>
+        :root {
+          --theme-app-bg: #f3f4f6;
+          --theme-shell-bg: #f3f4f6;
+          --theme-surface-bg: #fffaf3;
+          --theme-surface-alt-bg: #f7eedf;
+          --theme-border: rgba(196, 139, 90, 0.3);
+          --theme-text: #4b3b2a;
+          --theme-muted: #6b5440;
+          --theme-support-btn: linear-gradient(135deg, #c48b5a 0%, #a67550 100%);
+          --theme-support-btn-text: #ffffff;
+          --theme-input-bg: rgba(255, 250, 243, 0.94);
+        }
+
+        body {
+          background: var(--theme-app-bg) !important;
+          color: var(--theme-text);
+        }
+
+        body[data-theme='warm'] {
+          --theme-app-bg: #f3f4f6;
+          --theme-shell-bg: #f3f4f6;
+          --theme-surface-bg: #fffaf3;
+          --theme-surface-alt-bg: #f7eedf;
+          --theme-border: rgba(196, 139, 90, 0.3);
+          --theme-text: #4b3b2a;
+          --theme-muted: #6b5440;
+          --theme-support-btn: linear-gradient(135deg, #c48b5a 0%, #a67550 100%);
+          --theme-support-btn-text: #ffffff;
+          --theme-input-bg: rgba(255, 250, 243, 0.94);
+        }
+
+        body[data-theme='cool'] {
+          --theme-app-bg: #e9f2ff;
+          --theme-shell-bg: #dee7f3;
+          --theme-surface-bg: #f8fbff;
+          --theme-surface-alt-bg: #e0ecff;
+          --theme-border: rgba(59, 130, 246, 0.25);
+          --theme-text: #1e293b;
+          --theme-muted: #334155;
+          --theme-support-btn: linear-gradient(135deg, #60a5fa 0%, #2563eb 100%);
+          --theme-support-btn-text: #f8fafc;
+          --theme-input-bg: rgba(248, 251, 255, 0.96);
+        }
+
+        body[data-theme='midnight'] {
+          --theme-app-bg: #0f172a;
+          --theme-shell-bg: #111827;
+          --theme-surface-bg: #1f2937;
+          --theme-surface-alt-bg: #111827;
+          --theme-border: rgba(148, 163, 184, 0.35);
+          --theme-text: #e2e8f0;
+          --theme-muted: #94a3b8;
+          --theme-support-btn: linear-gradient(135deg, #6366f1 0%, #4338ca 100%);
+          --theme-support-btn-text: #f8fafc;
+          --theme-input-bg: rgba(17, 24, 39, 0.94);
+        }
+
+        #fallback-app {
+          background: var(--theme-shell-bg) !important;
+          color: var(--theme-text);
+        }
+
+        #supportMenuDropdown {
+          background: var(--theme-surface-bg) !important;
+          border-color: var(--theme-border) !important;
+          color: var(--theme-text) !important;
+        }
+
+        .support-menu-item {
+          color: var(--theme-text) !important;
+        }
+
+        .support-menu-item:hover {
+          background: var(--theme-surface-alt-bg) !important;
+        }
+
+        .support-menu-label {
+          color: var(--theme-text) !important;
+        }
+
+        .support-menu-desc {
+          color: var(--theme-muted) !important;
+        }
+
+        .support-menu-theme {
+          display: flex;
+          flex-direction: column;
+          gap: 6px;
+          padding: 8px 4px 12px;
+        }
+
+        .support-menu-theme label {
+          font-size: 11px;
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+          font-weight: 600;
+          color: var(--theme-muted) !important;
+        }
+
+        .support-menu-theme select {
+          width: 100%;
+          padding: 9px 12px;
+          border-radius: 8px;
+          border: 1px solid var(--theme-border) !important;
+          background: var(--theme-input-bg) !important;
+          color: var(--theme-text) !important;
+          font-size: 13px;
+          font-weight: 500;
+          cursor: pointer;
+        }
+
+        .support-menu-theme select:focus {
+          outline: none;
+          box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+        }
+
+        .support-menu-divider {
+          height: 1px;
+          background: var(--theme-border);
+          margin: 8px 4px;
+        }
+
+        .content-pill-btn--support {
+          background: var(--theme-support-btn) !important;
+          color: var(--theme-support-btn-text) !important;
+        }
+
+        .sidebar {
+          background: var(--theme-shell-bg) !important;
+        }
+
+        body[data-theme='warm'] .sidebar {
+          background: transparent !important;
+        }
+
+        body[data-theme='cool'] .main-content,
+        body[data-theme='midnight'] .main-content {
+          background: var(--theme-surface-bg) !important;
+          color: var(--theme-text);
+        }
+
         /* Sidebar layout refinements */
         .sidebar {
           width: 260px;
@@ -6198,8 +6276,11 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
             window.updateQuickActionBadges();
           }
           
-          // Show success message
+          // Show success message and update refresh metadata
           setTimeout(() => {
+            if (typeof window.markDataRefreshed === 'function') {
+              window.markDataRefreshed('Manual refresh');
+            }
             showToast('✅ Data refreshed successfully!', 'success');
           }, 500);
         }
@@ -7608,7 +7689,9 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       }, 300);
     };
 
-    initializeSidebarSections();
+  applyTheme(activeTheme, { silent: true, skipDuplicate: true });
+  initializeThemeSelector();
+  initializeSidebarSections();
 
     const tbody = document.getElementById('ordersBody');
     const samplesBody = document.getElementById('samplesBody');
@@ -7619,6 +7702,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
     let selectedItems = new Set();
     let expandedOrders = new Set();
     let statusFilterOverride = '';
+  let quickFiltersOpen = false;
 
   const SALES_ORG_OPTIONS = ['Bilka', 'føtex', 'netto', 'Fætter BR', 'Salling'];
   const DEFAULT_TACTIC_TYPE = 'Print';
@@ -7629,6 +7713,47 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       tacticType: '',
       tactic: ''
     };
+
+    function clearOrderFilters() {
+      orderFilters.salesOrg = '';
+      orderFilters.eventId = '';
+      orderFilters.tacticType = '';
+      orderFilters.tactic = '';
+      statusFilterOverride = '';
+
+      const selectIds = ['salesOrgFilter', 'eventIdFilter', 'tacticTypeFilter', 'tacticFilter'];
+      selectIds.forEach((id) => {
+        const select = document.getElementById(id);
+        if (select) {
+          select.value = '';
+        }
+      });
+
+        const searchInput = document.getElementById('searchBox');
+        if (searchInput) {
+          searchInput.value = '';
+        }
+
+      const filterInfo = document.querySelector('#mainContent .filter-info');
+      if (filterInfo) {
+        filterInfo.remove();
+      }
+
+      if (typeof updateOrderFilterSummary === 'function') {
+        updateOrderFilterSummary([]);
+      }
+
+      if (typeof drawOrderRows === 'function') {
+        drawOrderRows();
+      }
+
+      const panel = document.getElementById('quickFiltersPanel');
+      if (panel && quickFiltersOpen) {
+        toggleQuickFilters();
+      }
+    }
+
+    window.clearOrderFilters = clearOrderFilters;
 
     function getAccessibleOrders() {
       const sourceOrders = (typeof window.resolveOrdersSnapshot === 'function') ? window.resolveOrdersSnapshot() : (window.rkhOrders || []);
@@ -7648,6 +7773,70 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
 
     function normalizeComparisonValue(value) {
       return normalizeFilterValue(value).toLowerCase();
+    }
+
+    function resolveSalesOrgFromSap(sapItem) {
+      if (!sapItem || typeof sapItem !== 'object') {
+        return '';
+      }
+
+      const candidateFields = [
+        sapItem.salesOrg,
+        sapItem.salesOrganisation,
+        sapItem.salesOrganization,
+        sapItem.salesOrgName,
+        sapItem.format,
+        sapItem.channel
+      ];
+
+      for (const field of candidateFields) {
+        const candidate = normalizeFilterValue(field);
+        if (!candidate) continue;
+
+        const normalized = normalizeComparisonValue(candidate);
+        const matchedOption = SALES_ORG_OPTIONS.find(option => normalizeComparisonValue(option) === normalized);
+        if (matchedOption) {
+          return matchedOption;
+        }
+
+        if (normalized.includes('bilka')) return 'Bilka';
+        if (normalized.includes('føtex') || normalized.includes('fotex')) return 'føtex';
+        if (normalized.includes('netto')) return 'netto';
+        if (normalized.includes('salling')) return 'Salling';
+        if (normalized.includes('fætter') || normalized.includes('faetter') || normalized.includes('br')) return 'Fætter BR';
+
+        return candidate;
+      }
+
+      const numericPurchaseGroup = parseInt(sapItem.purchaseGroup, 10);
+      if (!Number.isNaN(numericPurchaseGroup)) {
+        if (numericPurchaseGroup >= 100 && numericPurchaseGroup < 200) return 'Bilka';
+        if (numericPurchaseGroup >= 200 && numericPurchaseGroup < 300) return 'føtex';
+        if (numericPurchaseGroup >= 300 && numericPurchaseGroup < 400) return 'netto';
+        if (numericPurchaseGroup >= 400 && numericPurchaseGroup < 500) return 'Salling';
+      }
+
+      const costCenterCandidate = normalizeFilterValue(sapItem.costCenter);
+      if (costCenterCandidate) {
+        const normalizedCostCenter = normalizeComparisonValue(costCenterCandidate);
+        if (normalizedCostCenter.includes('bilka')) return 'Bilka';
+        if (normalizedCostCenter.includes('føtex') || normalizedCostCenter.includes('fotex')) return 'føtex';
+        if (normalizedCostCenter.includes('netto')) return 'netto';
+        if (normalizedCostCenter.includes('salling')) return 'Salling';
+        if (normalizedCostCenter.includes('fætter') || normalizedCostCenter.includes('faetter') || normalizedCostCenter.includes('br')) return 'Fætter BR';
+      }
+
+      return '';
+    }
+
+    function resolveProductionMethod(sapItem) {
+      const raw = sapItem ? (sapItem.production || sapItem.productionMethod || sapItem.method) : '';
+      return normalizeFilterValue(raw);
+    }
+
+    if (typeof window !== 'undefined') {
+      window.resolveSalesOrgFromSap = resolveSalesOrgFromSap;
+      window.resolveProductionMethod = resolveProductionMethod;
     }
 
     const PRODUCTION_METHOD_OPTIONS = [
@@ -8003,7 +8192,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       if (!select) return;
 
       const previousValue = orderFilters.salesOrg;
-      select.innerHTML = '<option value="">All Sales Orgs</option>';
+  select.innerHTML = '<option value="">Sales Orgs</option>';
 
       SALES_ORG_OPTIONS.forEach(org => {
         const option = document.createElement('option');
@@ -8024,7 +8213,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
         .sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
 
       const previousValue = orderFilters.tacticType;
-      select.innerHTML = '<option value="">All Tactic Types</option>';
+  select.innerHTML = '<option value="">Tactic Types</option>';
 
       types.forEach(type => {
         const option = document.createElement('option');
@@ -8056,7 +8245,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
         .sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
 
       const previousValue = orderFilters.tactic;
-      select.innerHTML = '<option value="">All Tactics</option>';
+  select.innerHTML = '<option value="">Tactics</option>';
 
       tactics.forEach(tactic => {
         const option = document.createElement('option');
@@ -10627,8 +10816,29 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       }
 
       const orders = window.authSystem.getFilteredOrders(baseOrders);
-      let filteredByActiveFilters = hasPrimaryOrderFilter() ? applyActiveOrderFilters(orders) : orders;
+      const filtersActive = hasPrimaryOrderFilter();
+      let filteredByActiveFilters = filtersActive ? applyActiveOrderFilters(orders) : [];
       let statusFiltered = { orders: filteredByActiveFilters, label: '' };
+
+      if (!filtersActive) {
+        updateOrderFilterSummary([]);
+        if (tbody) {
+          tbody.innerHTML = `
+            <tr>
+              <td colspan="18" style="padding: 18px; text-align: center; color: #7b5a3d; font-size: 14px; font-weight: 600; background: rgba(253, 244, 230, 0.65); border-bottom: 1px solid rgba(196, 139, 90, 0.2);">
+                Select at least one filter to fetch and display orders.
+              </td>
+            </tr>
+          `;
+        }
+        if (typeof updateBulkActionsPanel === 'function') {
+          updateBulkActionsPanel();
+        }
+        if (typeof updateFilterTileCounts === 'function') {
+          updateFilterTileCounts();
+        }
+        return;
+      }
 
       if (statusFilterOverride) {
         statusFiltered = applyStatusFilter(filteredByActiveFilters, statusFilterOverride);
@@ -10886,8 +11096,6 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
         updateFilterTileCounts();
       }
     }
-
-    let quickFiltersOpen = false;
 
     function toggleQuickFilters() {
       const panel = document.getElementById('quickFiltersPanel');
@@ -13456,6 +13664,9 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
         }
         if (typeof window.updateQuickActionBadges === 'function') {
           window.updateQuickActionBadges();
+        }
+        if (typeof window.markDataRefreshed === 'function') {
+          window.markDataRefreshed('CPT import');
         }
         
         // Show success message
@@ -18425,10 +18636,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
     localStorage.setItem('runwareApiKey', apiKey);
     if (typeof window !== 'undefined') window.runwareConfig = runwareConfig;
     console.log('✅ Runware API configured successfully!');
-    showToast('✅ Runware API configured successfully!', 'success');
-    
-    // Test the connection
-    testGoogleAIConnection();
+    console.log('ℹ️ Connection test skipped (AI integrations disabled).');
     return runwareConfig;
   };
 
