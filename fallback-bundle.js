@@ -5810,11 +5810,12 @@ const __fallbackThemeCSS = `
               ` : ''}
               <button class="content-pill-btn content-pill-btn--compact" onclick="showMassUploadModal()" style="margin-left: 8px;">📤 <span>Mass Upload</span></button>
             </div>
-            <div class="content-actions" style="flex-direction: column; gap: 6px; align-items: flex-end;">
-              <button class="content-pill-btn content-pill-btn--export content-pill-btn--compact" onclick="exportToCsv()" style="width: 120px; justify-content: flex-start;">📊 <span>Export</span></button>
-              <button class="content-pill-btn content-pill-btn--refresh content-pill-btn--compact" onclick="refreshData()" style="width: 120px; justify-content: flex-start;">🔄 <span>Refresh</span></button>
+            <div style="display: flex; align-items: center; gap: 24px;">
+            <div class="content-actions" style="display: flex; align-items: center; gap: 8px;">
+              <button class="content-pill-btn content-pill-btn--export content-pill-btn--compact" onclick="exportToCsv()">📊 <span>Export</span></button>
+              <button class="content-pill-btn content-pill-btn--refresh content-pill-btn--compact" onclick="refreshData()">🔄 <span>Refresh</span></button>
               <div style="position: relative;">
-                  <button id="supportMenuBtn" onclick="toggleSupportMenu()" class="content-pill-btn content-pill-btn--support content-pill-btn--compact" style="background: linear-gradient(135deg, #c48b5a 0%, #a67550 100%); color: white; width: 120px; justify-content: flex-start;">
+                  <button id="supportMenuBtn" onclick="toggleSupportMenu()" class="content-pill-btn content-pill-btn--support content-pill-btn--compact" style="background: linear-gradient(135deg, #c48b5a 0%, #a67550 100%); color: white;">
                     <span>📚 Support</span>
                   </button>
                   <div id="supportMenuDropdown" class="support-menu-panel glass-surface glass-floating" style="
@@ -5885,6 +5886,7 @@ const __fallbackThemeCSS = `
                   <span style="color: #7b5a3d; font-weight: 500; font-size: 12px; text-transform: capitalize;">${currentUser.role}</span>
                   <span id="lastRefreshInfo" style="color: #85694c; font-weight: 500; font-size: 11px; max-width: 260px; text-align: right;">${initialRefreshSummary}</span>
                 </div>
+            </div>
             </div>
           </div>
           
