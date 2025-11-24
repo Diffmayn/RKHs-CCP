@@ -5810,12 +5810,11 @@ const __fallbackThemeCSS = `
               ` : ''}
               <button class="content-pill-btn content-pill-btn--compact" onclick="showMassUploadModal()" style="margin-left: 8px;">📤 <span>Mass Upload</span></button>
             </div>
-            <div class="content-actions">
-              <button class="content-pill-btn content-pill-btn--export content-pill-btn--compact" onclick="exportToCsv()">📊 <span>Export</span></button>
-              <button class="content-pill-btn content-pill-btn--refresh content-pill-btn--compact" onclick="refreshData()">🔄 <span>Refresh</span></button>
-              <div style="display: flex; align-items: center; gap: 12px;">
-                <div style="position: relative;">
-                  <button id="supportMenuBtn" onclick="toggleSupportMenu()" class="content-pill-btn content-pill-btn--support content-pill-btn--compact" style="background: linear-gradient(135deg, #c48b5a 0%, #a67550 100%); color: white;">
+            <div class="content-actions" style="flex-direction: column; gap: 6px; align-items: flex-end;">
+              <button class="content-pill-btn content-pill-btn--export content-pill-btn--compact" onclick="exportToCsv()" style="width: 120px; justify-content: flex-start;">📊 <span>Export</span></button>
+              <button class="content-pill-btn content-pill-btn--refresh content-pill-btn--compact" onclick="refreshData()" style="width: 120px; justify-content: flex-start;">🔄 <span>Refresh</span></button>
+              <div style="position: relative;">
+                  <button id="supportMenuBtn" onclick="toggleSupportMenu()" class="content-pill-btn content-pill-btn--support content-pill-btn--compact" style="background: linear-gradient(135deg, #c48b5a 0%, #a67550 100%); color: white; width: 120px; justify-content: flex-start;">
                     <span>📚 Support</span>
                   </button>
                   <div id="supportMenuDropdown" class="support-menu-panel glass-surface glass-floating" style="
