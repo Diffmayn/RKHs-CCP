@@ -10014,7 +10014,7 @@ const __fallbackThemeCSS = `
 
       if (!newOrderArticleContentState.length) {
         container.innerHTML = `
-          <div style="padding:14px;border:1px dashed rgba(196, 139, 90, 0.35);border-radius:12px;background:rgba(255,250,243,0.6);color:#6b5440;font-size:12px;">
+          <div style="padding:10px;border:1px dashed rgba(196, 139, 90, 0.35);border-radius:8px;background:rgba(255,250,243,0.6);color:#6b5440;font-size:12px;">
             Add article numbers above to configure content type per article.
           </div>
         `;
@@ -10030,14 +10030,14 @@ const __fallbackThemeCSS = `
           .join('');
 
         return `
-          <div style="display:grid;grid-template-columns:1fr 160px;gap:12px;align-items:center;padding:10px 12px;border-bottom:1px solid rgba(196, 139, 90, 0.18);">
+          <div style="display:grid;grid-template-columns:1fr 140px;gap:8px;align-items:center;padding:8px 10px;border-bottom:1px solid rgba(196, 139, 90, 0.18);">
             <div style="font-size:12px;color:#4b3b2a;line-height:1.4;word-break:break-word;">
-              <div style="font-weight:600;margin-bottom:4px;">Article ${index + 1}</div>
-              <div style="font-family:'Courier New', monospace;font-size:11px;color:#6b5440;background:rgba(196, 139, 90, 0.08);padding:6px 8px;border-radius:6px;">${escapeHtml(entry.raw)}</div>
+              <div style="font-weight:600;margin-bottom:2px;">Article ${index + 1}</div>
+              <div style="font-family:'Courier New', monospace;font-size:11px;color:#6b5440;background:rgba(196, 139, 90, 0.08);padding:4px 6px;border-radius:4px;">${escapeHtml(entry.raw)}</div>
             </div>
             <div>
-              <label style="display:block;font-size:11px;font-weight:600;color:#6b5440;margin-bottom:4px;">Content Type</label>
-              <select style="width:100%;padding:10px;border:2px solid #ead7c2;border-radius:8px;font-size:12px;background:white;transition:border-color 0.2s ease;" 
+              <label style="display:block;font-size:11px;font-weight:600;color:#6b5440;margin-bottom:2px;">Content Type</label>
+              <select style="width:100%;padding:6px 8px;border:1px solid #ead7c2;border-radius:6px;font-size:12px;background:white;transition:border-color 0.2s ease;" 
                       onfocus="this.style.borderColor='#c48b5a'" 
                       onblur="this.style.borderColor='#ead7c2'"
                       onchange="handleArticleContentTypeChange(${index}, this.value)">
@@ -10049,8 +10049,8 @@ const __fallbackThemeCSS = `
       }).join('');
 
       container.innerHTML = `
-        <div style="border:1px solid rgba(196, 139, 90, 0.28);border-radius:12px;overflow:hidden;background:white;box-shadow:0 12px 24px rgba(112,82,50,0.08);">
-          <div style="background:rgba(253, 244, 230, 0.65);padding:10px 12px;font-size:12px;font-weight:600;color:#4b3b2a;">Article Content Types</div>
+        <div style="border:1px solid rgba(196, 139, 90, 0.28);border-radius:8px;overflow:hidden;background:white;box-shadow:0 12px 24px rgba(112,82,50,0.08);">
+          <div style="background:rgba(253, 244, 230, 0.65);padding:8px 10px;font-size:12px;font-weight:600;color:#4b3b2a;">Article Content Types</div>
           <div>${rows}</div>
         </div>
       `;
@@ -10092,7 +10092,7 @@ const __fallbackThemeCSS = `
         position: fixed;
         top: 0;
         left: 0;
-        width: 650px;
+        width: 550px;
         height: 100vh;
         background: rgba(255, 250, 243, 0.97);
         backdrop-filter: blur(22px);
@@ -10102,34 +10102,34 @@ const __fallbackThemeCSS = `
         overflow-y: auto;
         transform: translateX(-100%);
         transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        padding: 28px;
+        padding: 20px;
       `;
 
       modal.innerHTML = `
-  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 2px solid rgba(196, 139, 90, 0.28);">
-          <div style="display: flex; align-items: center; gap: 12px;">
-            <img src="/CCP_Logog.png" alt="CCP Logo" style="width: 32px; height: 32px; object-fit: contain;" />
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 2px solid rgba(196, 139, 90, 0.28);">
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <img src="/CCP_Logog.png" alt="CCP Logo" style="width: 24px; height: 24px; object-fit: contain;" />
             <div>
-              <h3 style="margin: 0; font-size: 22px; color: #4b3b2a; font-weight: 600;">Create New Photo Order</h3>
-              <p style="margin: 4px 0 0; font-size: 12px; color: rgba(107, 84, 64, 0.78); letter-spacing: 0.3px;">Streamline new requests with the warm CCP workspace aesthetic.</p>
+              <h3 style="margin: 0; font-size: 18px; color: #4b3b2a; font-weight: 600;">Create New Photo Order</h3>
+              <p style="margin: 2px 0 0; font-size: 11px; color: rgba(107, 84, 64, 0.78); letter-spacing: 0.3px;">Streamline new requests with the warm CCP workspace aesthetic.</p>
             </div>
           </div>
-          <button onclick="closeNewOrderModal()" style="background: #ef4444; color: white; border: none; border-radius: 50%; width: 36px; height: 36px; cursor: pointer; font-size: 18px; display: flex; align-items: center; justify-content: center; transition: all 0.2s ease;" onmouseover="this.style.background='#dc2626'" onmouseout="this.style.background='#ef4444'">×</button>
+          <button onclick="closeNewOrderModal()" style="background: #ef4444; color: white; border: none; border-radius: 50%; width: 28px; height: 28px; cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center; transition: all 0.2s ease;" onmouseover="this.style.background='#dc2626'" onmouseout="this.style.background='#ef4444'">×</button>
         </div>
 
-  <div style="background: linear-gradient(135deg, #fdf4e6 0%, #f2e4d2 100%); padding: 24px; border-radius: 16px; box-sizing: border-box; border: 1px solid rgba(196, 139, 90, 0.24); box-shadow: 0 18px 32px rgba(112, 82, 50, 0.12);">
+  <div style="background: linear-gradient(135deg, #fdf4e6 0%, #f2e4d2 100%); padding: 16px; border-radius: 12px; box-sizing: border-box; border: 1px solid rgba(196, 139, 90, 0.24); box-shadow: 0 18px 32px rgba(112, 82, 50, 0.12);">
           <form id="newOrderForm" onsubmit="handleNewOrderSubmit(event)">
-            <div style="margin-bottom: 20px;">
-              <label style="display: block; font-weight: 600; margin-bottom: 6px; color: #4b3b2a; font-size: 14px;">Order Title</label>
-    <input name="title" required style="width: 100%; box-sizing: border-box; padding: 14px; border: 2px solid #ead7c2; border-radius: 8px; font-size: 16px; transition: border-color 0.2s ease;" 
+            <div style="margin-bottom: 12px;">
+              <label style="display: block; font-weight: 600; margin-bottom: 4px; color: #4b3b2a; font-size: 12px;">Order Title</label>
+    <input name="title" required style="width: 100%; box-sizing: border-box; padding: 8px 12px; border: 1px solid #ead7c2; border-radius: 6px; font-size: 13px; transition: border-color 0.2s ease;" 
                      placeholder="e.g., Premium Product Photography Session"
       onfocus="this.style.borderColor='#c48b5a'" onblur="this.style.borderColor='#ead7c2'">
             </div>
 
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
               <div style="min-width: 0;">
-                <label style="display: block; font-weight: 600; margin-bottom: 6px; color: #4b3b2a; font-size: 14px;">Cost Center</label>
-    <select name="costCenter" required style="width: 100%; box-sizing: border-box; padding: 14px; border: 2px solid #ead7c2; border-radius: 8px; font-size: 16px; transition: border-color 0.2s ease;"
+                <label style="display: block; font-weight: 600; margin-bottom: 4px; color: #4b3b2a; font-size: 12px;">Cost Center</label>
+    <select name="costCenter" required style="width: 100%; box-sizing: border-box; padding: 8px 12px; border: 1px solid #ead7c2; border-radius: 6px; font-size: 13px; transition: border-color 0.2s ease;"
       onfocus="this.style.borderColor='#c48b5a'" onblur="this.style.borderColor='#ead7c2'">
                   <option value="">Select cost center...</option>
                   <option value="Bilka.dk">Bilka.dk</option>
@@ -10143,8 +10143,8 @@ const __fallbackThemeCSS = `
                 </select>
               </div>
               <div style="min-width: 0;">
-                <label style="display: block; font-weight: 600; margin-bottom: 6px; color: #4b3b2a; font-size: 14px;">Purchase Group</label>
-    <select name="purchaseGroup" required style="width: 100%; box-sizing: border-box; padding: 14px; border: 2px solid #ead7c2; border-radius: 8px; font-size: 16px; transition: border-color 0.2s ease;"
+                <label style="display: block; font-weight: 600; margin-bottom: 4px; color: #4b3b2a; font-size: 12px;">Purchase Group</label>
+    <select name="purchaseGroup" required style="width: 100%; box-sizing: border-box; padding: 8px 12px; border: 1px solid #ead7c2; border-radius: 6px; font-size: 13px; transition: border-color 0.2s ease;"
       onfocus="this.style.borderColor='#c48b5a'" onblur="this.style.borderColor='#ead7c2'">
                   <option value="">Select purchase group...</option>
                   <option value="101">101 - Groceries</option>
@@ -10155,10 +10155,10 @@ const __fallbackThemeCSS = `
               </div>
             </div>
 
-            <div style="margin-bottom: 20px;">
+            <div style="margin-bottom: 12px;">
               <div style="min-width: 0;">
-                <label style="display: block; font-weight: 600; margin-bottom: 6px; color: #4b3b2a; font-size: 14px;">Production</label>
-    <select name="method" required style="width: 100%; box-sizing: border-box; padding: 14px; border: 2px solid #ead7c2; border-radius: 8px; font-size: 16px; transition: border-color 0.2s ease;"
+                <label style="display: block; font-weight: 600; margin-bottom: 4px; color: #4b3b2a; font-size: 12px;">Production</label>
+    <select name="method" required style="width: 100%; box-sizing: border-box; padding: 8px 12px; border: 1px solid #ead7c2; border-radius: 6px; font-size: 13px; transition: border-color 0.2s ease;"
       onfocus="this.style.borderColor='#c48b5a'" onblur="this.style.borderColor='#ead7c2'">
                   <option value="">Select production...</option>
                   <option value="Photo Box">Photo Box</option>
@@ -10169,10 +10169,10 @@ const __fallbackThemeCSS = `
               </div>
             </div>
 
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
               <div style="min-width: 0;">
-                <label style="display: block; font-weight: 600; margin-bottom: 6px; color: #4b3b2a; font-size: 14px;">Content Type</label>
-                <select name="contentType" style="width: 100%; box-sizing: border-box; padding: 14px; border: 2px solid #ead7c2; border-radius: 8px; font-size: 16px; transition: border-color 0.2s ease;"
+                <label style="display: block; font-weight: 600; margin-bottom: 4px; color: #4b3b2a; font-size: 12px;">Content Type</label>
+                <select name="contentType" style="width: 100%; box-sizing: border-box; padding: 8px 12px; border: 1px solid #ead7c2; border-radius: 6px; font-size: 13px; transition: border-color 0.2s ease;"
       onfocus="this.style.borderColor='#c48b5a'" onblur="this.style.borderColor='#ead7c2'">
                   <option value="">Select content type...</option>
                   <option value="Packshot">Packshot</option>
@@ -10186,8 +10186,8 @@ const __fallbackThemeCSS = `
                 </select>
               </div>
               <div style="min-width: 0;">
-                <label style="display: block; font-weight: 600; margin-bottom: 6px; color: #4b3b2a; font-size: 14px;">DAM Shot Type</label>
-                <select name="shotType" style="width: 100%; box-sizing: border-box; padding: 14px; border: 2px solid #ead7c2; border-radius: 8px; font-size: 16px; transition: border-color 0.2s ease;"
+                <label style="display: block; font-weight: 600; margin-bottom: 4px; color: #4b3b2a; font-size: 12px;">DAM Shot Type</label>
+                <select name="shotType" style="width: 100%; box-sizing: border-box; padding: 8px 12px; border: 1px solid #ead7c2; border-radius: 6px; font-size: 13px; transition: border-color 0.2s ease;"
       onfocus="this.style.borderColor='#c48b5a'" onblur="this.style.borderColor='#ead7c2'">
                   <option value="">Select shot type...</option>
                   <option value="Front">Front</option>
@@ -10203,62 +10203,62 @@ const __fallbackThemeCSS = `
               </div>
             </div>
 
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
               <div style="min-width: 0;">
-                <label style="display: block; font-weight: 600; margin-bottom: 6px; color: #4b3b2a; font-size: 14px;">Deadline</label>
-      <input name="deadline" type="date" required style="width: 100%; box-sizing: border-box; padding: 14px; border: 2px solid #ead7c2; border-radius: 8px; font-size: 16px; transition: border-color 0.2s ease;"
+                <label style="display: block; font-weight: 600; margin-bottom: 4px; color: #4b3b2a; font-size: 12px;">Deadline</label>
+      <input name="deadline" type="date" required style="width: 100%; box-sizing: border-box; padding: 8px 12px; border: 1px solid #ead7c2; border-radius: 6px; font-size: 13px; transition: border-color 0.2s ease;"
         onfocus="this.style.borderColor='#c48b5a'" onblur="this.style.borderColor='#ead7c2'">
               </div>
               <div style="min-width: 0;">
-                <label style="display: block; font-weight: 600; margin-bottom: 6px; color: #4b3b2a; font-size: 14px;">Budget (DKK)</label>
-      <input name="budget" type="number" min="0" style="width: 100%; box-sizing: border-box; padding: 14px; border: 2px solid #ead7c2; border-radius: 8px; font-size: 16px; transition: border-color 0.2s ease;" placeholder="0"
+                <label style="display: block; font-weight: 600; margin-bottom: 4px; color: #4b3b2a; font-size: 12px;">Budget (DKK)</label>
+      <input name="budget" type="number" min="0" style="width: 100%; box-sizing: border-box; padding: 8px 12px; border: 1px solid #ead7c2; border-radius: 6px; font-size: 13px; transition: border-color 0.2s ease;" placeholder="0"
         onfocus="this.style.borderColor='#c48b5a'" onblur="this.style.borderColor='#ead7c2'">
               </div>
             </div>
 
-            <div style="margin-bottom: 20px;">
-              <label style="display: block; font-weight: 600; margin-bottom: 6px; color: #4b3b2a; font-size: 14px;">Brief Description</label>
-              <textarea name="brief" required rows="3" style="width: 100%; box-sizing: border-box; padding: 14px; border: 2px solid #ead7c2; border-radius: 8px; font-size: 16px; resize: vertical; transition: border-color 0.2s ease;" 
+            <div style="margin-bottom: 12px;">
+              <label style="display: block; font-weight: 600; margin-bottom: 4px; color: #4b3b2a; font-size: 12px;">Brief Description</label>
+              <textarea name="brief" required rows="2" style="width: 100%; box-sizing: border-box; padding: 8px 12px; border: 1px solid #ead7c2; border-radius: 6px; font-size: 13px; resize: vertical; transition: border-color 0.2s ease;" 
                         placeholder="Provide detailed instructions for the content creation..."
                         onfocus="this.style.borderColor='#c48b5a'" onblur="this.style.borderColor='#ead7c2'"></textarea>
             </div>
 
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
               <div style="min-width: 0;">
-                <label style="display: block; font-weight: 600; margin-bottom: 6px; color: #4b3b2a; font-size: 14px;">Photo Reference / Shooting Type</label>
-                <select name="photoReference" style="width: 100%; box-sizing: border-box; padding: 14px; border: 2px solid #ead7c2; border-radius: 8px; font-size: 16px; transition: border-color 0.2s ease;"
+                <label style="display: block; font-weight: 600; margin-bottom: 4px; color: #4b3b2a; font-size: 12px;">Photo Reference / Shooting Type</label>
+                <select name="photoReference" style="width: 100%; box-sizing: border-box; padding: 8px 12px; border: 1px solid #ead7c2; border-radius: 6px; font-size: 13px; transition: border-color 0.2s ease;"
       onfocus="this.style.borderColor='#c48b5a'" onblur="this.style.borderColor='#ead7c2'">
                   <option value="">Select photo reference...</option>
                   ${PHOTO_REFERENCE_OPTIONS.map(option => `<option value="${option}">${option}</option>`).join('')}
                 </select>
               </div>
               <div style="min-width: 0;">
-                <label style="display: block; font-weight: 600; margin-bottom: 6px; color: #4b3b2a; font-size: 14px;">Activity</label>
-                <input name="activity" type="text" style="width: 100%; box-sizing: border-box; padding: 14px; border: 2px solid #ead7c2; border-radius: 8px; font-size: 16px; transition: border-color 0.2s ease;" placeholder="e.g., Summer Campaign" autocomplete="off"
+                <label style="display: block; font-weight: 600; margin-bottom: 4px; color: #4b3b2a; font-size: 12px;">Activity</label>
+                <input name="activity" type="text" style="width: 100%; box-sizing: border-box; padding: 8px 12px; border: 1px solid #ead7c2; border-radius: 6px; font-size: 13px; transition: border-color 0.2s ease;" placeholder="e.g., Summer Campaign" autocomplete="off"
       onfocus="this.style.borderColor='#c48b5a'" onblur="this.style.borderColor='#ead7c2'">
               </div>
             </div>
 
-            <div style="margin-bottom: 24px;">
-              <label style="display: block; font-weight: 600; margin-bottom: 6px; color: #4b3b2a; font-size: 14px;">
+            <div style="margin-bottom: 16px;">
+              <label style="display: block; font-weight: 600; margin-bottom: 4px; color: #4b3b2a; font-size: 12px;">
                 <span style="display: flex; align-items: center; gap: 8px;">
                   <span>Article Numbers (EAN/GTIN)</span>
-                  <span style="font-size: 18px;" title="Scan or enter multiple article numbers">📦</span>
+                  <span style="font-size: 16px;" title="Scan or enter multiple article numbers">📦</span>
                 </span>
               </label>
-              <textarea id="newOrderArticles" name="articles" required rows="4" style="width: 100%; box-sizing: border-box; padding: 14px; border: 2px solid #ead7c2; border-radius: 8px; font-size: 16px; resize: vertical; transition: border-color 0.2s ease; font-family: 'Courier New', monospace;" 
+              <textarea id="newOrderArticles" name="articles" required rows="3" style="width: 100%; box-sizing: border-box; padding: 8px 12px; border: 1px solid #ead7c2; border-radius: 6px; font-size: 13px; resize: vertical; transition: border-color 0.2s ease; font-family: 'Courier New', monospace;" 
                         placeholder="Scan or enter article numbers here (one per line)...&#10;Example:&#10;5901234567890&#10;5901234567891&#10;5901234567892"
                         oninput="handleNewOrderArticlesInput()"
                         onfocus="this.style.borderColor='#c48b5a'" onblur="this.style.borderColor='#ead7c2'"></textarea>
-              <div style="margin-top: 6px; font-size: 12px; color: #6b5440;">
+              <div style="margin-top: 4px; font-size: 11px; color: #6b5440;">
                 💡 Tip: You can scan barcodes directly into this field, or type article numbers manually (one per line)
               </div>
-              <div id="articleContentTypeConfigurator" style="margin-top: 16px;"></div>
+              <div id="articleContentTypeConfigurator" style="margin-top: 12px;"></div>
             </div>
 
-            <div style="display: flex; gap: 12px; justify-content: flex-end;">
-              <button type="button" onclick="closeNewOrderModal()" style="padding: 14px 24px; background: #6b5440; color: white; border: none; border-radius: 10px; cursor: pointer; font-weight: 500; transition: all 0.2s ease; box-shadow: 0 10px 24px rgba(107, 84, 64, 0.25);" onmouseover="this.style.background='#4b3b2a'; this.style.transform='translateY(-1px)'" onmouseout="this.style.background='#6b5440'; this.style.transform='translateY(0)'">Cancel</button>
-                <button type="submit" style="padding: 14px 28px; background: linear-gradient(135deg, #c48b5a 0%, #a66b38 100%); color: white; border: none; border-radius: 10px; cursor: pointer; font-weight: 600; box-shadow: 0 8px 20px rgba(166, 107, 56, 0.35); transition: all 0.2s ease;" onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform='translateY(0)'">Create Order</button>
+            <div style="display: flex; gap: 10px; justify-content: flex-end;">
+              <button type="button" onclick="closeNewOrderModal()" style="padding: 10px 16px; background: #6b5440; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 500; font-size: 13px; transition: all 0.2s ease; box-shadow: 0 4px 12px rgba(107, 84, 64, 0.25);" onmouseover="this.style.background='#4b3b2a'; this.style.transform='translateY(-1px)'" onmouseout="this.style.background='#6b5440'; this.style.transform='translateY(0)'">Cancel</button>
+                <button type="submit" style="padding: 10px 20px; background: linear-gradient(135deg, #c48b5a 0%, #a66b38 100%); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 13px; box-shadow: 0 4px 12px rgba(166, 107, 56, 0.35); transition: all 0.2s ease;" onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform='translateY(0)'">Create Order</button>
               </div>
             </form>
           </div>
