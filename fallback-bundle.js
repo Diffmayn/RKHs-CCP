@@ -3,7 +3,7 @@
 // Runware API Integration Working - Simplified Implementation
 // All functions defined at top level, no dependency issues
 // Mock implementation with data URL images (no external dependencies)
-console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
+console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING... Updated: ' + new Date().toISOString());
 (function(){
   console.log('[FALLBACK-BUNDLE] 🎬 IIFE STARTING...');
   
@@ -24,8 +24,9 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
   };
   if (typeof window !== 'undefined') window.runwareConfig = runwareConfig;
 const __fallbackThemeCSS = `
-  :root {
-          --theme-app-bg: #f3f4f6;
+    :root {
+      --ui-scale-factor: 0.82;
+      --theme-app-bg: #f3f4f6;
           --theme-shell-bg: #f3f4f6;
           --theme-surface-bg: #fffaf3;
           --theme-surface-alt-bg: #f7eedf;
@@ -49,6 +50,9 @@ const __fallbackThemeCSS = `
           --theme-export-gradient: linear-gradient(135deg, #efc892, #c48b5a);
           --theme-refresh-gradient: linear-gradient(135deg, #d2c3ac, #a3876a);
           --theme-logout-gradient: linear-gradient(135deg, #c76f5c, #a85544);
+          --theme-table-header-bg: linear-gradient(135deg, #f7eedf, #efe0cf);
+          --theme-table-header-text: #4b3b2a;
+          --theme-table-border: rgba(196, 139, 90, 0.22);
         }
 
         body {
@@ -56,6 +60,19 @@ const __fallbackThemeCSS = `
           color: var(--theme-text);
           font-family: 'Inter', 'Segoe UI', sans-serif;
           transition: background 0.6s ease, color 0.6s ease;
+        }
+
+        @media (min-width: 1280px) {
+          body {
+            overflow-x: hidden;
+          }
+
+          #fallback-app {
+            transform: scale(var(--ui-scale-factor));
+            transform-origin: top left;
+            width: calc(100vw / var(--ui-scale-factor));
+            min-height: calc(100vh / var(--ui-scale-factor));
+          }
         }
 
         body[data-theme='warm'] {
@@ -164,6 +181,49 @@ const __fallbackThemeCSS = `
           --theme-export-gradient: linear-gradient(135deg, rgba(196, 210, 255, 0.92), rgba(148, 180, 255, 0.78));
           --theme-refresh-gradient: linear-gradient(135deg, rgba(125, 211, 252, 0.82), rgba(45, 212, 191, 0.75));
           --theme-logout-gradient: linear-gradient(135deg, rgba(251, 191, 36, 0.82), rgba(248, 113, 113, 0.85));
+        }
+
+        body[data-theme='glass'] {
+          /* Modern Glassmorphism Theme - Apple/Microsoft inspired */
+          --theme-app-bg: radial-gradient(circle at 0% 0%, #eef2ff 0%, #e0e7ff 50%, #f5f3ff 100%);
+          --theme-shell-bg: rgba(255, 255, 255, 0.65);
+          --theme-surface-bg: rgba(255, 255, 255, 0.75);
+          --theme-surface-alt-bg: rgba(248, 250, 252, 0.5);
+          --theme-border: rgba(255, 255, 255, 0.6);
+          --theme-text: #1e293b;
+          --theme-muted: #64748b;
+          --theme-support-btn: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+          --theme-support-btn-text: #ffffff;
+          --theme-input-bg: rgba(255, 255, 255, 0.8);
+          --theme-pane-bg: rgba(255, 255, 255, 0.7);
+          --theme-pane-blur: blur(16px);
+          --theme-pane-border: rgba(255, 255, 255, 0.5);
+          --theme-pane-shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
+          --theme-accent: #3b82f6;
+          --theme-accent-soft: #60a5fa;
+          --theme-btn-text: #ffffff;
+          --theme-highlight: rgba(255, 255, 255, 0.8);
+          --theme-surface-gloss: linear-gradient(135deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.1) 100%);
+          --theme-glow-accent: rgba(59, 130, 246, 0.5);
+          --theme-blur-strength: blur(16px);
+          --theme-export-gradient: linear-gradient(135deg, #60a5fa, #3b82f6);
+          --theme-refresh-gradient: linear-gradient(135deg, #34d399, #10b981);
+          --theme-logout-gradient: linear-gradient(135deg, #f87171, #ef4444);
+        }
+
+        /* Fix for dropdown transparency issues in Glass theme */
+        body[data-theme='glass'] #supportMenuDropdown,
+        body[data-theme='glass'] .support-menu-panel {
+          background: rgba(255, 255, 255, 0.95) !important;
+          backdrop-filter: blur(30px) !important;
+          box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25) !important;
+          border: 1px solid rgba(255, 255, 255, 0.8) !important;
+        }
+
+        /* Performance optimizations */
+        .glass-surface, .glass-floating {
+          will-change: transform, opacity;
+          transform: translateZ(0); /* Hardware acceleration */
         }
 
         #fallback-app {
@@ -309,6 +369,12 @@ const __fallbackThemeCSS = `
           backdrop-filter: var(--theme-pane-blur);
         }
 
+        body[data-theme='aurora'] .glass-surface {
+          backdrop-filter: blur(18px) saturate(150%);
+          -webkit-backdrop-filter: blur(18px) saturate(150%);
+          will-change: transform, opacity;
+        }
+
         .glass-surface::before {
           content: '';
           position: absolute;
@@ -337,14 +403,36 @@ const __fallbackThemeCSS = `
           transform: translateY(-4px);
         }
 
+        body[data-theme='aurora'] .glass-floating {
+          transition: transform 0.3s ease, box-shadow 0.3s ease;
+          transform: translateZ(0);
+        }
+
+        body[data-theme='aurora'] .glass-floating:hover {
+          transform: translate3d(0, -2px, 0);
+          box-shadow: 0 32px 60px rgba(17, 23, 47, 0.35);
+        }
+
+        .sidebar.glass-floating:hover,
+        .main-content.glass-floating:hover,
+        body[data-theme='aurora'] .sidebar.glass-floating:hover,
+        body[data-theme='aurora'] .main-content.glass-floating:hover {
+          transform: none !important;
+          box-shadow: var(--theme-pane-shadow);
+        }
+
         @keyframes auroraPulse {
           0%, 100% {
-            transform: translateY(0) scale(1);
-            box-shadow: var(--theme-pane-shadow);
+            transform: translate3d(0, 0, 0) scale(1);
+            filter: brightness(1);
           }
-          50% {
-            transform: translateY(-3px) scale(1.01);
-            box-shadow: 0 40px 65px rgba(96, 165, 250, 0.25);
+          45% {
+            transform: translate3d(0, -3px, 0) scale(1.012);
+            filter: brightness(1.05);
+          }
+          55% {
+            transform: translate3d(0, -2px, 0) scale(1.006);
+            filter: brightness(1.02);
           }
         }
 
@@ -396,8 +484,10 @@ const __fallbackThemeCSS = `
         }
 
         body[data-theme='aurora'] .content-pill-btn {
-          animation: auroraPulse 9s ease-in-out infinite;
+          animation: auroraPulse 14s ease-in-out infinite;
           box-shadow: 0 28px 54px rgba(96, 165, 250, 0.28);
+          will-change: transform, filter;
+          background-size: 220% 220%;
         }
 
         body[data-theme='aurora'] .content-pill-btn:hover {
@@ -453,51 +543,146 @@ const __fallbackThemeCSS = `
         }
 
         body[data-theme='aurora'] .orders-table-container {
-          background: rgba(173, 216, 255, 0.08) !important;
-          border: 1px solid rgba(173, 216, 255, 0.35) !important;
-          box-shadow: 0 55px 110px rgba(45, 98, 197, 0.32) !important;
-          backdrop-filter: blur(26px) saturate(160%);
+          background: linear-gradient(140deg, rgba(244, 248, 255, 0.92), rgba(222, 235, 255, 0.75), rgba(186, 246, 231, 0.58)) !important;
+          border: 1px solid rgba(168, 199, 255, 0.48) !important;
+          box-shadow: 0 38px 72px rgba(21, 32, 54, 0.28) !important;
+          backdrop-filter: blur(28px) saturate(195%);
+          -webkit-backdrop-filter: blur(28px) saturate(195%);
         }
 
         body[data-theme='aurora'] .orders-table thead tr {
-          background: linear-gradient(135deg, rgba(196, 210, 255, 0.78), rgba(148, 180, 255, 0.6), rgba(56, 189, 248, 0.48)) !important;
-          color: rgba(244, 248, 255, 0.98) !important;
-          text-shadow: 0 4px 12px rgba(17, 24, 39, 0.35);
+          background: linear-gradient(135deg, rgba(248, 251, 255, 0.95), rgba(218, 232, 255, 0.9), rgba(196, 237, 229, 0.82)) !important;
+          color: rgba(24, 37, 69, 0.92) !important;
+          text-shadow: 0 2px 10px rgba(255, 255, 255, 0.75);
+          border-bottom: 1px solid rgba(163, 201, 255, 0.55) !important;
         }
 
         body[data-theme='aurora'] .orders-table tbody {
           background: transparent !important;
         }
 
+        body[data-theme='aurora'] .orders-table {
+          background: radial-gradient(circle at 20% 0%, rgba(255, 255, 255, 0.85), rgba(224, 238, 255, 0.72), rgba(190, 236, 222, 0.58)) !important;
+          border: 1px solid rgba(168, 199, 255, 0.35) !important;
+          border-radius: 18px;
+          overflow: hidden;
+          box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5), 0 26px 48px rgba(30, 53, 92, 0.22);
+        }
+
+        body[data-theme='aurora'] .orders-table th,
+        body[data-theme='aurora'] .orders-table td {
+          border-color: rgba(130, 174, 255, 0.22) !important;
+          position: relative;
+        }
+
+        body[data-theme='aurora'] .orders-table th::after {
+          content: '';
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(180deg, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0));
+          pointer-events: none;
+        }
+
         body[data-theme='aurora'] .orders-table tbody tr {
-          background: rgba(255, 255, 255, 0.12) !important;
-          border-bottom: 1px solid rgba(148, 180, 255, 0.26) !important;
-          color: rgba(236, 242, 255, 0.95) !important;
-          transition: background 0.25s ease, transform 0.25s ease;
+          background: rgba(248, 251, 255, 0.55) !important;
+          border-bottom: 1px solid rgba(178, 213, 255, 0.4) !important;
+          color: rgba(27, 43, 79, 0.92) !important;
+          transition: background 0.25s ease, transform 0.2s ease;
+          backdrop-filter: blur(14px) saturate(170%);
+        }
+
+        body[data-theme='aurora'] .orders-table tbody tr:nth-child(even) {
+          background: rgba(233, 244, 255, 0.45) !important;
         }
 
         body[data-theme='aurora'] .orders-table tbody tr:hover {
-          background: rgba(148, 180, 255, 0.24) !important;
+          background: rgba(210, 234, 255, 0.85) !important;
+          color: rgba(18, 32, 58, 0.96) !important;
           transform: translateY(-1px);
+          box-shadow: 0 10px 24px rgba(35, 64, 112, 0.2);
         }
 
         body[data-theme='aurora'] .orders-table tbody tr.selected-row {
-          background: linear-gradient(135deg, rgba(125, 211, 252, 0.4), rgba(45, 212, 191, 0.38)) !important;
-          color: rgba(244, 248, 255, 1) !important;
-          border-bottom-color: rgba(125, 211, 252, 0.6) !important;
+          background: linear-gradient(135deg, rgba(213, 238, 255, 0.95), rgba(186, 241, 227, 0.88)) !important;
+          color: rgba(15, 29, 56, 0.95) !important;
+          border-bottom-color: rgba(120, 197, 255, 0.6) !important;
+          box-shadow: 0 14px 30px rgba(42, 78, 128, 0.25);
         }
 
         body[data-theme='aurora'] .orders-table tbody tr td {
-          border-color: rgba(148, 180, 255, 0.18) !important;
+          border-color: rgba(160, 199, 255, 0.25) !important;
+          background: rgba(255, 255, 255, 0.12);
+        }
+
+        body[data-theme='aurora'] .orders-table tbody tr td:first-child {
+          box-shadow: inset 1px 0 rgba(255, 255, 255, 0.12);
+        }
+
+        body[data-theme='aurora'] .orders-table tbody tr td:last-child {
+          box-shadow: inset -1px 0 rgba(255, 255, 255, 0.12);
+        }
+
+        body[data-theme='aurora'] #supportMenuDropdown,
+        body[data-theme='aurora'] #quickFiltersPanel {
+          background: rgba(7, 12, 24, 0.9) !important;
+          border: 1px solid rgba(214, 232, 255, 0.45) !important;
+          box-shadow: 0 36px 80px rgba(2, 6, 14, 0.75) !important;
+          color: rgba(242, 246, 255, 0.95) !important;
+          backdrop-filter: blur(18px) saturate(180%);
+          -webkit-backdrop-filter: blur(18px) saturate(180%);
+          position: relative;
+          overflow: hidden;
+        }
+
+        body[data-theme='aurora'] #supportMenuDropdown::before,
+        body[data-theme='aurora'] #quickFiltersPanel::before {
+          content: '';
+          position: absolute;
+          inset: 0;
+          border-radius: inherit;
+          background: radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.35), transparent 60%);
+          pointer-events: none;
+          opacity: 0.45;
         }
 
         body[data-theme='aurora'] .support-menu-item {
-          border: 1px solid transparent;
+          border: 1px solid rgba(214, 232, 255, 0.25) !important;
+          background: rgba(255, 255, 255, 0.05);
+          color: rgba(242, 246, 255, 0.95) !important;
         }
 
         body[data-theme='aurora'] .support-menu-item:hover {
-          box-shadow: 0 18px 32px rgba(148, 180, 255, 0.28);
+          box-shadow: 0 18px 32px rgba(148, 180, 255, 0.32);
           transform: translateY(-1px) scale(1.01);
+          background: rgba(255, 255, 255, 0.1);
+        }
+
+        body[data-theme='aurora'] .orders-filter-bar select,
+        body[data-theme='aurora'] .support-menu-theme select,
+        body[data-theme='aurora'] select {
+          background: rgba(6, 12, 24, 0.85) !important;
+          color: rgba(240, 247, 255, 0.98) !important;
+          border: 1px solid rgba(214, 232, 255, 0.35) !important;
+          box-shadow: 0 12px 24px rgba(2, 4, 10, 0.6) !important;
+        }
+
+        body[data-theme='aurora'] .orders-filter-bar select:focus,
+        body[data-theme='aurora'] .support-menu-theme select:focus {
+          box-shadow: 0 0 0 2px rgba(125, 211, 252, 0.35), 0 18px 28px rgba(17, 23, 47, 0.35) !important;
+        }
+
+        body[data-theme='aurora'] select option {
+          background: #0b1224;
+          color: rgba(248, 252, 255, 0.95);
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          body[data-theme='aurora'] .content-pill-btn {
+            animation: none !important;
+          }
+          body[data-theme='aurora'] .glass-floating {
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+          }
         }
 `;
 
@@ -2079,7 +2264,36 @@ const __fallbackThemeCSS = `
 
   const normalizeArticles = orderHelpers?.normalizeArticles
     ? (...args) => orderHelpers.normalizeArticles(...args)
-    : () => [];
+    : (articles) => {
+        if (!Array.isArray(articles)) return [];
+        return articles.map((article, index) => {
+          if (typeof article === 'string') {
+            // Parse string format: "Name [EAN: 123]"
+            const eanMatch = article.match(/\[EAN:\s*(\d+)\]/);
+            const name = article.replace(/\[EAN:\s*\d+\]/, '').trim();
+            return {
+              name: name,
+              articleNumber: eanMatch ? eanMatch[1] : '',
+              raw: {
+                articleName: name,
+                articleNumber: eanMatch ? eanMatch[1] : '',
+                fileName: `ENV.${String(index + 1).padStart(6, '0')}.jpg`
+              }
+            };
+          }
+          // Handle object format
+          return {
+            name: article.name || article.articleName || '',
+            articleNumber: article.articleNumber || '',
+            combinedPhoto: article.combinedPhoto || '',
+            fileName: article.fileName || '',
+            raw: {
+              ...article,
+              fileName: article.fileName || `ENV.${String(index + 1).padStart(6, '0')}.jpg`
+            }
+          };
+        });
+    };
 
   const getArticleTextList = orderHelpers?.getArticleTextList
     ? (...args) => orderHelpers.getArticleTextList(...args)
@@ -2590,6 +2804,122 @@ const __fallbackThemeCSS = `
     return formatted;
   }
 
+  const PREVIEW_PLACEHOLDER_COLORS = ['#fde68a', '#bfdbfe', '#ddd6fe', '#d1fae5', '#fecdd3'];
+
+  function sanitizeLabelText(value, fallback = 'Preview Asset') {
+    if (!value) {
+      return fallback;
+    }
+    return String(value).replace(/[<>"']/g, '').trim().slice(0, 40) || fallback;
+  }
+
+  function createInlinePreview(orderNumber, descriptor, colorIndex = 0) {
+    const safeOrderNumber = sanitizeLabelText(orderNumber, 'ORD-Preview');
+    const safeDescriptor = sanitizeLabelText(descriptor, 'Asset Preview');
+    const accent = PREVIEW_PLACEHOLDER_COLORS[colorIndex % PREVIEW_PLACEHOLDER_COLORS.length];
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="320" height="220" viewBox="0 0 320 220" role="img" aria-label="${safeOrderNumber} - ${safeDescriptor}"><defs><linearGradient id="grad${colorIndex}" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="${accent}" stop-opacity="0.95"/><stop offset="100%" stop-color="${accent}" stop-opacity="0.7"/></linearGradient></defs><rect width="320" height="220" rx="24" fill="url(#grad${colorIndex})"/><text x="50%" y="45%" text-anchor="middle" font-size="22" font-family="'Segoe UI', 'Inter', Arial" fill="#1f2937" font-weight="600">${safeOrderNumber}</text><text x="50%" y="65%" text-anchor="middle" font-size="14" font-family="'Segoe UI', 'Inter', Arial" fill="#374151">${safeDescriptor}</text></svg>`;
+    return `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`;
+  }
+
+  function generateArticleFileName(orderNumber, index = 0) {
+    const digits = (orderNumber || '').replace(/\D/g, '').padStart(6, '0');
+    const orderSegment = digits.slice(-4);
+    const articleSegment = String(index + 1).padStart(2, '0');
+    return `ENV.${orderSegment}${articleSegment}.jpg`;
+  }
+
+  function ensureArticlesHaveFileNames(orders) {
+    if (!Array.isArray(orders)) {
+      return;
+    }
+
+    orders.forEach((order) => {
+      if (!Array.isArray(order.articles)) {
+        order.articles = [];
+        return;
+      }
+
+      order.articles = order.articles.map((article, index) => {
+        if (article && typeof article === 'object' && !Array.isArray(article)) {
+          if (!article.name) {
+            article.name = article.articleName || article.title || `Article ${index + 1}`;
+          }
+          if (!article.fileName) {
+            article.fileName = generateArticleFileName(order.orderNumber, index);
+          }
+          return article;
+        }
+
+        const label = typeof article === 'string' ? article : `Article ${index + 1}`;
+        return {
+          name: label,
+          fileName: generateArticleFileName(order.orderNumber, index)
+        };
+      });
+    });
+  }
+
+  function buildPlaceholderAsset(order, article, index) {
+    const descriptor = (article && (article.name || article.articleName || article.title)) || order.title || order.orderNumber || `Asset ${index + 1}`;
+    const fileName = (article && article.fileName) || generateArticleFileName(order.orderNumber, index);
+    return {
+      id: `${(order.orderNumber || 'ord').replace(/\W+/g, '_').toLowerCase()}_${index + 1}`,
+      name: fileName,
+      type: 'image/svg+xml',
+      size: 2100000 + (index * 45000),
+      data: createInlinePreview(order.orderNumber, descriptor, index),
+      uploadedBy: order.photographer || 'Automated System',
+      uploadedAt: order.createdAt || order.updatedAt || new Date().toISOString(),
+      uploadedByRole: order.photographer ? 'Photographer' : 'System'
+    };
+  }
+
+  function ensureOrderPreviewImages(orders) {
+    if (!Array.isArray(orders)) {
+      return;
+    }
+
+    orders.forEach((order) => {
+      if (!Array.isArray(order.uploadedContent) || order.uploadedContent.length === 0) {
+        const articleSeeds = Array.isArray(order.articles) && order.articles.length ? order.articles.slice(0, 3) : [null];
+        order.uploadedContent = articleSeeds.map((article, index) => buildPlaceholderAsset(order, article, index));
+        return;
+      }
+
+      order.uploadedContent = order.uploadedContent.map((asset, index) => {
+        if (!asset || typeof asset !== 'object') {
+          return buildPlaceholderAsset(order, Array.isArray(order.articles) ? order.articles[index] : null, index);
+        }
+
+        if (!asset.name) {
+          const fallbackArticle = Array.isArray(order.articles) ? order.articles[index] : null;
+          asset.name = (fallbackArticle && fallbackArticle.fileName) || generateArticleFileName(order.orderNumber, index);
+        }
+
+        if (!asset.data && !asset.thumbnailUrl && !asset.url) {
+          const descriptor = asset.name || (Array.isArray(order.articles) && order.articles[index]?.name) || order.title;
+          asset.data = createInlinePreview(order.orderNumber, descriptor, index);
+          asset.type = asset.type || 'image/svg+xml';
+        }
+
+        if (!asset.uploadedBy) {
+          asset.uploadedBy = order.photographer || 'Automated System';
+          asset.uploadedByRole = order.photographer ? 'Photographer' : 'System';
+        }
+
+        if (!asset.uploadedAt) {
+          asset.uploadedAt = order.createdAt || order.updatedAt || new Date().toISOString();
+        }
+
+        if (!asset.id) {
+          asset.id = `${(order.orderNumber || 'ord').replace(/\W+/g, '_').toLowerCase()}_${index + 1}`;
+        }
+
+        return asset;
+      });
+    });
+  }
+
   function ensureOrderPhotoMetadata(orders) {
     if (!Array.isArray(orders)) {
       return;
@@ -2632,7 +2962,10 @@ const __fallbackThemeCSS = `
       costCenter:'PG-100',
       priority:'Critical',
       brief:'Create high-impact product photography for premium dog food line. Focus on hero shots, lifestyle images, and detail macro shots.',
-      articles: ['Premium Dog Food 2kg [EAN: 5901234567890]'],
+      articles: [
+        'Premium Dog Food 2kg [EAN: 5901234567890]',
+        'Premium Dog Food 5kg [EAN: 5901234567891]'
+      ],
       budget: 5500,
       deliverables: ['Hero Product Shots', 'Lifestyle Photography', 'Detail Macro Shots'],
       
@@ -2733,7 +3066,10 @@ const __fallbackThemeCSS = `
       costCenter:'PG-200',
       priority:'Medium',
       brief:'Automated photo box session for coffee product line. Consistent e-commerce shots with white background.',
-      articles: ['Espresso Beans 500g [EAN: 2001234567892]'],
+      articles: [
+        'Espresso Beans 500g [EAN: 2001234567892]',
+        'Espresso Beans 1kg [EAN: 2001234567893]'
+      ],
       budget: 2200,
       deliverables: ['E-commerce Product Photos', '360° Product Views'],
       
@@ -2804,7 +3140,13 @@ const __fallbackThemeCSS = `
       brief:'Professional studio photography for new tech product launch. High-end product photography and lifestyle shots for electronics catalog.',
       articles: [
         { name: 'Wireless Bluetooth Speaker [EAN: 4061234567890]', combinedPhoto: 'AA' },
-        { name: 'USB-C Cable [EAN: 8901234567891]', combinedPhoto: 'BB' }
+        { name: 'USB-C Cable [EAN: 8901234567891]', combinedPhoto: 'BB' },
+        { name: 'Charging Dock [EAN: 8901234567892]', combinedPhoto: 'CC' },
+        { name: 'Protective Case [EAN: 8901234567893]', combinedPhoto: 'DD' },
+        { name: 'User Manual [EAN: 8901234567894]', combinedPhoto: 'EE' },
+        { name: 'Power Adapter [EAN: 8901234567895]', combinedPhoto: 'FF' },
+        { name: 'Aux Cable [EAN: 8901234567896]', combinedPhoto: 'GG' },
+        { name: 'Strap [EAN: 8901234567897]', combinedPhoto: 'HH' }
       ],
       budget: 8000,
       deliverables: ['Product Photography', 'Lifestyle Shots', 'Technical Details'],
@@ -2945,7 +3287,10 @@ const __fallbackThemeCSS = `
       brief:'Organic pasta product line photography for new health-focused marketing campaign. Clean, fresh styling.',
       articles: [
         { name: 'Organic Penne Pasta 500g', combinedPhoto: 'CC' },
-        { name: 'Organic Linguine 400g', combinedPhoto: 'CC' }
+        { name: 'Organic Linguine 400g', combinedPhoto: 'CC' },
+        { name: 'Organic Fusilli 500g', combinedPhoto: 'CC' },
+        { name: 'Organic Spaghetti 500g', combinedPhoto: 'CC' },
+        { name: 'Organic Lasagna Sheets 250g', combinedPhoto: 'CC' }
       ],
       budget: 3200,
       deliverables: ['Product Shots', 'Lifestyle Photography'],
@@ -3228,7 +3573,9 @@ const __fallbackThemeCSS = `
       brief:'New organic baby food line launch. Need hero shots, ingredient close-ups, and lifestyle photography with babies.',
       articles: [
         { name: 'Organic Baby Food Puree [EAN: 5901234567901]', combinedPhoto: 'FF' },
-        { name: 'Baby Food Spoon Set [EAN: 5901234567902]', combinedPhoto: 'GG' }
+        { name: 'Baby Food Spoon Set [EAN: 5901234567902]', combinedPhoto: 'GG' },
+        { name: 'Organic Rice Cakes [EAN: 5901234567903]', combinedPhoto: 'FF' },
+        { name: 'Fruit Pouch Variety Pack [EAN: 5901234567904]', combinedPhoto: 'FF' }
       ],
       budget: 8500,
       deliverables: ['Hero Product Shots', 'Ingredient Photography', 'Lifestyle with Babies'],
@@ -3294,7 +3641,25 @@ const __fallbackThemeCSS = `
       brief:'High-end gaming laptop with RGB lighting. Need dramatic tech shots with special lighting effects.',
       articles: [
         { name: 'Gaming Laptop Pro X1 [EAN: 5901234567903]', combinedPhoto: 'HH' },
-        { name: 'Gaming Mouse [EAN: 5901234567904]', combinedPhoto: 'HH' }
+        { name: 'Gaming Mouse [EAN: 5901234567904]', combinedPhoto: 'HH' },
+        { name: 'Mechanical Keyboard [EAN: 5901234567920]', combinedPhoto: 'II' },
+        { name: 'Gaming Headset [EAN: 5901234567921]', combinedPhoto: 'JJ' },
+        { name: 'Mouse Pad XL [EAN: 5901234567922]', combinedPhoto: 'KK' },
+        { name: 'Laptop Stand [EAN: 5901234567923]', combinedPhoto: 'LL' },
+        { name: 'Webcam 4K [EAN: 5901234567924]', combinedPhoto: 'MM' },
+        { name: 'Microphone [EAN: 5901234567925]', combinedPhoto: 'NN' },
+        { name: 'Capture Card [EAN: 5901234567926]', combinedPhoto: 'OO' },
+        { name: 'Stream Deck [EAN: 5901234567927]', combinedPhoto: 'PP' },
+        { name: 'Green Screen [EAN: 5901234567928]', combinedPhoto: 'QQ' },
+        { name: 'Ring Light [EAN: 5901234567929]', combinedPhoto: 'RR' },
+        { name: 'Cable Management Kit [EAN: 5901234567930]', combinedPhoto: 'SS' },
+        { name: 'USB Hub [EAN: 5901234567931]', combinedPhoto: 'TT' },
+        { name: 'External SSD 1TB [EAN: 5901234567932]', combinedPhoto: 'UU' },
+        { name: 'Gaming Chair [EAN: 5901234567933]', combinedPhoto: 'VV' },
+        { name: 'Monitor 27" 144Hz [EAN: 5901234567934]', combinedPhoto: 'WW' },
+        { name: 'Monitor Arm [EAN: 5901234567935]', combinedPhoto: 'XX' },
+        { name: 'DisplayPort Cable [EAN: 5901234567936]', combinedPhoto: 'YY' },
+        { name: 'HDMI Cable [EAN: 5901234567937]', combinedPhoto: 'ZZ' }
       ],
       budget: 12000,
       deliverables: ['Tech Hero Shots', 'RGB Lighting Effects', 'Detail Macro Shots'],
@@ -4737,6 +5102,8 @@ const __fallbackThemeCSS = `
   
   ];
 
+  ensureArticlesHaveFileNames(allOrders);
+  ensureOrderPreviewImages(allOrders);
   ensureOrderPhotoMetadata(allOrders);
 
   const OrderStoreCtor = window.__OrderStoreCtor || null;
@@ -5152,7 +5519,8 @@ const __fallbackThemeCSS = `
     warm: { label: 'Warm Classic' },
     cool: { label: 'Coastal Breeze' },
     midnight: { label: 'Midnight Dusk' },
-    aurora: { label: 'Aurora Glass' }
+    aurora: { label: 'Aurora Glass' },
+    glass: { label: 'Modern Glass' }
   };
 
   let activeTheme = 'warm';
@@ -5255,6 +5623,165 @@ const __fallbackThemeCSS = `
 
     let orders = authSystem.getFilteredOrders(resolveScopedOrders());
     const stats = getStats(orders);
+
+    const activeThemeKey = document.body?.dataset?.theme || '';
+    const isAuroraTheme = activeThemeKey === 'aurora';
+    const isGlassTheme = activeThemeKey === 'glass';
+    
+    let bulkPanelStyles;
+    
+    if (isAuroraTheme) {
+      bulkPanelStyles = {
+        container: 'display: none; background: radial-gradient(130% 160% at 20% 0%, rgba(248, 251, 255, 0.92), rgba(210, 236, 255, 0.75), rgba(190, 240, 228, 0.65)); border-radius: 20px; border: 1px solid rgba(148, 180, 255, 0.35); box-shadow: 0 36px 70px rgba(17, 33, 68, 0.35); margin-bottom: 28px; backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);',
+        header: 'background: linear-gradient(145deg, rgba(248, 251, 255, 0.55), rgba(210, 236, 255, 0.45), rgba(180, 230, 255, 0.42)); padding: 22px; border-radius: 20px 20px 0 0; border-bottom: 1px solid rgba(148, 180, 255, 0.38);',
+        countPill: 'background: linear-gradient(120deg, rgba(168, 180, 248, 0.95), rgba(125, 211, 252, 0.92)); color: rgba(15, 29, 56, 0.95); padding: 8px 16px; border-radius: 999px; font-size: 13px; font-weight: 600; box-shadow: 0 14px 30px rgba(72, 118, 182, 0.35); border: 1px solid rgba(255, 255, 255, 0.45);',
+        description: 'color: rgba(24, 42, 78, 0.92); font-size: 14px; font-weight: 500; text-shadow: 0 1px 2px rgba(255, 255, 255, 0.45);',
+        buttons: [
+          {
+            id: 'bulkUpdateStatus',
+            icon: '📝',
+            label: 'Update Status',
+            styleBase: 'background: linear-gradient(135deg, rgba(156, 205, 255, 0.98), rgba(99, 179, 237, 0.92)); color: rgba(17, 32, 62, 0.95); border: 1px solid rgba(156, 205, 255, 0.65); padding: 12px 20px; border-radius: 999px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; gap: 6px; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);',
+            baseShadow: '0 14px 32px rgba(71, 116, 179, 0.35)',
+            hoverShadow: '0 22px 42px rgba(71, 116, 179, 0.45)'
+          },
+          {
+            id: 'bulkAssign',
+            icon: '👤',
+            label: 'Assign To',
+            styleBase: 'background: linear-gradient(135deg, rgba(226, 191, 255, 0.95), rgba(178, 201, 255, 0.9)); color: rgba(40, 25, 72, 0.95); border: 1px solid rgba(209, 180, 255, 0.6); padding: 12px 20px; border-radius: 999px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; gap: 6px; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);',
+            baseShadow: '0 14px 32px rgba(120, 92, 192, 0.35)',
+            hoverShadow: '0 22px 42px rgba(120, 92, 192, 0.45)'
+          },
+          {
+            id: 'bulkExport',
+            icon: '📊',
+            label: 'Export',
+            styleBase: 'background: linear-gradient(135deg, rgba(255, 233, 195, 0.95), rgba(255, 208, 153, 0.9)); color: rgba(70, 42, 10, 0.95); border: 1px solid rgba(255, 220, 180, 0.65); padding: 12px 20px; border-radius: 999px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; gap: 6px; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);',
+            baseShadow: '0 14px 32px rgba(173, 112, 33, 0.28)',
+            hoverShadow: '0 22px 42px rgba(173, 112, 33, 0.4)'
+          },
+          {
+            id: 'clearSelection',
+            icon: '✖️',
+            label: 'Clear',
+            styleBase: 'background: linear-gradient(135deg, rgba(255, 255, 255, 0.35), rgba(209, 224, 255, 0.3)); color: rgba(24, 42, 78, 0.9); border: 1px solid rgba(164, 189, 255, 0.55); padding: 12px 20px; border-radius: 999px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; gap: 6px; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);',
+            baseShadow: '0 12px 28px rgba(26, 41, 79, 0.22)',
+            hoverShadow: '0 20px 36px rgba(26, 41, 79, 0.32)'
+          }
+        ]
+      };
+    } else if (isGlassTheme) {
+      bulkPanelStyles = {
+        container: 'display: none; background: rgba(255, 255, 255, 0.65); border-radius: 16px; border: 1px solid rgba(255, 255, 255, 0.6); box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1); margin-bottom: 28px; backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);',
+        header: 'background: rgba(255, 255, 255, 0.4); padding: 20px; border-radius: 16px 16px 0 0; border-bottom: 1px solid rgba(255, 255, 255, 0.5);',
+        countPill: 'background: linear-gradient(135deg, #3b82f6, #2563eb); color: white; padding: 8px 16px; border-radius: 999px; font-size: 13px; font-weight: 600; box-shadow: 0 8px 16px rgba(37, 99, 235, 0.25);',
+        description: 'color: #1e293b; font-size: 14px; font-weight: 500;',
+        buttons: [
+          {
+            id: 'bulkUpdateStatus',
+            icon: '📝',
+            label: 'Update Status',
+            styleBase: 'background: rgba(255, 255, 255, 0.8); color: #1e293b; border: 1px solid rgba(255, 255, 255, 0.6); padding: 10px 18px; border-radius: 999px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; gap: 6px; backdrop-filter: blur(10px);',
+            baseShadow: '0 4px 12px rgba(0, 0, 0, 0.05)',
+            hoverShadow: '0 8px 20px rgba(0, 0, 0, 0.1)'
+          },
+          {
+            id: 'bulkAssign',
+            icon: '👤',
+            label: 'Assign To',
+            styleBase: 'background: rgba(255, 255, 255, 0.8); color: #1e293b; border: 1px solid rgba(255, 255, 255, 0.6); padding: 10px 18px; border-radius: 999px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; gap: 6px; backdrop-filter: blur(10px);',
+            baseShadow: '0 4px 12px rgba(0, 0, 0, 0.05)',
+            hoverShadow: '0 8px 20px rgba(0, 0, 0, 0.1)'
+          },
+          {
+            id: 'bulkExport',
+            icon: '📊',
+            label: 'Export',
+            styleBase: 'background: rgba(255, 255, 255, 0.8); color: #1e293b; border: 1px solid rgba(255, 255, 255, 0.6); padding: 10px 18px; border-radius: 999px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; gap: 6px; backdrop-filter: blur(10px);',
+            baseShadow: '0 4px 12px rgba(0, 0, 0, 0.05)',
+            hoverShadow: '0 8px 20px rgba(0, 0, 0, 0.1)'
+          },
+          {
+            id: 'clearSelection',
+            icon: '✖️',
+            label: 'Clear',
+            styleBase: 'background: rgba(255, 255, 255, 0.5); color: #64748b; border: 1px solid rgba(255, 255, 255, 0.4); padding: 10px 18px; border-radius: 999px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; gap: 6px; backdrop-filter: blur(10px);',
+            baseShadow: '0 2px 8px rgba(0, 0, 0, 0.05)',
+            hoverShadow: '0 6px 16px rgba(0, 0, 0, 0.1)'
+          }
+        ]
+      };
+    } else {
+      bulkPanelStyles = {
+        container: 'display: none; background: #fdf8f1; border-radius: 12px; box-shadow: 0 10px 22px rgba(79, 59, 37, 0.1); margin-bottom: 24px; border: 1px solid rgba(196, 139, 90, 0.18);',
+        header: 'background: linear-gradient(135deg, #f6ede0, #efe2d0); padding: 18px; border-radius: 12px 12px 0 0;',
+        countPill: 'background: #c48b5a; color: white; padding: 6px 12px; border-radius: 16px; font-size: 13px; font-weight: 600; box-shadow: 0 4px 12px rgba(196, 139, 90, 0.35);',
+        description: 'color: #6b5440; font-size: 14px; font-weight: 500;',
+        buttons: [
+          {
+            id: 'bulkUpdateStatus',
+            icon: '📝',
+            label: 'Update Status',
+            styleBase: 'background: linear-gradient(135deg, #9cb89f, #7fa284); color: white; border: none; padding: 10px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; gap: 6px;',
+            baseShadow: '0 6px 12px rgba(127, 162, 132, 0.35)',
+            hoverShadow: '0 10px 20px rgba(127, 162, 132, 0.45)'
+          },
+          {
+            id: 'bulkAssign',
+            icon: '👤',
+            label: 'Assign To',
+            styleBase: 'background: linear-gradient(135deg, #c8a6d9, #b48fc7); color: white; border: none; padding: 10px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; gap: 6px;',
+            baseShadow: '0 6px 12px rgba(180, 143, 199, 0.35)',
+            hoverShadow: '0 10px 20px rgba(180, 143, 199, 0.45)'
+          },
+          {
+            id: 'bulkExport',
+            icon: '📊',
+            label: 'Export',
+            styleBase: 'background: linear-gradient(135deg, #dfb37d, #c48b5a); color: white; border: none; padding: 10px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; gap: 6px;',
+            baseShadow: '0 6px 12px rgba(196, 139, 90, 0.35)',
+            hoverShadow: '0 10px 20px rgba(196, 139, 90, 0.45)'
+          },
+          {
+            id: 'clearSelection',
+            icon: '✖️',
+            label: 'Clear',
+            styleBase: 'background: linear-gradient(135deg, #b4a392, #8f7b63); color: white; border: none; padding: 10px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; gap: 6px;',
+            baseShadow: '0 6px 12px rgba(143, 123, 99, 0.35)',
+            hoverShadow: '0 10px 20px rgba(143, 123, 99, 0.45)'
+          }
+        ]
+      };
+    }
+
+    const bulkButtonsHTML = bulkPanelStyles.buttons.map(btn => {
+      const buttonStyle = `${btn.styleBase} box-shadow: ${btn.baseShadow};`;
+      return `
+                        <button id="${btn.id}" style="${buttonStyle}" 
+                                onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='${btn.hoverShadow}'" 
+                                onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='${btn.baseShadow}'">
+                          <span>${btn.icon}</span> ${btn.label}
+                        </button>`;
+    }).join('');
+
+    const bulkActionsPanelMarkup = `
+                <!-- Bulk Actions Panel -->
+                <div style="${bulkPanelStyles.container}" id="bulkActionsPanel">
+                  <div style="${bulkPanelStyles.header}">
+                    <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
+                      <div class="selected-count-info" style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                        <div style="${bulkPanelStyles.countPill}">
+                          <span id="selectedCount">0</span> selected
+                        </div>
+                        <span style="${bulkPanelStyles.description}">Choose an action to apply to selected items</span>
+                      </div>
+                      <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                        ${bulkButtonsHTML}
+                      </div>
+                    </div>
+                  </div>
+                </div>`;
     
     // Function to refresh orders when needed
     function refreshOrders() {
@@ -5267,184 +5794,22 @@ const __fallbackThemeCSS = `
   <div id="fallback-app" style="min-height: 100vh; margin: 0; background: #f3f4f6; display: flex;">
         
         <!-- Modern Sidebar -->
-  <div class="sidebar glass-surface glass-floating" id="sidebar">
-          <div class="sidebar-header">
-            <div class="sidebar-title-container">
-                <img src="/CCP_Logog.png" alt="CCP Logo" class="sidebar-logo" />
-                <h1 class="sidebar-title">Content Creation Program</h1>
-              </div>
-            <button class="sidebar-toggle" onclick="toggleSidebar()" title="Toggle Sidebar (Ctrl+B)" aria-label="Toggle Sidebar">
-              <span id="sidebarToggleIcon">◀</span>
-            </button>
-          </div>
-          
-          <nav class="sidebar-nav">
-            <!-- Core Operations -->
-            <div class="nav-section" data-section="core">
-              <button class="nav-section-title" type="button">
-                <span>Core Operations</span>
-                <span class="nav-section-chevron">▾</span>
-              </button>
-              <div class="nav-section-items">
-                <div class="nav-item" data-tooltip="View All Orders" onclick="showView('orders')">
-                  <span class="nav-item-icon">📋</span>
-                  <span class="nav-item-text">Orders Overview</span>
-                </div>
-                ${authSystem.canCreateOrders() ? `
-                  <div class="nav-item" data-tooltip="Create New Order" onclick="showNewOrderModal()">
-                    <span class="nav-item-icon">🆕</span>
-                    <span class="nav-item-text">Create New Order</span>
-                  </div>
-                  <div class="nav-item" data-tooltip="Create/Edit Content with Runware AI (Google Gemini Flash Image 2.5)" onclick="showContentCreationModal()">
-                    <span class="nav-item-icon">🚀</span>
-                    <span class="nav-item-text">Create/Edit Content</span>
-                  </div>
-                ` : ''}
-                <div class="nav-item" data-tooltip="Mass Upload Images to Orders" onclick="showMassUploadModal()">
-                  <span class="nav-item-icon">📤</span>
-                  <span class="nav-item-text">Mass Upload</span>
-                </div>
-              </div>
-            </div>
-
-            <!-- Views & Analytics -->
-            <div class="nav-section" data-section="analytics">
-              <button class="nav-section-title" type="button">
-                <span>Views & Analytics</span>
-                <span class="nav-section-chevron">▾</span>
-              </button>
-              <div class="nav-section-items">
-                <div class="nav-item" data-tooltip="Kanban Board" onclick="showView('kanban')">
-                  <span class="nav-item-icon">📊</span>
-                  <span class="nav-item-text">Kanban Board</span>
-                </div>
-                <div class="nav-item" data-tooltip="Calendar View" onclick="showView('calendar')">
-                  <span class="nav-item-icon">📅</span>
-                  <span class="nav-item-text">Calendar</span>
-                </div>
-                <div class="nav-item" data-tooltip="Workflow View" onclick="showView('workflow')">
-                  <span class="nav-item-icon">🔄</span>
-                  <span class="nav-item-text">Workflow</span>
-                </div>
-                ${authSystem.canCreateOrders() ? `
-                  <div class="nav-item" data-tooltip="Smart Suggestions" onclick="window.showHistoricalSuggestionsModal()">
-                    <span class="nav-item-icon">📊</span>
-                    <span class="nav-item-text">Smart Analytics</span>
-                  </div>
-                ` : ''}
-              </div>
-            </div>
-
-            <!-- Quick Actions -->
-            <div class="nav-section" data-section="quick-actions">
-              <button class="nav-section-title" type="button">
-                <span>Quick Actions</span>
-                <span class="nav-section-chevron">▾</span>
-              </button>
-              <div class="nav-section-items">
-                <div class="nav-item nav-item-urgent" data-tooltip="View High & Critical Priority Orders" onclick="filterOrdersByStatus('urgent')">
-                  <span class="nav-item-icon">🚨</span>
-                  <span class="nav-item-text">Urgent Orders</span>
-                  <span class="nav-item-badge" id="urgentBadge">0</span>
-                </div>
-                <div class="nav-item nav-item-samples" data-tooltip="View Orders with Samples Requested/In Transit/Received" onclick="filterOrdersByStatus('samples')">
-                  <span class="nav-item-icon">📦</span>
-                  <span class="nav-item-text">Samples Ready</span>
-                  <span class="nav-item-badge" id="samplesBadge">0</span>
-                </div>
-                <div class="nav-item nav-item-overdue" data-tooltip="View Orders Past Their Deadline" onclick="filterOrdersByStatus('overdue')">
-                  <span class="nav-item-icon">⏰</span>
-                  <span class="nav-item-text">Overdue Orders</span>
-                  <span class="nav-item-badge" id="overdueBadge">0</span>
-                </div>
-                <div class="nav-item nav-item-today" data-tooltip="View Orders Due Today" onclick="filterOrdersByStatus('today')">
-                  <span class="nav-item-icon">📅</span>
-                  <span class="nav-item-text">Due Today</span>
-                  <span class="nav-item-badge" id="todayBadge">0</span>
-                </div>
-              </div>
-            </div>
-
-            <!-- Data Management -->
-            <div class="nav-section" data-section="data">
-              <button class="nav-section-title" type="button">
-                <span>Data Management</span>
-                <span class="nav-section-chevron">▾</span>
-              </button>
-              <div class="nav-section-items">
-                ${authSystem.canCreateOrders() ? `
-                  <div class="nav-item" data-tooltip="Import SAP PMR" onclick="showSAPImportModal()">
-                    <span class="nav-item-icon">🏢</span>
-                    <span class="nav-item-text">SAP Import</span>
-                  </div>
-                  <div class="nav-item" data-tooltip="Import Excel/CSV" onclick="window.showExcelImportModal()">
-                    <span class="nav-item-icon">📋</span>
-                    <span class="nav-item-text">Excel Import</span>
-                  </div>
-                ` : ''}
-                <div class="nav-item" data-tooltip="Cloudinary Asset Management" onclick="window.showDAMIntegrationModal()">
-                  <span class="nav-item-icon">☁️</span>
-                  <span class="nav-item-text">Cloudinary Assets</span>
-                </div>
-                <div id="toggleBulkMode" class="nav-item" data-tooltip="Bulk Operations">
-                  <span class="nav-item-icon">☑️</span>
-                  <span class="nav-item-text">Bulk Select</span>
-                </div>
-              </div>
-            </div>
-
-            <!-- Templates & Automation -->
-            ${authSystem.canCreateOrders() ? `
-              <div class="nav-section" data-section="automation">
-                <button class="nav-section-title" type="button">
-                  <span>Automation</span>
-                  <span class="nav-section-chevron">▾</span>
-                </button>
-                <div class="nav-section-items">
-                  <div class="nav-item" data-tooltip="Quick Templates" onclick="showQuickTemplatesModal()">
-                    <span class="nav-item-icon">⚡</span>
-                    <span class="nav-item-text">Quick Templates</span>
-                  </div>
-                  <div class="nav-item" data-tooltip="Template Rules Engine" onclick="window.showTemplateRulesModal()">
-                    <span class="nav-item-icon">🎯</span>
-                    <span class="nav-item-text">Template Rules</span>
-                  </div>
-                  <div class="nav-item" data-tooltip="Placeholder Items" onclick="window.showPlaceholderItemsModal()">
-                    <span class="nav-item-icon">📝</span>
-                    <span class="nav-item-text">Placeholder Items</span>
-                  </div>
-                </div>
-              </div>
-            ` : ''}
-
-            <!-- System & Support -->
-            <div class="nav-section" data-section="system">
-              <button class="nav-section-title" type="button">
-                <span>System</span>
-                <span class="nav-section-chevron">▾</span>
-              </button>
-              <div class="nav-section-items">
-                <div class="nav-item" data-tooltip="Request Customization" onclick="window.showCustomizationRequestModal()">
-                  <span class="nav-item-icon">🔧</span>
-                  <span class="nav-item-text">Customizations</span>
-                </div>
-                <div class="nav-item" data-tooltip="System Settings" onclick="showSettings()">
-                  <span class="nav-item-icon">⚙️</span>
-                  <span class="nav-item-text">Settings</span>
-                </div>
-                <div class="nav-item" data-tooltip="User Profile" onclick="showProfile()">
-                  <span class="nav-item-icon">👤</span>
-                  <span class="nav-item-text">Profile</span>
-                </div>
-              </div>
-            </div>
-          </nav>
-        </div>
+        <!-- Sidebar removed -->
 
         <!-- Main Content Area -->
         <div class="main-content glass-surface glass-floating">
           <div class="content-header glass-surface glass-floating">
-            <h1 class="content-title" id="contentTitle">Dashboard Overview</h1>
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <img src="/CCP_Logog.png" alt="CCP Logo" style="height: 40px; width: auto;" />
+              <div style="display: flex; flex-direction: column; justify-content: center;">
+                <span style="font-weight: 700; font-size: 16px; color: #4b3b2a; line-height: 1.2;">Content Creation Program</span>
+                <span id="contentTitle" style="font-size: 12px; color: #85694c; font-weight: 500; line-height: 1.2;">Order Overview</span>
+              </div>
+              ${authSystem.canCreateOrders() ? `
+              <button class="content-pill-btn content-pill-btn--compact" onclick="showNewOrderModal()" style="background: linear-gradient(135deg, #c48b5a 0%, #a67550 100%); color: white; margin-left: 8px;">➕ <span>Create Order</span></button>
+              ` : ''}
+              <button class="content-pill-btn content-pill-btn--compact" onclick="showMassUploadModal()" style="margin-left: 8px;">📤 <span>Mass Upload</span></button>
+            </div>
             <div class="content-actions">
               <button class="content-pill-btn content-pill-btn--export content-pill-btn--compact" onclick="exportToCsv()">📊 <span>Export</span></button>
               <button class="content-pill-btn content-pill-btn--refresh content-pill-btn--compact" onclick="refreshData()">🔄 <span>Refresh</span></button>
@@ -5480,6 +5845,7 @@ const __fallbackThemeCSS = `
                           <option value="cool">Coastal Breeze</option>
                           <option value="midnight">Midnight Dusk</option>
                           <option value="aurora">Aurora Glass</option>
+                          <option value="glass">Modern Glass</option>
                         </select>
                       </div>
                       <div class="support-menu-divider"></div>
@@ -5515,7 +5881,6 @@ const __fallbackThemeCSS = `
                     </div>
                   </div>
                 </div>
-                <button onclick="logout()" class="content-pill-btn content-pill-btn--logout content-pill-btn--compact"><span>Logout</span></button>
                 <div style="display: flex; flex-direction: column; align-items: flex-end; line-height: 1.2; gap: 2px;">
                   <span style="color: #4b3b2a; font-weight: 600; font-size: 14px;">${currentUser.name}</span>
                   <span style="color: #7b5a3d; font-weight: 500; font-size: 12px; text-transform: capitalize;">${currentUser.role}</span>
@@ -5527,7 +5892,7 @@ const __fallbackThemeCSS = `
           
           <div class="content-body">
             <!-- Main Content Area -->
-            <div id="mainContent">
+            <div id="mainContent" style="display: flex; flex-direction: column; flex: 1;">
               <!-- Dashboard View -->
               <div id="dashboardView" style="display: none;">
                 <!-- Dashboard Stats Grid -->
@@ -5585,119 +5950,132 @@ const __fallbackThemeCSS = `
                           style="padding: 6px 12px; border: 1px solid rgba(196, 139, 90, 0.35); border-radius: 8px; background: linear-gradient(135deg, #fef3c7, #fde68a); color: #92400e; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 10px rgba(180, 140, 60, 0.18); flex: 0 0 auto;">
                     Clear Filters ✕
                   </button>
-                  <div id="quickFiltersPanel" style="display: none; position: absolute; top: calc(100% + 8px); left: 0; right: 0; z-index: 40; background: #fffaf3; border-radius: 12px; box-shadow: 0 12px 24px rgba(79, 59, 37, 0.18); border: 1px solid rgba(196, 139, 90, 0.22); padding: 18px; max-height: 320px; overflow-y: auto;">
-                    <h3 style="margin: 0 0 12px; font-size: 14px; color: #4b3b2a; font-weight: 600; letter-spacing: 0.2px; text-transform: uppercase;">🔍 Quick Filters</h3>
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px;">
-                      <div onclick="filterOrdersByStatus('all')" style="background: linear-gradient(135deg, #fffaf3, #f4e8d8); border-radius: 10px; box-shadow: 0 6px 14px rgba(79, 59, 37, 0.12); padding: 14px; text-align: center; cursor: pointer; transition: all 0.3s ease; border-left: 4px solid #bfa079;" 
-                           onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 10px 20px rgba(79, 59, 37, 0.18)'"
-                           onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 6px 14px rgba(79, 59, 37, 0.12)';">
-                        <div style="font-size: 20px; font-weight: 700; color: #6b5440; margin-bottom: 6px;" id="allOrdersCount">0</div>
-                        <div style="font-size: 11px; color: #6b5440; text-transform: uppercase; letter-spacing: 0.4px;">📋 All Orders</div>
+                  <div id="quickFiltersPanel" style="display: none; position: absolute; top: calc(100% + 8px); left: 0; right: 0; z-index: 1000; background: #fffaf3; border-radius: 12px; box-shadow: 0 12px 24px rgba(79, 59, 37, 0.18); border: 1px solid rgba(196, 139, 90, 0.22); padding: 18px; max-height: 320px; overflow-y: auto;">
+                    <div style="font-weight: 700; font-size: 14px; color: #4b3b2a; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center;">
+                      <span>🔍 Quick Filters</span>
+                      <button onclick="resetQuickFilters()" style="background: none; border: none; color: #c48b5a; font-size: 11px; cursor: pointer; text-decoration: underline;">Reset</button>
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px;">
+                      <!-- Cost center -->
+                      <div class="filter-group">
+                        <label style="display: block; font-size: 11px; font-weight: 600; color: #85694c; margin-bottom: 4px;">Cost Center</label>
+                        <select id="filterCostCenter" class="filter-select" style="width: 100%; padding: 6px; border-radius: 6px; border: 1px solid #ead7c2; background: rgba(255, 255, 255, 0.5); color: #4b3b2a;">
+                          <option value="">All</option>
+                          <option value="1001">1001 - Marketing</option>
+                          <option value="1002">1002 - Sales</option>
+                          <option value="1003">1003 - Production</option>
+                        </select>
                       </div>
-                      <div onclick="filterOrdersByStatus('draft')" style="background: linear-gradient(135deg, #fff6ea, #f2e0c6); border-radius: 10px; box-shadow: 0 6px 14px rgba(79, 59, 37, 0.12); padding: 14px; text-align: center; cursor: pointer; transition: all 0.3s ease; border-left: 4px solid #d0b48c;" 
-                           onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 10px 20px rgba(79, 59, 37, 0.18)'"
-                           onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 6px 14px rgba(79, 59, 37, 0.12)';">
-                        <div style="font-size: 20px; font-weight: 700; color: #7b5a3d; margin-bottom: 6px;" id="draftOrdersCount">0</div>
-                        <div style="font-size: 11px; color: #6b5440; text-transform: uppercase; letter-spacing: 0.4px;">📝 Draft</div>
+
+                      <!-- Purchase group -->
+                      <div class="filter-group">
+                        <label style="display: block; font-size: 11px; font-weight: 600; color: #85694c; margin-bottom: 4px;">Purchase Group</label>
+                        <select id="filterPurchaseGroup" class="filter-select" style="width: 100%; padding: 6px; border-radius: 6px; border: 1px solid #ead7c2; background: rgba(255, 255, 255, 0.5); color: #4b3b2a;">
+                          <option value="">All</option>
+                          <option value="PG01">PG01 - Textiles</option>
+                          <option value="PG02">PG02 - Hard Goods</option>
+                        </select>
                       </div>
-                      <div onclick="filterOrdersByStatus('pending')" style="background: linear-gradient(135deg, #fff3df, #f0d3a7); border-radius: 10px; box-shadow: 0 6px 14px rgba(79, 59, 37, 0.12); padding: 14px; text-align: center; cursor: pointer; transition: all 0.3s ease; border-left: 4px solid #d8a458;" 
-                           onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 10px 20px rgba(79, 59, 37, 0.18)'"
-                           onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 6px 14px rgba(79, 59, 37, 0.12)';">
-                        <div style="font-size: 20px; font-weight: 700; color: #b0722e; margin-bottom: 6px;" id="pendingOrdersCount">0</div>
-                        <div style="font-size: 11px; color: #6b5440; text-transform: uppercase; letter-spacing: 0.4px;">⏳ Pending</div>
+
+                      <!-- Content type -->
+                      <div class="filter-group">
+                        <label style="display: block; font-size: 11px; font-weight: 600; color: #85694c; margin-bottom: 4px;">Content Type</label>
+                        <select id="filterContentType" class="filter-select" style="width: 100%; padding: 6px; border-radius: 6px; border: 1px solid #ead7c2; background: rgba(255, 255, 255, 0.5); color: #4b3b2a;">
+                          <option value="">All</option>
+                          <option value="photography">Photography</option>
+                          <option value="video">Video</option>
+                          <option value="3d">3D Render</option>
+                        </select>
                       </div>
-                      <div onclick="filterOrdersByStatus('approved')" style="background: linear-gradient(135deg, #f0f8f4, #dcebe3); border-radius: 10px; box-shadow: 0 6px 14px rgba(79, 59, 37, 0.12); padding: 14px; text-align: center; cursor: pointer; transition: all 0.3s ease; border-left: 4px solid #8fb0a3;" 
-                           onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 10px 20px rgba(79, 59, 37, 0.18)'"
-                           onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 6px 14px rgba(79, 59, 37, 0.12)';">
-                        <div style="font-size: 20px; font-weight: 700; color: #5f7f74; margin-bottom: 6px;" id="approvedOrdersCount">0</div>
-                        <div style="font-size: 11px; color: #6b5440; text-transform: uppercase; letter-spacing: 0.4px;">✅ Approved</div>
+
+                      <!-- Dam Shot type -->
+                      <div class="filter-group">
+                        <label style="display: block; font-size: 11px; font-weight: 600; color: #85694c; margin-bottom: 4px;">DAM Shot Type</label>
+                        <select id="filterDamShotType" class="filter-select" style="width: 100%; padding: 6px; border-radius: 6px; border: 1px solid #ead7c2; background: rgba(255, 255, 255, 0.5); color: #4b3b2a;">
+                          <option value="">All</option>
+                          <option value="packshot">Packshot</option>
+                          <option value="lifestyle">Lifestyle</option>
+                          <option value="detail">Detail</option>
+                        </select>
                       </div>
-                      <div onclick="filterOrdersByStatus('samples')" style="background: linear-gradient(135deg, #f6f0ff, #e6dbf5); border-radius: 10px; box-shadow: 0 6px 14px rgba(79, 59, 37, 0.12); padding: 14px; text-align: center; cursor: pointer; transition: all 0.3s ease; border-left: 4px solid #bfa3d6;" 
-                           onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 10px 20px rgba(79, 59, 37, 0.18)'"
-                           onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 6px 14px rgba(79, 59, 37, 0.12)';">
-                        <div style="font-size: 20px; font-weight: 700; color: #8767b2; margin-bottom: 6px;" id="samplesOrdersCount">0</div>
-                        <div style="font-size: 11px; color: #6b5440; text-transform: uppercase; letter-spacing: 0.4px;">📦 Samples</div>
+
+                      <!-- Aktivitet -->
+                      <div class="filter-group">
+                        <label style="display: block; font-size: 11px; font-weight: 600; color: #85694c; margin-bottom: 4px;">Aktivitet</label>
+                        <select id="filterAktivitet" class="filter-select" style="width: 100%; padding: 6px; border-radius: 6px; border: 1px solid #ead7c2; background: rgba(255, 255, 255, 0.5); color: #4b3b2a;">
+                          <option value="">All</option>
+                          <option value="campaign">Campaign</option>
+                          <option value="social">Social Media</option>
+                          <option value="ecom">E-commerce</option>
+                        </select>
                       </div>
-                      <div onclick="filterOrdersByStatus('In Progress')" style="background: linear-gradient(135deg, #fff1e6, #f0d3bb); border-radius: 10px; box-shadow: 0 6px 14px rgba(79, 59, 37, 0.12); padding: 14px; text-align: center; cursor: pointer; transition: all 0.3s ease; border-left: 4px solid #c48b5a;" 
-                           onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 10px 20px rgba(79, 59, 37, 0.18)'"
-                           onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 6px 14px rgba(79, 59, 37, 0.12)';">
-                        <div style="font-size: 20px; font-weight: 700; color: #a66b38; margin-bottom: 6px;" id="inProgressOrdersCount">0</div>
-                        <div style="font-size: 11px; color: #6b5440; text-transform: uppercase; letter-spacing: 0.4px;">🔄 In Progress</div>
+
+                      <!-- Production -->
+                      <div class="filter-group">
+                        <label style="display: block; font-size: 11px; font-weight: 600; color: #85694c; margin-bottom: 4px;">Production</label>
+                        <select id="filterProduction" class="filter-select" style="width: 100%; padding: 6px; border-radius: 6px; border: 1px solid #ead7c2; background: rgba(255, 255, 255, 0.5); color: #4b3b2a;">
+                          <option value="">All</option>
+                          <option value="internal">Internal Studio</option>
+                          <option value="external">External Agency</option>
+                        </select>
                       </div>
-                      <div onclick="filterOrdersByStatus('review')" style="background: linear-gradient(135deg, #f3f9ef, #e3eed8); border-radius: 10px; box-shadow: 0 6px 14px rgba(79, 59, 37, 0.12); padding: 14px; text-align: center; cursor: pointer; transition: all 0.3s ease; border-left: 4px solid #a5b68f;" 
-                           onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 10px 20px rgba(79, 59, 37, 0.18)'"
-                           onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 6px 14px rgba(79, 59, 37, 0.12)';">
-                        <div style="font-size: 20px; font-weight: 700; color: #6f7f5a; margin-bottom: 6px;" id="reviewOrdersCount">0</div>
-                        <div style="font-size: 11px; color: #6b5440; text-transform: uppercase; letter-spacing: 0.4px;">🔍 Review</div>
+
+                      <!-- Principle -->
+                      <div class="filter-group">
+                        <label style="display: block; font-size: 11px; font-weight: 600; color: #85694c; margin-bottom: 4px;">Principle</label>
+                        <select id="filterPrinciple" class="filter-select" style="width: 100%; padding: 6px; border-radius: 6px; border: 1px solid #ead7c2; background: rgba(255, 255, 255, 0.5); color: #4b3b2a;">
+                          <option value="">All</option>
+                          <option value="guideline1">Guideline 2024</option>
+                          <option value="guideline2">Guideline 2025</option>
+                        </select>
                       </div>
-                      <div onclick="filterOrdersByStatus('completed')" style="background: linear-gradient(135deg, #eff7f2, #dcebdc); border-radius: 10px; box-shadow: 0 6px 14px rgba(79, 59, 37, 0.12); padding: 14px; text-align: center; cursor: pointer; transition: all 0.3s ease; border-left: 4px solid #7fa284;" 
-                           onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 10px 20px rgba(79, 59, 37, 0.18)'"
-                           onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 6px 14px rgba(79, 59, 37, 0.12)';">
-                        <div style="font-size: 20px; font-weight: 700; color: #54735d; margin-bottom: 6px;" id="completedOrdersCount">0</div>
-                        <div style="font-size: 11px; color: #6b5440; text-transform: uppercase; letter-spacing: 0.4px;">🎉 Complete</div>
+
+                      <!-- Status -->
+                      <div class="filter-group">
+                        <label style="display: block; font-size: 11px; font-weight: 600; color: #85694c; margin-bottom: 4px;">Status</label>
+                        <select id="filterStatus" class="filter-select" style="width: 100%; padding: 6px; border-radius: 6px; border: 1px solid #ead7c2; background: rgba(255, 255, 255, 0.5); color: #4b3b2a;">
+                          <option value="">All</option>
+                          <option value="draft">Draft</option>
+                          <option value="pending">Pending</option>
+                          <option value="approved">Approved</option>
+                          <option value="rejected">Rejected</option>
+                          <option value="samples">Samples Ready</option>
+                        </select>
                       </div>
+                    </div>
+                    
+                    <div style="margin-top: 16px; display: flex; justify-content: flex-end;">
+                      <button onclick="applyQuickFilters()" style="padding: 8px 16px; background: linear-gradient(135deg, #c48b5a 0%, #a67550 100%); color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 600; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">Apply Filters</button>
                     </div>
                   </div>
                 </div>
 
-                <!-- Bulk Actions Panel -->
-                <div style="display: none; background: #fdf8f1; border-radius: 12px; box-shadow: 0 10px 22px rgba(79, 59, 37, 0.1); margin-bottom: 24px; border: 1px solid rgba(196, 139, 90, 0.18);" id="bulkActionsPanel">
-                  <div style="background: linear-gradient(135deg, #f6ede0, #efe2d0); padding: 18px; border-radius: 12px 12px 0 0;">
-                    <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
-                      <div class="selected-count-info" style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
-                        <div style="background: #c48b5a; color: white; padding: 6px 12px; border-radius: 16px; font-size: 13px; font-weight: 600; box-shadow: 0 4px 12px rgba(196, 139, 90, 0.35);">
-                          <span id="selectedCount">0</span> selected
-                        </div>
-                        <span style="color: #6b5440; font-size: 14px; font-weight: 500;">Choose an action to apply to selected items</span>
-                      </div>
-                      <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-                        <button id="bulkUpdateStatus" style="background: linear-gradient(135deg, #9cb89f, #7fa284); color: white; border: none; padding: 10px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; box-shadow: 0 6px 12px rgba(127, 162, 132, 0.35); display: flex; align-items: center; gap: 6px;" 
-                                onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 10px 20px rgba(127, 162, 132, 0.45)'" 
-                                onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 6px 12px rgba(127, 162, 132, 0.35)'">
-                          <span>📝</span> Update Status
-                        </button>
-                        <button id="bulkAssign" style="background: linear-gradient(135deg, #c8a6d9, #b48fc7); color: white; border: none; padding: 10px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; box-shadow: 0 6px 12px rgba(180, 143, 199, 0.35); display: flex; align-items: center; gap: 6px;" 
-                                onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 10px 20px rgba(180, 143, 199, 0.45)'" 
-                                onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 6px 12px rgba(180, 143, 199, 0.35)'">
-                          <span>👤</span> Assign To
-                        </button>
-                        <button id="bulkExport" style="background: linear-gradient(135deg, #dfb37d, #c48b5a); color: white; border: none; padding: 10px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; box-shadow: 0 6px 12px rgba(196, 139, 90, 0.35); display: flex; align-items: center; gap: 6px;" 
-                                onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 10px 20px rgba(196, 139, 90, 0.45)'" 
-                                onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 6px 12px rgba(196, 139, 90, 0.35)'">
-                          <span>📊</span> Export
-                        </button>
-                        <button id="clearSelection" style="background: linear-gradient(135deg, #b4a392, #8f7b63); color: white; border: none; padding: 10px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; box-shadow: 0 6px 12px rgba(143, 123, 99, 0.35); display: flex; align-items: center; gap: 6px;" 
-                                onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 10px 20px rgba(143, 123, 99, 0.45)'" 
-                                onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 6px 12px rgba(143, 123, 99, 0.35)'">
-                          <span>✖️</span> Clear
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                ${bulkActionsPanelMarkup}
 
                 <div class="orders-table-container">
                   <table class="orders-table">
                     <thead>
-                      <tr style="background: linear-gradient(135deg, #f7eedf, #efe0cf);">
+                      <tr style="background: var(--theme-table-header-bg);">
                         <th style="width: 55px; min-width: 55px; max-width: 55px; height: 55px; display: none; padding: 0; text-align: center;" class="bulk-checkbox"><input type="checkbox" id="selectAllOrders"></th>
-                        <th style="padding: 4px; text-align: center; border-bottom: 1px solid rgba(196, 139, 90, 0.22); width: 32px;" aria-label="Expand"></th>
-                        <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: #4b3b2a; border-bottom: 1px solid rgba(196, 139, 90, 0.22);">Order Number</th>
-                        <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: #4b3b2a; border-bottom: 1px solid rgba(196, 139, 90, 0.22);">Page</th>
-                        <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: #4b3b2a; border-bottom: 1px solid rgba(196, 139, 90, 0.22);">Offer ID</th>
-                        <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: #4b3b2a; border-bottom: 1px solid rgba(196, 139, 90, 0.22);">Group</th>
-                        <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: #4b3b2a; border-bottom: 1px solid rgba(196, 139, 90, 0.22);">Cost Center</th>
-                        <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: #4b3b2a; border-bottom: 1px solid rgba(196, 139, 90, 0.22);">Order Type</th>
-                        <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: #4b3b2a; border-bottom: 1px solid rgba(196, 139, 90, 0.22);">Offer Name</th>
-                        <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: #4b3b2a; border-bottom: 1px solid rgba(196, 139, 90, 0.22);">Shot Type</th>
-                        <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: #4b3b2a; border-bottom: 1px solid rgba(196, 139, 90, 0.22);">Photo Ref.</th>
-                        <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: #4b3b2a; border-bottom: 1px solid rgba(196, 139, 90, 0.22);">Production</th>
-                        <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: #4b3b2a; border-bottom: 1px solid rgba(196, 139, 90, 0.22);">Principle</th>
-                        <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: #4b3b2a; border-bottom: 1px solid rgba(196, 139, 90, 0.22);">File Name</th>
-                        <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: #4b3b2a; border-bottom: 1px solid rgba(196, 139, 90, 0.22); width: 92px;">Comments</th>
-                        <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: #4b3b2a; border-bottom: 1px solid rgba(196, 139, 90, 0.22);">Status</th>
-                        <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: #4b3b2a; border-bottom: 1px solid rgba(196, 139, 90, 0.22); width: 80px;">Briefing</th>
-                        <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: #4b3b2a; border-bottom: 1px solid rgba(196, 139, 90, 0.22);">Deadline</th>
+                        <th style="padding: 4px; text-align: center; border-bottom: 1px solid var(--theme-table-border); width: 32px;" aria-label="Expand"></th>
+                        <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: var(--theme-table-header-text); border-bottom: 1px solid var(--theme-table-border);">Order Number</th>
+                        <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: var(--theme-table-header-text); border-bottom: 1px solid var(--theme-table-border);">Activity</th>
+                        <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: var(--theme-table-header-text); border-bottom: 1px solid var(--theme-table-border);">Page</th>
+                        <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: var(--theme-table-header-text); border-bottom: 1px solid var(--theme-table-border);">Offer ID</th>
+                        <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: var(--theme-table-header-text); border-bottom: 1px solid var(--theme-table-border);">Group</th>
+                        <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: var(--theme-table-header-text); border-bottom: 1px solid var(--theme-table-border);">Cost Center</th>
+                        <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: var(--theme-table-header-text); border-bottom: 1px solid var(--theme-table-border);">Order Type</th>
+                        <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: var(--theme-table-header-text); border-bottom: 1px solid var(--theme-table-border);">Offer Name</th>
+                        <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: var(--theme-table-header-text); border-bottom: 1px solid var(--theme-table-border);">Shot Type</th>
+                        <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: var(--theme-table-header-text); border-bottom: 1px solid var(--theme-table-border);">Photo Ref.</th>
+                        <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: var(--theme-table-header-text); border-bottom: 1px solid var(--theme-table-border);">Production</th>
+                        <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: var(--theme-table-header-text); border-bottom: 1px solid var(--theme-table-border);">Principle</th>
+                        <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: var(--theme-table-header-text); border-bottom: 1px solid var(--theme-table-border);">File Name</th>
+                        <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: var(--theme-table-header-text); border-bottom: 1px solid var(--theme-table-border); width: 92px;">Comments</th>
+                        <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: var(--theme-table-header-text); border-bottom: 1px solid var(--theme-table-border);">Status</th>
+                        <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: var(--theme-table-header-text); border-bottom: 1px solid var(--theme-table-border); width: 80px;">Briefing</th>
+                        <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: var(--theme-table-header-text); border-bottom: 1px solid var(--theme-table-border);">Deadline</th>
                       </tr>
                     </thead>
                     <tbody id="ordersBody" style="background: #fffaf3;">
@@ -5919,14 +6297,17 @@ const __fallbackThemeCSS = `
           backdrop-filter: var(--theme-pane-blur);
           border: 1px solid var(--theme-pane-border);
           box-shadow: var(--theme-pane-shadow);
-          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          will-change: width;
           position: relative;
           z-index: 100;
           display: flex;
           flex-direction: column;
           border-radius: 0;
-          margin: 12px 0 18px 18px;
-          min-height: calc(100vh - 36px);
+          margin: 0;
+          min-height: 100vh;
+          align-self: stretch;
+          overflow-x: hidden; /* Prevent content from overflowing during transition */
         }
 
         .sidebar.collapsed {
@@ -5940,21 +6321,22 @@ const __fallbackThemeCSS = `
 
         .sidebar.collapsed .nav-item {
           justify-content: center;
-          padding: 12px 14px;
+          padding: 12px 0; /* Reduced padding to fit icon */
           margin: 6px;
         }
 
         .sidebar-header {
-          padding: 12px 48px 18px 20px;
+          padding: 12px 20px 18px; /* Fixed padding */
           border-bottom: none;
           display: flex;
           align-items: center;
-          justify-content: center;
+          justify-content: flex-start; /* Align left to keep logo stable */
           background: transparent;
           position: relative;
           min-height: 96px;
           box-sizing: border-box;
           border-radius: 0;
+          overflow: hidden;
         }
 
         .sidebar-title-container {
@@ -5965,6 +6347,14 @@ const __fallbackThemeCSS = `
           gap: 10px;
           margin-bottom: 0;
           text-align: center;
+          width: 100%; /* Ensure it takes full width */
+          transition: opacity 0.2s ease;
+        }
+
+        .sidebar.collapsed .sidebar-title-container {
+           opacity: 1;
+           justify-content: center;
+           padding: 0;
         }
 
         .sidebar-logo {
@@ -5977,6 +6367,14 @@ const __fallbackThemeCSS = `
           padding: 0;
           box-shadow: none;
           transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        /* Show a small logo or icon when collapsed if needed, or just hide the main logo container */
+        .sidebar.collapsed .sidebar-logo {
+           width: 40px;
+           height: 40px;
+           opacity: 1;
+           margin: 0;
         }
 
         .sidebar-title-container:hover .sidebar-logo {
@@ -6123,7 +6521,11 @@ const __fallbackThemeCSS = `
           letter-spacing: 0.1em;
           text-transform: uppercase;
           cursor: pointer;
-          transition: color 0.2s ease, background 0.2s ease;
+          transition: color 0.2s ease, background 0.2s ease, opacity 0.2s ease, height 0.2s ease, padding 0.2s ease;
+          height: 45px; /* Fixed height for smooth transition */
+          box-sizing: border-box;
+          white-space: nowrap;
+          overflow: hidden;
         }
 
         .nav-section-title:hover,
@@ -6161,9 +6563,9 @@ const __fallbackThemeCSS = `
 
         .sidebar.collapsed .nav-section-title {
           opacity: 0;
-          padding: 0;
+          padding: 0 18px;
           height: 0;
-          overflow: hidden;
+          pointer-events: none;
         }
 
         .sidebar.collapsed .nav-section {
@@ -6179,7 +6581,7 @@ const __fallbackThemeCSS = `
           margin: 2px 4px;
           border-radius: 14px;
           cursor: pointer;
-          transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+          transition: background 0.25s ease, border-color 0.25s ease, color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease, padding 0.25s ease;
           text-decoration: none;
           color: var(--theme-text);
           background: rgba(255, 255, 255, 0.02);
@@ -6236,6 +6638,7 @@ const __fallbackThemeCSS = `
           width: 20px;
           text-align: center;
           transition: margin 0.2s ease, transform 0.2s ease;
+          flex-shrink: 0; /* Prevent icon from shrinking */
         }
 
         .nav-item:hover .nav-item-icon {
@@ -6249,12 +6652,17 @@ const __fallbackThemeCSS = `
         .nav-item-text {
           font-size: 14px;
           font-weight: 500;
-          transition: opacity 0.2s ease;
+          transition: opacity 0.2s ease, width 0.2s ease;
+          white-space: nowrap;
+          overflow: hidden;
+          opacity: 1;
+          width: auto; /* Allow natural width */
         }
 
         .sidebar.collapsed .nav-item-text {
           opacity: 0;
-          display: none;
+          width: 0;
+          margin: 0;
         }
 
         .nav-item::after {
@@ -6369,13 +6777,18 @@ const __fallbackThemeCSS = `
         }
 
         #ordersView {
-          width: calc(100% + 64px);
+          width: auto;
           margin-left: -32px;
           margin-right: -32px;
+          display: flex;
+          flex-direction: column;
+          flex: 1;
+          min-height: 0;
         }
 
         .orders-filter-bar {
           position: relative;
+          z-index: 20;
           display: flex;
           flex-wrap: wrap;
           align-items: center;
@@ -6405,6 +6818,9 @@ const __fallbackThemeCSS = `
           border-top-left-radius: 0;
           border-top-right-radius: 0;
           border-top: none;
+          flex: 1;
+          display: flex;
+          flex-direction: column;
         }
 
         @media (max-width: 768px) {
@@ -6426,6 +6842,7 @@ const __fallbackThemeCSS = `
             margin: 0 0 20px;
             border-top-left-radius: 0;
             border-top-right-radius: 0;
+            flex: 1;
           }
         }
 
@@ -6434,8 +6851,7 @@ const __fallbackThemeCSS = `
           flex: 1;
           background: var(--theme-surface-bg);
           backdrop-filter: var(--theme-pane-blur);
-          margin: 20px;
-          margin-left: 20px;
+          margin: 0 20px 20px 20px;
           border-radius: 20px;
           border: 1px solid var(--theme-pane-border);
           box-shadow: var(--theme-pane-shadow);
@@ -6540,6 +6956,8 @@ const __fallbackThemeCSS = `
           flex: 1;
           padding: 32px;
           overflow-y: auto;
+          display: flex;
+          flex-direction: column;
         }
 
         /* Enhanced Quick Action Buttons */
@@ -8184,7 +8602,6 @@ const __fallbackThemeCSS = `
       console.log('[Sidebar] Toggle function called');
       const sidebar = document.getElementById('sidebar');
       const toggleIcon = document.getElementById('sidebarToggleIcon');
-      const mainContent = document.querySelector('.main-content');
       
       if (!sidebar || !toggleIcon) {
         console.log('[Sidebar] Missing elements - sidebar:', !!sidebar, 'toggleIcon:', !!toggleIcon);
@@ -8202,21 +8619,11 @@ const __fallbackThemeCSS = `
         sidebar.classList.remove('collapsed');
         toggleIcon.style.transform = 'rotate(0deg)';
         toggleIcon.textContent = '◀';
-        
-        // Reset main content margin to normal spacing
-        if (mainContent) {
-          mainContent.style.marginLeft = '20px';
-        }
       } else {
         // Collapsing sidebar
         sidebar.classList.add('collapsed');
         toggleIcon.style.transform = 'rotate(180deg)';
         toggleIcon.textContent = '◀'; // Keep same character, just rotate it
-        
-        // Keep main content in place, just let it expand naturally
-        if (mainContent) {
-          mainContent.style.marginLeft = '0px'; // No movement, just natural expansion
-        }
       }
       
       // Remove transitioning class after animation completes
@@ -9684,7 +10091,7 @@ const __fallbackThemeCSS = `
       modal.style.cssText = `
         position: fixed;
         top: 0;
-        left: 260px;
+        left: 0;
         width: 650px;
         height: 100vh;
         background: rgba(255, 250, 243, 0.97);
@@ -9703,7 +10110,7 @@ const __fallbackThemeCSS = `
           <div style="display: flex; align-items: center; gap: 12px;">
             <img src="/CCP_Logog.png" alt="CCP Logo" style="width: 32px; height: 32px; object-fit: contain;" />
             <div>
-              <h3 style="margin: 0; font-size: 22px; color: #4b3b2a; font-weight: 600;">Create New Content Project</h3>
+              <h3 style="margin: 0; font-size: 22px; color: #4b3b2a; font-weight: 600;">Create New Photo Order</h3>
               <p style="margin: 4px 0 0; font-size: 12px; color: rgba(107, 84, 64, 0.78); letter-spacing: 0.3px;">Streamline new requests with the warm CCP workspace aesthetic.</p>
             </div>
           </div>
@@ -9748,7 +10155,7 @@ const __fallbackThemeCSS = `
               </div>
             </div>
 
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px;">
+            <div style="margin-bottom: 20px;">
               <div style="min-width: 0;">
                 <label style="display: block; font-weight: 600; margin-bottom: 6px; color: #4b3b2a; font-size: 14px;">Production</label>
     <select name="method" required style="width: 100%; box-sizing: border-box; padding: 14px; border: 2px solid #ead7c2; border-radius: 8px; font-size: 16px; transition: border-color 0.2s ease;"
@@ -9760,12 +10167,38 @@ const __fallbackThemeCSS = `
                   <option value="MERRILD">MERRILD</option>
                 </select>
               </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px;">
               <div style="min-width: 0;">
-                <label style="display: block; font-weight: 600; margin-bottom: 6px; color: #4b3b2a; font-size: 14px;">Order Type</label>
-    <select name="orderType" required style="width: 100%; box-sizing: border-box; padding: 14px; border: 2px solid #ead7c2; border-radius: 8px; font-size: 16px; transition: border-color 0.2s ease;"
+                <label style="display: block; font-weight: 600; margin-bottom: 6px; color: #4b3b2a; font-size: 14px;">Content Type</label>
+                <select name="contentType" style="width: 100%; box-sizing: border-box; padding: 14px; border: 2px solid #ead7c2; border-radius: 8px; font-size: 16px; transition: border-color 0.2s ease;"
       onfocus="this.style.borderColor='#c48b5a'" onblur="this.style.borderColor='#ead7c2'">
-                  <option value="PO" selected>PO - Photo Order</option>
-                  <option value="PS">PS - Photo Service</option>
+                  <option value="">Select content type...</option>
+                  <option value="Packshot">Packshot</option>
+                  <option value="Product Group Shot (Transparent Background)">Product Group Shot (Transparent Background)</option>
+                  <option value="Product Group Shot (Miljø)">Product Group Shot (Miljø)</option>
+                  <option value="Model Shot (Transparent Background)">Model Shot (Transparent Background)</option>
+                  <option value="Model Shot (Miljø)">Model Shot (Miljø)</option>
+                  <option value="Detail Shot (Transparent Background)">Detail Shot (Transparent Background)</option>
+                  <option value="Detail Shot (Miljø)">Detail Shot (Miljø)</option>
+                  <option value="Premium (Transparent Background)">Premium (Transparent Background)</option>
+                </select>
+              </div>
+              <div style="min-width: 0;">
+                <label style="display: block; font-weight: 600; margin-bottom: 6px; color: #4b3b2a; font-size: 14px;">DAM Shot Type</label>
+                <select name="shotType" style="width: 100%; box-sizing: border-box; padding: 14px; border: 2px solid #ead7c2; border-radius: 8px; font-size: 16px; transition: border-color 0.2s ease;"
+      onfocus="this.style.borderColor='#c48b5a'" onblur="this.style.borderColor='#ead7c2'">
+                  <option value="">Select shot type...</option>
+                  <option value="Front">Front</option>
+                  <option value="Front - Top">Front - Top</option>
+                  <option value="Front - Left Angle">Front - Left Angle</option>
+                  <option value="Front - Right Angle">Front - Right Angle</option>
+                  <option value="Left Side">Left Side</option>
+                  <option value="Right Side">Right Side</option>
+                  <option value="Back">Back</option>
+                  <option value="Top">Top</option>
+                  <option value="Bottom">Bottom</option>
                 </select>
               </div>
             </div>
@@ -9800,10 +10233,9 @@ const __fallbackThemeCSS = `
                 </select>
               </div>
               <div style="min-width: 0;">
-                <label style="display: block; font-weight: 600; margin-bottom: 6px; color: #4b3b2a; font-size: 14px;">Image Request ID</label>
-                <input name="imageRequestId" type="text" style="width: 100%; box-sizing: border-box; padding: 14px; border: 2px solid #ead7c2; border-radius: 8px; font-size: 16px; transition: border-color 0.2s ease;" placeholder="IR123456" autocomplete="off"
+                <label style="display: block; font-weight: 600; margin-bottom: 6px; color: #4b3b2a; font-size: 14px;">Activity</label>
+                <input name="activity" type="text" style="width: 100%; box-sizing: border-box; padding: 14px; border: 2px solid #ead7c2; border-radius: 8px; font-size: 16px; transition: border-color 0.2s ease;" placeholder="e.g., Summer Campaign" autocomplete="off"
       onfocus="this.style.borderColor='#c48b5a'" onblur="this.style.borderColor='#ead7c2'">
-                <div style="margin-top: 6px; font-size: 12px; color: #6b5440;">Leave blank to auto-generate the next available ID.</div>
               </div>
             </div>
 
@@ -9899,7 +10331,7 @@ const __fallbackThemeCSS = `
       const formData = new FormData(event.target);
       const currentUser = authSystem.getCurrentUser();
   const selectedPhotoReference = (formData.get('photoReference') || '').trim();
-  const rawImageRequestInput = (formData.get('imageRequestId') || '').trim();
+  const activityInput = (formData.get('activity') || '').trim();
       const rawArticlesValue = (formData.get('articles') || '').toString();
 
       syncNewOrderArticleContentState();
@@ -9943,6 +10375,9 @@ const __fallbackThemeCSS = `
       const newOrder = {
         orderNumber: orderNumber,
         title: formData.get('title'),
+        contentType: formData.get('contentType'),
+        shotType: formData.get('shotType'),
+        orderType: 'PO',
         method: formData.get('method'),
         priority: formData.get('priority'),
         deadline: formData.get('deadline'),
@@ -9957,7 +10392,7 @@ const __fallbackThemeCSS = `
         comments: [],
         deliverables: ['Product Photos', 'High-Resolution Images'],
         photoReference: selectedPhotoReference || null,
-        imageRequestId: rawImageRequestInput,
+        activity: activityInput,
         photoStatus: 'New Request'
       };
 
@@ -11399,6 +11834,9 @@ const __fallbackThemeCSS = `
       
       if (tbody) {
         const placeholderSpan = '<span style="color:#9ca3af;">—</span>';
+        const activeTheme = document.body?.dataset?.theme || '';
+        const isAuroraTheme = activeTheme === 'aurora';
+        const isGlassTheme = activeTheme === 'glass';
 
         const formatPurchaseGroupDisplay = (value) => {
           if (value === undefined || value === null || value === '') {
@@ -11453,20 +11891,38 @@ const __fallbackThemeCSS = `
           const assetName = firstAsset?.name ? firstAsset.name : 'Preview asset';
 
           return `
-            <div style="display:flex;align-items:center;gap:8px;">
-              <div style="width:40px;height:40px;border-radius:8px;overflow:hidden;box-shadow:0 3px 8px rgba(0,0,0,0.08);background:#f9f4ec;flex-shrink:0;">
-                <img src="${previewSource}" alt="Preview for ${order.orderNumber}" data-preview="${previewSource}" 
-                  style="width:100%;height:100%;object-fit:cover;cursor:pointer;"
-                  onmouseenter="showThumbnailPreview(event, this.dataset.preview)"
-                  onmouseleave="hideThumbnailPreview()"
-                  onclick="openThumbnailModal(event, this.dataset.preview)">
-              </div>
-              <span style="font-size:11px;color:#6b5440;max-width:140px;display:inline-block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${assetName}</span>
+            <div style="display:flex;align-items:center;">
+              <span 
+                data-preview="${previewSource}"
+                onmouseenter="showThumbnailPreview(event, this.dataset.preview)"
+                onmouseleave="hideThumbnailPreview()"
+                onclick="openThumbnailModal(event, this.dataset.preview)"
+                style="font-size:11px;color:#6b5440;max-width:180px;display:inline-block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer;text-decoration:underline;text-decoration-style:dotted;text-underline-offset:2px;">
+                ${assetName}
+              </span>
             </div>
           `;
         };
 
         const buildChildDetailsTable = (order, normalizedArticles) => {
+          const childPanelStyle = isAuroraTheme
+            ? 'background:linear-gradient(145deg, rgba(248, 251, 255, 0.9), rgba(218, 234, 255, 0.78));border:1px solid rgba(163, 201, 255, 0.45);border-radius:0 0 14px 14px;overflow:auto;max-height:220px;box-shadow:0 18px 38px rgba(43, 74, 120, 0.25);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);margin-top:-1px;'
+            : isGlassTheme
+            ? 'background:rgba(255, 255, 255, 0.75);border:1px solid rgba(255, 255, 255, 0.6);border-radius:0 0 14px 14px;overflow:auto;max-height:220px;box-shadow:0 18px 38px rgba(0, 0, 0, 0.1);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);margin-top:-1px;'
+            : 'background:white;border:1px solid rgba(196, 139, 90, 0.25);border-radius:0 0 10px 10px;overflow:auto;max-height:220px;margin-top:-1px;';
+          const childHeaderStyle = isAuroraTheme
+            ? 'background:linear-gradient(90deg, rgba(248, 251, 255, 0.9), rgba(210, 234, 255, 0.8));'
+            : isGlassTheme
+            ? 'background:rgba(255, 255, 255, 0.5);backdrop-filter:blur(8px);'
+            : 'background:rgba(253, 244, 230, 0.6);';
+          const childCellBorder = isAuroraTheme ? 'rgba(160, 199, 255, 0.35)' : isGlassTheme ? 'rgba(255, 255, 255, 0.5)' : 'rgba(196, 139, 90, 0.18)';
+          const childCellTextColor = isAuroraTheme || isGlassTheme ? 'color:rgba(25, 40, 74, 0.92);' : '';
+          const childCellBackground = isAuroraTheme ? 'background:rgba(255, 255, 255, 0.08);' : isGlassTheme ? 'background:rgba(255, 255, 255, 0.2);' : '';
+          const duplicateHighlightStyle = isAuroraTheme
+            ? 'background:rgba(255, 255, 255, 0.55);border-left:3px solid rgba(120, 197, 255, 0.7);font-weight:600;color:rgba(18, 32, 58, 0.95);'
+            : isGlassTheme
+            ? 'background:rgba(255, 255, 255, 0.6);border-left:3px solid #3b82f6;font-weight:600;color:#1e293b;'
+            : 'background:#fef3c7;border-left:3px solid #f59e0b;font-weight:600;color:#92400e;';
           const hasOrderLevelDetail = Boolean(order.imageRequestId || order.articleNumber || order.articleName || order.purchaseGroup);
           const dataSource = normalizedArticles.length ? normalizedArticles : (hasOrderLevelDetail ? [{
             name: order.articleName || '',
@@ -11504,20 +11960,20 @@ const __fallbackThemeCSS = `
                                 allCombinedPhotos.filter(cp => cp === combinedPhoto).length > 1;
             
             const combinedPhotoStyle = isDuplicate 
-              ? 'background:#fef3c7;border-left:3px solid #f59e0b;font-weight:600;color:#92400e;'
+              ? duplicateHighlightStyle
               : '';
 
             return `
               <tr>
-                <td style="padding:6px 10px;border-bottom:1px solid rgba(196, 139, 90, 0.18);font-size:11px;">${imageRequestId || placeholderSpan}</td>
-                <td style="padding:6px 10px;border-bottom:1px solid rgba(196, 139, 90, 0.18);font-size:11px;">${articleNumber || placeholderSpan}</td>
-                <td style="padding:6px 10px;border-bottom:1px solid rgba(196, 139, 90, 0.18);font-size:11px;">${unitOfMeasure || placeholderSpan}</td>
-                <td style="padding:6px 10px;border-bottom:1px solid rgba(196, 139, 90, 0.18);font-size:11px;">${articleName || placeholderSpan}</td>
-                <td style="padding:6px 10px;border-bottom:1px solid rgba(196, 139, 90, 0.18);font-size:11px;">${netContent || placeholderSpan}</td>
-                <td style="padding:6px 10px;border-bottom:1px solid rgba(196, 139, 90, 0.18);font-size:11px;">${purchaseGroup || placeholderSpan}</td>
-                <td style="padding:6px 10px;border-bottom:1px solid rgba(196, 139, 90, 0.18);font-size:11px;">${contentType || placeholderSpan}</td>
-                <td style="padding:6px 10px;border-bottom:1px solid rgba(196, 139, 90, 0.18);font-size:11px;${combinedPhotoStyle}">${combinedPhoto || placeholderSpan}</td>
-                <td style="padding:6px 10px;border-bottom:1px solid rgba(196, 139, 90, 0.18);font-size:11px;">${fileName || placeholderSpan}</td>
+                <td style="padding:6px 10px;border-bottom:1px solid ${childCellBorder};font-size:11px;${childCellTextColor}${childCellBackground}">${imageRequestId || placeholderSpan}</td>
+                <td style="padding:6px 10px;border-bottom:1px solid ${childCellBorder};font-size:11px;${childCellTextColor}${childCellBackground}">${articleNumber || placeholderSpan}</td>
+                <td style="padding:6px 10px;border-bottom:1px solid ${childCellBorder};font-size:11px;${childCellTextColor}${childCellBackground}">${unitOfMeasure || placeholderSpan}</td>
+                <td style="padding:6px 10px;border-bottom:1px solid ${childCellBorder};font-size:11px;${childCellTextColor}${childCellBackground}">${articleName || placeholderSpan}</td>
+                <td style="padding:6px 10px;border-bottom:1px solid ${childCellBorder};font-size:11px;${childCellTextColor}${childCellBackground}">${netContent || placeholderSpan}</td>
+                <td style="padding:6px 10px;border-bottom:1px solid ${childCellBorder};font-size:11px;${childCellTextColor}${childCellBackground}">${purchaseGroup || placeholderSpan}</td>
+                <td style="padding:6px 10px;border-bottom:1px solid ${childCellBorder};font-size:11px;${childCellTextColor}${childCellBackground}">${contentType || placeholderSpan}</td>
+                <td style="padding:6px 10px;border-bottom:1px solid ${childCellBorder};font-size:11px;${childCellTextColor}${childCellBackground}${combinedPhotoStyle}">${combinedPhoto || placeholderSpan}</td>
+                <td style="padding:6px 10px;border-bottom:1px solid ${childCellBorder};font-size:11px;${childCellTextColor}${childCellBackground}">${fileName || placeholderSpan}</td>
               </tr>
             `;
           }).join('') : `
@@ -11527,19 +11983,19 @@ const __fallbackThemeCSS = `
           `;
 
           return `
-            <div style="background:white;border:1px solid rgba(196, 139, 90, 0.25);border-radius:10px;overflow:auto;max-height:220px;">
+            <div style="${childPanelStyle}">
               <table style="width:100%;border-collapse:collapse;">
-                <thead style="background:rgba(253, 244, 230, 0.6);">
+                <thead style="${childHeaderStyle}">
                   <tr>
-                    <th style="text-align:left;padding:8px 10px;font-size:11px;color:#6b5440;font-weight:600;">Image Request ID</th>
-                    <th style="text-align:left;padding:8px 10px;font-size:11px;color:#6b5440;font-weight:600;">Article Number</th>
-                    <th style="text-align:left;padding:8px 10px;font-size:11px;color:#6b5440;font-weight:600;">Unit of Measure</th>
-                    <th style="text-align:left;padding:8px 10px;font-size:11px;color:#6b5440;font-weight:600;">Article Name</th>
-                    <th style="text-align:left;padding:8px 10px;font-size:11px;color:#6b5440;font-weight:600;">Net Content</th>
-                    <th style="text-align:left;padding:8px 10px;font-size:11px;color:#6b5440;font-weight:600;">Purchase Group</th>
-                    <th style="text-align:left;padding:8px 10px;font-size:11px;color:#6b5440;font-weight:600;">Content Type</th>
-                    <th style="text-align:left;padding:8px 10px;font-size:11px;color:#6b5440;font-weight:600;">Combined Photo</th>
-                    <th style="text-align:left;padding:8px 10px;font-size:11px;color:#6b5440;font-weight:600;">File Name</th>
+                    <th style="text-align:left;padding:8px 10px;font-size:11px;color:${isAuroraTheme || isGlassTheme ? 'rgba(20, 34, 60, 0.9)' : '#6b5440'};font-weight:600;">Image Request ID</th>
+                    <th style="text-align:left;padding:8px 10px;font-size:11px;color:${isAuroraTheme || isGlassTheme ? 'rgba(20, 34, 60, 0.9)' : '#6b5440'};font-weight:600;">Article Number</th>
+                    <th style="text-align:left;padding:8px 10px;font-size:11px;color:${isAuroraTheme || isGlassTheme ? 'rgba(20, 34, 60, 0.9)' : '#6b5440'};font-weight:600;">Unit of Measure</th>
+                    <th style="text-align:left;padding:8px 10px;font-size:11px;color:${isAuroraTheme || isGlassTheme ? 'rgba(20, 34, 60, 0.9)' : '#6b5440'};font-weight:600;">Article Name</th>
+                    <th style="text-align:left;padding:8px 10px;font-size:11px;color:${isAuroraTheme || isGlassTheme ? 'rgba(20, 34, 60, 0.9)' : '#6b5440'};font-weight:600;">Net Content</th>
+                    <th style="text-align:left;padding:8px 10px;font-size:11px;color:${isAuroraTheme || isGlassTheme ? 'rgba(20, 34, 60, 0.9)' : '#6b5440'};font-weight:600;">Purchase Group</th>
+                    <th style="text-align:left;padding:8px 10px;font-size:11px;color:${isAuroraTheme || isGlassTheme ? 'rgba(20, 34, 60, 0.9)' : '#6b5440'};font-weight:600;">Content Type</th>
+                    <th style="text-align:left;padding:8px 10px;font-size:11px;color:${isAuroraTheme || isGlassTheme ? 'rgba(20, 34, 60, 0.9)' : '#6b5440'};font-weight:600;">Combined Photo</th>
+                    <th style="text-align:left;padding:8px 10px;font-size:11px;color:${isAuroraTheme || isGlassTheme ? 'rgba(20, 34, 60, 0.9)' : '#6b5440'};font-weight:600;">File Name</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -11557,9 +12013,26 @@ const __fallbackThemeCSS = `
             console.log('DEBUG: Found ORD-2025-009 in render list:', o);
           }
           const isOverdue = o.deadline ? (new Date(o.deadline) < new Date() && o.status !== 'Complete' && o.status !== 'Delivered') : false;
-          const deadlineStyle = isOverdue ? 'color: #dc2626; font-weight: bold;' : 'color: #4b3b2a;';
+          const baseTextColor = isAuroraTheme || isGlassTheme ? 'rgba(24, 42, 78, 0.95)' : '#4b3b2a';
+          const baseCellTextColor = isAuroraTheme || isGlassTheme ? 'color: rgba(24, 42, 78, 0.95) !important;' : 'color: #4b3b2a !important;';
+          const rowStyle = isAuroraTheme
+            ? 'cursor: pointer; background: linear-gradient(145deg, rgba(248, 251, 255, 0.9), rgba(223, 238, 255, 0.78)); color: rgba(24, 42, 78, 0.95) !important; box-shadow: 0 10px 24px rgba(25, 48, 92, 0.12);'
+            : isGlassTheme
+            ? 'cursor: pointer; background: rgba(255, 255, 255, 0.65); color: rgba(24, 42, 78, 0.95) !important; box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(255, 255, 255, 0.5);'
+            : 'cursor: pointer; color: #4b3b2a !important;';
           const commentCount = (o.comments || []).length;
           const unreadComments = window.commentSystem ? window.commentSystem.getUnreadCommentCount(o.orderNumber) : 0;
+          const commentButtonStyle = isAuroraTheme
+            ? `background: ${commentCount > 0 ? 'linear-gradient(120deg, rgba(168, 180, 248, 0.95), rgba(125, 211, 252, 0.9))' : 'rgba(255, 255, 255, 0.35)'}; color: rgba(17, 32, 62, 0.95); border: 1px solid rgba(148, 180, 255, 0.55); padding: 6px 14px; border-radius: 999px; cursor: pointer; font-size: 11px; position: relative; box-shadow: 0 12px 26px rgba(72, 118, 182, 0.35); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);`
+            : isGlassTheme
+            ? `background: ${commentCount > 0 ? 'linear-gradient(135deg, #3b82f6, #2563eb)' : 'rgba(255, 255, 255, 0.5)'}; color: ${commentCount > 0 ? 'white' : '#64748b'}; border: 1px solid rgba(255, 255, 255, 0.6); padding: 6px 14px; border-radius: 999px; cursor: pointer; font-size: 11px; position: relative; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); backdrop-filter: blur(10px);`
+            : `background: ${commentCount > 0 ? '#c48b5a' : '#6b5440'}; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 11px; position: relative;`;
+          const unreadBadgeStyle = isAuroraTheme
+            ? 'position: absolute; top: -6px; right: -6px; background: rgba(255, 82, 82, 0.92); color: white; border-radius: 999px; width: 16px; height: 16px; font-size: 10px; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(255, 255, 255, 0.65); box-shadow: 0 6px 14px rgba(239, 68, 68, 0.35);'
+            : isGlassTheme
+            ? 'position: absolute; top: -6px; right: -6px; background: #ef4444; color: white; border-radius: 999px; width: 16px; height: 16px; font-size: 10px; display: flex; align-items: center; justify-content: center; border: 1px solid white; box-shadow: 0 2px 6px rgba(239, 68, 68, 0.4);'
+            : 'position: absolute; top: -5px; right: -5px; background: #ef4444; color: white; border-radius: 50%; width: 14px; height: 14px; font-size: 9px; display: flex; align-items: center; justify-content: center;';
+          const deadlineStyle = isOverdue ? 'color: #dc2626; font-weight: bold;' : `color: ${baseTextColor};`;
           const normalizedArticles = normalizeArticles(o.articles);
           const isExpanded = expandedOrders.has(o.orderNumber);
           const expandIcon = `<span class="order-expand-arrow ${isExpanded ? 'is-open' : ''}">◀</span>`;
@@ -11568,6 +12041,7 @@ const __fallbackThemeCSS = `
           const groupDisplay = o.group || placeholderSpan;
           const costCenterDisplay = o.costCenter || placeholderSpan;
           const orderTypeDisplay = (o.orderType || 'PS');
+          const activityDisplay = o.activity || placeholderSpan;
           const rawPage = o.page ?? o.pageNumber ?? o.pageNo ?? o.catalogPage ?? o.pamPage ?? o.pageReference ?? '';
           const parsedPage = parseInt(rawPage, 10);
           const pageDisplay = !isNaN(parsedPage) && parsedPage >= 0 ? String(parsedPage) : (rawPage ? String(rawPage).trim() : placeholderSpan);
@@ -11579,38 +12053,44 @@ const __fallbackThemeCSS = `
           const productionInfo = buildProductionInfo(o);
           const previewCell = buildPreviewCell(o);
 
+          const childRowBackground = isAuroraTheme
+            ? 'background:linear-gradient(145deg, rgba(248, 251, 255, 0.92), rgba(223, 238, 255, 0.82)); border-bottom:1px solid rgba(151, 190, 255, 0.35);'
+            : isGlassTheme
+            ? 'background: rgba(255, 255, 255, 0.4); border-bottom: 1px solid rgba(255, 255, 255, 0.5);'
+            : 'background:#fffaf3;border-bottom:1px solid rgba(196, 139, 90, 0.2);';
           const articleDetailsRow = isExpanded ? `
             <tr class="order-articles-row" data-parent-order="${o.orderNumber}">
               <td class="bulk-checkbox" style="display: none; width: 55px; min-width: 55px; max-width: 55px; height: 55px; padding: 0; text-align: center;"></td>
-              <td colspan="17" style="background:#fffaf3;padding:10px 18px 16px;border-bottom:1px solid rgba(196, 139, 90, 0.2);">
+              <td colspan="17" style="${childRowBackground}padding:0 20px 12px;">
                 ${buildChildDetailsTable(o, normalizedArticles)}
               </td>
             </tr>
           ` : '';
 
           return `
-          <tr onclick="showOrderDetails('${o.orderNumber}')" style="cursor: pointer; color: #4b3b2a !important;" class="${window.selectedItems && window.selectedItems.has(o.orderNumber) ? 'selected-row' : ''}">
+          <tr onclick="showOrderDetails('${o.orderNumber}')" style="${rowStyle}" class="${window.selectedItems && window.selectedItems.has(o.orderNumber) ? 'selected-row' : ''}">
             <td class="bulk-checkbox" style="display: none; width: 55px; min-width: 55px; max-width: 55px; height: 55px; padding: 0; text-align: center;"><input type="checkbox" class="item-checkbox" data-id="${o.orderNumber}" onclick="event.stopPropagation()"></td>
             <td style="padding:4px;text-align:center;width:32px;">
               <button type="button" class="order-expand-button" aria-label="${expandLabel}" title="${expandLabel}" onclick="toggleOrderExpansion('${o.orderNumber}', event)">${expandIcon}</button>
             </td>
-            <td style="padding:6px 8px;color: #4b3b2a !important;font-size:12px;"><strong>${o.orderNumber}</strong></td>
-            <td style="padding:6px 8px;color: #4b3b2a !important;font-size:12px;">${pageDisplay}</td>
-            <td style="padding:6px 8px;color: #4b3b2a !important;font-size:12px;">${offerId}</td>
-            <td style="padding:6px 8px;color: #4b3b2a !important;font-size:12px;">${groupDisplay}</td>
-            <td style="padding:6px 8px;color: #4b3b2a !important;font-size:12px;">${costCenterDisplay}</td>
-            <td style="padding:6px 8px;color: #4b3b2a !important;font-size:12px;">${orderTypeDisplay}</td>
-            <td style="padding:6px 8px;color: #4b3b2a !important;min-width:150px;font-size:12px;">${offerName}</td>
-            <td style="padding:6px 8px;color: #4b3b2a !important;font-size:12px;">${shotType}</td>
-            <td style="padding:6px 8px;color: #4b3b2a !important;font-size:12px;">${photoRef}</td>
-            <td style="padding:6px 8px;color: #4b3b2a !important;font-size:12px;">${productionInfo}</td>
-            <td style="padding:6px 8px;color: #4b3b2a !important;font-size:12px;">${principle}</td>
-            <td style="padding:6px 8px;color: #4b3b2a !important;font-size:12px;">${previewCell}</td>
-            <td style="padding:4px 6px;text-align: center; color: #4b3b2a !important;">
+            <td style="padding:6px 8px;${baseCellTextColor}font-size:12px;"><strong>${o.orderNumber}</strong></td>
+            <td style="padding:6px 8px;${baseCellTextColor}font-size:12px;">${activityDisplay}</td>
+            <td style="padding:6px 8px;${baseCellTextColor}font-size:12px;">${pageDisplay}</td>
+            <td style="padding:6px 8px;${baseCellTextColor}font-size:12px;">${offerId}</td>
+            <td style="padding:6px 8px;${baseCellTextColor}font-size:12px;">${groupDisplay}</td>
+            <td style="padding:6px 8px;${baseCellTextColor}font-size:12px;">${costCenterDisplay}</td>
+            <td style="padding:6px 8px;${baseCellTextColor}font-size:12px;">${orderTypeDisplay}</td>
+            <td style="padding:6px 8px;${baseCellTextColor}min-width:150px;font-size:12px;">${offerName}</td>
+            <td style="padding:6px 8px;${baseCellTextColor}font-size:12px;">${shotType}</td>
+            <td style="padding:6px 8px;${baseCellTextColor}font-size:12px;">${photoRef}</td>
+            <td style="padding:6px 8px;${baseCellTextColor}font-size:12px;">${productionInfo}</td>
+            <td style="padding:6px 8px;${baseCellTextColor}font-size:12px;">${principle}</td>
+            <td style="padding:6px 8px;${baseCellTextColor}font-size:12px;">${previewCell}</td>
+            <td style="padding:4px 6px;text-align: center; ${baseCellTextColor}">
               <button onclick="event.stopPropagation(); window.commentSystem && window.commentSystem.showCommentsModal('${o.orderNumber}')" 
-                style="background: ${commentCount > 0 ? '#c48b5a' : '#6b5440'}; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 11px; position: relative;">
+                style="${commentButtonStyle}">
                 💬 ${commentCount}
-                ${unreadComments > 0 ? `<span style="position: absolute; top: -5px; right: -5px; background: #ef4444; color: white; border-radius: 50%; width: 14px; height: 14px; font-size: 9px; display: flex; align-items: center; justify-content: center;">${unreadComments}</span>` : ''}
+                ${unreadComments > 0 ? `<span style="${unreadBadgeStyle}">${unreadComments}</span>` : ''}
               </button>
             </td>
             <td style="padding:6px 8px;"><span class="status ${o.status.replace(/\s+/g, '')}">${o.status || 'Unknown'}</span></td>
@@ -12432,9 +12912,17 @@ const __fallbackThemeCSS = `
 
         tbody.innerHTML = filtered.map(o => {
           const isOverdue = o.deadline ? (new Date(o.deadline) < new Date() && o.status !== 'Complete' && o.status !== 'Delivered') : false;
-          const deadlineStyle = isOverdue ? 'color: #dc2626; font-weight: bold;' : 'color: #4b3b2a;';
+          const baseTextColor = isAuroraTheme ? 'rgba(24, 42, 78, 0.95)' : '#4b3b2a';
+          const baseCellTextColor = isAuroraTheme ? 'color: rgba(24, 42, 78, 0.95) !important;' : 'color: #4b3b2a !important;';
+          const deadlineStyle = isOverdue ? 'color: #dc2626; font-weight: bold;' : `color: ${baseTextColor};`;
           const commentCount = (o.comments || []).length;
           const unreadComments = window.commentSystem ? window.commentSystem.getUnreadCommentCount(o.orderNumber) : 0;
+          const commentButtonStyle = isAuroraTheme
+            ? `background: ${commentCount > 0 ? 'linear-gradient(120deg, rgba(168, 180, 248, 0.95), rgba(125, 211, 252, 0.9))' : 'rgba(255, 255, 255, 0.35)'}; color: rgba(17, 32, 62, 0.95); border: 1px solid rgba(148, 180, 255, 0.55); padding: 6px 14px; border-radius: 999px; cursor: pointer; font-size: 11px; position: relative; box-shadow: 0 12px 26px rgba(72, 118, 182, 0.35); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);`
+            : `background: ${commentCount > 0 ? '#c48b5a' : '#6b5440'}; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; position: relative;`;
+          const unreadBadgeStyle = isAuroraTheme
+            ? 'position: absolute; top: -6px; right: -6px; background: rgba(255, 82, 82, 0.92); color: white; border-radius: 999px; width: 16px; height: 16px; font-size: 10px; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(255, 255, 255, 0.65); box-shadow: 0 6px 14px rgba(239, 68, 68, 0.35);'
+            : 'position: absolute; top: -4px; right: -4px; background: #ef4444; color: white; border-radius: 50%; width: 16px; height: 16px; font-size: 10px; display: flex; align-items: center; justify-content: center;';
           const isExpanded = expandedOrders.has(o.orderNumber);
           const expandIcon = `<span class="order-expand-arrow ${isExpanded ? 'is-open' : ''}">◀</span>`;
           const expandLabel = isExpanded ? 'Collapse articles' : 'Expand articles';
@@ -12457,17 +12945,24 @@ const __fallbackThemeCSS = `
             ? buildChildDetailsTable(o, normalizedArticles)
             : renderArticleCards(o.articles);
 
+          const childRowBackground = isAuroraTheme
+            ? 'background:linear-gradient(145deg, rgba(248, 251, 255, 0.92), rgba(223, 238, 255, 0.82)); border-bottom:1px solid rgba(151, 190, 255, 0.35);'
+            : 'background:#fffaf3;border-bottom:1px solid rgba(196, 139, 90, 0.2);';
           const articleDetailsRow = isExpanded ? `
             <tr class="order-articles-row" data-parent-order="${o.orderNumber}">
               <td class="bulk-checkbox" style="display: none; width: 55px; min-width: 55px; max-width: 55px; height: 55px; padding: 0; text-align: center;"></td>
-              <td colspan="15" style="background:#fffaf3;padding:16px 24px 24px;border-bottom:1px solid rgba(196, 139, 90, 0.2);">
+              <td colspan="15" style="${childRowBackground}padding:16px 24px 24px;">
                 ${articleDetailsContent}
               </td>
             </tr>
           ` : '';
 
+          const quickRowBackground = isAuroraTheme
+            ? 'background:linear-gradient(145deg, rgba(248, 251, 255, 0.9), rgba(223, 238, 255, 0.78));color:rgba(24,42,78,0.95) !important;box-shadow:0 10px 22px rgba(24,46,88,0.12);'
+            : 'background:#fef3c7;color:#4b3b2a !important;';
+
           return `
-          <tr onclick="showOrderDetails('${o.orderNumber}')" style="cursor: pointer; background: #fef3c7; color:#4b3b2a !important;">
+          <tr onclick="showOrderDetails('${o.orderNumber}')" style="cursor: pointer; ${quickRowBackground}">
             <td class="bulk-checkbox" style="display: none; width: 55px; min-width: 55px; max-width: 55px; height: 55px; padding: 0; text-align: center;"><input type="checkbox" class="item-checkbox" data-id="${o.orderNumber}" onclick="event.stopPropagation()"></td>
             <td style="text-align:center;">
               <button type="button" class="order-expand-button" aria-label="${expandLabel}" title="${expandLabel}" onclick="toggleOrderExpansion('${o.orderNumber}', event)">${expandIcon}</button>
@@ -12483,14 +12978,14 @@ const __fallbackThemeCSS = `
             <td>${productionInfo}</td>
             <td>${principle}</td>
             <td>${previewCell}</td>
-            <td style="text-align: center;">
+            <td style="text-align: center;${baseCellTextColor}">
               <button onclick="event.stopPropagation(); window.commentSystem && window.commentSystem.showCommentsModal('${o.orderNumber}')" 
-                style="background: ${commentCount > 0 ? '#c48b5a' : '#6b5440'}; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; position: relative;">
+                style="${commentButtonStyle}">
                 💬 ${commentCount}
-                ${unreadComments > 0 ? `<span style="position: absolute; top: -4px; right: -4px; background: #ef4444; color: white; border-radius: 50%; width: 16px; height: 16px; font-size: 10px; display: flex; align-items: center; justify-content: center;">${unreadComments}</span>` : ''}
+                ${unreadComments > 0 ? `<span style="${unreadBadgeStyle}">${unreadComments}</span>` : ''}
               </button>
             </td>
-            <td><span class="status ${o.status.replace(/\s+/g, '')}">${o.status || 'Unknown'}</span></td>
+            <td style="${baseCellTextColor}"><span class="status ${o.status.replace(/\s+/g, '')}">${o.status || 'Unknown'}</span></td>
             <td style="${deadlineStyle}">${o.deadline || placeholderSpan}${isOverdue ? ' ⚠️' : ''}</td>
           </tr>
           ${articleDetailsRow}
@@ -13206,24 +13701,44 @@ const __fallbackThemeCSS = `
 
     // Create Order Modal
     function showCreateOrderModal() {
+      const activeTheme = document.body?.dataset?.theme || '';
+      const isAuroraTheme = activeTheme === 'aurora';
+      const modalCardStyle = isAuroraTheme
+        ? 'background:linear-gradient(145deg, rgba(248, 251, 255, 0.95), rgba(222, 236, 255, 0.85), rgba(190, 243, 228, 0.75));border-radius:20px;padding:32px;max-width:800px;width:95%;max-height:80vh;overflow-y:auto;border:1px solid rgba(168, 199, 255, 0.48);box-shadow:0 48px 90px rgba(27, 45, 82, 0.35);backdrop-filter:blur(28px);-webkit-backdrop-filter:blur(28px);'
+        : 'background:white;border-radius:12px;padding:32px;max-width:800px;width:95%;max-height:80vh;overflow-y:auto;';
+      const headingColor = isAuroraTheme ? 'rgba(17, 32, 62, 0.95)' : '#4b3b2a';
+      const labelStyle = isAuroraTheme
+        ? 'display:block;margin-bottom:8px;font-weight:500;color:rgba(24, 42, 78, 0.9);'
+        : 'display:block;margin-bottom:8px;font-weight:500;color:#4b3b2a;';
+      const inputStyle = isAuroraTheme
+        ? 'width:100%;padding:10px 12px;border:1px solid rgba(146, 194, 255, 0.45);border-radius:10px;background:rgba(255,255,255,0.82);color:rgba(18,32,58,0.95);box-shadow:0 8px 18px rgba(148, 180, 255, 0.18);'
+        : 'width:100%;padding:8px;border:1px solid #d1d5db;border-radius:4px;';
+      const textareaStyle = isAuroraTheme ? `${inputStyle}min-height:120px;` : 'width:100%;padding:8px;border:1px solid #d1d5db;border-radius:4px;';
+      const primaryButtonStyle = isAuroraTheme
+        ? 'background:linear-gradient(135deg, rgba(168, 180, 248, 0.95), rgba(125, 211, 252, 0.9));color:rgba(15, 29, 56, 0.95);border:none;padding:12px 24px;border-radius:999px;cursor:pointer;font-weight:600;box-shadow:0 14px 30px rgba(94, 132, 189, 0.35);'
+        : 'background:#b48fc7;color:white;border:none;padding:12px 24px;border-radius:6px;cursor:pointer;font-weight:500;';
+      const secondaryButtonStyle = isAuroraTheme
+        ? 'background:rgba(255,255,255,0.35);color:rgba(17, 32, 62, 0.9);border:1px solid rgba(148, 180, 255, 0.45);padding:12px 24px;border-radius:999px;cursor:pointer;font-weight:500;'
+        : 'background:#6b5440;color:white;border:none;padding:12px 24px;border-radius:6px;cursor:pointer;';
+      const closeButtonColor = isAuroraTheme ? 'rgba(24, 42, 78, 0.85)' : '#6b5440';
       const modal = document.createElement('div');
       modal.className = 'create-order-modal';
       modal.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;z-index:1000';
       modal.innerHTML = `
-        <div style="background:white;border-radius:12px;padding:32px;max-width:800px;width:95%;max-height:80vh;overflow-y:auto;">
+        <div style="${modalCardStyle}">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;">
-            <h2 style="margin:0;font-size:24px;color:#4b3b2a;">📝 Create New Order</h2>
-            <button onclick="this.closest('.create-order-modal').remove()" style="background:none;border:none;font-size:28px;cursor:pointer;color:#6b5440;">×</button>
+            <h2 style="margin:0;font-size:24px;color:${headingColor};">📝 Create New Order</h2>
+            <button onclick="this.closest('.create-order-modal').remove()" style="background:none;border:none;font-size:28px;cursor:pointer;color:${closeButtonColor};">×</button>
           </div>
           <form id="createOrderForm" onsubmit="handleCreateOrder(event)">
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px;">
               <div>
-                <label style="display:block;margin-bottom:8px;font-weight:500;color:#4b3b2a;">Order Title</label>
-                <input name="title" required style="width:100%;padding:8px;border:1px solid #d1d5db;border-radius:4px;" placeholder="e.g., Summer Collection Photography">
+                <label style="${labelStyle}">Order Title</label>
+                <input name="title" required style="${inputStyle}" placeholder="e.g., Summer Collection Photography">
               </div>
               <div>
-                <label style="display:block;margin-bottom:8px;font-weight:500;color:#4b3b2a;">Priority</label>
-                <select name="priority" style="width:100%;padding:8px;border:1px solid #d1d5db;border-radius:4px;">
+                <label style="${labelStyle}">Priority</label>
+                <select name="priority" style="${inputStyle}">
                   <option value="Low">Low</option>
                   <option value="Medium" selected>Medium</option>
                   <option value="High">High</option>
@@ -13232,12 +13747,12 @@ const __fallbackThemeCSS = `
               </div>
             </div>
             <div style="margin-bottom:20px;">
-              <label style="display:block;margin-bottom:8px;font-weight:500;color:#4b3b2a;">Brief & Instructions</label>
-              <textarea name="brief" rows="4" style="width:100%;padding:8px;border:1px solid #d1d5db;border-radius:4px;" placeholder="Detailed brief..."></textarea>
+              <label style="${labelStyle}">Brief & Instructions</label>
+              <textarea name="brief" rows="4" style="${textareaStyle}" placeholder="Detailed brief..."></textarea>
             </div>
             <div style="display:flex;gap:12px;margin-top:24px;">
-              <button type="submit" style="background:#b48fc7;color:white;border:none;padding:12px 24px;border-radius:6px;cursor:pointer;font-weight:500;">Create Order</button>
-              <button type="button" onclick="this.closest('.create-order-modal').remove()" style="background:#6b5440;color:white;border:none;padding:12px 24px;border-radius:6px;cursor:pointer;">Cancel</button>
+              <button type="submit" style="${primaryButtonStyle}">Create Order</button>
+              <button type="button" onclick="this.closest('.create-order-modal').remove()" style="${secondaryButtonStyle}">Cancel</button>
             </div>
           </form>
         </div>
@@ -13650,11 +14165,90 @@ const __fallbackThemeCSS = `
         if (!availableOrders || availableOrders.length === 0) {
           // Create some sample data if orders are not available
           const sampleOrders = [
-            { orderNumber: 'ORD001', title: 'Sample Order 1', status: 'Draft', priority: 'Medium', photographer: 'John Doe', method: 'Digital', deadline: '2025-09-10', purchaseGroup: 'PG1', eventId: 'E001' },
-            { orderNumber: 'ORD002', title: 'Sample Order 2', status: 'Pending', priority: 'High', photographer: 'Jane Smith', method: 'Print', deadline: '2025-09-12', purchaseGroup: 'PG2', eventId: 'E002' },
-            { orderNumber: 'ORD003', title: 'Sample Order 3', status: 'Approved', priority: 'Medium', photographer: 'Bob Wilson', method: 'Digital', deadline: '2025-09-15', purchaseGroup: 'PG1', eventId: 'E003' },
-            { orderNumber: 'ORD004', title: 'Sample Order 4', status: 'In Progress', priority: 'Low', photographer: 'Alice Brown', method: 'Print', deadline: '2025-09-18', purchaseGroup: 'PG3', eventId: 'E004' },
-            { orderNumber: 'ORD005', title: 'Sample Order 5', status: 'Complete', priority: 'High', photographer: 'Mike Davis', method: 'Digital', deadline: '2025-09-20', purchaseGroup: 'PG2', eventId: 'E005' }
+            { 
+              orderNumber: 'ORD-2025-001', 
+              title: 'Premium Dog Food - Hero Shot', 
+              status: 'In Progress', 
+              priority: 'Critical', 
+              photographer: 'Mike Rodriguez', 
+              method: 'Photographer', 
+              deadline: '2025-09-06', 
+              purchaseGroup: '101', 
+              eventId: 'A4025052',
+              articles: [
+                'Premium Dog Food 2kg [EAN: 5901234567890]',
+                'Premium Dog Food 5kg [EAN: 5901234567891]'
+              ]
+            },
+            { 
+              orderNumber: 'ORD-2025-002', 
+              title: 'Espresso Beans - E-commerce Photography', 
+              status: 'Samples Requested', 
+              priority: 'Medium', 
+              photographer: 'Emily Chen', 
+              method: 'Photo Box', 
+              deadline: '2025-09-05', 
+              purchaseGroup: '101', 
+              eventId: 'A4125053',
+              articles: [
+                'Espresso Beans 500g [EAN: 2001234567892]',
+                'Espresso Beans 1kg [EAN: 2001234567893]'
+              ]
+            },
+            { 
+              orderNumber: 'ORD-2025-003', 
+              title: 'Wireless Speaker - Tech Photography', 
+              status: 'Draft', 
+              priority: 'Medium', 
+              photographer: 'Mike Rodriguez', 
+              method: 'Photographer', 
+              deadline: '2025-09-15', 
+              purchaseGroup: '101', 
+              eventId: 'A3825054',
+              articles: [
+                { name: 'Wireless Bluetooth Speaker [EAN: 4061234567890]', combinedPhoto: 'AA' },
+                { name: 'USB-C Cable [EAN: 8901234567891]', combinedPhoto: 'BB' },
+                { name: 'Charging Dock [EAN: 8901234567892]', combinedPhoto: 'CC' },
+                { name: 'Protective Case [EAN: 8901234567893]', combinedPhoto: 'DD' },
+                { name: 'User Manual [EAN: 8901234567894]', combinedPhoto: 'EE' },
+                { name: 'Power Adapter [EAN: 8901234567895]', combinedPhoto: 'FF' },
+                { name: 'Aux Cable [EAN: 8901234567896]', combinedPhoto: 'GG' },
+                { name: 'Strap [EAN: 8901234567897]', combinedPhoto: 'HH' }
+              ]
+            },
+            { 
+              orderNumber: 'ORD-2025-004', 
+              title: 'Garden Tools - Product Showcase', 
+              status: 'Approved', 
+              priority: 'Critical', 
+              photographer: 'Emily Chen', 
+              method: 'Photographer', 
+              deadline: '2025-09-07', 
+              purchaseGroup: '101', 
+              eventId: 'A3725055',
+              articles: [
+                { name: 'Electric Hedge Trimmer', fileName: 'ENV.000010.jpg' },
+                { name: 'Garden Gloves Set', fileName: 'ENV.000011.jpg' }
+              ]
+            },
+            { 
+              orderNumber: 'ORD-2025-005', 
+              title: 'Organic Pasta - Product Photography', 
+              status: 'Pending Approval', 
+              priority: 'Critical', 
+              photographer: 'Emily Chen', 
+              method: 'Photo Box', 
+              deadline: '2025-09-04', 
+              purchaseGroup: '101', 
+              eventId: 'A3925056',
+              articles: [
+                { name: 'Organic Penne Pasta 500g', combinedPhoto: 'CC' },
+                { name: 'Organic Linguine 400g', combinedPhoto: 'CC' },
+                { name: 'Organic Fusilli 500g', combinedPhoto: 'CC' },
+                { name: 'Organic Spaghetti 500g', combinedPhoto: 'CC' },
+                { name: 'Organic Lasagna Sheets 250g', combinedPhoto: 'CC' }
+              ]
+            }
           ];
 
           assignSalesOrgMetadata(sampleOrders);
@@ -18887,6 +19481,22 @@ const __fallbackThemeCSS = `
               <span class="context-menu-item-detail">Create printable barcode labels</span>
             </div>
           </div>
+          <div class="context-menu-divider"></div>
+          <div class="context-menu-item" data-action="pmr_simulation">
+            <span class="context-menu-item-icon">🎲</span>
+            <div class="context-menu-item-label">
+              <span>Simulate PMR Request</span>
+              <span class="context-menu-item-detail">Generate dummy orders from SAP</span>
+            </div>
+          </div>
+          <div class="context-menu-divider"></div>
+          <div class="context-menu-item" data-action="logout">
+            <span class="context-menu-item-icon">🚪</span>
+            <div class="context-menu-item-label">
+              <span>Logout</span>
+              <span class="context-menu-item-detail">Sign out of your account</span>
+            </div>
+          </div>
         `;
         
         // Add event listeners
@@ -19002,6 +19612,20 @@ const __fallbackThemeCSS = `
             break;
           case 'barcode':
             showBarcodeGeneratorModal();
+            break;
+          case 'pmr_simulation':
+            if (typeof window.showSAPImportModal === 'function') {
+              window.showSAPImportModal();
+            } else {
+              showToast('PMR Simulation not available', 'error');
+            }
+            break;
+          case 'logout':
+            if (typeof window.logout === 'function') {
+              window.logout();
+            } else {
+              showToast('Logout function not available', 'error');
+            }
             break;
         }
       }
