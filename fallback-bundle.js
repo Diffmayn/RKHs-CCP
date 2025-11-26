@@ -5885,7 +5885,6 @@ const __fallbackThemeCSS = `
             <div style="display: flex; flex-direction: column; align-items: flex-end; line-height: 1.2; gap: 2px;">
               <span style="color: #4b3b2a; font-weight: 600; font-size: 14px;">${currentUser.name}</span>
               <span style="color: #7b5a3d; font-weight: 500; font-size: 12px; text-transform: capitalize;">${currentUser.role}</span>
-              <span id="lastRefreshInfo" style="color: #85694c; font-weight: 500; font-size: 11px; max-width: 260px; text-align: right;">${initialRefreshSummary}</span>
             </div>
             </div>
           </div>
