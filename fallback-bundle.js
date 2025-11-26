@@ -2958,7 +2958,7 @@ const __fallbackThemeCSS = `
       title:'Premium Dog Food - Hero Shot', 
       status:'In Progress',
       
-      method:'Photographer',
+      method:'M&B',
       orderType: 'PS',
       photographer:'Mike Rodriguez', 
       deadline:'2025-09-06', 
@@ -3134,7 +3134,7 @@ const __fallbackThemeCSS = `
       orderNumber:'ORD-2025-003', 
       title:'Wireless Speaker - Tech Photography', 
       status:'Draft', 
-      method:'Photographer',
+      method:'GILS',
       orderType: 'PS',
       photographer:'Mike Rodriguez', 
       deadline:'2025-09-15', 
@@ -3210,7 +3210,7 @@ const __fallbackThemeCSS = `
       orderNumber:'ORD-2025-004', 
       title:'Garden Tools - Product Showcase', 
       status:'Approved', 
-      method:'Photographer',
+      method:'MERRILD',
       orderType: 'PO',
       photographer:'Emily Chen', 
       deadline:'2025-09-07', 
@@ -3424,7 +3424,7 @@ const __fallbackThemeCSS = `
       orderNumber:'ORD-2025-007', 
       title:'Smart Home Devices - Tech Showcase', 
       status:'Complete', 
-      method:'Photographer',
+      method:'Photo Box',
       orderType: 'PS',
       photographer:'Mike Rodriguez', 
       deadline:'2025-09-02', 
@@ -3494,7 +3494,7 @@ const __fallbackThemeCSS = `
       orderNumber:'ORD-2025-008', 
       title:'Patio Furniture - Seasonal Showcase', 
       status:'Delivered', 
-      method:'Photographer',
+      method:'M&B',
       orderType: 'PO',
       photographer:'Emily Chen', 
       deadline:'2025-08-20', 
@@ -3567,7 +3567,7 @@ const __fallbackThemeCSS = `
       orderNumber:'ORD-2025-009', 
       title:'Organic Baby Food - Product Launch', 
       status:'Draft', 
-      method:'Photographer',
+      method:'GILS',
       orderType: 'PS',
       photographer:'Sarah Johnson', 
       deadline:'2025-09-10', 
@@ -3719,7 +3719,7 @@ const __fallbackThemeCSS = `
       orderNumber:'ORD-2025-011', 
       title:'Winter Jacket Collection', 
       status:'Pending Approval', 
-      method:'Photographer',
+      method:'MERRILD',
       orderType: 'PS',
       photographer:'Emily Chen', 
       deadline:'2025-09-12', 
@@ -3788,7 +3788,7 @@ const __fallbackThemeCSS = `
       orderNumber:'ORD-2025-013', 
       title:'Organic Skincare Line', 
       status:'Photo Session', 
-      method:'Photographer',
+      method:'Photo Box',
       orderType: 'PS',
       photographer:'Lisa Wang', 
       deadline:'2025-09-07', 
@@ -3856,7 +3856,7 @@ const __fallbackThemeCSS = `
       orderNumber:'ORD-2025-015', 
       title:'Artisan Bread Collection', 
       status:'Complete', 
-      method:'Photographer',
+      method:'M&B',
       orderType: 'PS',
       photographer:'Maria Garcia', 
       deadline:'2025-08-30', 
@@ -3890,7 +3890,7 @@ const __fallbackThemeCSS = `
       orderNumber:'ORD-2025-016', 
       title:'Fitness Equipment - Home Gym', 
       status:'Review', 
-      method:'Photographer',
+      method:'GILS',
       orderType: 'PO',
       photographer:'James Wilson', 
       deadline:'2025-09-18', 
@@ -3958,7 +3958,7 @@ const __fallbackThemeCSS = `
       orderNumber:'ORD-2025-018', 
       title:'Luxury Watch Collection', 
       status:'Samples Received', 
-      method:'Photographer',
+      method:'MERRILD',
       orderType: 'PS',
       photographer:'Catherine Lee', 
       deadline:'2025-09-14', 
@@ -4026,7 +4026,7 @@ const __fallbackThemeCSS = `
       orderNumber:'ORD-2025-020', 
       title:'Gourmet Coffee Beans', 
       status:'Delivered', 
-      method:'Photographer',
+      method:'Photo Box',
       orderType: 'PS',
       photographer:'Ana Rodriguez', 
       deadline:'2025-08-28', 
@@ -4060,7 +4060,7 @@ const __fallbackThemeCSS = `
       orderNumber:'ORD-2025-021', 
       title:'Children Toys - Educational Series', 
       status:'Draft', 
-      method:'Photographer',
+      method:'M&B',
       orderType: 'PS',
       photographer:'Sophie Turner', 
       deadline:'2025-09-22', 
@@ -4122,7 +4122,7 @@ const __fallbackThemeCSS = `
       orderNumber:'ORD-2025-023', 
       title:'Outdoor Camping Gear', 
       status:'Pending Approval', 
-      method:'Photographer',
+      method:'GILS',
       orderType: 'PS',
       photographer:'Tom Anderson', 
       deadline:'2025-09-28', 
@@ -4153,7 +4153,7 @@ const __fallbackThemeCSS = `
       orderNumber:'ORD-2025-024', 
       title:'Artisan Chocolate Collection', 
       status:'Approved', 
-      method:'Photographer',
+      method:'MERRILD',
       orderType: 'PS',
       photographer:'Isabella Martinez', 
       deadline:'2025-09-16', 
@@ -4215,7 +4215,7 @@ const __fallbackThemeCSS = `
       orderNumber:'ORD-2025-026', 
       title:'Luxury Bedding Set', 
       status:'Samples Requested', 
-      method:'Photographer',
+      method:'Photo Box',
       orderType: 'PS',
       photographer:'Rachel Green', 
       deadline:'2025-09-19', 
@@ -4242,7 +4242,7 @@ const __fallbackThemeCSS = `
       orderNumber:'ORD-2025-027', 
       title:'Electric Bike Urban Series', 
       status:'Complete', 
-      method:'Photographer',
+      method:'M&B',
       orderType: 'PS',
       photographer:'Daniel Foster', 
       deadline:'2025-08-25', 
@@ -4296,7 +4296,7 @@ const __fallbackThemeCSS = `
       orderNumber:'ORD-2025-029', 
       title:'Gourmet Spice Collection', 
       status:'New Request', 
-      method:'Photographer',
+      method:'GILS',
       orderType: 'PS',
       photographer:'Not Assigned', 
       deadline:'2025-09-30', 
@@ -4323,7 +4323,7 @@ const __fallbackThemeCSS = `
       orderNumber:'ORD-2025-030', 
       title:'Gaming Chair Pro Series', 
       status:'Samples in Transit', 
-      method:'Photographer',
+      method:'MERRILD',
       orderType: 'PS',
       photographer:'Chris Taylor', 
       deadline:'2025-09-21', 
@@ -4377,7 +4377,7 @@ const __fallbackThemeCSS = `
       orderNumber:'ORD-2025-032', 
       title:'Artisan Cheese Selection', 
       status:'Processing', 
-      method:'Photographer',
+      method:'Photo Box',
       orderType: 'PS',
       photographer:'Emma Thompson', 
       deadline:'2025-09-15', 
@@ -4431,7 +4431,7 @@ const __fallbackThemeCSS = `
       orderNumber:'ORD-2025-034', 
       title:'Designer Handbag Collection', 
       status:'Samples Received', 
-      method:'Photographer',
+      method:'M&B',
       orderType: 'PS',
       photographer:'Victoria Stone', 
       deadline:'2025-09-24', 
@@ -4485,7 +4485,7 @@ const __fallbackThemeCSS = `
       orderNumber:'ORD-2025-036', 
       title:'Organic Wine Collection', 
       status:'Pending Approval', 
-      method:'Photographer',
+      method:'GILS',
       orderType: 'PS',
       photographer:'Anthony Clark', 
       deadline:'2025-09-29', 
@@ -4539,7 +4539,7 @@ const __fallbackThemeCSS = `
       orderNumber:'ORD-2025-038', 
       title:'Luxury Perfume Launch', 
       status:'Photo Session', 
-      method:'Photographer',
+      method:'MERRILD',
       orderType: 'PS',
       photographer:'Sophia Martinez', 
       deadline:'2025-09-12', 
@@ -4566,7 +4566,7 @@ const __fallbackThemeCSS = `
       orderNumber:'ORD-2025-039', 
       title:'BBQ Grill Professional', 
       status:'Samples Requested', 
-      method:'Photographer',
+      method:'Photo Box',
       orderType: 'PS',
       photographer:'Jason Lee', 
       deadline:'2025-09-27', 
@@ -4593,7 +4593,7 @@ const __fallbackThemeCSS = `
       orderNumber:'ORD-2025-040', 
       title:'Gourmet Tea Collection', 
       status:'Complete', 
-      method:'Photographer',
+      method:'M&B',
       orderType: 'PS',
       photographer:'Helen Chang', 
       deadline:'2025-08-31', 
@@ -4647,7 +4647,7 @@ const __fallbackThemeCSS = `
       orderNumber:'ORD-2025-042', 
       title:'Luxury Skincare Anti-Aging', 
       status:'New Request', 
-      method:'Photographer',
+      method:'GILS',
       orderType: 'PS',
       photographer:'Not Assigned', 
       deadline:'2025-10-01', 
@@ -4701,7 +4701,7 @@ const __fallbackThemeCSS = `
       orderNumber:'ORD-2025-044', 
       title:'Outdoor Furniture Patio Set', 
       status:'Delivered', 
-      method:'Photographer',
+      method:'MERRILD',
       orderType: 'PS',
       photographer:'Lisa Rodriguez', 
       deadline:'2025-08-29', 
@@ -4728,7 +4728,7 @@ const __fallbackThemeCSS = `
       orderNumber:'ORD-2025-045', 
       title:'Artisan Bread Making Kit', 
       status:'Processing', 
-      method:'Photographer',
+      method:'Photo Box',
       orderType: 'PS',
       photographer:'Carlos Garcia', 
       deadline:'2025-09-25', 
@@ -4755,7 +4755,7 @@ const __fallbackThemeCSS = `
       orderNumber:'ORD-2025-046', 
       title:'Electric Scooter Urban', 
       status:'Urgent', 
-      method:'Photographer',
+      method:'M&B',
       orderType: 'PS',
       photographer:'David Thompson', 
       deadline:'2025-09-06', 
@@ -4782,7 +4782,7 @@ const __fallbackThemeCSS = `
       orderNumber:'ORD-2025-047', 
       title:'Designer Sunglasses Collection', 
       status:'Samples Received', 
-      method:'Photographer',
+      method:'GILS',
       orderType: 'PS',
       photographer:'Amanda Foster', 
       deadline:'2025-09-22', 
@@ -4836,7 +4836,7 @@ const __fallbackThemeCSS = `
       orderNumber:'ORD-2025-049', 
       title:'Luxury Bath Towel Set', 
       status:'Draft', 
-      method:'Photographer',
+      method:'MERRILD',
       orderType: 'PS',
       photographer:'Grace Wilson', 
       deadline:'2025-10-02', 
@@ -4917,7 +4917,7 @@ const __fallbackThemeCSS = `
       orderNumber:'ORD-2025-052', 
       title:'Artisan Ceramic Dinnerware', 
       status:'Complete', 
-      method:'Photographer',
+      method:'Photo Box',
       orderType: 'PS',
       photographer:'Diana Miller', 
       deadline:'2025-09-01', 
@@ -4971,7 +4971,7 @@ const __fallbackThemeCSS = `
       orderNumber:'ORD-2025-054', 
       title:'Luxury Watch Band Collection', 
       status:'Review', 
-      method:'Photographer',
+      method:'M&B',
       orderType: 'PS',
       photographer:'Olivia Garcia', 
       deadline:'2025-09-21', 
@@ -5025,7 +5025,7 @@ const __fallbackThemeCSS = `
       orderNumber:'ORD-2025-056', 
       title:'Ergonomic Office Chair Executive', 
       status:'Samples in Transit', 
-      method:'Photographer',
+      method:'GILS',
       orderType: 'PS',
       photographer:'Jonathan Smith', 
       deadline:'2025-09-24', 
@@ -5079,7 +5079,7 @@ const __fallbackThemeCSS = `
       orderNumber:'ORD-2025-058', 
       title:'Gourmet Olive Oil Collection', 
       status:'Processing', 
-      method:'Photographer',
+      method:'MERRILD',
       orderType: 'PS',
       photographer:'Mario Rossi', 
       deadline:'2025-09-19', 
@@ -5807,88 +5807,90 @@ const __fallbackThemeCSS = `
               <div style="display: flex; flex-direction: column; justify-content: center;">
                 <span style="font-weight: 700; font-size: 16px; color: #4b3b2a; line-height: 1.2;">Content Creation Program</span>
                 <span id="contentTitle" style="font-size: 12px; color: #85694c; font-weight: 500; line-height: 1.2;">Order Overview</span>
+                <div style="display: flex; gap: 8px; margin-top: 8px;">
+                  ${authSystem.canCreateOrders() ? `
+                  <button class="content-pill-btn content-pill-btn--compact" onclick="showNewOrderModal()" style="background: linear-gradient(135deg, #c48b5a 0%, #a67550 100%); color: white;">➕ <span>Create Order</span></button>
+                  ` : ''}
+                  <button class="content-pill-btn content-pill-btn--compact" onclick="showMassUploadModal()">📤 <span>Mass Upload</span></button>
+                </div>
               </div>
-              ${authSystem.canCreateOrders() ? `
-              <button class="content-pill-btn content-pill-btn--compact" onclick="showNewOrderModal()" style="background: linear-gradient(135deg, #c48b5a 0%, #a67550 100%); color: white; margin-left: 8px;">➕ <span>Create Order</span></button>
-              ` : ''}
-              <button class="content-pill-btn content-pill-btn--compact" onclick="showMassUploadModal()" style="margin-left: 8px;">📤 <span>Mass Upload</span></button>
             </div>
-            <div style="display: flex; align-items: center; gap: 24px;">
-            <div class="content-actions" style="display: flex; flex-direction: column; align-items: flex-end; gap: 4px;">
-              <button class="content-pill-btn content-pill-btn--export content-pill-btn--compact" onclick="exportToCsv()" style="width: 100px; justify-content: flex-start;">📊 <span>Export</span></button>
-              <button class="content-pill-btn content-pill-btn--refresh content-pill-btn--compact" onclick="refreshData()" style="width: 100px; justify-content: flex-start;">🔄 <span>Refresh</span></button>
-              <div style="position: relative;">
-                  <button id="supportMenuBtn" onclick="toggleSupportMenu()" class="content-pill-btn content-pill-btn--support content-pill-btn--compact" style="background: linear-gradient(135deg, #c48b5a 0%, #a67550 100%); color: white; width: 100px; justify-content: flex-start;">
-                    <span>📚 Support</span>
-                  </button>
-                  <div id="supportMenuDropdown" class="support-menu-panel glass-surface glass-floating" style="
-                    display: none;
-                    position: absolute;
-                    top: calc(100% + 8px);
-                    right: 0;
-                    background: #fffaf3;
-                    border: 2px solid #ead7c2;
-                    border-radius: 12px;
-                    box-shadow: 0 12px 24px rgba(79, 59, 37, 0.18);
-                    min-width: 220px;
-                    z-index: 1000;
-                    overflow: hidden;
-                  ">
-                    <div style="padding: 12px 16px; background: linear-gradient(135deg, #f7eedf, #efe0cf); border-bottom: 1px solid #ead7c2;">
-                      <div style="font-weight: 700; font-size: 14px; color: #4b3b2a; display: flex; align-items: center; gap: 8px;">
-                        <span>📚</span>
-                        <span>Support & Resources</span>
+            <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 8px;">
+              <div style="display: flex; flex-direction: column; align-items: flex-end; line-height: 1.2; gap: 2px;">
+                <span style="color: #4b3b2a; font-weight: 600; font-size: 14px;">${currentUser.name}</span>
+                <span style="color: #7b5a3d; font-weight: 500; font-size: 12px; text-transform: capitalize;">${currentUser.role}</span>
+              </div>
+              <div class="content-actions" style="display: flex; flex-direction: row; align-items: center; gap: 8px;">
+                <button class="content-pill-btn content-pill-btn--export content-pill-btn--compact" onclick="exportToCsv()" style="width: auto; padding: 6px 12px;">📊 <span>Export</span></button>
+                <button class="content-pill-btn content-pill-btn--refresh content-pill-btn--compact" onclick="refreshData()" style="width: auto; padding: 6px 12px;">🔄 <span>Refresh</span></button>
+                <div style="position: relative;">
+                    <button id="supportMenuBtn" onclick="toggleSupportMenu()" class="content-pill-btn content-pill-btn--support content-pill-btn--compact" style="background: linear-gradient(135deg, #c48b5a 0%, #a67550 100%); color: white; width: auto; padding: 6px 12px;">
+                      <span>📚 Support</span>
+                    </button>
+                    <div id="supportMenuDropdown" class="support-menu-panel glass-surface glass-floating" style="
+                      display: none;
+                      position: absolute;
+                      top: calc(100% + 8px);
+                      right: 0;
+                      background: #fffaf3;
+                      border: 2px solid #ead7c2;
+                      border-radius: 12px;
+                      box-shadow: 0 12px 24px rgba(79, 59, 37, 0.18);
+                      min-width: 220px;
+                      z-index: 1000;
+                      overflow: hidden;
+                    ">
+                      <div style="padding: 12px 16px; background: linear-gradient(135deg, #f7eedf, #efe0cf); border-bottom: 1px solid #ead7c2;">
+                        <div style="font-weight: 700; font-size: 14px; color: #4b3b2a; display: flex; align-items: center; gap: 8px;">
+                          <span>📚</span>
+                          <span>Support & Resources</span>
+                        </div>
                       </div>
-                    </div>
-                    <div style="padding: 8px;">
-                      <div class="support-menu-theme">
-                        <label for="themeSelector">Theme</label>
-                        <select id="themeSelector">
-                          <option value="warm">Warm Classic</option>
-                          <option value="cool">Coastal Breeze</option>
-                          <option value="midnight">Midnight Dusk</option>
-                          <option value="aurora">Aurora Glass</option>
-                          <option value="glass">Modern Glass</option>
-                        </select>
+                      <div style="padding: 8px;">
+                        <div class="support-menu-theme">
+                          <label for="themeSelector">Theme</label>
+                          <select id="themeSelector">
+                            <option value="warm">Warm Classic</option>
+                            <option value="cool">Coastal Breeze</option>
+                            <option value="midnight">Midnight Dusk</option>
+                            <option value="aurora">Aurora Glass</option>
+                            <option value="glass">Modern Glass</option>
+                          </select>
+                        </div>
+                        <div class="support-menu-divider"></div>
+                        <button onclick="openStyleGuide()" class="support-menu-item">
+                          <span class="support-menu-icon">🎨</span>
+                          <div class="support-menu-content">
+                            <span class="support-menu-label">Photo Reference Guide</span>
+                            <span class="support-menu-desc">Textile photography standards</span>
+                          </div>
+                        </button>
+                        <button onclick="openUserManual()" class="support-menu-item">
+                          <span class="support-menu-icon">📖</span>
+                          <div class="support-menu-content">
+                            <span class="support-menu-label">User Manual</span>
+                            <span class="support-menu-desc">Complete documentation</span>
+                          </div>
+                        </button>
+                        <button onclick="openScannerGuide()" class="support-menu-item">
+                          <span class="support-menu-icon">📷</span>
+                          <div class="support-menu-content">
+                            <span class="support-menu-label">Scanner Guide</span>
+                            <span class="support-menu-desc">Barcode scanning help</span>
+                          </div>
+                        </button>
+                        <div class="support-menu-divider"></div>
+                        <button onclick="showAboutModal()" class="support-menu-item">
+                          <span class="support-menu-icon">ℹ️</span>
+                          <div class="support-menu-content">
+                            <span class="support-menu-label">About</span>
+                            <span class="support-menu-desc">App version & info</span>
+                          </div>
+                        </button>
                       </div>
-                      <div class="support-menu-divider"></div>
-                      <button onclick="openStyleGuide()" class="support-menu-item">
-                        <span class="support-menu-icon">🎨</span>
-                        <div class="support-menu-content">
-                          <span class="support-menu-label">Photo Reference Guide</span>
-                          <span class="support-menu-desc">Textile photography standards</span>
-                        </div>
-                      </button>
-                      <button onclick="openUserManual()" class="support-menu-item">
-                        <span class="support-menu-icon">📖</span>
-                        <div class="support-menu-content">
-                          <span class="support-menu-label">User Manual</span>
-                          <span class="support-menu-desc">Complete documentation</span>
-                        </div>
-                      </button>
-                      <button onclick="openScannerGuide()" class="support-menu-item">
-                        <span class="support-menu-icon">📷</span>
-                        <div class="support-menu-content">
-                          <span class="support-menu-label">Scanner Guide</span>
-                          <span class="support-menu-desc">Barcode scanning help</span>
-                        </div>
-                      </button>
-                      <div class="support-menu-divider"></div>
-                      <button onclick="showAboutModal()" class="support-menu-item">
-                        <span class="support-menu-icon">ℹ️</span>
-                        <div class="support-menu-content">
-                          <span class="support-menu-label">About</span>
-                          <span class="support-menu-desc">App version & info</span>
-                        </div>
-                      </button>
                     </div>
                   </div>
-                </div>
-            </div>
-            <div style="display: flex; flex-direction: column; align-items: flex-end; line-height: 1.2; gap: 2px;">
-              <span style="color: #4b3b2a; font-weight: 600; font-size: 14px;">${currentUser.name}</span>
-              <span style="color: #7b5a3d; font-weight: 500; font-size: 12px; text-transform: capitalize;">${currentUser.role}</span>
-            </div>
+              </div>
             </div>
           </div>
           
@@ -9293,7 +9295,7 @@ const __fallbackThemeCSS = `
     const templates = {
       'product-hero': {
         title: 'Product Hero Photography',
-        method: 'Photographer',
+        method: 'Photo Box',
         priority: 'High',
         brief: 'Create high-impact hero shots for product marketing campaign. Focus on dramatic lighting, clean backgrounds, and compelling product presentation that captures attention and drives sales.',
         articles: 'Product Sample',
@@ -9315,7 +9317,7 @@ const __fallbackThemeCSS = `
       },
       'lifestyle-campaign': {
         title: 'Lifestyle Photography Campaign',
-        method: 'External Studio',
+        method: 'M&B',
         priority: 'High',
         brief: 'Professional lifestyle photography featuring products in real-world scenarios with models. Focus on emotional connection and aspirational lifestyle messaging.',
         articles: 'Product Samples, Props, Models',
@@ -9326,7 +9328,7 @@ const __fallbackThemeCSS = `
       },
       'detail-macro': {
         title: 'Detail & Macro Photography',
-        method: 'Internal Studio',
+        method: 'Photo Box',
         priority: 'Medium',
         brief: 'Close-up detail photography highlighting product features, textures, and craftsmanship. Technical precision with focus on product quality and specifications.',
         articles: 'Product Sample',
@@ -9348,7 +9350,7 @@ const __fallbackThemeCSS = `
       },
       'video-product': {
         title: 'Product Video Showcase',
-        method: 'External Studio',
+        method: 'GILS',
         priority: 'High',
         brief: 'Professional product video showcasing features, benefits, and usage scenarios. Include 360° rotation, close-ups, and lifestyle integration.',
         articles: 'Product Sample, Usage Props',
@@ -9359,7 +9361,7 @@ const __fallbackThemeCSS = `
       },
       'seasonal-campaign': {
         title: 'Seasonal Campaign Photography',
-        method: 'Photographer',
+        method: 'M&B',
         priority: 'Medium',
         brief: 'Seasonal themed photography for holiday marketing campaigns. Incorporate seasonal elements, colors, and themes relevant to current season.',
         articles: 'Product Samples, Seasonal Decorations',
@@ -9370,7 +9372,7 @@ const __fallbackThemeCSS = `
       },
       'packaging-shots': {
         title: 'Packaging & Unboxing Photography',
-        method: 'Internal Studio',
+        method: 'MERRILD',
         priority: 'Low',
         brief: 'Professional packaging photography and unboxing experience documentation. Focus on brand presentation and customer experience journey.',
         articles: 'Packaged Products, Unboxing Materials',
@@ -9392,7 +9394,7 @@ const __fallbackThemeCSS = `
       },
       'influencer-kit': {
         title: 'Influencer Content Kit',
-        method: 'Photographer',
+        method: 'GILS',
         priority: 'Medium',
         brief: 'Content creation for influencer partnerships and brand collaborations. Include lifestyle shots, product styling, and social-ready formats.',
         articles: 'Product Samples, Lifestyle Props',
@@ -9403,7 +9405,7 @@ const __fallbackThemeCSS = `
       },
       'technical-specs': {
         title: 'Technical Specification Photography',
-        method: 'Internal Studio',
+        method: 'Photo Box',
         priority: 'Low',
         brief: 'Technical documentation photography for manuals, specifications, and professional documentation. Focus on clarity and instructional value.',
         articles: 'Product Sample, Technical Components',
@@ -9414,7 +9416,7 @@ const __fallbackThemeCSS = `
       },
       'brand-storytelling': {
         title: 'Brand Storytelling Campaign',
-        method: 'External Studio',
+        method: 'M&B',
         priority: 'High',
         brief: 'Comprehensive brand storytelling through visual content. Showcase brand values, heritage, and emotional connection with premium artistic approach.',
         articles: 'Product Range, Brand Elements, Models',
@@ -14204,7 +14206,7 @@ const __fallbackThemeCSS = `
               status: 'In Progress', 
               priority: 'Critical', 
               photographer: 'Mike Rodriguez', 
-              method: 'Photographer', 
+              method: 'Photo Box', 
               deadline: '2025-09-06', 
               purchaseGroup: '101', 
               eventId: 'A4025052',
@@ -14234,7 +14236,7 @@ const __fallbackThemeCSS = `
               status: 'Draft', 
               priority: 'Medium', 
               photographer: 'Mike Rodriguez', 
-              method: 'Photographer', 
+              method: 'M&B', 
               deadline: '2025-09-15', 
               purchaseGroup: '101', 
               eventId: 'A3825054',
@@ -14255,7 +14257,7 @@ const __fallbackThemeCSS = `
               status: 'Approved', 
               priority: 'Critical', 
               photographer: 'Emily Chen', 
-              method: 'Photographer', 
+              method: 'GILS', 
               deadline: '2025-09-07', 
               purchaseGroup: '101', 
               eventId: 'A3725055',
