@@ -6850,10 +6850,10 @@ const __fallbackThemeCSS = `
           flex: 1;
           background: var(--theme-surface-bg);
           backdrop-filter: var(--theme-pane-blur);
-          margin: 0 20px 20px 20px;
-          border-radius: 20px;
-          border: 1px solid var(--theme-pane-border);
-          box-shadow: var(--theme-pane-shadow);
+          margin: 0;
+          border-radius: 0;
+          border: none;
+          box-shadow: none;
           overflow: hidden;
           display: flex;
           flex-direction: column;
