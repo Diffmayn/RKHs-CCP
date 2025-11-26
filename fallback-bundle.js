@@ -5917,6 +5917,13 @@ const __fallbackThemeCSS = `
               <div id="ordersView">
                 <!-- Compact Filter Row: Event ID + Search -->
                 <div class="orders-filter-bar">
+                  <select id="orderTypeFilter"
+                          onchange="handleOrderTypeFilterChange(this.value)"
+                          style="padding: 6px 10px; border: 1px solid rgba(216, 164, 88, 0.65); border-radius: 8px; font-size: 13px; font-family: monospace; font-weight: 500; background: #fffaf3; cursor: pointer; min-width: 140px; color: #6b5440; flex: 0 0 auto;">
+                    <option value="">Order Type</option>
+                    <option value="Photo Service">Photo Service</option>
+                    <option value="Photo order">Photo order</option>
+                  </select>
                   <select id="salesOrgFilter"
                           onchange="handleSalesOrgFilterChange(this.value)"
                           style="padding: 6px 10px; border: 1px solid rgba(216, 164, 88, 0.65); border-radius: 8px; font-size: 13px; font-family: monospace; font-weight: 500; background: #fffaf3; cursor: pointer; min-width: 140px; color: #6b5440; flex: 0 0 auto;">
@@ -8659,7 +8666,8 @@ const __fallbackThemeCSS = `
       salesOrg: '',
       eventId: '',
       tacticType: '',
-      tactic: ''
+      tactic: '',
+      orderType: ''
     };
 
     function clearOrderFilters() {
@@ -8667,9 +8675,10 @@ const __fallbackThemeCSS = `
       orderFilters.eventId = '';
       orderFilters.tacticType = '';
       orderFilters.tactic = '';
+      orderFilters.orderType = '';
       statusFilterOverride = '';
 
-      const selectIds = ['salesOrgFilter', 'eventIdFilter', 'tacticTypeFilter', 'tacticFilter'];
+      const selectIds = ['salesOrgFilter', 'eventIdFilter', 'tacticTypeFilter', 'tacticFilter', 'orderTypeFilter'];
       selectIds.forEach((id) => {
         const select = document.getElementById(id);
         if (select) {
@@ -8712,7 +8721,7 @@ const __fallbackThemeCSS = `
     }
 
     function hasPrimaryOrderFilter() {
-      return Boolean(orderFilters.salesOrg || orderFilters.eventId || orderFilters.tacticType || orderFilters.tactic || statusFilterOverride);
+      return Boolean(orderFilters.salesOrg || orderFilters.eventId || orderFilters.tacticType || orderFilters.tactic || orderFilters.orderType || statusFilterOverride);
     }
 
     function normalizeFilterValue(value) {
@@ -8985,6 +8994,7 @@ const __fallbackThemeCSS = `
       const expectedEventId = normalizeComparisonValue(orderFilters.eventId);
       const expectedTacticType = normalizeComparisonValue(orderFilters.tacticType);
       const expectedTactic = normalizeComparisonValue(orderFilters.tactic);
+      const expectedOrderType = normalizeComparisonValue(orderFilters.orderType);
 
       if (!hasPrimaryOrderFilter()) {
         return orderList;
@@ -9015,6 +9025,13 @@ const __fallbackThemeCSS = `
         if (expectedTactic) {
           const actualTactic = normalizeComparisonValue(getTacticValue(order));
           if (!actualTactic || actualTactic !== expectedTactic) {
+            return false;
+          }
+        }
+
+        if (expectedOrderType) {
+          const actualOrderType = normalizeComparisonValue(order.orderType);
+          if (!actualOrderType || actualOrderType !== expectedOrderType) {
             return false;
           }
         }
@@ -9237,6 +9254,11 @@ const __fallbackThemeCSS = `
       refreshOrdersAfterFilterChange();
     }
 
+    function handleOrderTypeFilterChange(value) {
+      orderFilters.orderType = normalizeFilterValue(value);
+      refreshOrdersAfterFilterChange();
+    }
+
     function refreshOrderFilters() {
       populateSalesOrgFilterOptions();
       populateTacticTypeFilterOptions();
@@ -9255,6 +9277,7 @@ const __fallbackThemeCSS = `
     window.handleTacticTypeFilterChange = handleTacticTypeFilterChange;
     window.handleTacticFilterChange = handleTacticFilterChange;
     window.handleEventFilterChange = handleEventFilterChange;
+    window.handleOrderTypeFilterChange = handleOrderTypeFilterChange;
     window.refreshOrderFilters = refreshOrderFilters;
   window.setStatusFilterOverride = setStatusFilterOverride;
 
