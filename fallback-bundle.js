@@ -9030,8 +9030,13 @@ const __fallbackThemeCSS = `
         }
 
         if (expectedOrderType) {
+          // Map filter selection to data codes (PS/PO)
+          let targetCode = expectedOrderType;
+          if (expectedOrderType === 'photo service') targetCode = 'ps';
+          else if (expectedOrderType === 'photo order') targetCode = 'po';
+
           const actualOrderType = normalizeComparisonValue(order.orderType);
-          if (!actualOrderType || actualOrderType !== expectedOrderType) {
+          if (!actualOrderType || actualOrderType !== targetCode) {
             return false;
           }
         }
