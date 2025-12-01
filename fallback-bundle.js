@@ -2280,6 +2280,7 @@ const __fallbackThemeCSS = `
               raw: {
                 articleName: name,
                 articleNumber: eanMatch ? eanMatch[1] : '',
+                unitOfMeasure: 'EA',
                 fileName: `ENV.${String(index + 1).padStart(6, '0')}.jpg`
               }
             };
@@ -2292,6 +2293,7 @@ const __fallbackThemeCSS = `
             fileName: article.fileName || '',
             raw: {
               ...article,
+              unitOfMeasure: article.unitOfMeasure || 'EA',
               fileName: article.fileName || `ENV.${String(index + 1).padStart(6, '0')}.jpg`
             }
           };
@@ -2850,12 +2852,16 @@ const __fallbackThemeCSS = `
           if (!article.fileName) {
             article.fileName = generateArticleFileName(order.orderNumber, index);
           }
+          if (!article.unitOfMeasure) {
+            article.unitOfMeasure = 'EA';
+          }
           return article;
         }
 
         const label = typeof article === 'string' ? article : `Article ${index + 1}`;
         return {
           name: label,
+          unitOfMeasure: 'EA',
           fileName: generateArticleFileName(order.orderNumber, index)
         };
       });
@@ -2929,6 +2935,14 @@ const __fallbackThemeCSS = `
     }
 
     orders.forEach((order, index) => {
+      // Skip Image Request ID generation for Photo Orders (PO)
+      if (order.orderType === 'PO') {
+        order.imageRequestId = '';
+        order.photoReference = '';
+        order.photoRef = '';
+        return;
+      }
+
       const overrideReference = ORDER_PHOTO_REFERENCE_OVERRIDES[order.orderNumber];
       const rawImageRequest = order.imageRequestId || '';
       let resolvedPhotoReference = order.photoReference || order.photoRef || overrideReference || '';
@@ -2962,8 +2976,9 @@ const __fallbackThemeCSS = `
       orderType: 'PS',
       photographer:'Mike Rodriguez', 
       deadline:'2025-09-06', 
-      costCenter:'PG-100',
+      costCenter:'90500512 Bilka Marketing',
       priority:'Critical',
+      principle: '#P 2D',
       brief:'Create high-impact product photography for premium dog food line. Focus on hero shots, lifestyle images, and detail macro shots.',
       articles: [
         'Premium Dog Food 2kg [EAN: 5901234567890]',
@@ -2976,7 +2991,7 @@ const __fallbackThemeCSS = `
       eventId: 'A4025052', // Week 40, 2025, Bilka format
       purchaseGroup: 101, // Groceries
       group: 99,
-      costCenter: 'Bilka Marketing',
+      costCenter: '90500512 Bilka Marketing',
       offerId: '10763319',
       articleNumber: '1234575511',
       articleName: 'Premium Dog Food 2kg',
@@ -3066,8 +3081,9 @@ const __fallbackThemeCSS = `
       orderType: 'PS',
       photographer:'Emily Chen', 
       deadline:'2025-09-05', 
-      costCenter:'PG-200',
+      costCenter:'90200512 føtex marketing',
       priority:'Medium',
+      principle: '#P 2P',
       brief:'Automated photo box session for coffee product line. Consistent e-commerce shots with white background.',
       articles: [
         'Espresso Beans 500g [EAN: 2001234567892]',
@@ -3080,9 +3096,9 @@ const __fallbackThemeCSS = `
       eventId: 'A4125053', // Week 41, 2025, Netto format
       purchaseGroup: 101, // Fresh Products
       group: 99,
-      costCenter: 'føtex Marketing',
+      costCenter: '90200512 føtex marketing',
       offerId: '10763320',
-      articleNumber: 'ART-COF-002',
+      articleNumber: '200123456',
       articleName: 'Espresso Beans 500g',
       imageRequestId: '123457',
       photoStatus: 'New Shoot - Photo Box',
@@ -3138,8 +3154,9 @@ const __fallbackThemeCSS = `
       orderType: 'PS',
       photographer:'Mike Rodriguez', 
       deadline:'2025-09-15', 
-      costCenter:'PG-300',
+      costCenter:'90870390 Electronic & Garden',
       priority:'Medium',
+      principle: '#P 2D FLIP',
       brief:'Professional studio photography for new tech product launch. High-end product photography and lifestyle shots for electronics catalog.',
       articles: [
         { name: 'Wireless Bluetooth Speaker [EAN: 4061234567890]', combinedPhoto: 'AA' },
@@ -3158,9 +3175,9 @@ const __fallbackThemeCSS = `
       eventId: 'A3825054', // Week 38, 2025, Føtex format
       purchaseGroup: 101, // Electronics
       group: 99,
-      costCenter: 'Bilka.dk',
+      costCenter: '90500512 Bilka Marketing',
       offerId: '10763321',
-      articleNumber: 'ART-ELEC-003',
+      articleNumber: '300123456',
       articleName: 'Wireless Bluetooth Speaker Premium',
       imageRequestId: '123458',
       photoStatus: 'New Shoot - Photographer',
@@ -3214,7 +3231,7 @@ const __fallbackThemeCSS = `
       orderType: 'PO',
       photographer:'Emily Chen', 
       deadline:'2025-09-07', 
-      costCenter:'PG-400',
+      costCenter:'90870330 Home & Leisure',
       priority:'Critical',
       brief:'Dynamic product shots of garden tools. Focus on durability, functionality, and outdoor lifestyle for spring catalog.',
       articles: [
@@ -3228,7 +3245,7 @@ const __fallbackThemeCSS = `
       eventId: 'A3725055', // Week 37, 2025, Bilka format
       purchaseGroup: 101, // Home & Garden
       group: 99,
-      costCenter: 'PDG',
+      costCenter: '90880110 Product Data Governance',
       offerId: '10763322',
       articleNumber: '1234575512',
       articleName: 'Electric Hedge Trimmer Pro',
@@ -3285,7 +3302,7 @@ const __fallbackThemeCSS = `
       orderType: 'PS',
       photographer:'Emily Chen', 
       deadline:'2025-09-04', 
-      costCenter:'PG-100',
+      costCenter:'90500512 Bilka Marketing',
       priority:'Critical',
       brief:'Organic pasta product line photography for new health-focused marketing campaign. Clean, fresh styling.',
       articles: [
@@ -3302,9 +3319,9 @@ const __fallbackThemeCSS = `
       eventId: 'A3925056', // Week 39, 2025, Netto format
       purchaseGroup: 101, // Groceries
       group: 99,
-      costCenter: 'Bilka Marketing',
+      costCenter: '90500512 Bilka Marketing',
       offerId: '10763323',
-      articleNumber: 'ART-PAST-005',
+      articleNumber: '500123456',
       articleName: 'Organic Penne Pasta Premium',
       imageRequestId: '123460',
       photoStatus: 'New Shoot - Photo Box',
@@ -3358,7 +3375,7 @@ const __fallbackThemeCSS = `
       orderType: 'PO',
       photographer:'Mike Rodriguez', 
       deadline:'2025-08-28', 
-      costCenter:'PG-200',
+      costCenter:'90200512 føtex marketing',
       priority:'Medium',
       brief:'Fresh dairy products for e-commerce catalog. Clean, appetizing shots with consistent lighting.',
       articles: [
@@ -3372,9 +3389,9 @@ const __fallbackThemeCSS = `
       eventId: 'A3525057', // Week 35, 2025, Føtex format
       purchaseGroup: 101, // Fresh Products
       group: 99,
-      costCenter: 'føtex Marketing',
+      costCenter: '90200512 føtex marketing',
       offerId: '10763324',
-      articleNumber: 'ART-DAIRY-006',
+      articleNumber: '600123456',
       articleName: 'Organic Milk Premium 1L',
       imageRequestId: '123461',
       photoStatus: 'Archive',
@@ -3428,7 +3445,7 @@ const __fallbackThemeCSS = `
       orderType: 'PS',
       photographer:'Mike Rodriguez', 
       deadline:'2025-09-02', 
-      costCenter:'PG-300',
+      costCenter:'90870390 Electronic & Garden',
       priority:'Medium',
       brief:'Smart home devices photography for holiday campaign preview. Modern, tech-focused styling.',
       articles: [
@@ -3442,7 +3459,7 @@ const __fallbackThemeCSS = `
       eventId: 'B3625066', // Week 36, 2025, Bilka format
       purchaseGroup: 103, // Marketing Materials
       group: 99,
-      costCenter: 'Bilka.dk',
+      costCenter: '90500512 Bilka Marketing',
       offerId: '10763325',
       articleNumber: '1234575513',
       articleName: 'Smart Thermostat Pro',
@@ -3498,7 +3515,7 @@ const __fallbackThemeCSS = `
       orderType: 'PO',
       photographer:'Emily Chen', 
       deadline:'2025-08-20', 
-      costCenter:'PG-400',
+      costCenter:'90870330 Home & Leisure',
       priority:'Medium',
       brief:'Outdoor patio furniture for summer/fall transition catalog. Lifestyle shots with outdoor setting.',
       articles: [
@@ -3512,9 +3529,9 @@ const __fallbackThemeCSS = `
       eventId: 'A3425059', // Week 34, 2025, Netto format
       purchaseGroup: 101, // Home & Garden
       group: 99,
-      costCenter: 'PDG',
+      costCenter: '90880110 Product Data Governance',
       offerId: '10763326',
-      articleNumber: 'ART-PATIO-008',
+      articleNumber: '800123456',
       articleName: 'Outdoor Dining Set Premium',
       imageRequestId: '123463',
       photoStatus: 'Archive',
@@ -3571,7 +3588,7 @@ const __fallbackThemeCSS = `
       orderType: 'PS',
       photographer:'Sarah Johnson', 
       deadline:'2025-09-10', 
-      costCenter:'PG-100',
+      costCenter:'90500512 Bilka Marketing',
       priority:'High',
       brief:'New organic baby food line launch. Need hero shots, ingredient close-ups, and lifestyle photography with babies.',
       articles: [
@@ -3587,9 +3604,9 @@ const __fallbackThemeCSS = `
       eventId: 'A4125060', 
       purchaseGroup: 100,
       group: 99,
-      costCenter: 'Bilka Marketing',
+      costCenter: '90500512 Bilka Marketing',
       offerId: '10763327',
-      articleNumber: 'ART-BABY-009',
+      articleNumber: '900123456',
       articleName: 'Organic Baby Food Variety Pack',
       imageRequestId: '123470',
       photoStatus: 'New',
@@ -3639,7 +3656,7 @@ const __fallbackThemeCSS = `
       orderType: 'PS',
       photographer:'Marcus Thompson', 
       deadline:'2025-09-08', 
-      costCenter:'PG-300',
+      costCenter:'90870390 Electronic & Garden',
       priority:'Critical',
       brief:'High-end gaming laptop with RGB lighting. Need dramatic tech shots with special lighting effects.',
       articles: [
@@ -3671,9 +3688,9 @@ const __fallbackThemeCSS = `
       eventId: 'A4225061', 
       purchaseGroup: 101,
       group: 99,
-      costCenter: 'føtex Marketing',
+      costCenter: '90200512 føtex marketing',
       offerId: '10763328',
-      articleNumber: 'ART-LAPTOP-010',
+      articleNumber: '100123456',
       articleName: 'Gaming Laptop Pro X1',
       imageRequestId: '123471',
       photoStatus: 'Samples Requested',
@@ -3723,7 +3740,7 @@ const __fallbackThemeCSS = `
       orderType: 'PS',
       photographer:'Emily Chen', 
       deadline:'2025-09-12', 
-      costCenter:'PG-200',
+      costCenter:'90200512 føtex marketing',
       priority:'Medium',
       brief:'Winter fashion collection for upcoming season. Need model shots and flat lay product photography.',
       articles: [
@@ -3738,7 +3755,7 @@ const __fallbackThemeCSS = `
       eventId: 'A4325062', 
       purchaseGroup: 101,
       group: 99,
-      costCenter: 'Bilka.dk',
+      costCenter: '90500512 Bilka Marketing',
       offerId: '10763329',
       articleNumber: 'ART-JACKET-011',
       articleName: 'Winter Jacket Collection',
@@ -3758,7 +3775,7 @@ const __fallbackThemeCSS = `
       orderType: 'PO',
       photographer:'David Kim', 
       deadline:'2025-09-15', 
-      costCenter:'PG-400',
+      costCenter:'90870330 Home & Leisure',
       priority:'Low',
       brief:'Modern kitchen appliance series. Clean, minimalist photography with lifestyle context.',
       articles: [
@@ -3772,7 +3789,7 @@ const __fallbackThemeCSS = `
       eventId: 'A4425063', 
       purchaseGroup: 101,
       group: 99,
-      costCenter: 'PDG',
+      costCenter: '90880110 Product Data Governance',
       offerId: '10763330',
       articleNumber: 'ART-KITCHEN-012',
       articleName: 'Kitchen Appliance Set',
@@ -3792,7 +3809,7 @@ const __fallbackThemeCSS = `
       orderType: 'PS',
       photographer:'Lisa Wang', 
       deadline:'2025-09-07', 
-      costCenter:'PG-100',
+      costCenter:'90500512 Bilka Marketing',
       priority:'High',
       brief:'Luxury organic skincare products. Need elegant beauty photography with natural lighting.',
       articles: [
@@ -3806,7 +3823,7 @@ const __fallbackThemeCSS = `
       eventId: 'A4525064', 
       purchaseGroup: 101,
       group: 99,
-      costCenter: 'Bilka Marketing',
+      costCenter: '90500512 Bilka Marketing',
       offerId: '10763331',
       articleNumber: 'ART-SKINCARE-013',
       articleName: 'Organic Skincare Collection',
@@ -3826,7 +3843,7 @@ const __fallbackThemeCSS = `
       orderType: 'PS',
       photographer:'Alex Johnson', 
       deadline:'2025-09-20', 
-      costCenter:'PG-300',
+      costCenter:'90870390 Electronic & Garden',
       priority:'Medium',
       brief:'Smart home security cameras and sensors. Need tech shots showing installation and features.',
       articles: [
@@ -3840,7 +3857,7 @@ const __fallbackThemeCSS = `
       eventId: 'A4625065', 
       purchaseGroup: 101,
       group: 99,
-      costCenter: 'føtex Marketing',
+      costCenter: '90200512 føtex marketing',
       offerId: '10763332',
       articleNumber: 'ART-SECURITY-014',
       articleName: 'Smart Security System',
@@ -3860,7 +3877,7 @@ const __fallbackThemeCSS = `
       orderType: 'PS',
       photographer:'Maria Garcia', 
       deadline:'2025-08-30', 
-      costCenter:'PG-100',
+      costCenter:'90500512 Bilka Marketing',
       priority:'Low',
       brief:'Artisan bakery products for autumn catalog. Warm, rustic food photography.',
       articles: [
@@ -3874,7 +3891,7 @@ const __fallbackThemeCSS = `
       eventId: 'A4725066', 
       purchaseGroup: 101,
       group: 99,
-      costCenter: 'Bilka.dk',
+      costCenter: '90500512 Bilka Marketing',
       offerId: '10763333',
       articleNumber: 'ART-BREAD-015',
       articleName: 'Artisan Bread Selection',
@@ -3894,7 +3911,7 @@ const __fallbackThemeCSS = `
       orderType: 'PO',
       photographer:'James Wilson', 
       deadline:'2025-09-18', 
-      costCenter:'PG-400',
+      costCenter:'90870330 Home & Leisure',
       priority:'High',
       brief:'Home fitness equipment showcase. Action shots with models using equipment.',
       articles: [
@@ -3908,7 +3925,7 @@ const __fallbackThemeCSS = `
       eventId: 'A4825067', 
       purchaseGroup: 101,
       group: 99,
-      costCenter: 'PDG',
+      costCenter: '90880110 Product Data Governance',
       offerId: '10763334',
       articleNumber: 'ART-FITNESS-016',
       articleName: 'Home Fitness Set',
@@ -3928,7 +3945,7 @@ const __fallbackThemeCSS = `
       orderType: 'PS',
       photographer:'Not Assigned', 
       deadline:'2025-09-25', 
-      costCenter:'PG-300',
+      costCenter:'90870390 Electronic & Garden',
       priority:'Medium',
       brief:'Smartphone case, charger, and screen protector bundle. Clean tech photography.',
       articles: [
@@ -3942,7 +3959,7 @@ const __fallbackThemeCSS = `
       eventId: 'A4925068', 
       purchaseGroup: 101,
       group: 99,
-      costCenter: 'Bilka Marketing',
+      costCenter: '90500512 Bilka Marketing',
       offerId: '10763335',
       articleNumber: 'ART-PHONE-017',
       articleName: 'Smartphone Accessory Bundle',
@@ -3962,7 +3979,7 @@ const __fallbackThemeCSS = `
       orderType: 'PS',
       photographer:'Catherine Lee', 
       deadline:'2025-09-14', 
-      costCenter:'PG-200',
+      costCenter:'90200512 føtex marketing',
       priority:'Critical',
       brief:'High-end luxury watches. Dramatic lighting with reflections and detail macro shots.',
       articles: [
@@ -3976,7 +3993,7 @@ const __fallbackThemeCSS = `
       eventId: 'A5025069', 
       purchaseGroup: 101,
       group: 99,
-      costCenter: 'føtex Marketing',
+      costCenter: '90200512 føtex marketing',
       offerId: '10763336',
       articleNumber: 'ART-WATCH-018',
       articleName: 'Luxury Watch Collection',
@@ -3996,7 +4013,7 @@ const __fallbackThemeCSS = `
       orderType: 'PO',
       photographer:'Robert Chen', 
       deadline:'2025-09-11', 
-      costCenter:'PG-400',
+      costCenter:'90870330 Home & Leisure',
       priority:'Medium',
       brief:'Garden tools and equipment for spring gardening season. Outdoor lifestyle shots.',
       articles: [
@@ -4010,7 +4027,7 @@ const __fallbackThemeCSS = `
       eventId: 'A5125070', 
       purchaseGroup: 101,
       group: 99,
-      costCenter: 'Bilka.dk',
+      costCenter: '90500512 Bilka Marketing',
       offerId: '10763337',
       articleNumber: 'ART-GARDEN-019',
       articleName: 'Garden Tool Collection',
@@ -4030,7 +4047,7 @@ const __fallbackThemeCSS = `
       orderType: 'PS',
       photographer:'Ana Rodriguez', 
       deadline:'2025-08-28', 
-      costCenter:'PG-100',
+      costCenter:'90500512 Bilka Marketing',
       priority:'Low',
       brief:'Premium coffee beans from different regions. Warm, appetizing food photography.',
       articles: [
@@ -4044,7 +4061,7 @@ const __fallbackThemeCSS = `
       eventId: 'A5225071', 
       purchaseGroup: 101,
       group: 99,
-      costCenter: 'PDG',
+      costCenter: '90880110 Product Data Governance',
       offerId: '10763338',
       articleNumber: 'ART-COFFEE-020',
       articleName: 'Gourmet Coffee Selection',
@@ -4064,7 +4081,7 @@ const __fallbackThemeCSS = `
       orderType: 'PS',
       photographer:'Sophie Turner', 
       deadline:'2025-09-22', 
-      costCenter:'PG-200',
+      costCenter:'90200512 føtex marketing',
       priority:'High',
       brief:'Educational toys for children 3-8 years. Bright, playful photography with kids in action.',
       articles: ['Building Blocks Set [EAN: 5901234567926]', 'Learning Tablet Kids [EAN: 5901234567927]'],
@@ -4075,7 +4092,7 @@ const __fallbackThemeCSS = `
       eventId: 'A5325072', 
       purchaseGroup: 101,
       group: 99,
-      costCenter: 'Bilka Marketing',
+      costCenter: '90500512 Bilka Marketing',
       offerId: '10763339',
       articleNumber: 'ART-TOYS-021',
       articleName: 'Educational Toy Set',
@@ -4095,7 +4112,7 @@ const __fallbackThemeCSS = `
       orderType: 'PS',
       photographer:'Michael Park', 
       deadline:'2025-09-05', 
-      costCenter:'PG-300',
+      costCenter:'90870390 Electronic & Garden',
       priority:'Critical',
       brief:'High-end wireless headphones launch. Need dramatic tech shots with sound wave effects.',
       articles: ['Wireless Headphones Pro [EAN: 5901234567928]', 'Charging Case [EAN: 5901234567929]'],
@@ -4106,7 +4123,7 @@ const __fallbackThemeCSS = `
       eventId: 'A5425073', 
       purchaseGroup: 101,
       group: 99,
-      costCenter: 'føtex Marketing',
+      costCenter: '90200512 føtex marketing',
       offerId: '10763340',
       articleNumber: 'ART-HEADPHONES-022',
       articleName: 'Wireless Headphones Premium',
@@ -4126,7 +4143,7 @@ const __fallbackThemeCSS = `
       orderType: 'PS',
       photographer:'Tom Anderson', 
       deadline:'2025-09-28', 
-      costCenter:'PG-400',
+      costCenter:'90870330 Home & Leisure',
       priority:'Medium',
       brief:'Camping equipment for autumn outdoor adventures. Rugged outdoor lifestyle photography.',
       articles: ['Camping Tent 4-Person [EAN: 5901234567930]', 'Sleeping Bag Winter [EAN: 5901234567931]'],
@@ -4137,7 +4154,7 @@ const __fallbackThemeCSS = `
       eventId: 'A5525074', 
       purchaseGroup: 101,
       group: 99,
-      costCenter: 'Bilka.dk',
+      costCenter: '90500512 Bilka Marketing',
       offerId: '10763341',
       articleNumber: 'ART-CAMPING-023',
       articleName: 'Camping Gear Set',
@@ -4157,7 +4174,7 @@ const __fallbackThemeCSS = `
       orderType: 'PS',
       photographer:'Isabella Martinez', 
       deadline:'2025-09-16', 
-      costCenter:'PG-100',
+      costCenter:'90500512 Bilka Marketing',
       priority:'High',
       brief:'Luxury artisan chocolates for holiday season. Elegant food photography with mood lighting.',
       articles: ['Dark Chocolate Truffles [EAN: 5901234567932]', 'Chocolate Gift Box [EAN: 5901234567933]'],
@@ -4168,7 +4185,7 @@ const __fallbackThemeCSS = `
       eventId: 'A5625075', 
       purchaseGroup: 101,
       group: 99,
-      costCenter: 'PDG',
+      costCenter: '90880110 Product Data Governance',
       offerId: '10763342',
       articleNumber: 'ART-CHOCOLATE-024',
       articleName: 'Artisan Chocolate Collection',
@@ -4188,7 +4205,7 @@ const __fallbackThemeCSS = `
       orderType: 'PS',
       photographer:'Kevin Wright', 
       deadline:'2025-09-13', 
-      costCenter:'PG-300',
+      costCenter:'90870390 Electronic & Garden',
       priority:'Medium',
       brief:'Large format smart TV with ultra-thin design. Modern living room lifestyle photography.',
       articles: ['Smart TV 75 inch [EAN: 5901234567934]', 'TV Mount Wall [EAN: 5901234567935]'],
@@ -4199,7 +4216,7 @@ const __fallbackThemeCSS = `
       eventId: 'A5725076', 
       purchaseGroup: 101,
       group: 99,
-      costCenter: 'Bilka Marketing',
+      costCenter: '90500512 Bilka Marketing',
       offerId: '10763343',
       articleNumber: 'ART-TV-025',
       articleName: 'Smart TV Ultra HD',
@@ -4219,7 +4236,7 @@ const __fallbackThemeCSS = `
       orderType: 'PS',
       photographer:'Rachel Green', 
       deadline:'2025-09-19', 
-      costCenter:'PG-200',
+      costCenter:'90200512 føtex marketing',
       priority:'Low',
       brief:'Premium bedding collection in natural fabrics. Cozy bedroom lifestyle photography.',
       articles: ['Silk Bedsheet Set [EAN: 5901234567936]', 'Down Pillows [EAN: 5901234567937]'],
@@ -4246,7 +4263,7 @@ const __fallbackThemeCSS = `
       orderType: 'PS',
       photographer:'Daniel Foster', 
       deadline:'2025-08-25', 
-      costCenter:'PG-400',
+      costCenter:'90870330 Home & Leisure',
       priority:'High',
       brief:'Urban electric bikes for city commuting. Dynamic action shots in urban environment.',
       articles: ['E-Bike Urban Pro [EAN: 5901234567938]', 'Bike Helmet Smart [EAN: 5901234567939]'],
@@ -4273,7 +4290,7 @@ const __fallbackThemeCSS = `
       orderType: 'PS',
       photographer:'Jennifer Liu', 
       deadline:'2025-09-17', 
-      costCenter:'PG-300',
+      costCenter:'90870390 Electronic & Garden',
       priority:'Medium',
       brief:'Smart baby monitoring system with app connectivity. Nursery lifestyle photography.',
       articles: ['Baby Monitor Camera [EAN: 5901234567940]', 'Monitor Base Station [EAN: 5901234567941]'],
@@ -4300,7 +4317,7 @@ const __fallbackThemeCSS = `
       orderType: 'PS',
       photographer:'Not Assigned', 
       deadline:'2025-09-30', 
-      costCenter:'PG-100',
+      costCenter:'90500512 Bilka Marketing',
       priority:'Low',
       brief:'International spice collection for cooking enthusiasts. Colorful food photography.',
       articles: ['Spice Set International [EAN: 5901234567942]', 'Spice Grinder [EAN: 5901234567943]'],
@@ -4327,7 +4344,7 @@ const __fallbackThemeCSS = `
       orderType: 'PS',
       photographer:'Chris Taylor', 
       deadline:'2025-09-21', 
-      costCenter:'PG-200',
+      costCenter:'90200512 føtex marketing',
       priority:'High',
       brief:'Professional gaming chair with RGB lighting. Gaming setup lifestyle photography.',
       articles: ['Gaming Chair RGB [EAN: 5901234567944]', 'Chair Cushion Set [EAN: 5901234567945]'],
@@ -4354,7 +4371,7 @@ const __fallbackThemeCSS = `
       orderType: 'PS',
       photographer:'Mark Davis', 
       deadline:'2025-08-22', 
-      costCenter:'PG-400',
+      costCenter:'90870330 Home & Leisure',
       priority:'Medium',
       brief:'Home solar panel installation kit. Clean energy lifestyle and technical photography.',
       articles: ['Solar Panel 300W [EAN: 5901234567946]', 'Inverter System [EAN: 5901234567947]'],
@@ -4381,7 +4398,7 @@ const __fallbackThemeCSS = `
       orderType: 'PS',
       photographer:'Emma Thompson', 
       deadline:'2025-09-15', 
-      costCenter:'PG-100',
+      costCenter:'90500512 Bilka Marketing',
       priority:'Critical',
       brief:'Premium artisan cheese collection for gourmet food catalog. Rustic food photography.',
       articles: ['Artisan Cheese Wheel [EAN: 5901234567948]', 'Cheese Board Set [EAN: 5901234567949]'],
@@ -4408,7 +4425,7 @@ const __fallbackThemeCSS = `
       orderType: 'PS',
       photographer:'Ryan Miller', 
       deadline:'2025-09-04', 
-      costCenter:'PG-300',
+      costCenter:'90870390 Electronic & Garden',
       priority:'Critical',
       brief:'Waterproof bluetooth speaker for outdoor use. Action shots with water and outdoor scenes.',
       articles: ['Bluetooth Speaker Waterproof [EAN: 5901234567950]', 'Speaker Stand [EAN: 5901234567951]'],
@@ -4435,7 +4452,7 @@ const __fallbackThemeCSS = `
       orderType: 'PS',
       photographer:'Victoria Stone', 
       deadline:'2025-09-24', 
-      costCenter:'PG-200',
+      costCenter:'90200512 føtex marketing',
       priority:'High',
       brief:'Luxury designer handbags for fall fashion collection. Elegant fashion photography.',
       articles: ['Leather Handbag Designer [EAN: 5901234567952]', 'Wallet Matching [EAN: 5901234567953]'],
@@ -4462,7 +4479,7 @@ const __fallbackThemeCSS = `
       orderType: 'PS',
       photographer:'Steve Johnson', 
       deadline:'2025-09-26', 
-      costCenter:'PG-400',
+      costCenter:'90870330 Home & Leisure',
       priority:'Medium',
       brief:'Professional power tools for construction and DIY. Workshop lifestyle photography.',
       articles: ['Cordless Drill Pro [EAN: 5901234567954]', 'Tool Set Complete [EAN: 5901234567955]'],
@@ -4489,7 +4506,7 @@ const __fallbackThemeCSS = `
       orderType: 'PS',
       photographer:'Anthony Clark', 
       deadline:'2025-09-29', 
-      costCenter:'PG-100',
+      costCenter:'90500512 Bilka Marketing',
       priority:'Low',
       brief:'Organic and biodynamic wine selection. Elegant wine photography with lifestyle context.',
       articles: ['Organic Red Wine [EAN: 5901234567956]', 'Wine Glass Set Crystal [EAN: 5901234567957]'],
@@ -4516,7 +4533,7 @@ const __fallbackThemeCSS = `
       orderType: 'PS',
       photographer:'Nancy Wilson', 
       deadline:'2025-09-23', 
-      costCenter:'PG-300',
+      costCenter:'90870390 Electronic & Garden',
       priority:'High',
       brief:'Smart robot vacuum with app control. Modern home lifestyle photography.',
       articles: ['Robot Vacuum Smart [EAN: 5901234567958]', 'Charging Dock [EAN: 5901234567959]'],
@@ -4543,7 +4560,7 @@ const __fallbackThemeCSS = `
       orderType: 'PS',
       photographer:'Sophia Martinez', 
       deadline:'2025-09-12', 
-      costCenter:'PG-200',
+      costCenter:'90200512 føtex marketing',
       priority:'Critical',
       brief:'High-end luxury perfume collection launch. Elegant beauty photography with dramatic lighting.',
       articles: ['Luxury Perfume 100ml [EAN: 5901234567960]', 'Perfume Gift Set [EAN: 5901234567961]'],
@@ -4570,7 +4587,7 @@ const __fallbackThemeCSS = `
       orderType: 'PS',
       photographer:'Jason Lee', 
       deadline:'2025-09-27', 
-      costCenter:'PG-400',
+      costCenter:'90870330 Home & Leisure',
       priority:'Medium',
       brief:'Professional outdoor BBQ grill with accessories. Outdoor cooking lifestyle photography.',
       articles: ['BBQ Grill Pro 6-Burner [EAN: 5901234567962]', 'Grill Tool Set [EAN: 5901234567963]'],
@@ -4597,7 +4614,7 @@ const __fallbackThemeCSS = `
       orderType: 'PS',
       photographer:'Helen Chang', 
       deadline:'2025-08-31', 
-      costCenter:'PG-100',
+      costCenter:'90500512 Bilka Marketing',
       priority:'Low',
       brief:'Premium tea collection from around the world. Zen-like food photography with tea ceremony elements.',
       articles: ['Green Tea Premium [EAN: 5901234567964]', 'Tea Set Ceramic [EAN: 5901234567965]'],
@@ -4615,494 +4632,7 @@ const __fallbackThemeCSS = `
       createdAt: '2025-08-26T10:30:00Z',
       assignedTo: 'user-photo5',
       comments: []
-    },
-    {
-      orderNumber:'ORD-2025-041', 
-      title:'Mechanical Keyboard Gaming', 
-      status:'Review', 
-      method:'Photo Box',
-      orderType: 'PS',
-      photographer:'Brian Kim', 
-      deadline:'2025-09-18', 
-      costCenter:'PG-300',
-      priority:'High',
-      brief:'High-end mechanical gaming keyboard with RGB. Gaming setup and tech photography.',
-      articles: ['Mechanical Keyboard RGB [EAN: 5901234567966]', 'Keycap Set Custom [EAN: 5901234567967]'],
-      budget: 7800,
-      deliverables: ['Tech Product Shots', 'Gaming Setup Lifestyle', 'RGB Light Effects'],
-      eventId: 'A7325092', 
-      purchaseGroup: 101,
-      offerId: '10763359',
-      articleNumber: 'ART-KEYBOARD-041',
-      articleName: 'Mechanical Keyboard Gaming',
-      imageRequestId: '123502',
-      photoStatus: 'Review',
-      page: 41,
-      createdBy: 'user-promo1',
-      createdAt: '2025-09-08T12:15:00Z',
-      assignedTo: 'user-photo1',
-      comments: []
-    },
-    {
-      orderNumber:'ORD-2025-042', 
-      title:'Luxury Skincare Anti-Aging', 
-      status:'New Request', 
-      method:'GILS',
-      orderType: 'PS',
-      photographer:'Not Assigned', 
-      deadline:'2025-10-01', 
-      costCenter:'PG-200',
-      priority:'Medium',
-      brief:'Anti-aging skincare line for mature skin. Elegant beauty photography with before/after concepts.',
-      articles: ['Anti-Aging Serum [EAN: 5901234567968]', 'Night Cream Luxury [EAN: 5901234567969]'],
-      budget: 16500,
-      deliverables: ['Beauty Product Photography', 'Lifestyle Mature Beauty', 'Ingredient Close-ups'],
-      eventId: 'A7425093', 
-      purchaseGroup: 101,
-      offerId: '10763360',
-      articleNumber: 'ART-ANTIAGING-042',
-      articleName: 'Anti-Aging Skincare Line',
-      imageRequestId: '123503',
-      photoStatus: 'New',
-      page: 42,
-      createdBy: 'user-promo2',
-      createdAt: '2025-09-08T14:45:00Z',
-      assignedTo: null,
-      comments: []
-    },
-    {
-      orderNumber:'ORD-2025-043', 
-      title:'Smart Doorbell Security', 
-      status:'Samples in Transit', 
-      method:'Photo Box',
-      orderType: 'PS',
-      photographer:'Peter Wilson', 
-      deadline:'2025-09-20', 
-      costCenter:'PG-300',
-      priority:'High',
-      brief:'Smart video doorbell with motion detection. Home security and tech photography.',
-      articles: ['Smart Doorbell Camera [EAN: 5901234567970]', 'Chime Indoor Unit [EAN: 5901234567971]'],
-      budget: 8200,
-      deliverables: ['Tech Product Shots', 'Home Security Demo', 'App Interface'],
-      eventId: 'A7525094', 
-      purchaseGroup: 101,
-      offerId: '10763361',
-      articleNumber: 'ART-DOORBELL-043',
-      articleName: 'Smart Video Doorbell',
-      imageRequestId: '123504',
-      photoStatus: 'Samples in Transit',
-      page: 43,
-      createdBy: 'user-promo1',
-      createdAt: '2025-09-08T16:30:00Z',
-      assignedTo: 'user-photo2',
-      comments: []
-    },
-    {
-      orderNumber:'ORD-2025-044', 
-      title:'Outdoor Furniture Patio Set', 
-      status:'Delivered', 
-      method:'MERRILD',
-      orderType: 'PS',
-      photographer:'Lisa Rodriguez', 
-      deadline:'2025-08-29', 
-      costCenter:'PG-400',
-      priority:'Low',
-      brief:'Weather-resistant patio furniture set. Outdoor lifestyle photography with seasonal context.',
-      articles: ['Patio Table Set [EAN: 5901234567972]', 'Outdoor Cushions [EAN: 5901234567973]'],
-      budget: 11200,
-      deliverables: ['Outdoor Lifestyle Photography', 'Product Detail Shots', 'Seasonal Styling'],
-      eventId: 'A7625095', 
-      purchaseGroup: 101,
-      offerId: '10763362',
-      articleNumber: 'ART-PATIO-044',
-      articleName: 'Outdoor Patio Furniture',
-      imageRequestId: '123505',
-      photoStatus: 'Archive',
-      page: 44,
-      createdBy: 'user-promo2',
-      createdAt: '2025-08-24T18:00:00Z',
-      assignedTo: 'user-photo3',
-      comments: []
-    },
-    {
-      orderNumber:'ORD-2025-045', 
-      title:'Artisan Bread Making Kit', 
-      status:'Processing', 
-      method:'Photo Box',
-      orderType: 'PS',
-      photographer:'Carlos Garcia', 
-      deadline:'2025-09-25', 
-      costCenter:'PG-100',
-      priority:'Medium',
-      brief:'Complete bread making kit for home bakers. Food photography with process demonstration.',
-      articles: ['Bread Making Kit [EAN: 5901234567974]', 'Sourdough Starter [EAN: 5901234567975]'],
-      budget: 5800,
-      deliverables: ['Food Photography', 'Baking Process Demo', 'Lifestyle Kitchen'],
-      eventId: 'A7725096', 
-      purchaseGroup: 101,
-      offerId: '10763363',
-      articleNumber: 'ART-BREADKIT-045',
-      articleName: 'Artisan Bread Making Kit',
-      imageRequestId: '123506',
-      photoStatus: 'Processing',
-      page: 45,
-      createdBy: 'user-promo1',
-      createdAt: '2025-09-09T08:15:00Z',
-      assignedTo: 'user-photo4',
-      comments: []
-    },
-    {
-      orderNumber:'ORD-2025-046', 
-      title:'Electric Scooter Urban', 
-      status:'Urgent', 
-      method:'M&B',
-      orderType: 'PS',
-      photographer:'David Thompson', 
-      deadline:'2025-09-06', 
-      costCenter:'PG-400',
-      priority:'Critical',
-      brief:'Urban electric scooter for city commuting. Dynamic action shots in urban environment.',
-      articles: ['Electric Scooter Pro [EAN: 5901234567976]', 'Scooter Helmet [EAN: 5901234567977]'],
-      budget: 13200,
-      deliverables: ['Action Photography', 'Urban Lifestyle', 'Tech Feature Highlights'],
-      eventId: 'A7825097', 
-      purchaseGroup: 101,
-      offerId: '10763364',
-      articleNumber: 'ART-ESCOOTER-046',
-      articleName: 'Electric Scooter Urban',
-      imageRequestId: '123507',
-      photoStatus: 'Urgent',
-      page: 46,
-      createdBy: 'user-promo2',
-      createdAt: '2025-09-04T19:30:00Z',
-      assignedTo: 'user-photo5',
-      comments: []
-    },
-    {
-      orderNumber:'ORD-2025-047', 
-      title:'Designer Sunglasses Collection', 
-      status:'Samples Received', 
-      method:'GILS',
-      orderType: 'PS',
-      photographer:'Amanda Foster', 
-      deadline:'2025-09-22', 
-      costCenter:'PG-200',
-      priority:'High',
-      brief:'Luxury designer sunglasses for summer/fall transition. Fashion photography with lifestyle context.',
-      articles: ['Designer Sunglasses Aviator [EAN: 5901234567978]', 'Sunglasses Case Leather [EAN: 5901234567979]'],
-      budget: 15800,
-      deliverables: ['Fashion Photography', 'Lifestyle Summer', 'Detail Craftsmanship'],
-      eventId: 'A7925098', 
-      purchaseGroup: 101,
-      offerId: '10763365',
-      articleNumber: 'ART-SUNGLASSES-047',
-      articleName: 'Designer Sunglasses Collection',
-      imageRequestId: '123508',
-      photoStatus: 'Samples Received',
-      page: 47,
-      createdBy: 'user-promo1',
-      createdAt: '2025-09-09T10:45:00Z',
-      assignedTo: 'user-photo1',
-      comments: []
-    },
-    {
-      orderNumber:'ORD-2025-048', 
-      title:'Smart Home Thermostat', 
-      status:'Approved', 
-      method:'Photo Box',
-      orderType: 'PS',
-      photographer:'Richard Davis', 
-      deadline:'2025-09-28', 
-      costCenter:'PG-300',
-      priority:'Medium',
-      brief:'Smart thermostat with energy saving features. Modern home lifestyle and tech photography.',
-      articles: ['Smart Thermostat WiFi [EAN: 5901234567980]', 'Temperature Sensor [EAN: 5901234567981]'],
-      budget: 7400,
-      deliverables: ['Tech Product Shots', 'Home Lifestyle', 'Energy Saving Demo'],
-      eventId: 'A8025099', 
-      purchaseGroup: 101,
-      offerId: '10763366',
-      articleNumber: 'ART-THERMOSTAT-048',
-      articleName: 'Smart Home Thermostat',
-      imageRequestId: '123509',
-      photoStatus: 'Approved',
-      page: 48,
-      createdBy: 'user-promo2',
-      createdAt: '2025-09-09T12:30:00Z',
-      assignedTo: 'user-photo2',
-      comments: []
-    },
-    {
-      orderNumber:'ORD-2025-049', 
-      title:'Luxury Bath Towel Set', 
-      status:'Draft', 
-      method:'MERRILD',
-      orderType: 'PS',
-      photographer:'Grace Wilson', 
-      deadline:'2025-10-02', 
-      costCenter:'PG-200',
-      priority:'Low',
-      brief:'Premium cotton bath towel collection. Spa-like bathroom lifestyle photography.',
-      articles: ['Bath Towel Luxury 100% Cotton [EAN: 5901234567982]', 'Towel Set Gift Box [EAN: 5901234567983]'],
-      budget: 6800,
-      deliverables: ['Lifestyle Bathroom', 'Texture Close-ups', 'Spa Styling'],
-      eventId: 'A8125100', 
-      purchaseGroup: 101,
-      offerId: '10763367',
-      articleNumber: 'ART-TOWELS-049',
-      articleName: 'Luxury Bath Towel Set',
-      imageRequestId: '123510',
-      photoStatus: 'New',
-      page: 49,
-      createdBy: 'user-promo1',
-      createdAt: '2025-09-09T14:15:00Z',
-      assignedTo: 'user-photo3',
-      comments: []
-    },
-    {
-      orderNumber:'ORD-2025-050', 
-      title:'Professional Blender High-Speed', 
-      status:'Pending Approval', 
-      method:'Photo Box',
-      orderType: 'PS',
-      photographer:'Michelle Lee', 
-      deadline:'2025-09-30', 
-      costCenter:'PG-400',
-      priority:'High',
-      brief:'High-performance blender for smoothies and food prep. Kitchen lifestyle with action shots.',
-      articles: ['High-Speed Blender Pro [EAN: 5901234567984]', 'Blender Cup Set [EAN: 5901234567985]'],
-      budget: 9600,
-      deliverables: ['Product Photography', 'Kitchen Lifestyle', 'Action Blending Shots'],
-      eventId: 'A8225101', 
-      purchaseGroup: 101,
-      offerId: '10763368',
-      articleNumber: 'ART-BLENDER-050',
-      articleName: 'Professional Blender',
-      imageRequestId: '123511',
-      photoStatus: 'Pending',
-      page: 50,
-      createdBy: 'user-promo2',
-      createdAt: '2025-09-09T16:00:00Z',
-      assignedTo: 'user-photo4',
-      comments: []
-    },
-    {
-      orderNumber:'ORD-2025-051', 
-      title:'Wireless Charging Pad Multi-Device', 
-      status:'Photo Session', 
-      method:'Photo Box',
-      orderType: 'PS',
-      photographer:'Kevin Chang', 
-      deadline:'2025-09-14', 
-      costCenter:'PG-300',
-      priority:'Medium',
-      brief:'Multi-device wireless charging station. Clean tech photography with device compatibility.',
-      articles: ['Wireless Charging Pad 3-in-1 [EAN: 5901234567986]', 'USB-C Cable Fast [EAN: 5901234567987]'],
-      budget: 5200,
-      deliverables: ['Tech Product Shots', 'Device Compatibility Demo', 'Lifestyle Office'],
-      eventId: 'A8325102', 
-      purchaseGroup: 101,
-      offerId: '10763369',
-      articleNumber: 'ART-CHARGER-051',
-      articleName: 'Wireless Charging Station',
-      imageRequestId: '123512',
-      photoStatus: 'In Progress',
-      page: 51,
-      createdBy: 'user-promo1',
-      createdAt: '2025-09-09T17:45:00Z',
-      assignedTo: 'user-photo5',
-      comments: []
-    },
-    {
-      orderNumber:'ORD-2025-052', 
-      title:'Artisan Ceramic Dinnerware', 
-      status:'Complete', 
-      method:'Photo Box',
-      orderType: 'PS',
-      photographer:'Diana Miller', 
-      deadline:'2025-09-01', 
-      costCenter:'PG-200',
-      priority:'Low',
-      brief:'Handcrafted ceramic dinnerware collection. Elegant table setting and lifestyle photography.',
-      articles: ['Ceramic Dinner Plate Set [EAN: 5901234567988]', 'Ceramic Bowl Collection [EAN: 5901234567989]'],
-      budget: 8400,
-      deliverables: ['Lifestyle Table Setting', 'Product Detail Shots', 'Artisan Craftsmanship'],
-      eventId: 'A8425103', 
-      purchaseGroup: 101,
-      offerId: '10763370',
-      articleNumber: 'ART-DINNERWARE-052',
-      articleName: 'Artisan Ceramic Collection',
-      imageRequestId: '123513',
-      photoStatus: 'Archive',
-      page: 52,
-      createdBy: 'user-promo2',
-      createdAt: '2025-08-27T09:30:00Z',
-      assignedTo: 'user-photo1',
-      comments: []
-    },
-    {
-      orderNumber:'ORD-2025-053', 
-      title:'Smart Water Bottle Hydration', 
-      status:'Samples Requested', 
-      method:'Photo Box',
-      orderType: 'PS',
-      photographer:'Tyler Brown', 
-      deadline:'2025-09-26', 
-      costCenter:'PG-400',
-      priority:'High',
-      brief:'Smart water bottle with hydration tracking. Active lifestyle and tech photography.',
-      articles: ['Smart Water Bottle 32oz [EAN: 5901234567990]', 'Bottle Cleaning Kit [EAN: 5901234567991]'],
-      budget: 6200,
-      deliverables: ['Tech Product Shots', 'Active Lifestyle', 'App Interface Demo'],
-      eventId: 'A8525104', 
-      purchaseGroup: 101,
-      offerId: '10763371',
-      articleNumber: 'ART-WATERBOTTLE-053',
-      articleName: 'Smart Hydration Bottle',
-      imageRequestId: '123514',
-      photoStatus: 'Samples Requested',
-      page: 53,
-      createdBy: 'user-promo1',
-      createdAt: '2025-09-10T08:00:00Z',
-      assignedTo: 'user-photo2',
-      comments: []
-    },
-    {
-      orderNumber:'ORD-2025-054', 
-      title:'Luxury Watch Band Collection', 
-      status:'Review', 
-      method:'M&B',
-      orderType: 'PS',
-      photographer:'Olivia Garcia', 
-      deadline:'2025-09-21', 
-      costCenter:'PG-200',
-      priority:'Medium',
-      brief:'Premium watch bands in various materials. Luxury accessory photography with lifestyle context.',
-      articles: ['Leather Watch Band [EAN: 5901234567992]', 'Metal Watch Band Titanium [EAN: 5901234567993]'],
-      budget: 11800,
-      deliverables: ['Luxury Accessory Photography', 'Material Close-ups', 'Lifestyle Elegance'],
-      eventId: 'A8625105', 
-      purchaseGroup: 101,
-      offerId: '10763372',
-      articleNumber: 'ART-WATCHBAND-054',
-      articleName: 'Luxury Watch Band Collection',
-      imageRequestId: '123515',
-      photoStatus: 'Review',
-      page: 54,
-      createdBy: 'user-promo2',
-      createdAt: '2025-09-10T10:30:00Z',
-      assignedTo: 'user-photo3',
-      comments: []
-    },
-    {
-      orderNumber:'ORD-2025-055', 
-      title:'Electric Coffee Grinder Pro', 
-      status:'New Request', 
-      method:'Photo Box',
-      orderType: 'PS',
-      photographer:'Not Assigned', 
-      deadline:'2025-10-03', 
-      costCenter:'PG-100',
-      priority:'Low',
-      brief:'Professional electric coffee grinder with precision settings. Coffee lifestyle photography.',
-      articles: ['Electric Coffee Grinder [EAN: 5901234567994]', 'Coffee Bean Storage [EAN: 5901234567995]'],
-      budget: 4800,
-      deliverables: ['Product Photography', 'Coffee Lifestyle', 'Grinding Demo'],
-      eventId: 'A8725106', 
-      purchaseGroup: 101,
-      offerId: '10763373',
-      articleNumber: 'ART-GRINDER-055',
-      articleName: 'Electric Coffee Grinder',
-      imageRequestId: '123516',
-      photoStatus: 'New',
-      page: 55,
-      createdBy: 'user-promo1',
-      createdAt: '2025-09-10T12:15:00Z',
-      assignedTo: null,
-      comments: []
-    },
-    {
-      orderNumber:'ORD-2025-056', 
-      title:'Ergonomic Office Chair Executive', 
-      status:'Samples in Transit', 
-      method:'GILS',
-      orderType: 'PS',
-      photographer:'Jonathan Smith', 
-      deadline:'2025-09-24', 
-      costCenter:'PG-200',
-      priority:'High',
-      brief:'Executive ergonomic office chair with premium materials. Office lifestyle photography.',
-      articles: ['Office Chair Executive [EAN: 5901234567996]', 'Chair Mat Protective [EAN: 5901234567997]'],
-      budget: 14200,
-      deliverables: ['Product Photography', 'Office Lifestyle', 'Ergonomic Features'],
-      eventId: 'A8825107', 
-      purchaseGroup: 101,
-      offerId: '10763374',
-      articleNumber: 'ART-OFFICECHAIR-056',
-      articleName: 'Ergonomic Executive Chair',
-      imageRequestId: '123517',
-      photoStatus: 'Samples in Transit',
-      page: 56,
-      createdBy: 'user-promo2',
-      createdAt: '2025-09-10T14:45:00Z',
-      assignedTo: 'user-photo4',
-      comments: []
-    },
-    {
-      orderNumber:'ORD-2025-057', 
-      title:'Air Purifier HEPA Advanced', 
-      status:'Delivered', 
-      method:'Photo Box',
-      orderType: 'PS',
-      photographer:'Sandra Lee', 
-      deadline:'2025-09-02', 
-      costCenter:'PG-300',
-      priority:'Medium',
-      brief:'Advanced HEPA air purifier for home use. Clean lifestyle photography with air quality focus.',
-      articles: ['Air Purifier HEPA [EAN: 5901234567998]', 'Replacement Filter Set [EAN: 5901234567999]'],
-      budget: 10500,
-      deliverables: ['Tech Product Shots', 'Home Lifestyle', 'Air Quality Demo'],
-      eventId: 'A8925108', 
-      purchaseGroup: 101,
-      offerId: '10763375',
-      articleNumber: 'ART-AIRPURIFIER-057',
-      articleName: 'HEPA Air Purifier',
-      imageRequestId: '123518',
-      photoStatus: 'Archive',
-      page: 57,
-      createdBy: 'user-promo1',
-      createdAt: '2025-08-28T16:30:00Z',
-      assignedTo: 'user-photo5',
-      comments: []
-    },
-    {
-      orderNumber:'ORD-2025-058', 
-      title:'Gourmet Olive Oil Collection', 
-      status:'Processing', 
-      method:'MERRILD',
-      orderType: 'PS',
-      photographer:'Mario Rossi', 
-      deadline:'2025-09-19', 
-      costCenter:'PG-100',
-      priority:'Critical',
-      brief:'Premium extra virgin olive oils from Mediterranean regions. Gourmet food photography.',
-      articles: ['Extra Virgin Olive Oil [EAN: 5901234568000]', 'Oil Tasting Set [EAN: 5901234568001]'],
-      budget: 7600,
-      deliverables: ['Gourmet Food Photography', 'Lifestyle Cooking', 'Oil Quality Demo'],
-      eventId: 'A9025109', 
-      purchaseGroup: 101,
-      offerId: '10763376',
-      articleNumber: 'ART-OLIVEOIL-058',
-      articleName: 'Gourmet Olive Oil Collection',
-      imageRequestId: '123519',
-      photoStatus: 'Processing',
-      page: 58,
-      createdBy: 'user-promo2',
-      createdAt: '2025-09-10T18:00:00Z',
-      assignedTo: 'user-photo1',
-      comments: []
     }
-  
   ];
 
   ensureArticlesHaveFileNames(allOrders);
@@ -6037,8 +5567,21 @@ const __fallbackThemeCSS = `
                         <label style="display: block; font-size: 11px; font-weight: 600; color: #85694c; margin-bottom: 4px;">Principle</label>
                         <select id="filterPrinciple" class="filter-select" style="width: 100%; padding: 6px; border-radius: 6px; border: 1px solid #ead7c2; background: rgba(255, 255, 255, 0.5); color: #4b3b2a;">
                           <option value="">All</option>
-                          <option value="guideline1">Guideline 2024</option>
-                          <option value="guideline2">Guideline 2025</option>
+                          <option value="#P 2D">#P 2D</option>
+                          <option value="#P 2P">#P 2P</option>
+                          <option value="#P 2D FLIP">#P 2D FLIP</option>
+                          <option value="#P 2J FLIP">#P 2J FLIP</option>
+                          <option value="#P 2I">#P 2I</option>
+                          <option value="#P 2J">#P 2J</option>
+                          <option value="#P 2K">#P 2K</option>
+                          <option value="#P 2H">#P 2H</option>
+                          <option value="#P 2K FLIP">#P 2K FLIP</option>
+                          <option value="#P 2N">#P 2N</option>
+                          <option value="#P 2M">#P 2M</option>
+                          <option value="#P 4A">#P 4A</option>
+                          <option value="#P 3E">#P 3E</option>
+                          <option value="#P 4C">#P 4C</option>
+                          <option value="#P 4E">#P 4E</option>
                         </select>
                       </div>
 
@@ -6071,7 +5614,7 @@ const __fallbackThemeCSS = `
                         <th style="width: 55px; min-width: 55px; max-width: 55px; height: 55px; display: none; padding: 0; text-align: center;" class="bulk-checkbox"><input type="checkbox" id="selectAllOrders"></th>
                         <th style="padding: 4px; text-align: center; border-bottom: 1px solid var(--theme-table-border); width: 32px;" aria-label="Expand"></th>
                         <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: var(--theme-table-header-text); border-bottom: 1px solid var(--theme-table-border);">Order Number</th>
-                        <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: var(--theme-table-header-text); border-bottom: 1px solid var(--theme-table-border);">Activity</th>
+                        <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: var(--theme-table-header-text); border-bottom: 1px solid var(--theme-table-border);">Title</th>
                         <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: var(--theme-table-header-text); border-bottom: 1px solid var(--theme-table-border);">Page</th>
                         <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: var(--theme-table-header-text); border-bottom: 1px solid var(--theme-table-border);">Offer ID</th>
                         <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: var(--theme-table-header-text); border-bottom: 1px solid var(--theme-table-border);">Group</th>
@@ -8464,11 +8007,16 @@ const __fallbackThemeCSS = `
               <div>
                 <label style="display: block; font-weight: 500; margin-bottom: 4px;">Cost Center</label>
                 <select name="costCenter" style="width: 100%; padding: 8px; border: 1px solid #d1d5db; border-radius: 4px;">
-                  <option value="">Select cost center...</option>
-                  <option value="Bilka.dk">Bilka.dk</option>
-                  <option value="føtex Marketing">føtex Marketing</option>
-                  <option value="Bilka Marketing">Bilka Marketing</option>
-                  <option value="PDG">PDG</option>
+<option value="">Select cost center...</option>
+                  <option value="90500512 Bilka Marketing">90500512 Bilka Marketing</option>
+                  <option value="90200512 føtex marketing">90200512 føtex marketing</option>
+                  <option value="90510512 BR">90510512 BR</option>
+                  <option value="90880220 Chilled, Meat & poultry">90880220 Chilled, Meat & poultry</option>
+                  <option value="90870390 Electronic & Garden">90870390 Electronic & Garden</option>
+                  <option value="90870330 Home & Leisure">90870330 Home & Leisure</option>
+                  <option value="90700572 Netto Marketing">90700572 Netto Marketing</option>
+                  <option value="90880110 Product Data Governance">90880110 Product Data Governance</option>
+                  <option value="90740310 Textile">90740310 Textile</option>
                 </select>
               </div>
 
@@ -8662,6 +8210,7 @@ const __fallbackThemeCSS = `
   let quickFiltersOpen = false;
 
   const SALES_ORG_OPTIONS = ['Bilka', 'føtex', 'netto', 'Fætter BR', 'Salling'];
+  const PRINCIPLE_OPTIONS = ['#P 2D', '#P 2P', '#P 2D FLIP', '#P 2J FLIP', '#P 2I', '#P 2J', '#P 2K', '#P 2H', '#P 2K FLIP', '#P 2N', '#P 2M', '#P 4A', '#P 3E', '#P 4C', '#P 4E'];
   const DEFAULT_TACTIC_TYPE = 'Print';
   const DEFAULT_TACTIC = 'Leaflet';
     const orderFilters = {
@@ -8963,6 +8512,16 @@ const __fallbackThemeCSS = `
         order.salesOrg = SALES_ORG_OPTIONS[index];
       } else {
         order.salesOrg = getRandomSalesOrg();
+      }
+
+      // Assign Principle if missing
+      if (!order.principle) {
+        if (fallbackIndex !== null && !Number.isNaN(fallbackIndex)) {
+          const pIndex = Math.abs(fallbackIndex) % PRINCIPLE_OPTIONS.length;
+          order.principle = PRINCIPLE_OPTIONS[pIndex];
+        } else {
+          order.principle = PRINCIPLE_OPTIONS[Math.floor(Math.random() * PRINCIPLE_OPTIONS.length)];
+        }
       }
 
       order.tacticType = DEFAULT_TACTIC_TYPE;
@@ -9912,7 +9471,11 @@ const __fallbackThemeCSS = `
       'Editorial',
       'Campaign',
       'Social',
-      'Video'
+      'Video',
+      'Front Packshot',
+      'Back Packshot',
+      'Packshot facing Right',
+      'Packshot Facing Left'
     ];
     const DEFAULT_ARTICLE_CONTENT_TYPE = ARTICLE_CONTENT_TYPE_OPTIONS[0];
 
@@ -9965,10 +9528,17 @@ const __fallbackThemeCSS = `
         .replace(/\s{2,}/g, ' ')
         .trim();
 
+      let articleNumber = articleMatch ? articleMatch[1].trim() : '';
+      
+      // If the name consists only of digits and articleNumber is empty, treat name as article number
+      if (!articleNumber && /^\d+$/.test(cleanName)) {
+        articleNumber = cleanName;
+      }
+
       return {
         name: cleanName,
         ean: eanMatch ? eanMatch[1].trim() : '',
-        articleNumber: articleMatch ? articleMatch[1].trim() : ''
+        articleNumber: articleNumber
       };
     }
 
@@ -10012,32 +9582,68 @@ const __fallbackThemeCSS = `
       };
     }
 
+    function handleTemplateChange() {
+      syncNewOrderArticleContentState();
+    }
+    window.handleTemplateChange = handleTemplateChange;
+
     function syncNewOrderArticleContentState() {
       const lines = getNewOrderArticleLines();
+      const templateSelect = document.querySelector('select[name="template"]');
+      const selectedTemplate = templateSelect ? templateSelect.value : '';
+      
+      // Define template rules
+      const templateRules = {
+        "Women's Fashion": ["Front Packshot", "Back Packshot"],
+        "Men's Fashion": ["Front Packshot", "Back Packshot"],
+        "Children Fashion": ["Front Packshot", "Back Packshot"],
+        "Shoes": ["Packshot facing Right", "Packshot Facing Left"],
+        "Bags & Accessories": ["Front Packshot", "Back Packshot"],
+        "Jewelry & Watches": ["Front Packshot"],
+        "Home": ["Front Packshot", "Back Packshot"],
+        "Beauty": ["Front Packshot"]
+      };
+
       if (!lines.length) {
         newOrderArticleContentState = [];
         renderArticleContentTypeConfigurator();
         return;
       }
 
-      const previous = newOrderArticleContentState.map(entry => ({ ...entry, __used: false }));
-      const next = lines.map(raw => {
-        const matchIndex = previous.findIndex(entry => !entry.__used && entry.raw === raw);
-        if (matchIndex !== -1) {
-          previous[matchIndex].__used = true;
-          return {
-            raw,
-            contentType: previous[matchIndex].contentType || DEFAULT_ARTICLE_CONTENT_TYPE
-          };
-        }
+      // If a template is selected, we regenerate the list to enforce the template rules
+      if (selectedTemplate && templateRules[selectedTemplate]) {
+         const contentTypes = templateRules[selectedTemplate];
+         const next = [];
+         lines.forEach(raw => {
+            contentTypes.forEach(type => {
+               next.push({
+                 raw,
+                 contentType: type
+               });
+            });
+         });
+         newOrderArticleContentState = next;
+      } else {
+          // Original logic for manual mode
+          const previous = newOrderArticleContentState.map(entry => ({ ...entry, __used: false }));
+          const next = lines.map(raw => {
+            const matchIndex = previous.findIndex(entry => !entry.__used && entry.raw === raw);
+            if (matchIndex !== -1) {
+              previous[matchIndex].__used = true;
+              return {
+                raw,
+                contentType: previous[matchIndex].contentType || DEFAULT_ARTICLE_CONTENT_TYPE
+              };
+            }
+    
+            return {
+              raw,
+              contentType: DEFAULT_ARTICLE_CONTENT_TYPE
+            };
+          });
+          newOrderArticleContentState = next;
+      }
 
-        return {
-          raw,
-          contentType: DEFAULT_ARTICLE_CONTENT_TYPE
-        };
-      });
-
-      newOrderArticleContentState = next;
       renderArticleContentTypeConfigurator();
     }
 
@@ -10166,15 +9772,16 @@ const __fallbackThemeCSS = `
                 <label style="display: block; font-weight: 600; margin-bottom: 4px; color: #4b3b2a; font-size: 12px;">Cost Center</label>
     <select name="costCenter" required style="width: 100%; box-sizing: border-box; padding: 8px 12px; border: 1px solid #ead7c2; border-radius: 6px; font-size: 13px; transition: border-color 0.2s ease;"
       onfocus="this.style.borderColor='#c48b5a'" onblur="this.style.borderColor='#ead7c2'">
-                  <option value="">Select cost center...</option>
-                  <option value="Bilka.dk">Bilka.dk</option>
-                  <option value="Bilka Marketing">Bilka Marketing</option>
-                  <option value="Føtex">Føtex</option>
-                  <option value="Netto">Netto</option>
-                  <option value="PG-100">PG-100</option>
-                  <option value="PG-200">PG-200</option>
-                  <option value="PG-300">PG-300</option>
-                  <option value="PG-400">PG-400</option>
+<option value="">Select cost center...</option>
+                  <option value="90500512 Bilka Marketing">90500512 Bilka Marketing</option>
+                  <option value="90200512 føtex marketing">90200512 føtex marketing</option>
+                  <option value="90510512 BR">90510512 BR</option>
+                  <option value="90880220 Chilled, Meat & poultry">90880220 Chilled, Meat & poultry</option>
+                  <option value="90870390 Electronic & Garden">90870390 Electronic & Garden</option>
+                  <option value="90870330 Home & Leisure">90870330 Home & Leisure</option>
+                  <option value="90700572 Netto Marketing">90700572 Netto Marketing</option>
+                  <option value="90880110 Product Data Governance">90880110 Product Data Governance</option>
+                  <option value="90740310 Textile">90740310 Textile</option>
                 </select>
               </div>
               <div style="min-width: 0;">
@@ -10182,24 +9789,41 @@ const __fallbackThemeCSS = `
     <select name="purchaseGroup" required style="width: 100%; box-sizing: border-box; padding: 8px 12px; border: 1px solid #ead7c2; border-radius: 6px; font-size: 13px; transition: border-color 0.2s ease;"
       onfocus="this.style.borderColor='#c48b5a'" onblur="this.style.borderColor='#ead7c2'">
                   <option value="">Select purchase group...</option>
-                  <option value="101">101 - Groceries</option>
-                  <option value="102">102 - Fresh Produce</option>
-                  <option value="103">103 - Marketing Materials</option>
-                  <option value="104">104 - Seasonal Items</option>
+                  <option value="101">101 - Petfood</option>
+                  <option value="102">102 - Coffee/Tea</option>
+                  <option value="103">103 - Groceries</option>
+                  <option value="104">104 - Confectionary</option>
+                  <option value="105">105 - Dry Food</option>
+                  <option value="106">106 - Frozen</option>
                 </select>
               </div>
             </div>
 
-            <div style="margin-bottom: 12px;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
               <div style="min-width: 0;">
                 <label style="display: block; font-weight: 600; margin-bottom: 4px; color: #4b3b2a; font-size: 12px;">Production</label>
-    <select name="method" required style="width: 100%; box-sizing: border-box; padding: 8px 12px; border: 1px solid #ead7c2; border-radius: 6px; font-size: 13px; transition: border-color 0.2s ease;"
-      onfocus="this.style.borderColor='#c48b5a'" onblur="this.style.borderColor='#ead7c2'">
+                <select name="method" required style="width: 100%; box-sizing: border-box; padding: 8px 12px; border: 1px solid #ead7c2; border-radius: 6px; font-size: 13px; transition: border-color 0.2s ease;"
+                  onfocus="this.style.borderColor='#c48b5a'" onblur="this.style.borderColor='#ead7c2'">
                   <option value="">Select production...</option>
                   <option value="Photo Box">Photo Box</option>
                   <option value="M&B">M&B</option>
                   <option value="GILS">GILS</option>
                   <option value="MERRILD">MERRILD</option>
+                </select>
+              </div>
+              <div style="min-width: 0;">
+                <label style="display: block; font-weight: 600; margin-bottom: 4px; color: #4b3b2a; font-size: 12px;">Template</label>
+                <select name="template" style="width: 100%; box-sizing: border-box; padding: 8px 12px; border: 1px solid #ead7c2; border-radius: 6px; font-size: 13px; transition: border-color 0.2s ease;"
+                  onfocus="this.style.borderColor='#c48b5a'" onblur="this.style.borderColor='#ead7c2'" onchange="handleTemplateChange()">
+                  <option value="">Select Template...</option>
+                  <option value="Women's Fashion">Women's Fashion</option>
+                  <option value="Men's Fashion">Men's Fashion</option>
+                  <option value="Children Fashion">Children Fashion</option>
+                  <option value="Shoes">Shoes</option>
+                  <option value="Bags & Accessories">Bags & Accessories</option>
+                  <option value="Jewelry & Watches">Jewelry & Watches</option>
+                  <option value="Home">Home</option>
+                  <option value="Beauty">Beauty</option>
                 </select>
               </div>
             </div>
@@ -10321,13 +9945,6 @@ const __fallbackThemeCSS = `
         modal.style.transform = 'translateX(0)';
       }, 10);
 
-      // Shift main content to the right to make space for the larger modal
-      const mainContent = document.querySelector('.main-content');
-      if (mainContent) {
-        mainContent.style.marginLeft = '650px';
-        mainContent.style.transition = 'margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
-      }
-
       // Focus on the first input
       setTimeout(() => {
         document.querySelector('#newOrderForm input[name="title"]')?.focus();
@@ -10350,12 +9967,6 @@ const __fallbackThemeCSS = `
         setTimeout(() => {
           modal.remove();
         }, 300);
-      }
-
-      // Reset main content position
-      const mainContent = document.querySelector('.main-content');
-      if (mainContent) {
-        mainContent.style.marginLeft = '0';
       }
     }
 
@@ -10419,7 +10030,7 @@ const __fallbackThemeCSS = `
         budget: formData.get('budget') ? parseFloat(formData.get('budget')) : null,
         photographer: formData.get('photographer') || null,
         brief: formData.get('brief'),
-  articles: articleEntries,
+        articles: articleEntries,
         status: 'Draft',
         createdBy: currentUser.name,
         createdDate: new Date().toLocaleDateString(),
@@ -10428,7 +10039,8 @@ const __fallbackThemeCSS = `
         deliverables: ['Product Photos', 'High-Resolution Images'],
         photoReference: selectedPhotoReference || null,
         activity: activityInput,
-        photoStatus: 'New Request'
+        photoStatus: 'New Request',
+        purchaseGroup: formData.get('purchaseGroup')
       };
 
       ensureOrderPhotoMetadata([newOrder]);
@@ -11972,6 +11584,8 @@ const __fallbackThemeCSS = `
             }
           }] : []);
 
+          const isPhotoOrder = order.orderType === 'PO';
+
           const rows = dataSource.length ? dataSource.map((article, index) => {
             const raw = article && typeof article.raw === 'object' ? article.raw : {};
             const imageRequestId = raw.imageRequestId || order.imageRequestId || placeholderSpan;
@@ -12000,7 +11614,7 @@ const __fallbackThemeCSS = `
 
             return `
               <tr>
-                <td style="padding:6px 10px;border-bottom:1px solid ${childCellBorder};font-size:11px;${childCellTextColor}${childCellBackground}">${imageRequestId || placeholderSpan}</td>
+                ${!isPhotoOrder ? `<td style="padding:6px 10px;border-bottom:1px solid ${childCellBorder};font-size:11px;${childCellTextColor}${childCellBackground}">${imageRequestId || placeholderSpan}</td>` : ''}
                 <td style="padding:6px 10px;border-bottom:1px solid ${childCellBorder};font-size:11px;${childCellTextColor}${childCellBackground}">${articleNumber || placeholderSpan}</td>
                 <td style="padding:6px 10px;border-bottom:1px solid ${childCellBorder};font-size:11px;${childCellTextColor}${childCellBackground}">${unitOfMeasure || placeholderSpan}</td>
                 <td style="padding:6px 10px;border-bottom:1px solid ${childCellBorder};font-size:11px;${childCellTextColor}${childCellBackground}">${articleName || placeholderSpan}</td>
@@ -12013,7 +11627,7 @@ const __fallbackThemeCSS = `
             `;
           }).join('') : `
             <tr>
-              <td colspan="9" style="padding:12px;color:#9ca3af;text-align:center;border-bottom:1px solid rgba(196, 139, 90, 0.2);">No article details available for this order.</td>
+              <td colspan="${isPhotoOrder ? 8 : 9}" style="padding:12px;color:#9ca3af;text-align:center;border-bottom:1px solid rgba(196, 139, 90, 0.2);">No article details available for this order.</td>
             </tr>
           `;
 
@@ -12022,7 +11636,7 @@ const __fallbackThemeCSS = `
               <table style="width:100%;border-collapse:collapse;">
                 <thead style="${childHeaderStyle}">
                   <tr>
-                    <th style="text-align:left;padding:8px 10px;font-size:11px;color:${isAuroraTheme || isGlassTheme ? 'rgba(20, 34, 60, 0.9)' : '#6b5440'};font-weight:600;">Image Request ID</th>
+                    ${!isPhotoOrder ? `<th style="text-align:left;padding:8px 10px;font-size:11px;color:${isAuroraTheme || isGlassTheme ? 'rgba(20, 34, 60, 0.9)' : '#6b5440'};font-weight:600;">Image Request ID</th>` : ''}
                     <th style="text-align:left;padding:8px 10px;font-size:11px;color:${isAuroraTheme || isGlassTheme ? 'rgba(20, 34, 60, 0.9)' : '#6b5440'};font-weight:600;">Article Number</th>
                     <th style="text-align:left;padding:8px 10px;font-size:11px;color:${isAuroraTheme || isGlassTheme ? 'rgba(20, 34, 60, 0.9)' : '#6b5440'};font-weight:600;">Unit of Measure</th>
                     <th style="text-align:left;padding:8px 10px;font-size:11px;color:${isAuroraTheme || isGlassTheme ? 'rgba(20, 34, 60, 0.9)' : '#6b5440'};font-weight:600;">Article Name</th>
@@ -12076,15 +11690,15 @@ const __fallbackThemeCSS = `
           const groupDisplay = o.group || placeholderSpan;
           const costCenterDisplay = o.costCenter || placeholderSpan;
           const orderTypeDisplay = (o.orderType || 'PS');
-          const activityDisplay = o.activity || placeholderSpan;
+          const activityDisplay = o.title || placeholderSpan;
           const rawPage = o.page ?? o.pageNumber ?? o.pageNo ?? o.catalogPage ?? o.pamPage ?? o.pageReference ?? '';
           const parsedPage = parseInt(rawPage, 10);
           const pageDisplay = !isNaN(parsedPage) && parsedPage >= 0 ? String(parsedPage) : (rawPage ? String(rawPage).trim() : placeholderSpan);
           const offerId = o.offerId || placeholderSpan;
-          const offerName = o.title || placeholderSpan;
+          const offerName = o.offerName || o.articleName || placeholderSpan;
           const shotType = o.photoStatus || placeholderSpan;
           const photoRef = o.photoReference || placeholderSpan;
-          const principle = o.salesOrg || placeholderSpan;
+          const principle = o.principle || placeholderSpan;
           const productionInfo = buildProductionInfo(o);
           const previewCell = buildPreviewCell(o);
 
@@ -12973,7 +12587,7 @@ const __fallbackThemeCSS = `
           const shotType = o.photoStatus || placeholderSpan;
           const photoRef = o.photoReference || placeholderSpan;
           const productionInfo = buildQuickProductionInfo(o);
-          const principle = o.salesOrg || placeholderSpan;
+          const principle = o.principle || placeholderSpan;
           const previewCell = buildQuickPreviewCell(o);
 
           const articleDetailsContent = typeof buildChildDetailsTable === 'function'
@@ -13772,14 +13386,45 @@ const __fallbackThemeCSS = `
                 <input name="title" required style="${inputStyle}" placeholder="e.g., Summer Collection Photography">
               </div>
               <div>
-                <label style="${labelStyle}">Priority</label>
-                <select name="priority" style="${inputStyle}">
-                  <option value="Low">Low</option>
-                  <option value="Medium" selected>Medium</option>
-                  <option value="High">High</option>
-                  <option value="Urgent">Urgent</option>
+                <label style="${labelStyle}">Deadline</label>
+                <input type="date" name="deadline" required style="${inputStyle}">
+              </div>
+              <div>
+                <label style="${labelStyle}">Production</label>
+                <select name="method" required style="${inputStyle}">
+                  <option value="">Select Method...</option>
+                  <option value="Photo Box">Photo Box</option>
+                  <option value="M&B">M&B</option>
+                  <option value="GILS">GILS</option>
+                  <option value="MERRILD">MERRILD</option>
                 </select>
               </div>
+              <div>
+                <label style="${labelStyle}">Template</label>
+                <select name="template" style="${inputStyle}">
+                  <option value="">Select Template...</option>
+                  <option value="Women's Fashion">Women's Fashion</option>
+                  <option value="Men's Fashion">Men's Fashion</option>
+                  <option value="Children Fashion">Children Fashion</option>
+                  <option value="Shoes">Shoes</option>
+                  <option value="Bags & Accessories">Bags & Accessories</option>
+                  <option value="Jewelry & Watches">Jewelry & Watches</option>
+                  <option value="Home">Home</option>
+                  <option value="Beauty">Beauty</option>
+                </select>
+              </div>
+              <div>
+                <label style="${labelStyle}">Budget (SEK)</label>
+                <input type="number" name="budget" min="0" step="100" style="${inputStyle}" placeholder="0">
+              </div>
+              <div>
+                <label style="${labelStyle}">Cost Center</label>
+                <input name="costCenter" style="${inputStyle}" placeholder="e.g. PG-100">
+              </div>
+            </div>
+            <div style="margin-bottom:20px;">
+              <label style="${labelStyle}">Articles (One per line)</label>
+              <textarea name="articles" rows="3" style="${textareaStyle}" placeholder="E.g. Premium Dog Food 2kg [EAN: 123...]"></textarea>
             </div>
             <div style="margin-bottom:20px;">
               <label style="${labelStyle}">Brief & Instructions</label>
@@ -14124,7 +13769,17 @@ const __fallbackThemeCSS = `
       };
 
       // Cost centers
-      const costCenters = ['Bilka.dk', 'Bilka Marketing', 'Føtex', 'Netto', 'PG-100', 'PG-200', 'PG-300', 'PG-400'];
+      const costCenters = [
+        '90500512 Bilka Marketing',
+        '90200512 føtex marketing',
+        '90510512 BR',
+        '90880220 Chilled, Meat & poultry',
+        '90870390 Electronic & Garden',
+        '90870330 Home & Leisure',
+        '90700572 Netto Marketing',
+        '90880110 Product Data Governance',
+        '90740310 Textile'
+      ];
       
       // Shot types
       const shotTypes = ['#13 EMBALLAGE', '#12 FRI OPSTILLING', '#11 PACKSHOT', 'Archive', 'Lifestyle', 'Detail Macro', 'Environment'];
@@ -14211,8 +13866,8 @@ const __fallbackThemeCSS = `
               purchaseGroup: '101', 
               eventId: 'A4025052',
               articles: [
-                'Premium Dog Food 2kg [EAN: 5901234567890]',
-                'Premium Dog Food 5kg [EAN: 5901234567891]'
+                { name: 'Premium Dog Food 2kg [EAN: 5901234567890]', unitOfMeasure: 'EA', netContent: '2000g' },
+                { name: 'Premium Dog Food 5kg [EAN: 5901234567891]', unitOfMeasure: 'EA', netContent: '5000g' }
               ]
             },
             { 
@@ -14223,11 +13878,11 @@ const __fallbackThemeCSS = `
               photographer: 'Emily Chen', 
               method: 'Photo Box', 
               deadline: '2025-09-05', 
-              purchaseGroup: '101', 
+              purchaseGroup: '102', 
               eventId: 'A4125053',
               articles: [
-                'Espresso Beans 500g [EAN: 2001234567892]',
-                'Espresso Beans 1kg [EAN: 2001234567893]'
+                { name: 'Espresso Beans 500g [EAN: 2001234567892]', unitOfMeasure: 'EA', netContent: '500g' },
+                { name: 'Espresso Beans 1kg [EAN: 2001234567893]', unitOfMeasure: 'EA', netContent: '1000g' }
               ]
             },
             { 
@@ -14238,17 +13893,17 @@ const __fallbackThemeCSS = `
               photographer: 'Mike Rodriguez', 
               method: 'M&B', 
               deadline: '2025-09-15', 
-              purchaseGroup: '101', 
+              purchaseGroup: '103', 
               eventId: 'A3825054',
               articles: [
-                { name: 'Wireless Bluetooth Speaker [EAN: 4061234567890]', combinedPhoto: 'AA' },
-                { name: 'USB-C Cable [EAN: 8901234567891]', combinedPhoto: 'BB' },
-                { name: 'Charging Dock [EAN: 8901234567892]', combinedPhoto: 'CC' },
-                { name: 'Protective Case [EAN: 8901234567893]', combinedPhoto: 'DD' },
-                { name: 'User Manual [EAN: 8901234567894]', combinedPhoto: 'EE' },
-                { name: 'Power Adapter [EAN: 8901234567895]', combinedPhoto: 'FF' },
-                { name: 'Aux Cable [EAN: 8901234567896]', combinedPhoto: 'GG' },
-                { name: 'Strap [EAN: 8901234567897]', combinedPhoto: 'HH' }
+                { name: 'Wireless Bluetooth Speaker [EAN: 4061234567890]', combinedPhoto: 'AA', unitOfMeasure: 'EA', netContent: '1' },
+                { name: 'USB-C Cable [EAN: 8901234567891]', combinedPhoto: 'BB', unitOfMeasure: 'EA', netContent: '1' },
+                { name: 'Charging Dock [EAN: 8901234567892]', combinedPhoto: 'CC', unitOfMeasure: 'EA', netContent: '1' },
+                { name: 'Protective Case [EAN: 8901234567893]', combinedPhoto: 'DD', unitOfMeasure: 'EA', netContent: '1' },
+                { name: 'User Manual [EAN: 8901234567894]', combinedPhoto: 'EE', unitOfMeasure: 'EA', netContent: '1' },
+                { name: 'Power Adapter [EAN: 8901234567895]', combinedPhoto: 'FF', unitOfMeasure: 'EA', netContent: '1' },
+                { name: 'Aux Cable [EAN: 8901234567896]', combinedPhoto: 'GG', unitOfMeasure: 'EA', netContent: '1' },
+                { name: 'Strap [EAN: 8901234567897]', combinedPhoto: 'HH', unitOfMeasure: 'EA', netContent: '1' }
               ]
             },
             { 
@@ -14259,11 +13914,11 @@ const __fallbackThemeCSS = `
               photographer: 'Emily Chen', 
               method: 'GILS', 
               deadline: '2025-09-07', 
-              purchaseGroup: '101', 
+              purchaseGroup: '103', 
               eventId: 'A3725055',
               articles: [
-                { name: 'Electric Hedge Trimmer', fileName: 'ENV.000010.jpg' },
-                { name: 'Garden Gloves Set', fileName: 'ENV.000011.jpg' }
+                { name: 'Electric Hedge Trimmer', fileName: 'ENV.000010.jpg', unitOfMeasure: 'EA', netContent: '1' },
+                { name: 'Garden Gloves Set', fileName: 'ENV.000011.jpg', unitOfMeasure: 'EA', netContent: '1' }
               ]
             },
             { 
@@ -14274,14 +13929,113 @@ const __fallbackThemeCSS = `
               photographer: 'Emily Chen', 
               method: 'Photo Box', 
               deadline: '2025-09-04', 
-              purchaseGroup: '101', 
+              purchaseGroup: '105', 
               eventId: 'A3925056',
               articles: [
-                { name: 'Organic Penne Pasta 500g', combinedPhoto: 'CC' },
-                { name: 'Organic Linguine 400g', combinedPhoto: 'CC' },
-                { name: 'Organic Fusilli 500g', combinedPhoto: 'CC' },
-                { name: 'Organic Spaghetti 500g', combinedPhoto: 'CC' },
-                { name: 'Organic Lasagna Sheets 250g', combinedPhoto: 'CC' }
+                { name: 'Organic Penne Pasta 500g', combinedPhoto: 'CC', unitOfMeasure: 'EA', netContent: '500g' },
+                { name: 'Organic Linguine 400g', combinedPhoto: 'CC', unitOfMeasure: 'EA', netContent: '400g' },
+                { name: 'Organic Fusilli 500g', combinedPhoto: 'CC', unitOfMeasure: 'EA', netContent: '500g' },
+                { name: 'Organic Spaghetti 500g', combinedPhoto: 'CC', unitOfMeasure: 'EA', netContent: '500g' },
+                { name: 'Organic Lasagna Sheets 250g', combinedPhoto: 'CC', unitOfMeasure: 'EA', netContent: '250g' }
+              ]
+            },
+            { 
+              orderNumber: 'ORD-2025-006', 
+              title: 'Frozen Pizza Selection', 
+              status: 'In Progress', 
+              priority: 'High', 
+              photographer: 'Sarah Jones', 
+              method: 'MERRILD', 
+              deadline: '2025-09-10', 
+              purchaseGroup: '106', 
+              eventId: 'A4225057',
+              articles: [
+                { name: 'Pepperoni Pizza 350g', unitOfMeasure: 'EA', netContent: '350g' },
+                { name: 'Margherita Pizza 330g', unitOfMeasure: 'EA', netContent: '330g' },
+                { name: 'Vegetable Pizza 360g', unitOfMeasure: 'EA', netContent: '360g' }
+              ]
+            },
+            { 
+              orderNumber: 'ORD-2025-007', 
+              title: 'Chocolate Assortment', 
+              status: 'New', 
+              priority: 'Low', 
+              photographer: 'Mike Rodriguez', 
+              method: 'Photo Box', 
+              deadline: '2025-09-20', 
+              purchaseGroup: '104', 
+              eventId: 'A4325058',
+              articles: [
+                { name: 'Dark Chocolate Bar 100g', unitOfMeasure: 'EA', netContent: '100g' },
+                { name: 'Milk Chocolate Bar 100g', unitOfMeasure: 'EA', netContent: '100g' },
+                { name: 'Hazelnut Chocolate Bar 100g', unitOfMeasure: 'EA', netContent: '100g' },
+                { name: 'White Chocolate Bar 100g', unitOfMeasure: 'EA', netContent: '100g' }
+              ]
+            },
+            { 
+              orderNumber: 'ORD-2025-008', 
+              title: 'Cat Food Pouches', 
+              status: 'Samples Requested', 
+              priority: 'Medium', 
+              photographer: 'Emily Chen', 
+              method: 'Photo Box', 
+              deadline: '2025-09-12', 
+              purchaseGroup: '101', 
+              eventId: 'A4425059',
+              articles: [
+                { name: 'Chicken in Gravy 85g', unitOfMeasure: 'EA', netContent: '85g' },
+                { name: 'Salmon in Jelly 85g', unitOfMeasure: 'EA', netContent: '85g' },
+                { name: 'Beef Chunks 85g', unitOfMeasure: 'EA', netContent: '85g' }
+              ]
+            },
+            { 
+              orderNumber: 'ORD-2025-009', 
+              title: 'Breakfast Cereal Campaign', 
+              status: 'Approved', 
+              priority: 'High', 
+              photographer: 'Sarah Jones', 
+              method: 'GILS', 
+              deadline: '2025-09-08', 
+              purchaseGroup: '105', 
+              eventId: 'A4525060',
+              articles: [
+                { name: 'Corn Flakes 500g', unitOfMeasure: 'EA', netContent: '500g' },
+                { name: 'Oat Clusters 450g', unitOfMeasure: 'EA', netContent: '450g' }
+              ]
+            },
+            { 
+              orderNumber: 'ORD-2025-010', 
+              title: 'Mega Confectionary Launch', 
+              status: 'In Progress', 
+              priority: 'Critical', 
+              photographer: 'Mike Rodriguez', 
+              method: 'M&B', 
+              deadline: '2025-09-01', 
+              purchaseGroup: '104', 
+              eventId: 'A4625061',
+              articles: [
+                { name: 'Gummy Bears 200g', unitOfMeasure: 'EA', netContent: '200g' },
+                { name: 'Sour Worms 200g', unitOfMeasure: 'EA', netContent: '200g' },
+                { name: 'Cola Bottles 200g', unitOfMeasure: 'EA', netContent: '200g' },
+                { name: 'Fruit Chews 150g', unitOfMeasure: 'EA', netContent: '150g' },
+                { name: 'Lollipops Mixed 300g', unitOfMeasure: 'EA', netContent: '300g' },
+                { name: 'Marshmallows 250g', unitOfMeasure: 'EA', netContent: '250g' },
+                { name: 'Chocolate Buttons 120g', unitOfMeasure: 'EA', netContent: '120g' },
+                { name: 'Jelly Beans 180g', unitOfMeasure: 'EA', netContent: '180g' },
+                { name: 'Licorice Allsorts 200g', unitOfMeasure: 'EA', netContent: '200g' },
+                { name: 'Peppermint Creams 150g', unitOfMeasure: 'EA', netContent: '150g' },
+                { name: 'Toffee Eclairs 200g', unitOfMeasure: 'EA', netContent: '200g' },
+                { name: 'Fudge Cubes 150g', unitOfMeasure: 'EA', netContent: '150g' },
+                { name: 'Bubblegum Balls 100g', unitOfMeasure: 'EA', netContent: '100g' },
+                { name: 'Sherbet Lemons 120g', unitOfMeasure: 'EA', netContent: '120g' },
+                { name: 'Rhubarb & Custard 120g', unitOfMeasure: 'EA', netContent: '120g' },
+                { name: 'Pear Drops 120g', unitOfMeasure: 'EA', netContent: '120g' },
+                { name: 'Chocolate Raisins 150g', unitOfMeasure: 'EA', netContent: '150g' },
+                { name: 'Chocolate Peanuts 150g', unitOfMeasure: 'EA', netContent: '150g' },
+                { name: 'Mint Humbugs 120g', unitOfMeasure: 'EA', netContent: '120g' },
+                { name: 'Butterscotch 120g', unitOfMeasure: 'EA', netContent: '120g' },
+                { name: 'Fruit Pastilles 150g', unitOfMeasure: 'EA', netContent: '150g' },
+                { name: 'Wine Gums 180g', unitOfMeasure: 'EA', netContent: '180g' }
               ]
             }
           ];
@@ -18037,13 +17791,14 @@ const __fallbackThemeCSS = `
       const newOrder = {
         orderNumber: 'ORD-' + Date.now(),
         title: formData.get('title'),
-        priority: formData.get('priority'),
+        priority: formData.get('priority') || 'Medium',
         method: formData.get('method'),
         brief: formData.get('brief'),
         status: 'New',
         photographer: formData.get('photographer') || 'Not Assigned',
         deadline: formData.get('deadline'),
         budget: formData.get('budget') || 0,
+        costCenter: formData.get('costCenter') || '',
         createdBy: currentUser.id,
         createdAt: new Date().toISOString(),
         assignedTo: formData.get('photographer') ? formData.get('photographer').replace(/\s*\(.*\)/, '') : null,
@@ -18056,7 +17811,7 @@ const __fallbackThemeCSS = `
   photoReference: selectedPhotoReference || null,
   imageRequestId: rawImageRequestInput,
         photoStatus: 'New',
-        articles: formData.get('articles') ? formData.get('articles').split('\n').filter(a => a.trim()) : [],
+        articles: processArticlesWithTemplate(formData.get('articles'), formData.get('template')),
         deliverables: ['Product Photography'],
         comments: []
       };
