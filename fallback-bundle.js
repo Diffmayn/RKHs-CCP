@@ -9,7 +9,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING... Updated: ' + new Date().t
   
   // Global feature flags
   var featureFlags = (typeof window !== 'undefined' && window.featureFlags) ? window.featureFlags : {};
-  featureFlags.gpt5CodexPreview = true;
+  featureFlags.gpt5CodexPreview = false;
   featureFlags.gpt5CodexRollout = 'preview';
   featureFlags.gpt5CodexAudience = 'all-clients';
   if (typeof window !== 'undefined') {
@@ -1757,8 +1757,8 @@ const __fallbackThemeCSS = `
 
     if (!window.__GPT5_ANNOUNCED__) {
       window.__GPT5_ANNOUNCED__ = true;
-      console.log('🧠 GPT-5 Codex (Preview) is enabled for all clients.');
-      showToast('🧠 GPT-5 Codex (Preview) is now enabled for all clients.', 'success');
+      // console.log('🧠 GPT-5 Codex (Preview) is enabled for all clients.');
+      // showToast('🧠 GPT-5 Codex (Preview) is now enabled for all clients.', 'success');
     }
 
   // Authentication System
@@ -2250,15 +2250,12 @@ const __fallbackThemeCSS = `
   }
 
   const purchaseGroups = orderHelpers?.PURCHASE_GROUPS || {
-    100: 'Groceries',
-    200: 'Fresh Products',
-    300: 'Electronics',
-    400: 'Home & Garden',
-    500: 'Fashion',
-    600: 'Health & Beauty',
-    700: 'Sports & Leisure',
-    800: 'Automotive',
-    900: 'Baby & Kids'
+    101: 'Petfood',
+    102: 'Coffee/Tea',
+    103: 'Groceries',
+    104: 'Confectionary',
+    105: 'Dry Food',
+    106: 'Frozen'
   };
 
   const createNormalizedArticle = orderHelpers?.createNormalizedArticle
@@ -2314,7 +2311,32 @@ const __fallbackThemeCSS = `
 
   const renderArticleCards = orderHelpers?.renderArticleCards
     ? (...args) => orderHelpers.renderArticleCards(...args)
-    : () => '<div style="padding:16px;background:rgba(255, 250, 243, 0.8);border:1px dashed rgba(196, 139, 90, 0.4);border-radius:12px;color:#6b5440;font-size:13px;">No article details available for this order.</div>';
+    : (articles) => {
+        if (!Array.isArray(articles) || articles.length === 0) {
+          return '<div style="padding:16px;background:rgba(255, 250, 243, 0.8);border:1px dashed rgba(196, 139, 90, 0.4);border-radius:12px;color:#6b5440;font-size:13px;">No article details available for this order.</div>';
+        }
+        
+        return articles.map(article => {
+          const raw = article.raw || {};
+          const articleNumber = article.articleNumber || raw.articleNumber || 'N/A';
+          const name = article.name || raw.articleName || 'Unknown Article';
+          const uom = article.unitOfMeasure || raw.unitOfMeasure || 'EA';
+          const netContent = article.netContent || raw.netContent || 'N/A';
+          
+          return `
+            <div style="padding:12px;background:rgba(255, 255, 255, 0.9);border:1px solid rgba(196, 139, 90, 0.2);border-radius:8px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;">
+              <div>
+                <div style="font-weight:600;color:#3a2a1d;font-size:13px;">${name}</div>
+                <div style="font-size:11px;color:#7c6248;margin-top:2px;">ID: ${articleNumber}</div>
+              </div>
+              <div style="text-align:right;">
+                <div style="font-size:11px;color:#7c6248;background:rgba(196, 139, 90, 0.1);padding:2px 6px;border-radius:4px;display:inline-block;">${uom}</div>
+                <div style="font-size:11px;color:#7c6248;margin-top:2px;">${netContent}</div>
+              </div>
+            </div>
+          `;
+        }).join('');
+    };
 
   window.purchaseGroups = purchaseGroups;
 
@@ -4635,6 +4657,103 @@ const __fallbackThemeCSS = `
     }
   ];
 
+  // Migration for new status values
+  const statusMigrationMap = {
+    'Draft': 'Order Created',
+    'New Request': 'Order Created',
+    'Samples Requested': 'Sample ordered',
+    'In Progress': 'Ordered',
+    'Approved': 'Image Ready for use',
+    'Complete': 'Image Ready for use',
+    'Delivered': 'Image Ready for use',
+    'Pending Approval': 'Ordered',
+    'Photo Session': 'Ordered',
+    'Archive': 'Image Ready for use'
+  };
+
+  // Migration for purchase groups
+  const purchaseGroupMigrationMap = {
+    100: 103, // Groceries -> Groceries
+    200: 103, // Fresh Products -> Groceries (fallback)
+    300: 103, // Electronics -> Groceries (fallback)
+    400: 103, // Home & Garden -> Groceries (fallback)
+    500: 103, // Fashion -> Groceries (fallback)
+    600: 103, // Health & Beauty -> Groceries (fallback)
+    700: 103, // Sports & Leisure -> Groceries (fallback)
+    800: 103, // Automotive -> Groceries (fallback)
+    900: 101  // Baby & Kids -> Petfood (just assigning to first valid one for now as mapping is unclear, or maybe 103)
+  };
+
+  // Randomly assign new purchase groups to existing orders for variety if they don't match
+  const validPurchaseGroups = [101, 102, 103, 104, 105, 106];
+  
+  const validContentTypes = [
+    'Packshot',
+    'Product Group Shot (Transparent Background)',
+    'Product Group Shot (Miljø)',
+    'Model Shot (Transparent Background)',
+    'Model Shot (Miljø)',
+    'Detail Shot (Transparent Background)',
+    'Detail Shot (Miljø)',
+    'Premium (Transparent Background)'
+  ];
+
+  if (Array.isArray(allOrders)) {
+    allOrders.forEach((order, index) => {
+      if (statusMigrationMap[order.status]) {
+        order.status = statusMigrationMap[order.status];
+      }
+      // Also migrate photoStatus if needed, though not explicitly requested, it keeps things consistent
+      if (statusMigrationMap[order.photoStatus]) {
+        order.photoStatus = statusMigrationMap[order.photoStatus];
+      }
+
+      // Update Purchase Group
+      // If it's one of the old ones, map it or assign a valid one
+      if (!validPurchaseGroups.includes(order.purchaseGroup)) {
+         // Assign a valid purchase group based on index to distribute them
+         order.purchaseGroup = validPurchaseGroups[index % validPurchaseGroups.length];
+      }
+
+      // Update child level (articles) if they have purchaseGroup
+      if (Array.isArray(order.articles)) {
+        order.articles.forEach((article, artIndex) => {
+            if (article && typeof article === 'object' && article.purchaseGroup) {
+                 if (!validPurchaseGroups.includes(article.purchaseGroup)) {
+                     article.purchaseGroup = order.purchaseGroup; // Sync with order
+                 }
+            }
+             // Also check raw property if it exists
+            if (article && typeof article === 'object' && article.raw && article.raw.purchaseGroup) {
+                 if (!validPurchaseGroups.includes(article.raw.purchaseGroup)) {
+                     article.raw.purchaseGroup = order.purchaseGroup;
+                 }
+            }
+
+            // Update Content Type
+            const ensureValidContentType = (obj, prop) => {
+                if (!obj[prop] || !validContentTypes.includes(obj[prop])) {
+                    // Assign a deterministic but varied content type based on order index and article index
+                    // But mostly Packshot as it's the most common
+                    if ((index + artIndex) % 4 === 0) {
+                         obj[prop] = validContentTypes[(index + artIndex) % validContentTypes.length];
+                    } else {
+                         obj[prop] = 'Packshot';
+                    }
+                }
+            };
+
+            if (article && typeof article === 'object') {
+                ensureValidContentType(article, 'contentType');
+                if (article.raw) {
+                    ensureValidContentType(article.raw, 'contentType');
+                }
+            }
+        });
+      }
+    });
+  }
+
   ensureArticlesHaveFileNames(allOrders);
   ensureOrderPreviewImages(allOrders);
   ensureOrderPhotoMetadata(allOrders);
@@ -5514,8 +5633,12 @@ const __fallbackThemeCSS = `
                         <label style="display: block; font-size: 11px; font-weight: 600; color: #85694c; margin-bottom: 4px;">Purchase Group</label>
                         <select id="filterPurchaseGroup" class="filter-select" style="width: 100%; padding: 6px; border-radius: 6px; border: 1px solid #ead7c2; background: rgba(255, 255, 255, 0.5); color: #4b3b2a;">
                           <option value="">All</option>
-                          <option value="PG01">PG01 - Textiles</option>
-                          <option value="PG02">PG02 - Hard Goods</option>
+                          <option value="101">101 - Petfood</option>
+                          <option value="102">102 - Coffee/Tea</option>
+                          <option value="103">103 - Groceries</option>
+                          <option value="104">104 - Confectionary</option>
+                          <option value="105">105 - Dry Food</option>
+                          <option value="106">106 - Frozen</option>
                         </select>
                       </div>
 
@@ -9465,17 +9588,13 @@ const __fallbackThemeCSS = `
 
     const ARTICLE_CONTENT_TYPE_OPTIONS = [
       'Packshot',
-      'Hero',
-      'Lifestyle',
-      'Detail',
-      'Editorial',
-      'Campaign',
-      'Social',
-      'Video',
-      'Front Packshot',
-      'Back Packshot',
-      'Packshot facing Right',
-      'Packshot Facing Left'
+      'Product Group Shot (Transparent Background)',
+      'Product Group Shot (Miljø)',
+      'Model Shot (Transparent Background)',
+      'Model Shot (Miljø)',
+      'Detail Shot (Transparent Background)',
+      'Detail Shot (Miljø)',
+      'Premium (Transparent Background)'
     ];
     const DEFAULT_ARTICLE_CONTENT_TYPE = ARTICLE_CONTENT_TYPE_OPTIONS[0];
 
@@ -10031,7 +10150,7 @@ const __fallbackThemeCSS = `
         photographer: formData.get('photographer') || null,
         brief: formData.get('brief'),
         articles: articleEntries,
-        status: 'Draft',
+        status: 'Order Created',
         createdBy: currentUser.name,
         createdDate: new Date().toLocaleDateString(),
         updatedAt: new Date().toISOString(),
@@ -10918,21 +11037,13 @@ const __fallbackThemeCSS = `
             ? window.rkhOrders
             : (typeof allOrders !== 'undefined' ? allOrders : []));
 
-      console.log('[DEBUG] Base orders count:', baseOrders.length);
-      console.log('[DEBUG] Available order numbers:', baseOrders.map(o => o.orderNumber));
-
       // Prefer finding from base orders so we mutate the canonical object
       let order = baseOrders.find(o => String(o.orderNumber) === String(orderNumber));
-
-      console.log('[DEBUG] Found order in base orders:', !!order);
 
       if (!order && window.authSystem && typeof authSystem.getFilteredOrders === 'function') {
         try {
           const filtered = authSystem.getFilteredOrders(baseOrders) || [];
-          console.log('[DEBUG] Filtered orders count:', filtered.length);
-          console.log('[DEBUG] Filtered order numbers:', filtered.map(o => o.orderNumber));
           order = filtered.find(o => String(o.orderNumber) === String(orderNumber)) || order;
-          console.log('[DEBUG] Found order in filtered orders:', !!order);
         } catch (err) {
           console.error('[Orders] Unable to resolve order from filtered list:', err);
         }
@@ -10945,22 +11056,13 @@ const __fallbackThemeCSS = `
       }
 
       console.log('[DEBUG] Opening modal for order:', order.orderNumber, order.title);
+      console.log('[DEBUG] Articles for modal:', order.articles);
 
       const safeAuth = window.authSystem || {};
       const currentUser = typeof safeAuth.getCurrentUser === 'function' ? safeAuth.getCurrentUser() : { name: 'Guest', role: 'viewer' };
       const canManageOrders = typeof safeAuth.canManageOrders === 'function' ? safeAuth.canManageOrders() : false;
       const canAssignWork = typeof safeAuth.canAssignWork === 'function' ? safeAuth.canAssignWork() : false;
       const canEditOrder = typeof safeAuth.canEditOrder === 'function' ? safeAuth.canEditOrder(order) : (canManageOrders || canAssignWork);
-
-      const statusOptions = [
-        'Draft',
-        'New Request',
-        'Samples Requested',
-        'In Progress',
-        'Approved',
-        'Complete',
-        'Delivered'
-      ];
 
       const teamMembers = [
         'Unassigned',
@@ -10975,181 +11077,148 @@ const __fallbackThemeCSS = `
 
       const modal = document.createElement('div');
       modal.className = 'order-details-modal';
-      modal.style.cssText = 'position:fixed;inset:0;background:rgba(46,34,23,0.55);display:flex;align-items:center;justify-content:center;z-index:1000;padding:32px 18px;';
+      modal.style.cssText = 'position:fixed;inset:0;background:rgba(46,34,23,0.55);display:flex;align-items:center;justify-content:center;z-index:1000;padding:20px;';
 
       const articlesMarkup = renderArticleCards(order.articles);
       const articlesCount = Array.isArray(order.articles) ? order.articles.length : 0;
       const assignedOwner = order.photographer || 'Unassigned';
       const salesOrgLabel = order.salesOrg || 'Not set';
-      const budgetMarkup = order.budget ? `<div style="display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-radius:10px;background:rgba(255,255,255,0.6);margin-top:10px;border:1px solid rgba(196,139,90,0.25);"><span style="font-size:12px;letter-spacing:0.05em;color:#82694c;text-transform:uppercase;">Budget</span><span style="font-weight:600;color:#3a2a1d;">${order.budget}</span></div>` : '';
+      const budgetMarkup = order.budget ? `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;border-radius:8px;background:rgba(255,255,255,0.6);margin-top:8px;border:1px solid rgba(196,139,90,0.25);"><span style="font-size:11px;letter-spacing:0.05em;color:#82694c;text-transform:uppercase;">Budget</span><span style="font-weight:600;color:#3a2a1d;font-size:13px;">${order.budget}</span></div>` : '';
+      
       const eventOrBriefBlock = order.eventId ? `
-          <div style="padding:20px;border-radius:16px;background:rgba(254,243,199,0.85);border:1px solid rgba(212,163,94,0.35);box-shadow:0 18px 36px rgba(62,44,30,0.12);">
-            <h3 style="margin:0 0 16px;font-size:16px;color:#3b2b1a;display:flex;align-items:center;gap:8px;font-weight:700;">🏢 SAP PMR Integration</h3>
-            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;font-size:13px;color:#3b2b1a;">
+          <div style="padding:14px;border-radius:12px;background:rgba(254,243,199,0.85);border:1px solid rgba(212,163,94,0.35);box-shadow:0 10px 20px rgba(62,44,30,0.08);">
+            <h3 style="margin:0 0 10px;font-size:14px;color:#3b2b1a;display:flex;align-items:center;gap:6px;font-weight:700;">🏢 SAP PMR Integration</h3>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:8px;font-size:12px;color:#3b2b1a;">
               <div><strong>Event ID:</strong> ${order.eventId}</div>
-              <div><strong>Purchase Group:</strong> ${order.purchaseGroup} - ${(typeof purchaseGroups !== 'undefined' && purchaseGroups) ? (purchaseGroups[order.purchaseGroup] || 'Unknown') : 'Unknown'}</div>
+              <div><strong>Purchase Group:</strong> ${order.purchaseGroup}</div>
               <div><strong>Offer ID:</strong> ${order.offerId || 'N/A'}</div>
               <div><strong>Article Number:</strong> ${order.articleNumber || 'N/A'}</div>
               <div><strong>Image Request ID:</strong> ${order.imageRequestId || 'N/A'}</div>
-              <div><strong>Photo Status:</strong> <span style="display:inline-flex;align-items:center;padding:4px 10px;border-radius:999px;background:#${order.photoStatus === 'Archive' ? '10b981' : order.photoStatus === 'New Shoot - Photo Box' ? '3b82f6' : 'f59e0b'};color:white;font-size:12px;">${order.photoStatus || 'Not Set'}</span></div>
+              <div><strong>Photo Status:</strong> <span style="display:inline-flex;align-items:center;padding:2px 8px;border-radius:999px;background:#${order.photoStatus === 'Archive' ? '10b981' : order.photoStatus === 'New Shoot - Photo Box' ? '3b82f6' : 'f59e0b'};color:white;font-size:11px;">${order.photoStatus || 'Not Set'}</span></div>
               ${order.cloudinaryUrl ? `<div><strong>Cloudinary:</strong> <a href="${order.cloudinaryUrl}" target="_blank" style="color:#b15d1d;">View Image</a></div>` : ''}
             </div>
           </div>
         ` : '';
         
       const briefBlock = order.brief ? `
-          <div style="padding:20px;border-radius:16px;background:rgba(253,250,246,0.85);border:1px solid rgba(196,139,90,0.35);box-shadow:0 18px 36px rgba(62,44,30,0.12);">
-            <h3 style="margin:0 0 12px;font-size:16px;color:#3b2b1a;font-weight:700;">📝 Creative Brief</h3>
-            <div style="font-size:14px;line-height:1.6;color:#3b2b1a;white-space:pre-wrap;">${order.brief}</div>
+          <div style="padding:14px;border-radius:12px;background:rgba(253,250,246,0.85);border:1px solid rgba(196,139,90,0.35);">
+            <h3 style="margin:0 0 8px;font-size:14px;color:#3b2b1a;font-weight:700;">📝 Creative Brief</h3>
+            <div style="font-size:13px;line-height:1.5;color:#3b2b1a;white-space:pre-wrap;">${order.brief}</div>
           </div>
         ` : '';
 
       const uploadFormMarkup = canEditOrder ? `
-            <div style="background:rgba(255,255,255,0.9);padding:16px;border-radius:12px;margin-bottom:16px;border:2px dashed rgba(196,139,90,0.4);">
-              <div style="text-align:center;color:#6b5440;margin-bottom:12px;">
-                <span style="font-size:24px;">📸</span>
-                <div style="margin-top:6px;font-size:13px;">Upload content for this order</div>
+            <div style="background:rgba(255,255,255,0.9);padding:12px;border-radius:10px;margin-bottom:12px;border:2px dashed rgba(196,139,90,0.4);">
+              <div style="text-align:center;color:#6b5440;margin-bottom:8px;">
+                <span style="font-size:20px;">📸</span>
+                <div style="margin-top:4px;font-size:12px;">Upload content</div>
               </div>
-              <input type="file" id="contentUpload-${orderNumber}" accept="image/*,video/*,.pdf,.zip,.rar" multiple style="width:100%;padding:10px;border:1px solid rgba(196,139,90,0.4);border-radius:10px;font-size:13px;margin-bottom:12px;background:rgba(255,255,255,0.95);">
+              <input type="file" id="contentUpload-${orderNumber}" accept="image/*,video/*,.pdf,.zip,.rar" multiple style="width:100%;padding:8px;border:1px solid rgba(196,139,90,0.4);border-radius:8px;font-size:12px;margin-bottom:8px;background:rgba(255,255,255,0.95);">
               <div style="text-align:right;">
-                <button onclick="uploadContent('${orderNumber}')" style="background:#7fa284;color:white;border:none;padding:8px 18px;border-radius:10px;cursor:pointer;font-size:13px;font-weight:600;">Upload Files</button>
+                <button onclick="uploadContent('${orderNumber}')" style="background:#7fa284;color:white;border:none;padding:6px 14px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:600;">Upload</button>
               </div>
             </div>
           ` : '';
 
       const uploadedContentMarkup = order.uploadedContent && order.uploadedContent.length
         ? order.uploadedContent.map((file, index) => `
-          <div style="background:white;padding:14px;border-radius:12px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;border-left:4px solid #7fa284;box-shadow:0 8px 16px rgba(62,44,30,0.08);">
-            <div style="display:flex;align-items:center;gap:12px;">
-              <div style="font-size:24px;">${file.type.startsWith('image/') ? '🖼️' : file.type.startsWith('video/') ? '🎥' : file.type === 'application/pdf' ? '📄' : '📁'}</div>
+          <div style="background:white;padding:10px;border-radius:10px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;border-left:3px solid #7fa284;box-shadow:0 4px 8px rgba(62,44,30,0.05);">
+            <div style="display:flex;align-items:center;gap:10px;">
+              <div style="font-size:20px;">${file.type.startsWith('image/') ? '🖼️' : file.type.startsWith('video/') ? '🎥' : file.type === 'application/pdf' ? '📄' : '📁'}</div>
               <div>
-                <div style="font-weight:600;color:#3a2a1d;">${file.name}</div>
-                <div style="font-size:12px;color:#7c6248;">${(file.size / 1024 / 1024).toFixed(2)} MB • Uploaded by ${file.uploadedBy} • ${new Date(file.uploadedAt).toLocaleDateString()}</div>
+                <div style="font-weight:600;color:#3a2a1d;font-size:13px;">${file.name}</div>
+                <div style="font-size:11px;color:#7c6248;">${(file.size / 1024 / 1024).toFixed(2)} MB • ${file.uploadedBy}</div>
               </div>
             </div>
-            <div style="display:flex;gap:8px;">
-              <button onclick="previewContent('${orderNumber}', ${index})" style="background:#c48b5a;color:white;border:none;padding:6px 12px;border-radius:8px;cursor:pointer;font-size:12px;">Preview</button>
-              <button onclick="downloadContent('${orderNumber}', ${index})" style="background:#6b5440;color:white;border:none;padding:6px 12px;border-radius:8px;cursor:pointer;font-size:12px;">Download</button>
+            <div style="display:flex;gap:6px;">
+              <button onclick="previewContent('${orderNumber}', ${index})" style="background:#c48b5a;color:white;border:none;padding:4px 10px;border-radius:6px;cursor:pointer;font-size:11px;">Preview</button>
+              <button onclick="downloadContent('${orderNumber}', ${index})" style="background:#6b5440;color:white;border:none;padding:4px 10px;border-radius:6px;cursor:pointer;font-size:11px;">Download</button>
             </div>
           </div>
         `).join('')
-        : '<div style="text-align:center;color:#7c6248;font-style:italic;padding:20px;">No content uploaded yet</div>';
+        : '<div style="text-align:center;color:#7c6248;font-style:italic;padding:12px;font-size:12px;">No content uploaded yet</div>';
 
       const comments = order.comments || [];
       const commentsMarkup = comments.length
         ? comments.map(comment => `
-          <div style="background:white;padding:16px;border-radius:12px;margin-bottom:10px;border-left:4px solid #c48b5a;box-shadow:0 8px 16px rgba(62,44,30,0.08);">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-              <div style="font-weight:600;color:#3a2a1d;">${comment.userName} <span style="font-size:12px;color:#7c6248;">(${comment.userRole})</span></div>
-              <div style="font-size:12px;color:#7c6248;">${new Date(comment.createdAt).toLocaleDateString()} ${new Date(comment.createdAt).toLocaleTimeString()}</div>
+          <div style="background:white;padding:12px;border-radius:10px;margin-bottom:8px;border-left:3px solid #c48b5a;box-shadow:0 4px 8px rgba(62,44,30,0.05);">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+              <div style="font-weight:600;color:#3a2a1d;font-size:13px;">${comment.userName} <span style="font-size:11px;color:#7c6248;">(${comment.userRole})</span></div>
+              <div style="font-size:11px;color:#7c6248;">${new Date(comment.createdAt).toLocaleDateString()}</div>
             </div>
-            <div style="color:#3a2a1d;line-height:1.5;">${comment.message}</div>
+            <div style="color:#3a2a1d;line-height:1.4;font-size:13px;">${comment.message}</div>
           </div>
         `).join('')
-        : '<div style="text-align:center;color:#7c6248;font-style:italic;padding:20px;">No comments yet</div>';
+        : '<div style="text-align:center;color:#7c6248;font-style:italic;padding:12px;font-size:12px;">No comments yet</div>';
 
       modal.innerHTML = `
-        <div style="position:relative;width:min(820px,95vw);max-height:88vh;overflow-y:auto;border-radius:18px;padding:36px 32px 30px;background:linear-gradient(135deg,rgba(255,255,255,0.96),rgba(249,245,240,0.92));box-shadow:0 40px 70px rgba(34,25,18,0.3);border:1px solid rgba(194,147,104,0.4);backdrop-filter:blur(26px);display:flex;flex-direction:column;gap:28px;">
-          <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:16px;">
+        <div style="position:relative;width:min(700px,95vw);max-height:90vh;overflow-y:auto;border-radius:16px;padding:24px;background:linear-gradient(135deg,rgba(255,255,255,0.98),rgba(252,250,247,0.95));box-shadow:0 25px 50px rgba(34,25,18,0.25);border:1px solid rgba(194,147,104,0.3);backdrop-filter:blur(20px);display:flex;flex-direction:column;gap:16px;">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;">
             <div style="flex:1;min-width:0;">
-              <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8a6d4c;font-weight:600;">${salesOrgLabel} · ${order.orderNumber}</div>
-              <h2 style="margin:10px 0 12px;font-size:28px;color:#372614;font-weight:700;line-height:1.2;">${order.title}</h2>
-              <div style="display:flex;align-items:center;gap:12px;font-size:13px;color:#715b43;">
+              <div style="font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#8a6d4c;font-weight:600;">${salesOrgLabel} · ${order.orderNumber}</div>
+              <h2 style="margin:6px 0 8px;font-size:22px;color:#372614;font-weight:700;line-height:1.2;">${order.title}</h2>
+              <div style="display:flex;align-items:center;gap:10px;font-size:12px;color:#715b43;">
                 <span>Created ${order.createdDate}</span>
-                <span style="width:6px;height:6px;border-radius:50%;background:#c48b5a;display:inline-block;"></span>
+                <span style="width:4px;height:4px;border-radius:50%;background:#c48b5a;display:inline-block;"></span>
                 <span>Deadline ${order.deadline}</span>
               </div>
             </div>
-            <button onclick="this.closest('.order-details-modal').remove()" style="background:rgba(255,255,255,0.45);border:1px solid rgba(117,90,58,0.25);width:42px;height:42px;border-radius:12px;color:#5c4631;font-size:24px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(12px);">×</button>
+            <button onclick="this.closest('.order-details-modal').remove()" style="background:rgba(255,255,255,0.5);border:1px solid rgba(117,90,58,0.2);width:32px;height:32px;border-radius:8px;color:#5c4631;font-size:20px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;">×</button>
           </div>
 
-          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;">
-            <div style="padding:18px;border-radius:14px;background:rgba(255,255,255,0.7);border:1px solid rgba(196,139,90,0.25);box-shadow:0 16px 30px rgba(62,44,30,0.12);">
-              <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.12em;color:#7c6248;font-weight:600;">Status</div>
-              <div style="margin-top:10px;">
-                <span class="status ${order.status.replace(/\s+/g, '')}" style="display:inline-flex;align-items:center;padding:6px 12px;border-radius:999px;font-size:12px;">${order.status}</span>
-              </div>
-            </div>
-          </div>
-
-          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:26px;align-items:start;">
-            <div>
-              <div style="padding:18px;border-radius:14px;background:rgba(255,255,255,0.78);border:1px solid rgba(196,139,90,0.25);box-shadow:0 12px 24px rgba(62,44,30,0.1);display:flex;flex-direction:column;gap:10px;">
-                <div style="display:flex;justify-content:space-between;color:#7c6248;font-weight:600;">Created By<span style="color:#3a2a1d;font-weight:600;">${order.createdBy}</span></div>
-                <div style="display:flex;justify-content:space-between;color:#7c6248;font-weight:600;">Order Type<span style="color:#3a2a1d;font-weight:600;">${order.orderType || 'Standard'}</span></div>
-                <div style="display:flex;justify-content:space-between;color:#7c6248;font-weight:600;">Sales Org<span style="color:#3a2a1d;font-weight:600;">${salesOrgLabel}</span></div>
-                ${order.channel ? `<div style="display:flex;justify-content:space-between;color:#7c6248;font-weight:600;">Channel<span style="color:#3a2a1d;font-weight:600;">${order.channel}</span></div>` : ''}
-              </div>
-              ${budgetMarkup}
-            </div>
-            <div style="padding:20px;border-radius:16px;background:rgba(253,250,246,0.85);border:1px solid rgba(196,139,90,0.35);box-shadow:0 18px 36px rgba(62,44,30,0.12);">
-              <h3 style="margin:0 0 16px;font-size:16px;color:#3b2b1a;display:flex;align-items:center;gap:8px;font-weight:700;">Workflow Controls</h3>
-              <div style="margin-bottom:16px;font-size:13px;color:#6f583f;">
-                <strong style="display:block;color:#3a2a1d;margin-bottom:6px;">Current Status</strong>
-                <span class="status ${order.status.replace(/\s+/g, '')}" style="display:inline-flex;align-items:center;padding:6px 12px;border-radius:999px;font-size:12px;">${order.status}</span>
-              </div>
-              ${canManageOrders ? `
-                <div style="margin-bottom:18px;">
-                  <label for="statusSelect_${orderNumber}" style="display:block;font-size:12px;text-transform:uppercase;letter-spacing:0.1em;color:#7c6248;font-weight:600;margin-bottom:6px;">Update Status</label>
-                  <select id="statusSelect_${orderNumber}" style="width:100%;padding:10px 12px;border:1px solid rgba(148,109,71,0.35);border-radius:10px;background:rgba(255,255,255,0.9);color:#3a2a1d;font-size:14px;">
-                    ${statusOptions.map(status => `<option value="${status}" ${status === order.status ? 'selected' : ''}>${status}</option>`).join('')}
-                  </select>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;align-items:start;">
+            <div style="padding:14px;border-radius:12px;background:rgba(255,255,255,0.6);border:1px solid rgba(196,139,90,0.2);display:flex;flex-direction:column;gap:8px;">
+                <div style="display:flex;justify-content:space-between;align-items:center;color:#7c6248;font-weight:600;font-size:13px;">Status
+                  <span class="status ${order.status.replace(/\s+/g, '')}" style="display:inline-flex;align-items:center;padding:2px 8px;border-radius:999px;font-size:11px;">${order.status}</span>
                 </div>
-              ` : ''}
-              <div style="margin-bottom:18px;">
-                <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.1em;color:#7c6248;font-weight:600;margin-bottom:6px;">Assigned To</div>
-                <div style="font-size:14px;color:#3a2a1d;font-weight:600;">${assignedOwner}</div>
-              </div>
-              ${canAssignWork ? `
-                <div style="margin-bottom:18px;">
-                  <label for="assignSelect_${orderNumber}" style="display:block;font-size:12px;text-transform:uppercase;letter-spacing:0.1em;color:#7c6248;font-weight:600;margin-bottom:6px;">Reassign Order</label>
-                  <select id="assignSelect_${orderNumber}" style="width:100%;padding:10px 12px;border:1px solid rgba(148,109,71,0.35);border-radius:10px;background:rgba(255,255,255,0.9);color:#3a2a1d;font-size:14px;">
-                    ${teamMembers.map(member => `<option value="${member}" ${(member === order.photographer || (member === 'Unassigned' && !order.photographer)) ? 'selected' : ''}>${member}</option>`).join('')}
-                  </select>
+                <div style="display:flex;justify-content:space-between;color:#7c6248;font-weight:600;font-size:13px;">Created By<span style="color:#3a2a1d;">${order.createdBy}</span></div>
+                <div style="display:flex;justify-content:space-between;color:#7c6248;font-weight:600;font-size:13px;">Order Type<span style="color:#3a2a1d;">${order.orderType || 'Standard'}</span></div>
+                <div style="display:flex;justify-content:space-between;color:#7c6248;font-weight:600;font-size:13px;">Sales Org<span style="color:#3a2a1d;">${salesOrgLabel}</span></div>
+                <div style="display:flex;justify-content:space-between;align-items:center;color:#7c6248;font-weight:600;font-size:13px;">
+                  Assigned To
+                  ${canAssignWork ? `
+                    <select id="assignSelect_${orderNumber}" onchange="updateOrderWorkflow('${orderNumber}')" style="padding:2px 6px;border-radius:4px;border:1px solid rgba(196,139,90,0.4);background:rgba(255,255,255,0.9);font-size:12px;color:#3a2a1d;max-width:140px;">
+                      ${teamMembers.map(member => `<option value="${member}" ${order.photographer === member || (member === 'Unassigned' && !order.photographer) ? 'selected' : ''}>${member}</option>`).join('')}
+                    </select>
+                  ` : `<span style="color:#3a2a1d;">${assignedOwner}</span>`}
                 </div>
-              ` : ''}
-              ${(canManageOrders || canAssignWork) ? `
-                <button onclick="updateOrderWorkflow('${orderNumber}')" style="width:100%;margin-top:4px;background:linear-gradient(135deg,#b88358 0%,#8e6238 100%);color:white;border:none;padding:12px 16px;border-radius:12px;font-weight:600;font-size:14px;cursor:pointer;box-shadow:0 12px 25px rgba(145,101,60,0.3);transition:transform 0.15s ease;">Save Updates</button>
-              ` : ''}
             </div>
+            ${budgetMarkup}
           </div>
 
           ${eventOrBriefBlock}
-          
           ${briefBlock}
 
-          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:26px;">
-            <div style="padding:20px;border-radius:16px;background:rgba(253,250,246,0.88);border:1px solid rgba(196,139,90,0.3);box-shadow:0 14px 28px rgba(62,44,30,0.1);">
-              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
-                <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.1em;color:#7c6248;font-weight:600;">Articles</div>
-                <div style="font-size:12px;color:#8a6d4c;">${articlesCount} items</div>
-              </div>
-              <div>${articlesMarkup}</div>
+          <div style="padding:16px;border-radius:12px;background:rgba(253,250,246,0.8);border:1px solid rgba(196,139,90,0.25);">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+              <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.1em;color:#7c6248;font-weight:600;">Articles</div>
+              <div style="font-size:11px;color:#8a6d4c;">${articlesCount} items</div>
             </div>
+            <div>${articlesMarkup}</div>
           </div>
 
-          <div style="padding:20px;border-radius:16px;background:rgba(249,250,251,0.9);border:1px solid rgba(196,139,90,0.25);box-shadow:0 14px 28px rgba(62,44,30,0.08);">
-            <h3 style="margin:0 0 16px;font-size:16px;color:#3b2b1a;display:flex;align-items:center;gap:8px;font-weight:700;">📁 Uploaded Content</h3>
+          <div style="padding:16px;border-radius:12px;background:rgba(249,250,251,0.8);border:1px solid rgba(196,139,90,0.2);">
+            <h3 style="margin:0 0 10px;font-size:14px;color:#3b2b1a;display:flex;align-items:center;gap:6px;font-weight:700;">📁 Uploaded Content</h3>
             ${uploadFormMarkup}
-            <div id="uploadedContent-${orderNumber}" style="max-height:260px;overflow-y:auto;">${uploadedContentMarkup}</div>
+            <div id="uploadedContent-${orderNumber}" style="max-height:200px;overflow-y:auto;">${uploadedContentMarkup}</div>
           </div>
 
-          <div style="padding:20px;border-radius:16px;background:rgba(249,250,251,0.9);border:1px solid rgba(196,139,90,0.25);box-shadow:0 14px 28px rgba(62,44,30,0.08);">
-            <h3 style="margin:0 0 16px;font-size:16px;color:#3b2b1a;display:flex;align-items:center;gap:8px;font-weight:700;">💬 Comments (${comments.length})</h3>
-            <div style="background:rgba(255,255,255,0.95);padding:12px;border-radius:12px;margin-bottom:16px;">
-              <textarea id="newComment-${orderNumber}" placeholder="Add a comment..." style="width:100%;padding:10px;border:1px solid rgba(196,139,90,0.4);border-radius:10px;resize:vertical;min-height:70px;font-family:inherit;font-size:14px;"></textarea>
-              <div style="margin-top:8px;text-align:right;">
-                <button onclick="addComment('${orderNumber}')" style="background:#c48b5a;color:white;border:none;padding:8px 20px;border-radius:10px;cursor:pointer;font-size:13px;font-weight:600;">Add Comment</button>
+          <div style="padding:16px;border-radius:12px;background:rgba(249,250,251,0.8);border:1px solid rgba(196,139,90,0.2);">
+            <h3 style="margin:0 0 10px;font-size:14px;color:#3b2b1a;display:flex;align-items:center;gap:6px;font-weight:700;">💬 Comments (${comments.length})</h3>
+            <div style="background:rgba(255,255,255,0.9);padding:10px;border-radius:10px;margin-bottom:12px;">
+              <textarea id="newComment-${orderNumber}" placeholder="Add a comment..." style="width:100%;padding:8px;border:1px solid rgba(196,139,90,0.4);border-radius:8px;resize:vertical;min-height:60px;font-family:inherit;font-size:13px;"></textarea>
+              <div style="margin-top:6px;text-align:right;">
+                <button onclick="addComment('${orderNumber}')" style="background:#c48b5a;color:white;border:none;padding:6px 16px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:600;">Add Comment</button>
               </div>
             </div>
-            <div style="max-height:300px;overflow-y:auto;">${commentsMarkup}</div>
+            <div style="max-height:240px;overflow-y:auto;">${commentsMarkup}</div>
           </div>
 
-          <div style="display:flex;justify-content:flex-end;gap:12px;">
+          <div style="display:flex;justify-content:flex-end;gap:10px;">
             ${canManageOrders ? `
-              <button onclick="showOrderHistory('${orderNumber}')" style="border:none;padding:12px 24px;border-radius:12px;background:rgba(94,73,52,0.12);color:#4b3825;font-weight:600;font-size:14px;cursor:pointer;">View History</button>
+              <button onclick="showOrderHistory('${orderNumber}')" style="border:none;padding:10px 20px;border-radius:10px;background:rgba(94,73,52,0.1);color:#4b3825;font-weight:600;font-size:13px;cursor:pointer;">View History</button>
             ` : ''}
-            <button onclick="this.closest('.order-details-modal').remove()" style="border:none;padding:12px 26px;border-radius:12px;background:linear-gradient(135deg,#76604b 0%,#3d2d1e 100%);color:white;font-weight:600;font-size:14px;cursor:pointer;box-shadow:0 12px 24px rgba(61,45,30,0.25);">Close</button>
+            <button onclick="this.closest('.order-details-modal').remove()" style="border:none;padding:10px 22px;border-radius:10px;background:linear-gradient(135deg,#76604b 0%,#3d2d1e 100%);color:white;font-weight:600;font-size:13px;cursor:pointer;">Close</button>
           </div>
         </div>
       `;
@@ -12795,6 +12864,11 @@ const __fallbackThemeCSS = `
           
           order.uploadedContent.push(fileData);
           
+          // Update status to 'Image Ready for use' if images are uploaded
+          if (file.type.startsWith('image/')) {
+            order.status = 'Image Ready for use';
+          }
+
           // Show success message
           showToast(`File "${file.name}" uploaded successfully`, 'success');
           
@@ -13742,29 +13816,35 @@ const __fallbackThemeCSS = `
     window.simulatePMRRequest = function() {
       // Sample articles for different purchase groups
       const sampleArticles = {
-        100: [ // Groceries
+        101: [ // Petfood
+          { name: 'Premium Dog Food 2kg', number: 'ART-DOG-' + Math.floor(Math.random() * 1000) },
+          { name: 'Cat Treats Salmon Flavor', number: 'ART-CAT-' + Math.floor(Math.random() * 1000) },
+          { name: 'Bird Seed Mix 1kg', number: 'ART-BRD-' + Math.floor(Math.random() * 1000) }
+        ],
+        102: [ // Coffee/Tea
+          { name: 'Arabica Coffee Beans 500g', number: 'ART-COF-' + Math.floor(Math.random() * 1000) },
+          { name: 'Earl Grey Tea Bags 50pk', number: 'ART-TEA-' + Math.floor(Math.random() * 1000) },
+          { name: 'Instant Coffee Gold 200g', number: 'ART-INS-' + Math.floor(Math.random() * 1000) }
+        ],
+        103: [ // Groceries
           { name: 'Premium Olive Oil Extra Virgin 500ml', number: 'ART-OIL-' + Math.floor(Math.random() * 1000) },
           { name: 'Organic Quinoa Red 400g', number: 'ART-QUI-' + Math.floor(Math.random() * 1000) },
-          { name: 'Artisan Bread Sourdough', number: 'ART-BRD-' + Math.floor(Math.random() * 1000) },
-          { name: 'Free Range Eggs Large 12pk', number: 'ART-EGG-' + Math.floor(Math.random() * 1000) }
+          { name: 'Artisan Bread Sourdough', number: 'ART-BRD-' + Math.floor(Math.random() * 1000) }
         ],
-        200: [ // Fresh Products
-          { name: 'Norwegian Salmon Fillet 400g', number: 'ART-SAL-' + Math.floor(Math.random() * 1000) },
-          { name: 'Organic Baby Spinach 150g', number: 'ART-SPI-' + Math.floor(Math.random() * 1000) },
-          { name: 'Fresh Strawberries 250g', number: 'ART-STR-' + Math.floor(Math.random() * 1000) },
-          { name: 'Greek Feta Cheese 200g', number: 'ART-FET-' + Math.floor(Math.random() * 1000) }
+        104: [ // Confectionary
+          { name: 'Milk Chocolate Bar 100g', number: 'ART-CHO-' + Math.floor(Math.random() * 1000) },
+          { name: 'Gummy Bears 200g', number: 'ART-GUM-' + Math.floor(Math.random() * 1000) },
+          { name: 'Licorice Mix 150g', number: 'ART-LIC-' + Math.floor(Math.random() * 1000) }
         ],
-        300: [ // Electronics
-          { name: 'Wireless Gaming Mouse RGB', number: 'ART-MOU-' + Math.floor(Math.random() * 1000) },
-          { name: 'USB-C Fast Charger 65W', number: 'ART-CHR-' + Math.floor(Math.random() * 1000) },
-          { name: 'Bluetooth Noise Cancelling Headphones', number: 'ART-HEA-' + Math.floor(Math.random() * 1000) },
-          { name: 'Smart Watch Fitness Tracker', number: 'ART-WAT-' + Math.floor(Math.random() * 1000) }
+        105: [ // Dry Food
+          { name: 'Basmati Rice 1kg', number: 'ART-RIC-' + Math.floor(Math.random() * 1000) },
+          { name: 'Pasta Penne 500g', number: 'ART-PAS-' + Math.floor(Math.random() * 1000) },
+          { name: 'Canned Tomatoes 400g', number: 'ART-TOM-' + Math.floor(Math.random() * 1000) }
         ],
-        400: [ // Home & Garden
-          { name: 'Solar Pathway Lights Set of 6', number: 'ART-SOL-' + Math.floor(Math.random() * 1000) },
-          { name: 'Ceramic Plant Pots Set', number: 'ART-POT-' + Math.floor(Math.random() * 1000) },
-          { name: 'Outdoor Cushion Covers 4pk', number: 'ART-CUS-' + Math.floor(Math.random() * 1000) },
-          { name: 'Garden Tool Set Professional', number: 'ART-TOO-' + Math.floor(Math.random() * 1000) }
+        106: [ // Frozen
+          { name: 'Frozen Peas 500g', number: 'ART-PEA-' + Math.floor(Math.random() * 1000) },
+          { name: 'Ice Cream Vanilla 1L', number: 'ART-ICE-' + Math.floor(Math.random() * 1000) },
+          { name: 'Frozen Pizza Pepperoni', number: 'ART-PIZ-' + Math.floor(Math.random() * 1000) }
         ]
       };
 
@@ -13791,8 +13871,8 @@ const __fallbackThemeCSS = `
       const now = new Date();
       const weekNum = Math.ceil((now.getTime() - new Date(now.getFullYear(), 0, 1).getTime()) / (7 * 24 * 60 * 60 * 1000));
       
-      // Random purchase group (100, 200, 300, 400)
-      const purchaseGroups = [100, 200, 300, 400];
+      // Random purchase group
+      const purchaseGroups = [101, 102, 103, 104, 105, 106];
       const randomPG = purchaseGroups[Math.floor(Math.random() * purchaseGroups.length)];
       
       // Random number of articles (1-3)
@@ -14529,7 +14609,7 @@ const __fallbackThemeCSS = `
           const newOrder = {
             orderNumber: orderNumber,
             title: row.Title.trim(),
-            status: 'Draft',
+            status: 'Order Created',
             method: row.Method || 'Photographer',
             photographer: row.Photographer || 'Unassigned',
             assignedTo: row.Photographer ? authSystem.getUserIdByName(row.Photographer) : null,
@@ -15060,7 +15140,7 @@ const __fallbackThemeCSS = `
       const newOrder = {
         orderNumber: `ORD-2025-${String(allOrders.length + 1).padStart(3, '0')}`,
         title: formData.get('title'),
-        status: 'Draft',
+        status: 'Order Created',
         method: formData.get('method'),
         photographer: formData.get('photographer') || 'Unassigned',
         assignedTo: formData.get('photographer') ? authSystem.getUserIdByName(formData.get('photographer')) : null,
