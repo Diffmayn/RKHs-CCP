@@ -11993,7 +11993,12 @@ const __fallbackThemeCSS = `
             <div style="display:flex;align-items:center;gap:10px;">
               <div style="font-size:20px;">${file.type.startsWith('image/') ? '🖼️' : file.type.startsWith('video/') ? '🎥' : file.type === 'application/pdf' ? '📄' : '📁'}</div>
               <div>
-                <div style="font-weight:600;color:#3a2a1d;font-size:13px;">${file.name}</div>
+                <div 
+                  style="font-weight:600;color:#3a2a1d;font-size:13px;cursor:pointer;text-decoration:underline;text-decoration-style:dotted;text-underline-offset:2px;"
+                  onmouseenter="showThumbnailPreview(event, '${file.data}')"
+                  onmouseleave="hideThumbnailPreview()"
+                  onclick="previewContent('${orderNumber}', ${index})"
+                >${file.name}</div>
                 <div style="font-size:11px;color:#7c6248;">${(file.size / 1024 / 1024).toFixed(2)} MB • ${file.uploadedBy}</div>
               </div>
             </div>
