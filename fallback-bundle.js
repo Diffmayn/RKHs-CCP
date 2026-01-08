@@ -12492,25 +12492,19 @@ const __fallbackThemeCSS = `
           `;
         };
 
-        const renderFileNameWithPreview = (fileName, uploadedAt, cloudinaryUrl) => {
+        const renderFileNameWithPreview = (fileName, uploadedAt, cloudinaryUrl, uploadedContentData) => {
           if (!uploadedAt || uploadedAt === placeholderSpan) return fileName || placeholderSpan;
           
-          const imageUrl = cloudinaryUrl || 'https://res.cloudinary.com/demo/image/upload/sample.jpg';
-          const tooltipId = 'preview-' + Math.random().toString(36).substr(2, 9);
+          const imageUrl = uploadedContentData || cloudinaryUrl || 'https://res.cloudinary.com/demo/image/upload/sample.jpg';
           
           return `
-            <div style="position: relative; display: inline-block;" 
-                 onmouseenter="const el = document.getElementById('${tooltipId}'); if(el) el.style.display='block';" 
-                 onmouseleave="const el = document.getElementById('${tooltipId}'); if(el) el.style.display='none';">
-                <a href="${imageUrl}" target="_blank" style="color: #2563eb; text-decoration: underline; cursor: pointer;" onclick="event.stopPropagation();">
-                    ${fileName}
-                </a>
-                <div id="${tooltipId}" style="display: none; position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%); 
-                            z-index: 1000; background: white; padding: 4px; border: 1px solid #ccc; border-radius: 4px; 
-                            box-shadow: 0 4px 6px rgba(0,0,0,0.1); width: 200px; text-align: center; pointer-events: none;">
-                    <img src="${imageUrl}" style="max-width: 100%; height: auto; display: block; border-radius: 2px;" alt="Preview" />
-                </div>
-            </div>
+            <span 
+              style="color: #2563eb; text-decoration: underline; text-decoration-style: dotted; cursor: pointer; text-underline-offset: 2px;" 
+              onmouseenter="showThumbnailPreview(event, '${imageUrl}')"
+              onmouseleave="hideThumbnailPreview()"
+              onclick="event.stopPropagation(); openThumbnailModal(event, '${imageUrl}')">
+              ${fileName}
+            </span>
           `;
         };
 
@@ -12605,7 +12599,7 @@ const __fallbackThemeCSS = `
                 ${!isPhotoServiceOrder ? `<td style="padding:6px 10px;border-bottom:1px solid ${childCellBorder};font-size:11px;${childCellTextColor}${childCellBackground}">${contentType || placeholderSpan}</td>` : ''}
                 ${!isPhotoServiceOrder ? `<td style="padding:6px 10px;border-bottom:1px solid ${childCellBorder};font-size:11px;${childCellTextColor}${childCellBackground}${combinedPhotoStyle}">${combinedPhoto || placeholderSpan}</td>` : ''}
                 ${isPhotoOrder ? `<td style="padding:6px 10px;border-bottom:1px solid ${childCellBorder};font-size:11px;${childCellTextColor}${childCellBackground}">${shotType}</td>` : ''}
-                ${!isPhotoServiceOrder ? `<td style="padding:6px 10px;border-bottom:1px solid ${childCellBorder};font-size:11px;${childCellTextColor}${childCellBackground}">${renderFileNameWithPreview(fileName, uploadedAt, cloudinaryUrl)}</td>` : ''}
+                ${!isPhotoServiceOrder ? `<td style="padding:6px 10px;border-bottom:1px solid ${childCellBorder};font-size:11px;${childCellTextColor}${childCellBackground}">${renderFileNameWithPreview(fileName, uploadedAt, cloudinaryUrl, article.uploadedImages && article.uploadedImages[0] ? article.uploadedImages[0].data : null)}</td>` : ''}
                 ${!isPhotoServiceOrder ? `<td style="padding:6px 10px;border-bottom:1px solid ${childCellBorder};font-size:11px;${childCellTextColor}${childCellBackground}">${formattedUploadTime}</td>` : ''}
               </tr>
             `;
@@ -12721,7 +12715,7 @@ const __fallbackThemeCSS = `
             <td style="padding:6px 8px;${baseCellTextColor}font-size:12px;">${photoRef}</td>
             <td style="padding:6px 8px;${baseCellTextColor}font-size:12px;">${productionInfo}</td>
             <td style="padding:6px 8px;${baseCellTextColor}font-size:12px;">${o.orderType === 'PO' ? '' : principle}</td>
-            <td style="padding:6px 8px;${baseCellTextColor}font-size:12px;">${o.orderType === 'PO' ? '' : renderFileNameWithPreview(o.fileName || 'SG_' + Math.floor(Math.random() * 900000 + 100000), o.uploadedAt, o.cloudinaryUrl)}</td>
+            <td style="padding:6px 8px;${baseCellTextColor}font-size:12px;">${o.orderType === 'PO' ? '' : renderFileNameWithPreview(o.fileName || 'SG_' + Math.floor(Math.random() * 900000 + 100000), o.uploadedAt, o.cloudinaryUrl, o.uploadedContent && o.uploadedContent[0] ? o.uploadedContent[0].data : null)}</td>
             <td style="padding:6px 8px;${baseCellTextColor}font-size:12px;">
               ${o.orderType === 'PO' ? '' : (o.uploadedAt 
                 ? new Date(o.uploadedAt).toLocaleString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }).replace(',', '')
