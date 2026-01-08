@@ -3950,26 +3950,6 @@ const __fallbackThemeCSS = `
           uploadedBy: 'Mike Rodriguez',
           uploadedAt: '2025-08-27T14:30:00Z',
           uploadedByRole: 'Photographer'
-        },
-        {
-          id: 'file_speaker_002',
-          name: 'Speaker_Waterproof_Demo.jpg',
-          type: 'image/jpeg',
-          size: 1987654,
-          data: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgZmlsbD0iIzEwYjk4MSIvPjx0ZXh0IHg9IjIwMCIgeT0iMTUwIiBmb250LXNpemU9IjE0IiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPldhdGVycHJvb2YgRGVtbzwvdGV4dD48L3N2Zz4=',
-          uploadedBy: 'Mike Rodriguez',
-          uploadedAt: '2025-08-27T15:15:00Z',
-          uploadedByRole: 'Photographer'
-        },
-        {
-          id: 'file_speaker_003',
-          name: 'Speaker_Outdoor_Lifestyle.jpg',
-          type: 'image/jpeg',
-          size: 3123456,
-          data: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgZmlsbD0iIzMzNzNkYyIvPjx0ZXh0IHg9IjIwMCIgeT0iMTUwIiBmb250LXNpemU9IjE0IiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPk91dGRvb3IgTGlmZXN0eWxlPC90ZXh0Pjwvc3ZnPg==',
-          uploadedBy: 'Mike Rodriguez',
-          uploadedAt: '2025-08-27T16:00:00Z',
-          uploadedByRole: 'Photographer'
         }
       ]
     },
@@ -4019,26 +3999,6 @@ const __fallbackThemeCSS = `
           data: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R+IRjWjBqO6O2mhP//Z',
           uploadedBy: 'Bilka Auto-Generator',
           uploadedAt: '2025-08-27T14:30:00Z',
-          uploadedByRole: 'System'
-        },
-        {
-          id: 'file_bilka_004_2',
-          name: 'ENV.000004.jpg',
-          type: 'image/jpeg',
-          size: 2345678,
-          data: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R+IRjWjBqO6O2mhP//Z',
-          uploadedBy: 'Bilka Auto-Generator',
-          uploadedAt: '2025-08-27T15:15:00Z',
-          uploadedByRole: 'System'
-        },
-        {
-          id: 'file_bilka_004_3',
-          name: 'ENV.000005.jpg',
-          type: 'image/jpeg',
-          size: 4567890,
-          data: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R+IRjWjBqO6O2mhP//Z',
-          uploadedBy: 'Bilka Auto-Generator',
-          uploadedAt: '2025-08-27T16:00:00Z',
           uploadedByRole: 'System'
         }
       ]
@@ -4094,26 +4054,6 @@ const __fallbackThemeCSS = `
           uploadedBy: 'Emily Chen',
           uploadedAt: '2025-08-27T14:30:00Z',
           uploadedByRole: 'Photographer'
-        },
-        {
-          id: 'file_past_005_2',
-          name: 'Organic_Linguine_Detail_Shot.jpg',
-          type: 'image/jpeg',
-          size: 2345678,
-          data: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgZmlsbD0iIzMzNzNkYyIvPjx0ZXh0IHg9IjIwMCIgeT0iMTUwIiBmb250LXNpemU9IjE0IiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPk9yZ2FuaWMgTGluZ3VpbmUgRGV0YWlsPC90ZXh0Pjwvc3ZnPg==',
-          uploadedBy: 'Emily Chen',
-          uploadedAt: '2025-08-27T15:15:00Z',
-          uploadedByRole: 'Photographer'
-        },
-        {
-          id: 'file_past_005_3',
-          name: 'Pasta_Lifestyle_Shot.jpg',
-          type: 'image/jpeg',
-          size: 4567890,
-          data: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgZmlsbD0iIzMzNzNkYyIvPjx0ZXh0IHg9IjIwMCIgeT0iMTUwIiBmb250LXNpemU9IjE0IiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPlBhc3RhIExpZmVzdHlsZTwvdGV4dD48L3N2Zz4=',
-          uploadedBy: 'Emily Chen',
-          uploadedAt: '2025-08-27T16:00:00Z',
-          uploadedByRole: 'Photographer'
         }
       ]
     },
@@ -4164,26 +4104,6 @@ const __fallbackThemeCSS = `
           uploadedBy: 'Mike Rodriguez',
           uploadedAt: '2025-08-27T10:15:00Z',
           uploadedByRole: 'Photographer'
-        },
-        {
-          id: 'file_dairy_006_2',
-          name: 'Greek_Yogurt_Container_Detail_Shot.jpg',
-          type: 'image/jpeg',
-          size: 1987654,
-          data: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgZmlsbD0iI2Y5ZjlmOSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPkdyZWVrIFlvZ3VydCDE0YWlsPC90ZXh0Pjwvc3ZnPg==',
-          uploadedBy: 'Mike Rodriguez',
-          uploadedAt: '2025-08-27T11:00:00Z',
-          uploadedByRole: 'Photographer'
-        },
-        {
-          id: 'file_dairy_006_3',
-          name: 'Dairy_Products_Lifestyle_Shot.jpg',
-          type: 'image/jpeg',
-          size: 3456789,
-          data: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgZmlsbD0iI2Y5ZjlmOSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPkRhaXJ5IFByb2R1Y3RzIExpZmVzdHlsZTwvdGV4dD48L3N2Zz4=',
-          uploadedBy: 'Mike Rodriguez',
-          uploadedAt: '2025-08-27T11:45:00Z',
-          uploadedByRole: 'Photographer'
         }
       ]
     },
@@ -4233,26 +4153,6 @@ const __fallbackThemeCSS = `
           data: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTAwIiBoZWlnaHQ9IjQwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iNTAwIiBoZWlnaHQ9IjQwMCIgZmlsbD0iI2ZmZTZjYyIvPjx0ZXh0IHg9IjI1MCIgeT0iMTQwIiBmb250LXNpemU9IjI0IiBmb250LXdlaWdodD0iYm9sZCIgZmlsbD0iIzMzMzMzMyIgdGV4dC1hbmNob3I9Im1pZGRsZSI+T1JELVR5cGU6IFNtYXJ0IEhvbWU8L3RleHQ+PHRleHQgeD0iMjUwIiB5PSIxOTAiIGZvbnQtc2l6ZT0iMjAiIGZpbGw9IiMzMzMzMzMiIHRleHQtYW5jaG9yPSJtaWRkbGUiPk9SRC0yMDI1LTAwNzwvdGV4dD48dGV4dCB4PSIyNTAiIHk9IjI1MCIgZm9udC1zaXplPSIzMiIgZmlsbD0iI2ZmYjMxYiIgdGV4dC1hbmNob3I9Im1pZGRsZSI+U1lTVEVNIDE8L3RleHQ+PHRleHQgeD0iMjUwIiB5PSIzMTAiIGZvbnQtc2l6ZT0iMTYiIGZpbGw9IiMzMzMzMzMiIHRleHQtYW5jaG9yPSJtaWRkbGUiPlNtYXJ0IFRoZXJtb3N0YXQgUGhvdG8gMTwvdGV4dD48L3N2Zz4=',
           uploadedBy: 'Mike Rodriguez',
           uploadedAt: '2025-08-27T12:30:00Z',
-          uploadedByRole: 'Photographer'
-        },
-        {
-          id: 'file_bilka_007_2',
-          name: 'ENV.000007.jpg',
-          type: 'image/jpeg',
-          size: 2456789,
-          data: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTAwIiBoZWlnaHQ9IjQwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iNTAwIiBoZWlnaHQ9IjQwMCIgZmlsbD0iI2ZmZTZjYyIvPjx0ZXh0IHg9IjI1MCIgeT0iMTQwIiBmb250LXNpemU9IjI0IiBmb250LXdlaWdodD0iYm9sZCIgZmlsbD0iIzMzMzMzMyIgdGV4dC1hbmNob3I9Im1pZGRsZSI+T1JELVR5cGU6IFNtYXJ0IEhvbWU8L3RleHQ+PHRleHQgeD0iMjUwIiB5PSIxOTAiIGZvbnQtc2l6ZT0iMjAiIGZpbGw9IiMzMzMzMzMiIHRleHQtYW5jaG9yPSJtaWRkbGUiPk9SRC0yMDI1LTAwNzwvdGV4dD48dGV4dCB4PSIyNTAiIHk9IjI1MCIgZm9udC1zaXplPSIzMiIgZmlsbD0iI2ZmYjMxYiIgdGV4dC1hbmNob3I9Im1pZGRsZSI+Q0FNRVJBIDE8L3RleHQ+PHRleHQgeD0iMjUwIiB5PSIzMTAiIGZvbnQtc2l6ZT0iMTYiIGZpbGw9IiMzMzMzMzMiIHRleHQtYW5jaG9yPSJtaWRkbGUiPkNhbWVyYSBQaG90byAyPC90ZXh0Pjwvc3ZnPg==',
-          uploadedBy: 'Mike Rodriguez',
-          uploadedAt: '2025-08-27T13:15:00Z',
-          uploadedByRole: 'Photographer'
-        },
-        {
-          id: 'file_bilka_007_3',
-          name: 'ENV.000008.jpg',
-          type: 'image/jpeg',
-          size: 3789456,
-          data: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTAwIiBoZWlnaHQ9IjQwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iNTAwIiBoZWlnaHQ9IjQwMCIgZmlsbD0iI2ZmZTZjYyIvPjx0ZXh0IHg9IjI1MCIgeT0iMTQwIiBmb250LXNpemU9IjI0IiBmb250LXdlaWdodD0iYm9sZCIgZmlsbD0iIzMzMzMzMyIgdGV4dC1hbmNob3I9Im1pZGRsZSI+T1JELVR5cGU6IFNtYXJ0IEhvbWU8L3RleHQ+PHRleHQgeD0iMjUwIiB5PSIxOTAiIGZvbnQtc2l6ZT0iMjAiIGZpbGw9IiMzMzMzMzMiIHRleHQtYW5jaG9yPSJtaWRkbGUiPk9SRC0yMDI1LTAwNzwvdGV4dD48dGV4dCB4PSIyNTAiIHk9IjI1MCIgZm9udC1zaXplPSIzMiIgZmlsbD0iI2ZmYjMxYiIgdGV4dC1hbmNob3I9Im1pZGRsZSI+U0VUIExBWU9VVDwvdGV4dD48dGV4dCB4PSIyNTAiIHk9IjMxMCIgZm9udC1zaXplPSIxNiIgZmlsbD0iIzMzMzMzMyIgdGV4dC1hbmNob3I9Im1pZGRsZSI+U2V0dXAgQ29udGV4dCBQaG90byAzPC90ZXh0Pjwvc3ZnPg==',
-          uploadedBy: 'Mike Rodriguez',
-          uploadedAt: '2025-08-27T14:00:00Z',
           uploadedByRole: 'Photographer'
         }
       ]
@@ -4374,26 +4274,6 @@ const __fallbackThemeCSS = `
           uploadedBy: 'Sarah Johnson',
           uploadedAt: '2025-09-01T09:00:00Z',
           uploadedByRole: 'Photographer'
-        },
-        {
-          id: 'file_baby_009_2',
-          name: 'Baby_Food_Ingredients_Detail.jpg',
-          type: 'image/jpeg',
-          size: 2234567,
-          data: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTAwIiBoZWlnaHQ9IjQwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iNTAwIiBoZWlnaHQ9IjQwMCIgZmlsbD0iIzk2YmY2YiIvPjx0ZXh0IHg9IjI1MCIgeT0iMTQwIiBmb250LXNpemU9IjI0IiBmb250LXdlaWdodD0iYm9sZCIgZmlsbD0id2hpdGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiPk9SRC0yMDI1LTAwOTwvdGV4dD48dGV4dCB4PSIyNTAiIHk9IjE5MCIgZm9udC1zaXplPSIyMCIgZmlsbD0iI2ZmZiIgdGV4dC1hbmNob3I9Im1pZGRsZSI+QmFieSBGb29kIExpbmU8L3RleHQ+PHRleHQgeD0iMjUwIiB5PSIyNTAiIGZvbnQtc2l6ZT0iMzIiIGZpbGw9IiNmZmQiIHRleHQtYW5jaG9yPSJtaWRkbGUiPklOR1JFRElFTlQ8L3RleHQ+PHRleHQgeD0iMjUwIiB5PSIzMTAiIGZvbnQtc2l6ZT0iMTYiIGZpbGw9IiNmZmYiIHRleHQtYW5jaG9yPSJtaWRkbGUiPkluZ3JlZGllbnQgQ2xvc2UtdXAgUGhvdG8gMjwvdGV4dD48L3N2Zz4=',
-          uploadedBy: 'Sarah Johnson',
-          uploadedAt: '2025-09-01T09:30:00Z',
-          uploadedByRole: 'Photographer'
-        },
-        {
-          id: 'file_baby_009_3',
-          name: 'Baby_Food_Lifestyle_Shot.jpg',
-          type: 'image/jpeg',
-          size: 3456789,
-          data: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTAwIiBoZWlnaHQ9IjQwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iNTAwIiBoZWlnaHQ9IjQwMCIgZmlsbD0iI2ZmYjNiMyIvPjx0ZXh0IHg9IjI1MCIgeT0iMTQwIiBmb250LXNpemU9IjI0IiBmb250LXdlaWdodD0iYm9sZCIgZmlsbD0id2hpdGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiPk9SRC0yMDI1LTAwOTwvdGV4dD48dGV4dCB4PSIyNTAiIHk9IjE5MCIgZm9udC1zaXplPSIyMCIgZmlsbD0iI2ZmZiIgdGV4dC1hbmNob3I9Im1pZGRsZSI+QmFieSBGb29kIExpbmU8L3RleHQ+PHRleHQgeD0iMjUwIiB5PSIyNTAiIGZvbnQtc2l6ZT0iMzIiIGZpbGw9IiNmZmYiIHRleHQtYW5jaG9yPSJtaWRkbGUiPkxJRkVTVFlMRTwvdGV4dD48dGV4dCB4PSIyNTAiIHk9IjMxMCIgZm9udC1zaXplPSIxNiIgZmlsbD0iI2ZmZiIgdGV4dC1hbmNob3I9Im1pZGRsZSI+QmFieSBMaWZlc3R5bGUgUGhvdG8gMzwvdGV4dD48L3N2Zz4=',
-          uploadedBy: 'Sarah Johnson',
-          uploadedAt: '2025-09-01T10:00:00Z',
-          uploadedByRole: 'Photographer'
         }
       ],
       comments: []
@@ -4457,26 +4337,6 @@ const __fallbackThemeCSS = `
           data: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTAwIiBoZWlnaHQ9IjQwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iNTAwIiBoZWlnaHQ9IjQwMCIgZmlsbD0iIzEwMGEwYSIvPjx0ZXh0IHg9IjI1MCIgeT0iMTQwIiBmb250LXNpemU9IjI0IiBmb250LXdlaWdodD0iYm9sZCIgZmlsbD0iI2ZmMDAwMCIgdGV4dC1hbmNob3I9Im1pZGRsZSI+T1JELVR5cGU6IEdBTUlORzwvdGV4dD48dGV4dCB4PSIyNTAiIHk9IjE5MCIgZm9udC1zaXplPSIyMCIgZmlsbD0iI2ZmZiIgdGV4dC1hbmNob3I9Im1pZGRsZSI+T1JELVR5cGU6IFBybyBYMTwvdGV4dD48dGV4dCB4PSIyNTAiIHk9IjI1MCIgZm9udC1zaXplPSIzMiIgZmlsbD0iI2ZmMDAwMCIgdGV4dC1hbmNob3I9Im1pZGRsZSI+TEFDIFE8L3RleHQ+PHRleHQgeD0iMjUwIiB5PSIzMTAiIGZvbnQtc2l6ZT0iMTYiIGZpbGw9IiNmZmYiIHRleHQtYW5jaG9yPSJtaWRkbGUiPkdhbWluZyBMYXB0b3AgSGVybyBQaG90byAxPC90ZXh0Pjwvc3ZnPg==',
           uploadedBy: 'Marcus Thompson',
           uploadedAt: '2025-09-02T10:45:00Z',
-          uploadedByRole: 'Photographer'
-        },
-        {
-          id: 'file_laptop_010_2',
-          name: 'RGB_Lighting_Effects_Demo.jpg',
-          type: 'image/jpeg',
-          size: 2987654,
-          data: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTAwIiBoZWlnaHQ9IjQwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iNTAwIiBoZWlnaHQ9IjQwMCIgZmlsbD0iIzIwMjAyMCIvPjxjaXJjbGUgY3g9IjE1MCIgY3k9IjEwMCIgcj0iMzAiIGZpbGw9IiNmZjAwMDAiLz48Y2lyY2xlIGN4PSIyNTAiIGN5PSIxMDAiIHI9IjMwIiBmaWxsPSIjMDBmZjAwIi8+PGNpcmNsZSBjeD0iMzUwIiBjeT0iMTAwIiByPSIzMCIgZmlsbD0iIzAwMDBmZiIvPjx0ZXh0IHg9IjI1MCIgeT0iMjAwIiBmb250LXNpemU9IjI4IiBmaWxsPSIjZmZmIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXdlaWdodD0iYm9sZCI+UkdCIExJR0hUSU5HPC90ZXh0Pjx0ZXh0IHg9IjI1MCIgeT0iMzAwIiBmb250LXNpemU9IjE2IiBmaWxsPSIjZmZmIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5FZmZlY3RzIERlbW8gUGhvdG8gMjwvdGV4dD48L3N2Zz4=',
-          uploadedBy: 'Marcus Thompson',
-          uploadedAt: '2025-09-02T11:15:00Z',
-          uploadedByRole: 'Photographer'
-        },
-        {
-          id: 'file_laptop_010_3',
-          name: 'Macro_Detail_Shots.jpg',
-          type: 'image/jpeg',
-          size: 2456789,
-          data: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTAwIiBoZWlnaHQ9IjQwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iNTAwIiBoZWlnaHQ9IjQwMCIgZmlsbD0iIzMwMzAzMCIvPjx0ZXh0IHg9IjI1MCIgeT0iMTQwIiBmb250LXNpemU9IjI0IiBmb250LXdlaWdodD0iYm9sZCIgZmlsbD0iI2ZmMDAwMCIgdGV4dC1hbmNob3I9Im1pZGRsZSI+T1JEVHR5cGU6IFBybyBYMTwvdGV4dD48dGV4dCB4PSIyNTAiIHk9IjI1MCIgZm9udC1zaXplPSIzMiIgZmlsbD0iI2ZmZiIgdGV4dC1hbmNob3I9Im1pZGRsZSI+TUFDQ08gRkxBU0g8L3RleHQ+PHRleHQgeD0iMjUwIiB5PSIzMTAiIGZvbnQtc2l6ZT0iMTYiIGZpbGw9IiNmZmYiIHRleHQtYW5jaG9yPSJtaWRkbGUiPkRldGFpbCBQaG90byAzPC90ZXh0Pjwvc3ZnPg==',
-          uploadedBy: 'Marcus Thompson',
-          uploadedAt: '2025-09-02T11:45:00Z',
           uploadedByRole: 'Photographer'
         }
       ],
