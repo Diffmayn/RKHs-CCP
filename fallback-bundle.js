@@ -3,13 +3,13 @@
 // Runware API Integration Working - Simplified Implementation
 // All functions defined at top level, no dependency issues
 // Mock implementation with data URL images (no external dependencies)
-console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
+console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING... Updated: ' + new Date().toISOString());
 (function(){
   console.log('[FALLBACK-BUNDLE] 🎬 IIFE STARTING...');
   
   // Global feature flags
   var featureFlags = (typeof window !== 'undefined' && window.featureFlags) ? window.featureFlags : {};
-  featureFlags.gpt5CodexPreview = true;
+  featureFlags.gpt5CodexPreview = false;
   featureFlags.gpt5CodexRollout = 'preview';
   featureFlags.gpt5CodexAudience = 'all-clients';
   if (typeof window !== 'undefined') {
@@ -23,26 +23,699 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
     model: 'google:4@1' // Nano Banana - Google Gemini Flash Image 2.5
   };
   if (typeof window !== 'undefined') window.runwareConfig = runwareConfig;
+const __fallbackThemeCSS = `
+    :root {
+      --ui-scale-factor: 0.82;
+      --theme-app-bg: #f3f4f6;
+          --theme-shell-bg: #f3f4f6;
+          --theme-surface-bg: #fffaf3;
+          --theme-surface-alt-bg: #f7eedf;
+          --theme-border: rgba(196, 139, 90, 0.3);
+          --theme-text: #4b3b2a;
+          --theme-muted: #6b5440;
+          --theme-support-btn: linear-gradient(135deg, #c48b5a 0%, #a67550 100%);
+          --theme-support-btn-text: #ffffff;
+          --theme-input-bg: rgba(255, 250, 243, 0.94);
+          --theme-pane-bg: rgba(255, 250, 243, 0.94);
+          --theme-pane-blur: blur(6px);
+          --theme-pane-border: rgba(196, 139, 90, 0.22);
+          --theme-pane-shadow: 0 16px 30px rgba(79, 59, 37, 0.12);
+          --theme-accent: #e2b684;
+          --theme-accent-soft: #c7925b;
+          --theme-btn-text: #fffaf3;
+          --theme-highlight: rgba(255, 255, 255, 0.35);
+          --theme-surface-gloss: inset 0 1px 0 rgba(255, 255, 255, 0.15);
+          --theme-glow-accent: rgba(196, 139, 90, 0.35);
+          --theme-blur-strength: blur(6px);
+          --theme-export-gradient: linear-gradient(135deg, #efc892, #c48b5a);
+          --theme-refresh-gradient: linear-gradient(135deg, #d2c3ac, #a3876a);
+          --theme-logout-gradient: linear-gradient(135deg, #c76f5c, #a85544);
+          --theme-table-header-bg: linear-gradient(135deg, #f7eedf, #efe0cf);
+          --theme-table-header-text: #4b3b2a;
+          --theme-table-border: rgba(196, 139, 90, 0.22);
+        }
 
-  // Load saved API key as early as possible
+        body {
+          margin: 0;
+          padding: 0;
+          overflow-x: hidden;
+          background: var(--theme-app-bg) !important;
+          color: var(--theme-text);
+          font-family: 'Inter', 'Segoe UI', sans-serif;
+          transition: background 0.6s ease, color 0.6s ease;
+        }
+
+        @media (min-width: 1280px) {
+          body {
+            overflow-x: hidden;
+          }
+
+          #fallback-app {
+            transform: scale(var(--ui-scale-factor));
+            transform-origin: top left;
+            width: calc(100vw / var(--ui-scale-factor));
+            min-height: calc(100vh / var(--ui-scale-factor));
+          }
+        }
+
+        body[data-theme='warm'] {
+          --theme-app-bg: #f3f4f6;
+          --theme-shell-bg: #f3f4f6;
+          --theme-surface-bg: #fffaf3;
+          --theme-surface-alt-bg: #f7eedf;
+          --theme-border: rgba(196, 139, 90, 0.3);
+          --theme-text: #4b3b2a;
+          --theme-muted: #6b5440;
+          --theme-support-btn: linear-gradient(135deg, #c48b5a 0%, #a67550 100%);
+          --theme-support-btn-text: #ffffff;
+          --theme-input-bg: rgba(255, 250, 243, 0.94);
+          --theme-pane-bg: rgba(255, 250, 243, 0.94);
+          --theme-pane-blur: blur(6px);
+          --theme-pane-border: rgba(196, 139, 90, 0.22);
+          --theme-pane-shadow: 0 16px 30px rgba(79, 59, 37, 0.12);
+          --theme-accent: #e2b684;
+          --theme-accent-soft: #c7925b;
+          --theme-btn-text: #fffaf3;
+          --theme-highlight: rgba(255, 255, 255, 0.35);
+          --theme-surface-gloss: inset 0 1px 0 rgba(255, 255, 255, 0.12);
+          --theme-glow-accent: rgba(196, 139, 90, 0.45);
+          --theme-blur-strength: blur(6px);
+          --theme-export-gradient: linear-gradient(135deg, #efc892, #c48b5a);
+          --theme-refresh-gradient: linear-gradient(135deg, #d2c3ac, #a3876a);
+          --theme-logout-gradient: linear-gradient(135deg, #c76f5c, #a85544);
+        }
+
+        body[data-theme='cool'] {
+          --theme-app-bg: linear-gradient(160deg, #e9f2ff 0%, #d7e6ff 55%, #f5f9ff 100%);
+          --theme-shell-bg: rgba(233, 242, 255, 0.75);
+          --theme-surface-bg: rgba(248, 251, 255, 0.96);
+          --theme-surface-alt-bg: rgba(224, 236, 255, 0.85);
+          --theme-border: rgba(96, 165, 250, 0.28);
+          --theme-text: #1e293b;
+          --theme-muted: #334155;
+          --theme-support-btn: linear-gradient(135deg, rgba(96, 165, 250, 0.92) 0%, rgba(37, 99, 235, 0.92) 100%);
+          --theme-support-btn-text: #f8fafc;
+          --theme-input-bg: rgba(248, 251, 255, 0.92);
+          --theme-pane-bg: rgba(248, 251, 255, 0.92);
+          --theme-pane-blur: blur(10px);
+          --theme-pane-border: rgba(96, 165, 250, 0.22);
+          --theme-pane-shadow: 0 26px 42px rgba(37, 99, 235, 0.16);
+          --theme-accent: rgba(96, 165, 250, 0.95);
+          --theme-accent-soft: rgba(59, 130, 246, 0.85);
+          --theme-btn-text: #f8fbff;
+          --theme-highlight: rgba(255, 255, 255, 0.5);
+          --theme-surface-gloss: inset 0 1px 0 rgba(255, 255, 255, 0.2);
+          --theme-glow-accent: rgba(96, 165, 250, 0.35);
+          --theme-blur-strength: blur(10px);
+          --theme-export-gradient: linear-gradient(135deg, rgba(147, 197, 253, 0.9), rgba(59, 130, 246, 0.85));
+          --theme-refresh-gradient: linear-gradient(135deg, rgba(134, 239, 172, 0.85), rgba(16, 185, 129, 0.78));
+          --theme-logout-gradient: linear-gradient(135deg, rgba(248, 113, 113, 0.9), rgba(220, 38, 38, 0.82));
+        }
+
+        body[data-theme='midnight'] {
+          --theme-app-bg: radial-gradient(circle at top, rgba(79, 70, 229, 0.12) 0%, rgba(17, 24, 39, 0.95) 55%, rgba(15, 23, 42, 1) 100%);
+          --theme-shell-bg: rgba(17, 24, 39, 0.9);
+          --theme-surface-bg: rgba(30, 41, 59, 0.9);
+          --theme-surface-alt-bg: rgba(17, 24, 39, 0.9);
+          --theme-border: rgba(148, 163, 184, 0.35);
+          --theme-text: #e2e8f0;
+          --theme-muted: #94a3b8;
+          --theme-support-btn: linear-gradient(135deg, rgba(99, 102, 241, 0.95) 0%, rgba(67, 56, 202, 0.95) 100%);
+          --theme-support-btn-text: #f8fafc;
+          --theme-input-bg: rgba(17, 24, 39, 0.8);
+          --theme-pane-bg: rgba(17, 24, 39, 0.88);
+          --theme-pane-blur: blur(12px);
+          --theme-pane-border: rgba(148, 163, 184, 0.32);
+          --theme-pane-shadow: 0 28px 48px rgba(15, 23, 42, 0.45);
+          --theme-accent: rgba(99, 102, 241, 0.95);
+          --theme-accent-soft: rgba(76, 81, 191, 0.82);
+          --theme-btn-text: #f4f7ff;
+          --theme-highlight: rgba(255, 255, 255, 0.28);
+          --theme-surface-gloss: inset 0 1px 0 rgba(148, 163, 184, 0.22);
+          --theme-glow-accent: rgba(99, 102, 241, 0.4);
+          --theme-blur-strength: blur(14px);
+          --theme-export-gradient: linear-gradient(135deg, rgba(99, 102, 241, 0.9), rgba(14, 116, 144, 0.85));
+          --theme-refresh-gradient: linear-gradient(135deg, rgba(56, 189, 248, 0.85), rgba(14, 165, 233, 0.78));
+          --theme-logout-gradient: linear-gradient(135deg, rgba(248, 113, 113, 0.88), rgba(190, 24, 93, 0.8));
+        }
+
+        body[data-theme='aurora'] {
+          --theme-app-bg: radial-gradient(140% 140% at 15% 0%, rgba(217, 228, 255, 0.52), rgba(148, 163, 255, 0.18) 40%, rgba(45, 212, 191, 0.12) 65%, rgba(17, 24, 39, 0.76) 100%);
+          --theme-shell-bg: rgba(14, 23, 42, 0.35);
+          --theme-surface-bg: rgba(255, 255, 255, 0.18);
+          --theme-surface-alt-bg: rgba(173, 216, 255, 0.15);
+          --theme-border: rgba(255, 255, 255, 0.28);
+          --theme-text: rgba(244, 248, 255, 0.98);
+          --theme-muted: rgba(209, 219, 236, 0.85);
+          --theme-support-btn: linear-gradient(135deg, rgba(168, 180, 248, 0.85) 0%, rgba(129, 140, 248, 0.72) 35%, rgba(56, 189, 248, 0.65) 100%);
+          --theme-support-btn-text: #f8fbff;
+          --theme-input-bg: rgba(255, 255, 255, 0.2);
+          --theme-pane-bg: rgba(255, 255, 255, 0.16);
+          --theme-pane-blur: blur(20px);
+          --theme-pane-border: rgba(255, 255, 255, 0.32);
+          --theme-pane-shadow: 0 35px 65px rgba(45, 98, 197, 0.25);
+          --theme-accent: rgba(168, 180, 248, 0.92);
+          --theme-accent-soft: rgba(135, 206, 250, 0.75);
+          --theme-btn-text: rgba(248, 252, 255, 0.98);
+          --theme-highlight: rgba(255, 255, 255, 0.65);
+          --theme-surface-gloss: inset 0 1px 0 rgba(255, 255, 255, 0.42);
+          --theme-glow-accent: rgba(148, 180, 255, 0.45);
+          --theme-blur-strength: blur(20px);
+          --theme-export-gradient: linear-gradient(135deg, rgba(196, 210, 255, 0.92), rgba(148, 180, 255, 0.78));
+          --theme-refresh-gradient: linear-gradient(135deg, rgba(125, 211, 252, 0.82), rgba(45, 212, 191, 0.75));
+          --theme-logout-gradient: linear-gradient(135deg, rgba(251, 191, 36, 0.82), rgba(248, 113, 113, 0.85));
+        }
+
+        body[data-theme='glass'] {
+          /* Modern Glassmorphism Theme - Apple/Microsoft inspired */
+          --theme-app-bg: radial-gradient(circle at 0% 0%, #eef2ff 0%, #e0e7ff 50%, #f5f3ff 100%);
+          --theme-shell-bg: rgba(255, 255, 255, 0.65);
+          --theme-surface-bg: rgba(255, 255, 255, 0.75);
+          --theme-surface-alt-bg: rgba(248, 250, 252, 0.5);
+          --theme-border: rgba(255, 255, 255, 0.6);
+          --theme-text: #1e293b;
+          --theme-muted: #64748b;
+          --theme-support-btn: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+          --theme-support-btn-text: #ffffff;
+          --theme-input-bg: rgba(255, 255, 255, 0.8);
+          --theme-pane-bg: rgba(255, 255, 255, 0.7);
+          --theme-pane-blur: blur(16px);
+          --theme-pane-border: rgba(255, 255, 255, 0.5);
+          --theme-pane-shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
+          --theme-accent: #3b82f6;
+          --theme-accent-soft: #60a5fa;
+          --theme-btn-text: #ffffff;
+          --theme-highlight: rgba(255, 255, 255, 0.8);
+          --theme-surface-gloss: linear-gradient(135deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.1) 100%);
+          --theme-glow-accent: rgba(59, 130, 246, 0.5);
+          --theme-blur-strength: blur(16px);
+          --theme-export-gradient: linear-gradient(135deg, #60a5fa, #3b82f6);
+          --theme-refresh-gradient: linear-gradient(135deg, #34d399, #10b981);
+          --theme-logout-gradient: linear-gradient(135deg, #f87171, #ef4444);
+        }
+
+        /* Fix for dropdown transparency issues in Glass theme */
+        body[data-theme='glass'] #supportMenuDropdown,
+        body[data-theme='glass'] .support-menu-panel {
+          background: rgba(255, 255, 255, 0.95) !important;
+          backdrop-filter: blur(30px) !important;
+          box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25) !important;
+          border: 1px solid rgba(255, 255, 255, 0.8) !important;
+        }
+
+        /* Performance optimizations */
+        .glass-surface, .glass-floating {
+          will-change: transform, opacity;
+          transform: translateZ(0); /* Hardware acceleration */
+        }
+
+        #fallback-app {
+          background: var(--theme-shell-bg) !important;
+          color: var(--theme-text);
+        }
+
+        .main-content {
+          background: var(--theme-surface-bg) !important;
+          color: var(--theme-text);
+        }
+
+        #supportMenuDropdown {
+          background: var(--theme-surface-bg) !important;
+          border-color: var(--theme-border) !important;
+          color: var(--theme-text) !important;
+        }
+
+        .support-menu-item {
+          color: var(--theme-text) !important;
+        }
+
+        .support-menu-item:hover {
+          background: var(--theme-surface-alt-bg) !important;
+        }
+
+        .support-menu-label {
+          color: var(--theme-text) !important;
+        }
+
+        .support-menu-desc {
+          color: var(--theme-muted) !important;
+        }
+
+        .support-menu-theme {
+          display: flex;
+          flex-direction: column;
+          gap: 6px;
+          padding: 8px 4px 12px;
+        }
+
+        .support-menu-theme label {
+          font-size: 11px;
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+          font-weight: 600;
+          color: var(--theme-muted) !important;
+        }
+
+        .support-menu-theme select {
+          width: 100%;
+          padding: 9px 12px;
+          border-radius: 12px;
+          border: 1px solid var(--theme-border) !important;
+          background: var(--theme-input-bg) !important;
+          color: var(--theme-text) !important;
+          font-size: 13px;
+          font-weight: 500;
+          cursor: pointer;
+          backdrop-filter: var(--theme-blur-strength);
+          transition: box-shadow 0.2s ease, transform 0.2s ease;
+        }
+
+        .support-menu-theme select:focus {
+          outline: none;
+          box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
+          transform: translateY(-1px);
+        }
+
+        .support-menu-divider {
+          height: 1px;
+          background: var(--theme-border);
+          margin: 8px 4px;
+        }
+
+        .auth-viewport {
+          background: linear-gradient(135deg, #f4e8d8 0%, #e7d2b8 100%);
+        }
+
+        body[data-theme='cool'] .auth-viewport {
+          background: linear-gradient(135deg, rgba(219, 234, 254, 0.9), rgba(191, 219, 254, 0.8));
+        }
+
+        body[data-theme='midnight'] .auth-viewport {
+          background: radial-gradient(circle at top, rgba(79, 70, 229, 0.35), rgba(15, 23, 42, 0.95));
+        }
+
+        body[data-theme='aurora'] .auth-viewport {
+          background: radial-gradient(140% 140% at 15% 0%, rgba(226, 232, 255, 0.4), rgba(148, 163, 255, 0.2) 45%, rgba(45, 212, 191, 0.18) 70%, rgba(17, 24, 39, 0.8) 100%);
+        }
+
+        .support-menu-panel {
+          border-radius: 16px;
+        }
+
+        .auth-card {
+          background: var(--theme-pane-bg) !important;
+          border: 1px solid var(--theme-pane-border) !important;
+          box-shadow: var(--theme-pane-shadow);
+          backdrop-filter: var(--theme-pane-blur);
+        }
+
+        .auth-input {
+          background: var(--theme-input-bg) !important;
+          border: 1px solid var(--theme-border) !important;
+          color: var(--theme-text) !important;
+          border-radius: 12px !important;
+          transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+        }
+
+        .auth-input:focus {
+          border-color: var(--theme-accent);
+          box-shadow: 0 0 0 3px rgba(148, 180, 255, 0.25);
+          outline: none;
+          transform: translateY(-1px);
+        }
+
+        body[data-theme='aurora'] .auth-card {
+          box-shadow: 0 42px 82px rgba(17, 23, 47, 0.45) !important;
+          border-color: rgba(255, 255, 255, 0.28) !important;
+        }
+
+        body[data-theme='aurora'] .auth-input {
+          border-color: rgba(255, 255, 255, 0.24) !important;
+          box-shadow: 0 12px 28px rgba(148, 180, 255, 0.18);
+        }
+
+        .content-pill-btn--support {
+          background: var(--theme-support-btn) !important;
+          color: var(--theme-support-btn-text) !important;
+        }
+
+        .sidebar {
+          background: var(--theme-shell-bg) !important;
+        }
+
+        .glass-surface {
+          position: relative;
+          background: var(--theme-pane-bg);
+          border: 1px solid var(--theme-pane-border);
+          border-radius: inherit;
+          box-shadow: var(--theme-pane-shadow);
+          backdrop-filter: var(--theme-pane-blur);
+        }
+
+        body[data-theme='aurora'] .glass-surface {
+          backdrop-filter: blur(18px) saturate(150%);
+          -webkit-backdrop-filter: blur(18px) saturate(150%);
+          will-change: transform, opacity;
+        }
+
+        .glass-surface::before {
+          content: '';
+          position: absolute;
+          inset: 0;
+          border-radius: inherit;
+          pointer-events: none;
+          opacity: 0;
+        }
+
+        body[data-theme='aurora'] .glass-surface::before {
+          opacity: 1;
+          background: linear-gradient(135deg, rgba(255, 255, 255, 0.48), transparent 68%);
+          mix-blend-mode: screen;
+        }
+
+        body[data-theme='aurora'] .glass-surface > * {
+          position: relative;
+          z-index: 1;
+        }
+
+        .glass-floating {
+          transition: transform 0.45s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.45s ease;
+        }
+
+        .glass-floating:hover {
+          transform: translateY(-4px);
+        }
+
+        body[data-theme='aurora'] .glass-floating {
+          transition: transform 0.3s ease, box-shadow 0.3s ease;
+          transform: translateZ(0);
+        }
+
+        body[data-theme='aurora'] .glass-floating:hover {
+          transform: translate3d(0, -2px, 0);
+          box-shadow: 0 32px 60px rgba(17, 23, 47, 0.35);
+        }
+
+        .sidebar.glass-floating:hover,
+        .main-content.glass-floating:hover,
+        body[data-theme='aurora'] .sidebar.glass-floating:hover,
+        body[data-theme='aurora'] .main-content.glass-floating:hover {
+          transform: none !important;
+          box-shadow: var(--theme-pane-shadow);
+        }
+
+        @keyframes auroraPulse {
+          0%, 100% {
+            transform: translate3d(0, 0, 0) scale(1);
+            filter: brightness(1);
+          }
+          45% {
+            transform: translate3d(0, -3px, 0) scale(1.012);
+            filter: brightness(1.05);
+          }
+          55% {
+            transform: translate3d(0, -2px, 0) scale(1.006);
+            filter: brightness(1.02);
+          }
+        }
+
+        .content-pill-btn {
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          padding: 10px 22px;
+          font-size: 14px;
+          font-weight: 600;
+          color: var(--theme-btn-text);
+          background: linear-gradient(135deg, var(--theme-accent), var(--theme-accent-soft));
+          border-radius: 999px;
+          border: 1px solid var(--theme-pane-border);
+          box-shadow: 0 12px 24px var(--theme-glow-accent);
+          cursor: pointer;
+          transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+          text-shadow: 0 1px 0 rgba(0, 0, 0, 0.12);
+          backdrop-filter: var(--theme-blur-strength);
+          position: relative;
+          overflow: hidden;
+        }
+
+        .content-pill-btn::after {
+          content: '';
+          position: absolute;
+          inset: 0;
+          border-radius: inherit;
+          background: radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.45), transparent 55%);
+          opacity: 0;
+          transition: opacity 0.25s ease;
+          pointer-events: none;
+        }
+
+        .content-pill-btn:hover::after {
+          opacity: 1;
+        }
+
+        .content-pill-btn:hover {
+          transform: translateY(-1px);
+          box-shadow: 0 20px 34px rgba(79, 59, 37, 0.22);
+          filter: brightness(1.04);
+        }
+
+        .content-pill-btn:active {
+          transform: translateY(0);
+          box-shadow: 0 8px 16px rgba(79, 59, 37, 0.18);
+          filter: brightness(0.98);
+        }
+
+        body[data-theme='aurora'] .content-pill-btn {
+          animation: auroraPulse 14s ease-in-out infinite;
+          box-shadow: 0 28px 54px rgba(96, 165, 250, 0.28);
+          will-change: transform, filter;
+          background-size: 220% 220%;
+        }
+
+        body[data-theme='aurora'] .content-pill-btn:hover {
+          box-shadow: 0 46px 78px rgba(148, 180, 255, 0.4);
+          filter: brightness(1.08);
+        }
+
+        body[data-theme='cool'] .orders-table-container {
+          background: rgba(248, 251, 255, 0.95) !important;
+          border-color: rgba(96, 165, 250, 0.28) !important;
+          box-shadow: 0 30px 55px rgba(37, 99, 235, 0.18) !important;
+        }
+
+        body[data-theme='cool'] .orders-table thead tr {
+          background: linear-gradient(135deg, rgba(147, 197, 253, 0.92), rgba(59, 130, 246, 0.82)) !important;
+          color: #0f172a !important;
+        }
+
+        body[data-theme='cool'] .orders-table tbody {
+          background: transparent !important;
+        }
+
+        body[data-theme='cool'] .orders-table tbody tr {
+          background: rgba(224, 236, 255, 0.55) !important;
+          border-bottom: 1px solid rgba(96, 165, 250, 0.28) !important;
+          color: #1e293b !important;
+        }
+
+        body[data-theme='cool'] .orders-table tbody tr:hover {
+          background: rgba(191, 219, 254, 0.65) !important;
+        }
+
+        body[data-theme='cool'] .orders-table tbody tr.selected-row {
+          background: rgba(96, 165, 250, 0.35) !important;
+          color: #0f172a !important;
+        }
+
+        body[data-theme='aurora'] .content-header {
+          box-shadow: 0 28px 60px rgba(45, 98, 197, 0.22);
+          border-bottom-color: rgba(255, 255, 255, 0.24);
+          position: relative;
+          z-index: 8;
+        }
+
+        body[data-theme='aurora'] .content-header .content-actions {
+          position: relative;
+          z-index: 10;
+        }
+
+        body[data-theme='aurora'] .main-content {
+          box-shadow: 0 60px 120px rgba(17, 23, 47, 0.45);
+          border-color: rgba(255, 255, 255, 0.26);
+        }
+
+        body[data-theme='aurora'] .orders-table-container {
+          background: linear-gradient(140deg, rgba(244, 248, 255, 0.92), rgba(222, 235, 255, 0.75), rgba(186, 246, 231, 0.58)) !important;
+          border: 1px solid rgba(168, 199, 255, 0.48) !important;
+          box-shadow: 0 38px 72px rgba(21, 32, 54, 0.28) !important;
+          backdrop-filter: blur(28px) saturate(195%);
+          -webkit-backdrop-filter: blur(28px) saturate(195%);
+        }
+
+        body[data-theme='aurora'] .orders-table thead tr {
+          background: linear-gradient(135deg, rgba(248, 251, 255, 0.95), rgba(218, 232, 255, 0.9), rgba(196, 237, 229, 0.82)) !important;
+          color: rgba(24, 37, 69, 0.92) !important;
+          text-shadow: 0 2px 10px rgba(255, 255, 255, 0.75);
+          border-bottom: 1px solid rgba(163, 201, 255, 0.55) !important;
+        }
+
+        body[data-theme='aurora'] .orders-table tbody {
+          background: transparent !important;
+        }
+
+        body[data-theme='aurora'] .orders-table {
+          background: radial-gradient(circle at 20% 0%, rgba(255, 255, 255, 0.85), rgba(224, 238, 255, 0.72), rgba(190, 236, 222, 0.58)) !important;
+          border: 1px solid rgba(168, 199, 255, 0.35) !important;
+          border-radius: 18px;
+          overflow: hidden;
+          box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5), 0 26px 48px rgba(30, 53, 92, 0.22);
+        }
+
+        body[data-theme='aurora'] .orders-table th,
+        body[data-theme='aurora'] .orders-table td {
+          border-color: rgba(130, 174, 255, 0.22) !important;
+          position: relative;
+        }
+
+        body[data-theme='aurora'] .orders-table th::after {
+          content: '';
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(180deg, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0));
+          pointer-events: none;
+        }
+
+        body[data-theme='aurora'] .orders-table tbody tr {
+          background: rgba(248, 251, 255, 0.55) !important;
+          border-bottom: 1px solid rgba(178, 213, 255, 0.4) !important;
+          color: rgba(27, 43, 79, 0.92) !important;
+          transition: background 0.25s ease, transform 0.2s ease;
+          backdrop-filter: blur(14px) saturate(170%);
+        }
+
+        body[data-theme='aurora'] .orders-table tbody tr:nth-child(even) {
+          background: rgba(233, 244, 255, 0.45) !important;
+        }
+
+        body[data-theme='aurora'] .orders-table tbody tr:hover {
+          background: rgba(210, 234, 255, 0.85) !important;
+          color: rgba(18, 32, 58, 0.96) !important;
+          transform: translateY(-1px);
+          box-shadow: 0 10px 24px rgba(35, 64, 112, 0.2);
+        }
+
+        body[data-theme='aurora'] .orders-table tbody tr.selected-row {
+          background: linear-gradient(135deg, rgba(213, 238, 255, 0.95), rgba(186, 241, 227, 0.88)) !important;
+          color: rgba(15, 29, 56, 0.95) !important;
+          border-bottom-color: rgba(120, 197, 255, 0.6) !important;
+          box-shadow: 0 14px 30px rgba(42, 78, 128, 0.25);
+        }
+
+        body[data-theme='aurora'] .orders-table tbody tr td {
+          border-color: rgba(160, 199, 255, 0.25) !important;
+          background: rgba(255, 255, 255, 0.12);
+        }
+
+        body[data-theme='aurora'] .orders-table tbody tr td:first-child {
+          box-shadow: inset 1px 0 rgba(255, 255, 255, 0.12);
+        }
+
+        body[data-theme='aurora'] .orders-table tbody tr td:last-child {
+          box-shadow: inset -1px 0 rgba(255, 255, 255, 0.12);
+        }
+
+        body[data-theme='aurora'] #supportMenuDropdown,
+        body[data-theme='aurora'] #quickFiltersPanel {
+          background: rgba(7, 12, 24, 0.9) !important;
+          border: 1px solid rgba(214, 232, 255, 0.45) !important;
+          box-shadow: 0 36px 80px rgba(2, 6, 14, 0.75) !important;
+          color: rgba(242, 246, 255, 0.95) !important;
+          backdrop-filter: blur(18px) saturate(180%);
+          -webkit-backdrop-filter: blur(18px) saturate(180%);
+          position: relative;
+          overflow: hidden;
+        }
+
+        body[data-theme='aurora'] #supportMenuDropdown::before,
+        body[data-theme='aurora'] #quickFiltersPanel::before {
+          content: '';
+          position: absolute;
+          inset: 0;
+          border-radius: inherit;
+          background: radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.35), transparent 60%);
+          pointer-events: none;
+          opacity: 0.45;
+        }
+
+        body[data-theme='aurora'] .support-menu-item {
+          border: 1px solid rgba(214, 232, 255, 0.25) !important;
+          background: rgba(255, 255, 255, 0.05);
+          color: rgba(242, 246, 255, 0.95) !important;
+        }
+
+        body[data-theme='aurora'] .support-menu-item:hover {
+          box-shadow: 0 18px 32px rgba(148, 180, 255, 0.32);
+          transform: translateY(-1px) scale(1.01);
+          background: rgba(255, 255, 255, 0.1);
+        }
+
+        body[data-theme='aurora'] .orders-filter-bar select,
+        body[data-theme='aurora'] .support-menu-theme select,
+        body[data-theme='aurora'] select {
+          background: rgba(6, 12, 24, 0.85) !important;
+          color: rgba(240, 247, 255, 0.98) !important;
+          border: 1px solid rgba(214, 232, 255, 0.35) !important;
+          box-shadow: 0 12px 24px rgba(2, 4, 10, 0.6) !important;
+        }
+
+        body[data-theme='aurora'] .orders-filter-bar select:focus,
+        body[data-theme='aurora'] .support-menu-theme select:focus {
+          box-shadow: 0 0 0 2px rgba(125, 211, 252, 0.35), 0 18px 28px rgba(17, 23, 47, 0.35) !important;
+        }
+
+        body[data-theme='aurora'] select option {
+          background: #0b1224;
+          color: rgba(248, 252, 255, 0.95);
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          body[data-theme='aurora'] .content-pill-btn {
+            animation: none !important;
+          }
+          body[data-theme='aurora'] .glass-floating {
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+          }
+        }
+`;
+
+  // Restore Runware and Gemini configuration helpers
   try {
     var _savedRunwareKey = (typeof localStorage !== 'undefined') ? localStorage.getItem('runwareApiKey') : null;
     if (_savedRunwareKey) {
       runwareConfig.apiKey = _savedRunwareKey;
     }
-    if (typeof window !== 'undefined') window.runwareConfig = runwareConfig;
-  } catch (e) {
-    console.warn('[Runware] Unable to access saved configuration:', e);
-    if (typeof window !== 'undefined') window.runwareConfig = runwareConfig;
+    if (typeof window !== 'undefined') {
+      window.runwareConfig = runwareConfig;
+    }
+  } catch (error) {
+    console.warn('[Runware] Unable to access saved configuration:', error);
+    if (typeof window !== 'undefined') {
+      window.runwareConfig = runwareConfig;
+    }
   }
 
   var geminiConfig = (typeof window !== 'undefined' && window.geminiConfig) ? window.geminiConfig : {
     apiKey: '',
-    baseUrl: 'https://generativelanguage.googleapis.com/v1beta', // Google AI Studio endpoint for AIzaSy keys
-    vertexUrl: 'https://us-central1-aiplatform.googleapis.com/v1' // Vertex AI endpoint for OAuth tokens
+    baseUrl: 'https://generativelanguage.googleapis.com/v1beta',
+    vertexUrl: 'https://us-central1-aiplatform.googleapis.com/v1'
   };
-  if (typeof window !== 'undefined') window.geminiConfig = geminiConfig;
-  // Load saved Gemini API key
+  var googleAIConfig = geminiConfig;
+  if (typeof window !== 'undefined') {
+    window.geminiConfig = geminiConfig;
+    window.googleAIConfig = googleAIConfig;
+  }
+
   try {
     var _savedGeminiKey = (typeof localStorage !== 'undefined') ? localStorage.getItem('geminiApiKey') : null;
     var _savedProjectId = (typeof localStorage !== 'undefined') ? localStorage.getItem('geminiProjectId') : null;
@@ -56,234 +729,158 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
     if (_savedLocation) {
       geminiConfig.location = _savedLocation;
     }
-    if (typeof window !== 'undefined') window.geminiConfig = geminiConfig;
-  } catch (e) {
-    console.warn('[Gemini] Unable to access saved configuration:', e);
-    if (typeof window !== 'undefined') window.geminiConfig = geminiConfig;
+  } catch (error) {
+    console.warn('[Gemini] Unable to access saved configuration:', error);
   }
 
   function getRunwareConfig() {
     return (typeof window !== 'undefined' && window.runwareConfig) ? window.runwareConfig : runwareConfig;
   }
 
-  // Helper to always get the active Gemini config
   function getGeminiConfig() {
     return (typeof window !== 'undefined' && window.geminiConfig) ? window.geminiConfig : geminiConfig;
   }
 
-  // Initialize WebSocket stub immediately - will be replaced by full implementation
-  // This ensures window.RunwareWebSocketManager exists even if full code hasn't loaded yet
   if (typeof window !== 'undefined' && !window.RunwareWebSocketManager) {
-    console.log('[Init:0] 🚀 Starting WebSocket stub creation...');
-    console.log('[Init:0] ⏱️ Timestamp:', new Date().toISOString());
-    
-    // Temporary stub that will be replaced
+    console.log('[Init:0] Starting WebSocket stub creation...');
     window._runwareStub = true;
-    
-    // Create a promise that resolves when the real WebSocket class is ready
     window._runwareReady = new Promise((resolve) => {
-      console.log('[Init:0] 📝 Promise created, storing resolver...');
       window._runwareReadyResolver = resolve;
-      console.log('[Init:0] ✅ Resolver stored. Type:', typeof resolve);
     });
-    
-    console.log('[Init:0] ✅ Stub complete. IIFE will now execute...');
   }
 
-  // Runware API Setup Modal - Define early for global access
-  window.showGoogleAISetupModal = function() {
+  function showGoogleAISetupModal() {
+    const existingModal = document.getElementById('googleAISetupModal');
+    if (existingModal) {
+      existingModal.remove();
+    }
+
     const modal = document.createElement('div');
     modal.id = 'googleAISetupModal';
-    modal.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: center; z-index: 10000;';
-    
-    modal.innerHTML = 
-      '<div style="background: white; border-radius: 12px; padding: 24px; max-width: 500px; width: 90%;">' +
-        '<div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">' +
-          '<div style="display: flex; align-items: center;">' +
-            '<span style="font-size: 28px; margin-right: 12px;">🚀</span>' +
-            '<h3 style="margin: 0; color: #4b3b2a;">Runware API Setup</h3>' +
-          '</div>' +
-          '<button onclick="document.getElementById(\'googleAISetupModal\').remove()" style="background: none; border: none; font-size: 24px; cursor: pointer; color: #6b5440;">&times;</button>' +
-        '</div>' +
-        '<div style="background: #fdf4e6; padding: 16px; border-radius: 8px; margin-bottom: 16px;">' +
-          '<h4 style="margin: 0 0 8px; color: #a66b38;">🚀 ADVANCED AI READY!</h4>' +
-          '<p style="margin: 0; color: #a66b38; font-size: 14px;">Runware API provides advanced AI image generation and editing with <strong>Nano Banana</strong> (Google Gemini Flash Image 2.5) model!</p>' +
-        '</div>' +
-        '<div style="margin-bottom: 16px;">' +
-          '<h4 style="margin: 0 0 8px; color: #4b3b2a;">Quick Setup (2 minutes):</h4>' +
-          '<ol style="margin: 0; padding-left: 20px; color: #6b5440; font-size: 14px;">' +
-            '<li>Visit <a href="https://runware.ai" target="_blank" style="color: #c48b5a;">Runware.ai</a></li>' +
-            '<li>Sign up for an account</li>' +
-            '<li>Get your API key from dashboard</li>' +
-            '<li>Copy the key and paste it below</li>' +
-          '</ol>' +
-        '</div>' +
-        '<div style="margin-bottom: 16px;">' +
-          '<input type="text" id="googleAIApiKey" placeholder="Paste your Runware API key here..." style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px;">' +
-        '</div>' +
-        '<div style="display: flex; gap: 12px; justify-content: flex-end;">' +
-          '<button onclick="document.getElementById(\'googleAISetupModal\').remove()" style="padding: 10px 20px; background: #6b5440; color: white; border: none; border-radius: 6px; cursor: pointer;">Cancel</button>' +
-          '<button onclick="saveGoogleAIKey()" style="padding: 10px 20px; background: #c48b5a; color: white; border: none; border-radius: 6px; cursor: pointer;">✅ Save & Test</button>' +
-        '</div>' +
-      '</div>';
-    
-    document.body.appendChild(modal);
-  };
+    modal.style.cssText = 'position:fixed; inset:0; display:flex; align-items:center; justify-content:center; background:rgba(15,23,42,0.55); backdrop-filter:blur(6px); z-index:10000;';
 
-  // Save Runware API key function - Define early for modal access
-  window.saveGoogleAIKey = function() {
+    modal.innerHTML = `
+      <div class="glass-surface glass-floating" style="max-width:420px; width:90%; border-radius:20px; padding:24px; background:var(--theme-pane-bg); color:var(--theme-text);">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+          <div>
+            <h2 style="margin:0; font-size:20px;">Runware API Setup</h2>
+            <p style="margin:4px 0 0; font-size:13px; color:var(--theme-muted);">Connect Google Gemini Flash Image 2.5 through Runware.</p>
+          </div>
+          <button type="button" data-role="close-google-ai-setup" style="border:none; background:transparent; color:var(--theme-muted); font-size:20px; cursor:pointer; line-height:1;">&times;</button>
+        </div>
+        <div style="display:grid; gap:12px;">
+          <div style="font-size:13px; color:var(--theme-muted); line-height:1.5;">
+            <strong>Quick steps:</strong>
+            <ol style="margin:8px 0 0 18px; padding:0;">
+              <li>Create or sign in at runware.ai</li>
+              <li>Copy your API key</li>
+              <li>Paste it below and save</li>
+            </ol>
+          </div>
+          <input id="googleAIApiKey" type="text" placeholder="Paste Runware API key" style="width:100%; padding:12px; border-radius:14px; border:1px solid var(--theme-border); background:var(--theme-input-bg); color:var(--theme-text); font-size:14px;">
+          <div style="display:flex; justify-content:flex-end; gap:12px;">
+            <button type="button" id="googleAISetupCancel" style="padding:10px 16px; border-radius:999px; border:1px solid var(--theme-border); background:transparent; color:var(--theme-muted); cursor:pointer;">Cancel</button>
+            <button type="button" id="googleAISetupSave" class="content-pill-btn" style="padding:10px 18px;">Save & Test</button>
+          </div>
+        </div>
+      </div>
+    `;
+
+    const closeButton = modal.querySelector('[data-role="close-google-ai-setup"]');
+    if (closeButton) {
+      closeButton.addEventListener('click', () => modal.remove());
+    }
+
+    const cancelButton = modal.querySelector('#googleAISetupCancel');
+    if (cancelButton) {
+      cancelButton.addEventListener('click', () => modal.remove());
+    }
+
+    const saveButton = modal.querySelector('#googleAISetupSave');
+    if (saveButton) {
+      saveButton.addEventListener('click', saveGoogleAIKey);
+    }
+
+    document.body.appendChild(modal);
+
+    const input = modal.querySelector('#googleAIApiKey');
+    if (input) {
+      input.value = runwareConfig.apiKey || '';
+      input.focus();
+    }
+  }
+
+  function saveGoogleAIKey() {
     const keyInput = document.getElementById('googleAIApiKey');
-    const apiKey = keyInput.value.trim();
-    
+    const apiKey = keyInput ? keyInput.value.trim() : '';
+
     if (!apiKey) {
-      showToast('⚠️ Please enter your API key', 'warning');
+      showToast('Please enter your Runware API key.', 'warning');
       return;
     }
-    
+
     const cfg = getRunwareConfig();
     cfg.apiKey = apiKey;
+
     if (typeof localStorage !== 'undefined') {
-      localStorage.setItem('runwareApiKey', apiKey);
-      localStorage.setItem('geminiAccessToken', apiKey);
-    }
-    
-    document.getElementById('googleAISetupModal')?.remove();
-    showToast('✅ Runware API configured! Testing connection...', 'success');
-    
-    // Test the connection
-    setTimeout(() => {
-      if (typeof window.testGoogleAIConnection === 'function') {
-        window.testGoogleAIConnection();
+      try {
+        localStorage.setItem('runwareApiKey', apiKey);
+        localStorage.setItem('geminiAccessToken', apiKey);
+      } catch (error) {
+        console.warn('[Runware] Unable to persist API key:', error);
       }
-    }, 500);
-  };
+    }
 
-  // Simple prompt generator - define immediately
-  function generateImageEditingPrompt(operation, instructions) {
-    const safeInstructions = instructions || 'general image editing';
-    const safeOperation = operation || 'custom';
-    
-    const basePrompts = {
-      'color-change': 'Edit the provided image to change the color as requested: ' + safeInstructions + '. Maintain the original composition, lighting, and style while only changing the specified colors.',
-      'add-model': 'Add a model to the provided image as requested: ' + safeInstructions + '. Ensure the model fits naturally into the scene with appropriate lighting and perspective.',
-      'background-change': 'Modify the background of the provided image: ' + safeInstructions + '. Keep the main subject unchanged while updating the background environment.',
-      'lighting-adjustment': 'Adjust the lighting in the provided image: ' + safeInstructions + '. Modify the lighting conditions while preserving the main subject and composition.',
-      'object-removal': 'Remove objects from the provided image: ' + safeInstructions + '. Fill in the removed areas naturally to maintain a seamless appearance.',
-      'style-transfer': 'Transform the style of the provided image: ' + safeInstructions + '. Apply the requested artistic style while preserving the main subject and composition.',
-      'product-enhancement': 'Enhance the quality of the provided image: ' + safeInstructions + '. Improve clarity, sharpness, and overall visual appeal.',
-      'custom': 'Edit the provided image according to these instructions: ' + safeInstructions + '. Make the changes while maintaining natural lighting and composition.'
-    };
-    
-    return basePrompts[safeOperation] || basePrompts['custom'];
+    document.getElementById('googleAISetupModal')?.remove();
+    showToast('Runware API configured. Testing connection...', 'success');
+
+    setTimeout(() => {
+      if (typeof testGoogleAIConnection === 'function') {
+        testGoogleAIConnection();
+      }
+    }, 400);
   }
-  window.generateImageEditingPrompt = generateImageEditingPrompt;
 
-  // Simple availability checker - define immediately
   async function checkGoogleAIAvailability() {
     const cfg = getRunwareConfig();
     if (!cfg.apiKey) {
       return false;
     }
-    
-    try {
-      // For now, just check if we have an API key - can be enhanced later
-      console.log('Checking Runware API availability with key:', cfg.apiKey ? 'present' : 'missing');
-      return true; // Assume available if key is present
-    } catch (error) {
-      console.error('Runware API availability check error:', error);
-      return false;
-    }
+    return true;
   }
+
+  function testGoogleAIConnection() {
+    showToast('Testing Runware API connection...', 'info');
+
+    setTimeout(async () => {
+      const cfg = getRunwareConfig();
+      if (!cfg.apiKey) {
+        showToast('Runware API key is missing.', 'warning');
+        return;
+      }
+
+      try {
+        const isAvailable = await checkGoogleAIAvailability();
+        if (isAvailable) {
+          showToast('Runware API connection looks good!', 'success');
+        } else {
+          showToast('Runware API connection failed.', 'error');
+        }
+      } catch (error) {
+        console.error('Runware connection check failed:', error);
+        showToast('Runware API connection failed.', 'error');
+      }
+    }, 150);
+  }
+
+  window.showGoogleAISetupModal = showGoogleAISetupModal;
+  window.saveGoogleAIKey = saveGoogleAIKey;
   window.checkGoogleAIAvailability = checkGoogleAIAvailability;
+  window.testGoogleAIConnection = testGoogleAIConnection;
 
-  // Simple API processor - define immediately
-
-
-  // Simple preview modal - define immediately
-  function showGoogleAIPreviewModal(operation, instructions, result = null) {
-    const modal = document.createElement('div');
-    modal.id = 'googleAIPreviewModal';
-    modal.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: center; z-index: 10000;';
-    
-    // Check if result has a text response instead of image
-    if (result?.textResponse) {
-      // Display text response for models that don't generate images
-      modal.innerHTML = 
-        '<div style="background: white; border-radius: 12px; padding: 24px; max-width: 600px; width: 90%; max-height: 80vh; overflow-y: auto;">' +
-          '<div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">' +
-            '<div style="display: flex; align-items: center;">' +
-              '<span style="font-size: 28px; margin-right: 12px;">🔮</span>' +
-              '<h3 style="margin: 0; color: #4b3b2a;">Gemini AI Response</h3>' +
-            '</div>' +
-            '<button onclick="document.getElementById(\'googleAIPreviewModal\').remove()" style="background: none; border: none; font-size: 24px; cursor: pointer; color: #6b5440;">&times;</button>' +
-          '</div>' +
-          '<div style="margin-bottom: 16px; padding: 12px; background: #f1e8dc; border-radius: 8px;">' +
-            '<strong>Operation:</strong> ' + operation + '<br>' +
-            '<strong>Instructions:</strong> ' + (instructions || 'No specific instructions provided') +
-          '</div>' +
-          '<div style="padding: 16px; background: #fef3c7; border-left: 4px solid #f59e0b; border-radius: 8px; margin-bottom: 16px;">' +
-            '<p style="margin: 0; color: #92400e;"><strong>⚠️ Note:</strong> Gemini 2.5 Flash is a vision/text model and cannot generate or edit images. It can only analyze and describe images.</p>' +
-            '<p style="margin: 8px 0 0 0; color: #92400e; font-size: 14px;">For image generation, use <strong>Imagen</strong> model or <strong>Runware AI</strong> instead.</p>' +
-          '</div>' +
-          '<div style="padding: 16px; background: #f9fafb; border-radius: 8px; white-space: pre-wrap; font-family: monospace; font-size: 14px;">' +
-            result.textResponse +
-          '</div>' +
-        '</div>';
-      document.body.appendChild(modal);
-      return;
-    }
-    
-    // Extract image URL from result
-    let imageUrl = '';
-    if (result?.imageUrl) {
-      imageUrl = result.imageUrl;
-    } else if (result?.candidates?.[0]?.content?.parts?.[0]?.inline_data?.data) {
-      imageUrl = 'data:image/jpeg;base64,' + result.candidates[0].content.parts[0].inline_data.data;
-    } else {
-      // Fallback: create a simple colored div if no image using URL encoding instead of btoa
-      const svg = '<svg width="400" height="300" xmlns="http://www.w3.org/2000/svg"><rect width="400" height="300" fill="#7fa284"/><text x="200" y="150" text-anchor="middle" fill="white" font-family="Arial" font-size="24">Processed</text></svg>';
-      imageUrl = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
-    }
-    
-    modal.innerHTML = 
-      '<div style="background: white; border-radius: 12px; padding: 24px; max-width: 600px; width: 90%; max-height: 80vh; overflow-y: auto;">' +
-        '<div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">' +
-          '<div style="display: flex; align-items: center;">' +
-            '<span style="font-size: 28px; margin-right: 12px;">🚀</span>' +
-            '<h3 style="margin: 0; color: #4b3b2a;">Runware AI Result</h3>' +
-          '</div>' +
-          '<button onclick="document.getElementById(\'googleAIPreviewModal\').remove()" style="background: none; border: none; font-size: 24px; cursor: pointer; color: #6b5440;">&times;</button>' +
-        '</div>' +
-        '<div style="margin-bottom: 16px; padding: 12px; background: #f1e8dc; border-radius: 8px;">' +
-          '<strong>Operation:</strong> ' + operation + '<br>' +
-          '<strong>Instructions:</strong> ' + (instructions || 'No specific instructions provided') + '<br>' +
-          '<strong>Processing Time:</strong> ' + (result?.processingTime || 'N/A') + '<br>' +
-          '<strong>Cost:</strong> ' + (result?.cost || 'N/A') +
-        '</div>' +
-        '<div style="text-align: center; margin-bottom: 20px;">' +
-          '<img src="' + imageUrl + '" style="max-width: 100%; max-height: 400px; border-radius: 8px; border: 2px solid #7fa284;" onload="console.log(\'Image loaded successfully\')" onerror="console.error(\'Image failed to load\', this.src)">' +
-        '</div>' +
-        '<div style="background: #eff6ff; padding: 16px; border-radius: 8px; margin-bottom: 16px;">' +
-          '<h4 style="margin: 0 0 8px; color: #a66b38;">🚀 Google Gemini Flash Image 2.5 Features:</h4>' +
-          '<ul style="margin: 0; padding-left: 20px; color: #a66b38; font-size: 14px;">' +
-            '<li>Advanced AI image generation and editing</li>' +
-            '<li>High-fidelity image processing with WebSocket</li>' +
-            '<li>Real-time image inference capabilities</li>' +
-            '<li>Professional-grade image enhancement</li>' +
-            '<li>Fast processing with Google Gemini Flash Image 2.5 model</li>' +
-            '<li>WebSocket-based real-time communication</li>' +
-          '</ul>' +
-        '</div>' +
-        '<div style="display: flex; gap: 12px; justify-content: flex-end;">' +
-          '<button onclick="document.getElementById(\'googleAIPreviewModal\').remove()" style="padding: 10px 20px; background: #6b5440; color: white; border: none; border-radius: 6px; cursor: pointer;">Close</button>' +
-          '<button onclick="window.saveProcessedImage(\'' + imageUrl + '\', \'' + operation + '\')" style="padding: 10px 20px; background: #c48b5a; color: white; border: none; border-radius: 6px; cursor: pointer;">💾 Save Image</button>' +
-          '<button onclick="alert(\'✅ Result saved successfully!\'); document.getElementById(\'googleAIPreviewModal\').remove();" style="padding: 10px 20px; background: #7fa284; color: white; border: none; border-radius: 6px; cursor: pointer;">✅ Use Result</button>' +
-        '</div>' +
-      '</div>';
-    
-    document.body.appendChild(modal);
-  }
-  window.showGoogleAIPreviewModal = showGoogleAIPreviewModal;
+  window.testRunwareConnection = function() {
+    return testGoogleAIConnection();
+  };
 
   // Function to save/download processed images
   function saveProcessedImage(imageUrl, operation = 'processed') {
@@ -442,74 +1039,13 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
     }
   };
 
-  window.testGoogleAIConnection = function() {
-    console.log('testGoogleAIConnection called');
-    showToast('🔄 Testing Runware API connection...', 'info');
-
-    // Check if API key is configured
-    setTimeout(async () => {
-      const cfg = getRunwareConfig();
-      console.log('API Key available:', !!cfg.apiKey);
-      console.log('API Key value:', cfg.apiKey ? 'configured' : 'not configured');
-      
-      if (cfg.apiKey) {
-        try {
-          const isAvailable = await checkGoogleAIAvailability();
-          if (isAvailable) {
-            console.log('✅ Runware API connection successful');
-            showToast('✅ Runware API connected successfully!', 'success');
-          } else {
-            console.log('❌ Runware API connection failed');
-            showToast('❌ Runware API connection failed', 'error');
-          }
-        } catch (error) {
-          console.error('Connection test error:', error);
-          showToast('❌ Connection test error: ' + error.message, 'error');
-        }
-      } else {
-        console.log('❌ API key not configured');
-        showToast('❌ Runware API key not configured', 'error');
-        console.log('Current config:', cfg);
-      }
-    }, 100);
-  };
+  window.testGoogleAIConnection = testGoogleAIConnection;
 
   // Test Runware connection (alias for backward compatibility)
   window.testRunwareConnection = function() {
-    return window.testGoogleAIConnection();
+    return testGoogleAIConnection();
   };
 
-  // Test Google Gemini connection
-  window.testGeminiConnection = function() {
-    console.log('testGeminiConnection called');
-    showToast('🔮 Testing Google Gemini API connection...', 'info');
-
-    // Check if API key is configured
-    setTimeout(async () => {
-      console.log('Gemini API Key available:', !!geminiConfig.apiKey);
-      console.log('Gemini API Key value:', geminiConfig.apiKey ? 'configured' : 'not configured');
-
-      if (geminiConfig.apiKey) {
-        try {
-          const isAvailable = await testGeminiConnection();
-          if (isAvailable) {
-            console.log('✅ Google Gemini API connection successful');
-            showToast('✅ Google Gemini API connected successfully!', 'success');
-          } else {
-            console.log('❌ Google Gemini API connection failed');
-            showToast('❌ Google Gemini API connection failed', 'error');
-          }
-        } catch (error) {
-          console.error('Gemini connection test error:', error);
-          showToast('❌ Gemini connection test error: ' + error.message, 'error');
-        }
-      } else {
-        console.log('❌ Gemini API key not configured');
-        showToast('❌ Google Gemini API key not configured', 'error');
-        console.log('Current Gemini config:', geminiConfig);
-      }
-    }, 100);
-  };
 
   // Post Production functions - Define immediately for global access
   window.handleMethodChange = function(selectElement) {
@@ -675,7 +1211,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
     const currentValue = filterSelect.value;
     
     // Clear existing options except "All Events"
-    filterSelect.innerHTML = '<option value="">All Events</option>';
+  filterSelect.innerHTML = '<option value="">Events</option>';
     
     // Sort Event IDs alphabetically
     eventIds.sort();
@@ -1221,8 +1757,8 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
 
     if (!window.__GPT5_ANNOUNCED__) {
       window.__GPT5_ANNOUNCED__ = true;
-      console.log('🧠 GPT-5 Codex (Preview) is enabled for all clients.');
-      showToast('🧠 GPT-5 Codex (Preview) is now enabled for all clients.', 'success');
+      // console.log('🧠 GPT-5 Codex (Preview) is enabled for all clients.');
+      // showToast('🧠 GPT-5 Codex (Preview) is now enabled for all clients.', 'success');
     }
 
   // Authentication System
@@ -1494,11 +2030,103 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
   // Expose authSystem globally for access from other scopes
   window.authSystem = authSystem;
 
+  // Data refresh tracking
+  let lastDataRefresh = null;
+
+  function loadPersistedRefreshState() {
+    if (typeof window !== 'undefined' && window.lastDataRefresh && window.lastDataRefresh.timestamp) {
+      return window.lastDataRefresh;
+    }
+    if (typeof localStorage === 'undefined') {
+      return null;
+    }
+    try {
+      const raw = localStorage.getItem('lastDataRefreshInfo');
+      if (!raw) {
+        return null;
+      }
+      const parsed = JSON.parse(raw);
+      if (parsed && parsed.timestamp) {
+        return parsed;
+      }
+    } catch (error) {
+      console.warn('[Refresh] Unable to read persisted refresh info:', error);
+    }
+    return null;
+  }
+
+  lastDataRefresh = loadPersistedRefreshState();
+  if (typeof window !== 'undefined') {
+    window.lastDataRefresh = lastDataRefresh;
+  }
+
+  function formatRefreshTimestamp(timestampIso) {
+    if (!timestampIso) {
+      return 'unknown time';
+    }
+    try {
+      const date = new Date(timestampIso);
+      if (!isNaN(date.getTime())) {
+        return date.toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' });
+      }
+    } catch (error) {
+      console.warn('[Refresh] Unable to format timestamp:', error);
+    }
+    return timestampIso;
+  }
+
+  function buildRefreshSummaryText(user) {
+    const userName = user && user.name ? user.name : 'current user';
+    if (!lastDataRefresh || !lastDataRefresh.timestamp) {
+      return `Awaiting first refresh for ${userName}. Includes PMR and CPT updates.`;
+    }
+    const formatted = formatRefreshTimestamp(lastDataRefresh.timestamp);
+    const sourceLabel = lastDataRefresh.source || 'Manual refresh';
+    return `Last refresh for ${userName}: ${formatted} (${sourceLabel}). Includes updates from other users, PMR, and CPT.`;
+  }
+
+  function updateLastRefreshDisplay() {
+    const infoNode = document.getElementById('lastRefreshInfo');
+    if (!infoNode) {
+      return;
+    }
+    const user = (authSystem && typeof authSystem.getCurrentUser === 'function') ? authSystem.getCurrentUser() : null;
+    infoNode.textContent = buildRefreshSummaryText(user);
+    if (lastDataRefresh && lastDataRefresh.timestamp) {
+      infoNode.title = `Latest refresh completed ${formatRefreshTimestamp(lastDataRefresh.timestamp)} via ${lastDataRefresh.source || 'Manual refresh'}.`;
+    } else {
+      infoNode.title = 'Click Refresh to pull the latest updates from other users, PMR, and CPT.';
+    }
+  }
+
+  function markDataRefreshed(source) {
+    const refreshRecord = {
+      timestamp: new Date().toISOString(),
+      source: source || 'Manual refresh',
+    };
+    lastDataRefresh = refreshRecord;
+    if (typeof window !== 'undefined') {
+      window.lastDataRefresh = refreshRecord;
+    }
+    if (typeof localStorage !== 'undefined') {
+      try {
+        localStorage.setItem('lastDataRefreshInfo', JSON.stringify(refreshRecord));
+      } catch (error) {
+        console.warn('[Refresh] Unable to persist refresh info:', error);
+      }
+    }
+    updateLastRefreshDisplay();
+  }
+
+  window.updateLastRefreshDisplay = updateLastRefreshDisplay;
+  window.markDataRefreshed = markDataRefreshed;
+
   // Show login screen if not authenticated
   function showLoginScreen() {
-    root.innerHTML = `
-      <div style="min-height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #f4e8d8 0%, #e7d2b8 100%); padding: 20px; box-sizing: border-box;">
-        <div style="background: #fffaf3; padding: 48px; border-radius: 16px; box-shadow: 0 30px 60px rgba(79, 59, 37, 0.18); max-width: 420px; width: 100%; max-height: 90vh; overflow-y: auto; border: 1px solid rgba(196, 139, 90, 0.2);">
+
+  root.innerHTML = `
+  <div class="auth-viewport" style="min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; box-sizing: border-box;">
+        <div class="auth-card glass-surface glass-floating" style="background: #fffaf3; padding: 48px; border-radius: 20px; box-shadow: 0 30px 60px rgba(79, 59, 37, 0.18); max-width: 420px; width: 100%; max-height: 90vh; overflow-y: auto; border: 1px solid rgba(196, 139, 90, 0.2);">
           <div style="text-align: center; margin-bottom: 32px;">
             <div style="margin: 0 0 20px 0; text-align: center;">
               <div style="margin-bottom: 8px;">
@@ -1515,19 +2143,21 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
             <div style="margin-bottom: 24px;">
               <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #4b3b2a;">Username</label>
               <input type="text" id="username" required 
-                style="width: 100%; padding: 12px 16px; border: 1px solid rgba(196, 139, 90, 0.35); border-radius: 8px; font-size: 16px; transition: border-color 0.15s; background: #fffaf3; color: #4b3b2a;" 
+                class="auth-input"
+                style="width: 100%; padding: 12px 16px; border: 1px solid rgba(196, 139, 90, 0.35); border-radius: 12px; font-size: 16px; transition: border-color 0.15s; background: #fffaf3; color: #4b3b2a;" 
                 placeholder="Enter your username">
             </div>
 
             <div style="margin-bottom: 32px;">
               <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #4b3b2a;">Password</label>
               <input type="password" id="password" required 
-                style="width: 100%; padding: 12px 16px; border: 1px solid rgba(196, 139, 90, 0.35); border-radius: 8px; font-size: 16px; transition: border-color 0.15s; background: #fffaf3; color: #4b3b2a;" 
+                class="auth-input"
+                style="width: 100%; padding: 12px 16px; border: 1px solid rgba(196, 139, 90, 0.35); border-radius: 12px; font-size: 16px; transition: border-color 0.15s; background: #fffaf3; color: #4b3b2a;" 
                 placeholder="Enter your password">
             </div>
 
-            <button type="submit" 
-              style="width: 100%; background: linear-gradient(135deg, #dfb37d, #c48b5a); color: white; border: none; padding: 14px; border-radius: 10px; font-size: 16px; font-weight: 600; cursor: pointer; transition: transform 0.2s; margin-bottom: 16px; box-shadow: 0 12px 24px rgba(196, 139, 90, 0.35);">
+            <button type="submit" class="content-pill-btn content-pill-btn--export" 
+              style="width: 100%; border: none; padding: 14px; border-radius: 999px; font-size: 16px; font-weight: 600; cursor: pointer; transition: transform 0.2s; margin-bottom: 16px;">
               Sign In
             </button>
           </form>
@@ -1620,15 +2250,12 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
   }
 
   const purchaseGroups = orderHelpers?.PURCHASE_GROUPS || {
-    100: 'Groceries',
-    200: 'Fresh Products',
-    300: 'Electronics',
-    400: 'Home & Garden',
-    500: 'Fashion',
-    600: 'Health & Beauty',
-    700: 'Sports & Leisure',
-    800: 'Automotive',
-    900: 'Baby & Kids'
+    101: 'Petfood',
+    102: 'Coffee/Tea',
+    103: 'Groceries',
+    104: 'Confectionary',
+    105: 'Dry Food',
+    106: 'Frozen'
   };
 
   const createNormalizedArticle = orderHelpers?.createNormalizedArticle
@@ -1637,7 +2264,38 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
 
   const normalizeArticles = orderHelpers?.normalizeArticles
     ? (...args) => orderHelpers.normalizeArticles(...args)
-    : () => [];
+    : (articles) => {
+        if (!Array.isArray(articles)) return [];
+        return articles.map((article, index) => {
+          if (typeof article === 'string') {
+            // Parse string format: "Name [EAN: 123]"
+            const eanMatch = article.match(/\[EAN:\s*(\d+)\]/);
+            const name = article.replace(/\[EAN:\s*\d+\]/, '').trim();
+            return {
+              name: name,
+              articleNumber: eanMatch ? eanMatch[1] : '',
+              raw: {
+                articleName: name,
+                articleNumber: eanMatch ? eanMatch[1] : '',
+                unitOfMeasure: 'EA',
+                fileName: `ENV.${String(index + 1).padStart(6, '0')}.jpg`
+              }
+            };
+          }
+          // Handle object format
+          return {
+            name: article.name || article.articleName || '',
+            articleNumber: article.articleNumber || '',
+            combinedPhoto: article.combinedPhoto || '',
+            fileName: article.fileName || '',
+            raw: {
+              ...article,
+              unitOfMeasure: article.unitOfMeasure || 'EA',
+              fileName: article.fileName || `ENV.${String(index + 1).padStart(6, '0')}.jpg`
+            }
+          };
+        });
+    };
 
   const getArticleTextList = orderHelpers?.getArticleTextList
     ? (...args) => orderHelpers.getArticleTextList(...args)
@@ -1653,7 +2311,32 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
 
   const renderArticleCards = orderHelpers?.renderArticleCards
     ? (...args) => orderHelpers.renderArticleCards(...args)
-    : () => '<div style="padding:16px;background:rgba(255, 250, 243, 0.8);border:1px dashed rgba(196, 139, 90, 0.4);border-radius:12px;color:#6b5440;font-size:13px;">No article details available for this order.</div>';
+    : (articles) => {
+        if (!Array.isArray(articles) || articles.length === 0) {
+          return '<div style="padding:16px;background:rgba(255, 250, 243, 0.8);border:1px dashed rgba(196, 139, 90, 0.4);border-radius:12px;color:#6b5440;font-size:13px;">No article details available for this order.</div>';
+        }
+        
+        return articles.map(article => {
+          const raw = article.raw || {};
+          const articleNumber = article.articleNumber || raw.articleNumber || 'N/A';
+          const name = article.name || raw.articleName || 'Unknown Article';
+          const uom = article.unitOfMeasure || raw.unitOfMeasure || 'EA';
+          const netContent = article.netContent || raw.netContent || 'N/A';
+          
+          return `
+            <div style="padding:12px;background:rgba(255, 255, 255, 0.9);border:1px solid rgba(196, 139, 90, 0.2);border-radius:8px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;">
+              <div>
+                <div style="font-weight:600;color:#3a2a1d;font-size:13px;">${name}</div>
+                <div style="font-size:11px;color:#7c6248;margin-top:2px;">ID: ${articleNumber}</div>
+              </div>
+              <div style="text-align:right;">
+                <div style="font-size:11px;color:#7c6248;background:rgba(196, 139, 90, 0.1);padding:2px 6px;border-radius:4px;display:inline-block;">${uom}</div>
+                <div style="font-size:11px;color:#7c6248;margin-top:2px;">${netContent}</div>
+              </div>
+            </div>
+          `;
+        }).join('');
+    };
 
   window.purchaseGroups = purchaseGroups;
 
@@ -1746,10 +2429,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
   console.log('Endpoint:', geminiConfig.apiKey?.startsWith('AIzaSy') || geminiConfig.apiKey?.startsWith('AQ.') ? 'Google AI Studio' : 'Vertex AI');
   console.log('Project ID:', geminiConfig.projectId || 'Not required for Google AI Studio keys');
   console.log('Location:', geminiConfig.location);
-  showToast('✅ Google Gemini API configured successfully!', 'success');
-
-    // Test the connection
-    testGeminiConnection();
+  console.log('ℹ️ Connection test skipped (AI integrations disabled).');
     return geminiConfig;
   };
 
@@ -1763,114 +2443,15 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
     return isGoogleAIKey(token);
   }
 
-  // Test Google Gemini connection - Supports Vertex AI (OAuth) and Google AI (AQ key)
+  // Test Google Gemini connection - disabled while AI integrations are paused
   async function testGeminiConnection() {
-    try {
-      if (!geminiConfig.apiKey) {
-        showToast('❌ Google Gemini API key not configured', 'error');
-        return false;
-      }
-
-      let url;
-      let headers;
-      let body;
-
-      if (isGoogleAIKey(geminiConfig.apiKey)) {
-        // Google AI Studio endpoint with API key query param
-        url = `${geminiConfig.baseUrl}/models/${geminiConfig.model}:generateContent?key=${geminiConfig.apiKey}`;
-        headers = { 'Content-Type': 'application/json' };
-        body = {
-          contents: [{
-            parts: [{ text: 'Hello, this is a test message for Google AI Studio Gemini.' }]
-          }],
-          generationConfig: {
-            temperature: geminiConfig.temperature,
-            maxOutputTokens: geminiConfig.maxTokens,
-          }
-        };
-
-        const keyTypeDisplay = geminiConfig.apiKey.startsWith('AIzaSy') ? 'AIzaSy API Key' : 'AQ. Token';
-        console.log('🔗 Testing Google AI Studio endpoint (aistudio.google.com)...');
-        console.log('URL:', url.replace(geminiConfig.apiKey, geminiConfig.apiKey.substring(0, 15) + '...'));
-        console.log('Using', keyTypeDisplay, 'via query param');
-      } else {
-        // Vertex AI with OAuth 2 access token
-        if (!geminiConfig.projectId) {
-          showToast('❌ Google Cloud Project ID not configured', 'error');
-          return false;
-        }
-        url = `${geminiConfig.baseUrl}/projects/${geminiConfig.projectId}/locations/${geminiConfig.location}/publishers/google/models/${geminiConfig.model}:generateContent`;
-        headers = {
-          'Authorization': `Bearer ${geminiConfig.apiKey}`,
-          'Content-Type': 'application/json',
-        };
-        body = {
-          contents: [{
-            parts: [ { text: 'Hello, this is a test message for Vertex AI Gemini.' } ]
-          }],
-          generationConfig: {
-            temperature: geminiConfig.temperature,
-            maxOutputTokens: geminiConfig.maxTokens,
-          }
-        };
-        console.log('🔗 Testing Vertex AI connection...');
-        console.log('URL:', url);
-        console.log('Using Bearer token authentication (expecting OAuth 2 access token)');
-      }
-
-      const response = await fetch(url, {
-        method: 'POST',
-        headers,
-        body: JSON.stringify(body)
-      });
-
-      if (response.ok) {
-        const result = await response.json();
-        console.log('✅ Google Gemini (Vertex AI) connection successful');
-        console.log('Response received:', result.candidates ? 'Yes' : 'No candidates');
-        showToast('✅ Google Gemini (Vertex AI) connected successfully!', 'success');
-        return true;
-      } else {
-        const errorData = await response.json().catch(() => ({}));
-        console.error('❌ Google Gemini connection failed:', response.status, response.statusText);
-        console.error('Error details:', errorData);
-        console.error('🔍 Authentication Debug Info:');
-        console.error('- API Key configured:', !!geminiConfig.apiKey);
-        console.error('- API Key starts with AIzaSy:', geminiConfig.apiKey?.startsWith('AIzaSy'));
-        console.error('- API Key starts with AQ.:', geminiConfig.apiKey?.startsWith('AQ.'));
-        console.error('- API Key length:', geminiConfig.apiKey?.length);
-        console.error('- Project ID:', geminiConfig.projectId);
-        console.error('- Location:', geminiConfig.location);
-        console.error('- Full URL:', url);
-        console.error('- Headers sent:', isGoogleAIKey(geminiConfig.apiKey)
-          ? { 'Content-Type': 'application/json', 'Auth': 'API key via query param' }
-          : { 'Content-Type': 'application/json', 'Authorization': `Bearer ${geminiConfig.apiKey ? geminiConfig.apiKey.substring(0, 10) + '...' : 'NOT SET'}` }
-        );
-
-        let errorMessage = `HTTP ${response.status}: ${response.statusText}`;
-        if (errorData.error) {
-          errorMessage += ` - ${errorData.error.message || 'Unknown error'}`;
-          // Provide friendlier guidance for common auth errors
-          const reason = errorData.error.details && errorData.error.details[0] && (errorData.error.details[0].reason || errorData.error.details[0]['@type']);
-          if (reason === 'API_KEY_SERVICE_BLOCKED') {
-            errorMessage += ' (Vertex AI does not accept API keys. Using Google AI endpoint with AQ key is supported.)';
-          } else if (reason === 'CREDENTIALS_MISSING' && isAQToken(geminiConfig.apiKey)) {
-            errorMessage += ' (This model may require OAuth even on Google AI. Try gemini-1.5-flash instead.)';
-          }
-          if (errorData.error.details) {
-            console.error('Error details from API:', errorData.error.details);
-            console.error('Full error object:', JSON.stringify(errorData, null, 2));
-          }
-        }
-
-        showToast(`❌ Google Gemini connection failed: ${errorMessage}`, 'error');
-        return false;
-      }
-    } catch (error) {
-      console.error('❌ Google Gemini connection test error:', error);
-      showToast('❌ Gemini connection test error: ' + error.message, 'error');
+    if (!geminiConfig.apiKey) {
+      console.log('ℹ️ Google Gemini connection test skipped (no API key configured).');
       return false;
     }
+
+    console.log('ℹ️ Google Gemini connection test skipped (AI integrations disabled).');
+    return false;
   }
 
   // Expose test function globally
@@ -2035,13 +2616,18 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
           PHOTO_REFERENCE_OPTIONS[Math.floor(Math.random() * PHOTO_REFERENCE_OPTIONS.length)];
 
         const rawImageRequestId = item.imageRequestId || '';
+        const resolvedSalesOrg = resolveSalesOrgFromSap(item);
+        const productionMethod = resolveProductionMethod(item) || 'M&B';
+        const createdTimestamp = new Date().toISOString();
 
         const order = {
           orderNumber: rawImageRequestId || `IMG-${Date.now()}-${Math.random().toString(36).substr(2, 5)}`,
           title: item.offerName || item.articleName || 'Product Photography',
           status: item.photoStatus === 'Archive' ? 'Completed' : 'New Request',
           orderType: 'PS',
-          method: item.production || 'M&B',
+          method: productionMethod,
+          production: productionMethod,
+          productionMethod: productionMethod,
           photographer: 'Unassigned',
           deadline: getEventDeadline(item.eventId),
           costCenter: item.costCenter || `PG-${item.purchaseGroup || '100'}`,
@@ -2062,13 +2648,18 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
           imageRequestId: rawImageRequestId,
           photoStatus: item.photoStatus,
           cloudinaryUrl: item.cloudinaryUrl || null,
-          createdAt: new Date().toISOString(),
+          createdAt: createdTimestamp,
+          updatedAt: createdTimestamp,
           createdBy: 'sap-import',
           assignedTo: null,
           samples: [],
           comments: [],
           uploadedContent: []
         };
+
+        if (resolvedSalesOrg) {
+          order.salesOrg = resolvedSalesOrg;
+        }
 
         ensureOrderPhotoMetadata([order]);
         order.brief = `Photography for ${order.offerName || order.articleName || 'Product Photography'} (Article: ${order.articleNumber || 'N/A'}) as part of Event ${order.eventId || 'N/A'}\nPage: ${order.page || 'N/A'} | Group: ${order.group || 99} | Shot Type: ${order.shotType || 'N/A'} | Photo Ref: ${order.photoReference || 'N/A'}`;
@@ -2111,6 +2702,10 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
 
       if (typeof window.updateQuickActionBadges === 'function') {
         window.updateQuickActionBadges();
+      }
+
+      if (typeof window.markDataRefreshed === 'function') {
+        window.markDataRefreshed('SAP PMR import');
       }
 
       return { success: true, imported: newOrders.length };
@@ -2236,12 +2831,140 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
     return formatted;
   }
 
+  const PREVIEW_PLACEHOLDER_COLORS = ['#fde68a', '#bfdbfe', '#ddd6fe', '#d1fae5', '#fecdd3'];
+
+  function sanitizeLabelText(value, fallback = 'Preview Asset') {
+    if (!value) {
+      return fallback;
+    }
+    return String(value).replace(/[<>"']/g, '').trim().slice(0, 40) || fallback;
+  }
+
+  function createInlinePreview(orderNumber, descriptor, colorIndex = 0) {
+    const safeOrderNumber = sanitizeLabelText(orderNumber, 'ORD-Preview');
+    const safeDescriptor = sanitizeLabelText(descriptor, 'Asset Preview');
+    const accent = PREVIEW_PLACEHOLDER_COLORS[colorIndex % PREVIEW_PLACEHOLDER_COLORS.length];
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="320" height="220" viewBox="0 0 320 220" role="img" aria-label="${safeOrderNumber} - ${safeDescriptor}"><defs><linearGradient id="grad${colorIndex}" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="${accent}" stop-opacity="0.95"/><stop offset="100%" stop-color="${accent}" stop-opacity="0.7"/></linearGradient></defs><rect width="320" height="220" rx="24" fill="url(#grad${colorIndex})"/><text x="50%" y="45%" text-anchor="middle" font-size="22" font-family="'Segoe UI', 'Inter', Arial" fill="#1f2937" font-weight="600">${safeOrderNumber}</text><text x="50%" y="65%" text-anchor="middle" font-size="14" font-family="'Segoe UI', 'Inter', Arial" fill="#374151">${safeDescriptor}</text></svg>`;
+    return `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`;
+  }
+
+  function generateArticleFileName(orderNumber, index = 0) {
+    const digits = (orderNumber || '').replace(/\D/g, '').padStart(6, '0');
+    const orderSegment = digits.slice(-4);
+    const articleSegment = String(index + 1).padStart(2, '0');
+    return `ENV.${orderSegment}${articleSegment}.jpg`;
+  }
+
+  function ensureArticlesHaveFileNames(orders) {
+    if (!Array.isArray(orders)) {
+      return;
+    }
+
+    orders.forEach((order) => {
+      if (!Array.isArray(order.articles)) {
+        order.articles = [];
+        return;
+      }
+
+      order.articles = order.articles.map((article, index) => {
+        if (article && typeof article === 'object' && !Array.isArray(article)) {
+          if (!article.name) {
+            article.name = article.articleName || article.title || `Article ${index + 1}`;
+          }
+          if (!article.fileName) {
+            article.fileName = generateArticleFileName(order.orderNumber, index);
+          }
+          if (!article.unitOfMeasure) {
+            article.unitOfMeasure = 'EA';
+          }
+          return article;
+        }
+
+        const label = typeof article === 'string' ? article : `Article ${index + 1}`;
+        return {
+          name: label,
+          unitOfMeasure: 'EA',
+          fileName: generateArticleFileName(order.orderNumber, index)
+        };
+      });
+    });
+  }
+
+  function buildPlaceholderAsset(order, article, index) {
+    const descriptor = (article && (article.name || article.articleName || article.title)) || order.title || order.orderNumber || `Asset ${index + 1}`;
+    const fileName = (article && article.fileName) || generateArticleFileName(order.orderNumber, index);
+    return {
+      id: `${(order.orderNumber || 'ord').replace(/\W+/g, '_').toLowerCase()}_${index + 1}`,
+      name: fileName,
+      type: 'image/svg+xml',
+      size: 2100000 + (index * 45000),
+      data: createInlinePreview(order.orderNumber, descriptor, index),
+      uploadedBy: order.photographer || 'Automated System',
+      uploadedAt: order.createdAt || order.updatedAt || new Date().toISOString(),
+      uploadedByRole: order.photographer ? 'Photographer' : 'System'
+    };
+  }
+
+  function ensureOrderPreviewImages(orders) {
+    if (!Array.isArray(orders)) {
+      return;
+    }
+
+    orders.forEach((order) => {
+      if (!Array.isArray(order.uploadedContent) || order.uploadedContent.length === 0) {
+        const articleSeeds = Array.isArray(order.articles) && order.articles.length ? order.articles.slice(0, 3) : [null];
+        order.uploadedContent = articleSeeds.map((article, index) => buildPlaceholderAsset(order, article, index));
+        return;
+      }
+
+      order.uploadedContent = order.uploadedContent.map((asset, index) => {
+        if (!asset || typeof asset !== 'object') {
+          return buildPlaceholderAsset(order, Array.isArray(order.articles) ? order.articles[index] : null, index);
+        }
+
+        if (!asset.name) {
+          const fallbackArticle = Array.isArray(order.articles) ? order.articles[index] : null;
+          asset.name = (fallbackArticle && fallbackArticle.fileName) || generateArticleFileName(order.orderNumber, index);
+        }
+
+        if (!asset.data && !asset.thumbnailUrl && !asset.url) {
+          const descriptor = asset.name || (Array.isArray(order.articles) && order.articles[index]?.name) || order.title;
+          asset.data = createInlinePreview(order.orderNumber, descriptor, index);
+          asset.type = asset.type || 'image/svg+xml';
+        }
+
+        if (!asset.uploadedBy) {
+          asset.uploadedBy = order.photographer || 'Automated System';
+          asset.uploadedByRole = order.photographer ? 'Photographer' : 'System';
+        }
+
+        if (!asset.uploadedAt) {
+          asset.uploadedAt = order.createdAt || order.updatedAt || new Date().toISOString();
+        }
+
+        if (!asset.id) {
+          asset.id = `${(order.orderNumber || 'ord').replace(/\W+/g, '_').toLowerCase()}_${index + 1}`;
+        }
+
+        return asset;
+      });
+    });
+  }
+
   function ensureOrderPhotoMetadata(orders) {
     if (!Array.isArray(orders)) {
       return;
     }
 
     orders.forEach((order, index) => {
+      // Skip Image Request ID generation for Photo Orders (PO)
+      if (order.orderType === 'PO') {
+        order.imageRequestId = '';
+        order.photoReference = '';
+        order.photoRef = '';
+        return;
+      }
+
       const overrideReference = ORDER_PHOTO_REFERENCE_OVERRIDES[order.orderNumber];
       const rawImageRequest = order.imageRequestId || '';
       let resolvedPhotoReference = order.photoReference || order.photoRef || overrideReference || '';
@@ -2271,14 +2994,18 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       title:'Premium Dog Food - Hero Shot', 
       status:'In Progress',
       
-      method:'Photographer',
+      method:'M&B',
       orderType: 'PS',
       photographer:'Mike Rodriguez', 
       deadline:'2025-09-06', 
-      costCenter:'PG-100',
+      costCenter:'90500512 Bilka Marketing',
       priority:'Critical',
+      principle: '#P 2D',
       brief:'Create high-impact product photography for premium dog food line. Focus on hero shots, lifestyle images, and detail macro shots.',
-      articles: ['Premium Dog Food 2kg [EAN: 5901234567890]'],
+      articles: [
+        'Premium Dog Food 2kg [EAN: 5901234567890]',
+        'Premium Dog Food 5kg [EAN: 5901234567891]'
+      ],
       budget: 5500,
       deliverables: ['Hero Product Shots', 'Lifestyle Photography', 'Detail Macro Shots'],
       
@@ -2286,7 +3013,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       eventId: 'A4025052', // Week 40, 2025, Bilka format
       purchaseGroup: 101, // Groceries
       group: 99,
-      costCenter: 'Bilka Marketing',
+      costCenter: '90500512 Bilka Marketing',
       offerId: '10763319',
       articleNumber: '1234575511',
       articleName: 'Premium Dog Food 2kg',
@@ -2376,10 +3103,14 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       orderType: 'PS',
       photographer:'Emily Chen', 
       deadline:'2025-09-05', 
-      costCenter:'PG-200',
+      costCenter:'90200512 føtex marketing',
       priority:'Medium',
+      principle: '#P 2P',
       brief:'Automated photo box session for coffee product line. Consistent e-commerce shots with white background.',
-      articles: ['Espresso Beans 500g [EAN: 2001234567892]'],
+      articles: [
+        'Espresso Beans 500g [EAN: 2001234567892]',
+        'Espresso Beans 1kg [EAN: 2001234567893]'
+      ],
       budget: 2200,
       deliverables: ['E-commerce Product Photos', '360° Product Views'],
       
@@ -2387,9 +3118,9 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       eventId: 'A4125053', // Week 41, 2025, Netto format
       purchaseGroup: 101, // Fresh Products
       group: 99,
-      costCenter: 'føtex Marketing',
+      costCenter: '90200512 føtex marketing',
       offerId: '10763320',
-      articleNumber: 'ART-COF-002',
+      articleNumber: '200123456',
       articleName: 'Espresso Beans 500g',
       imageRequestId: '123457',
       photoStatus: 'New Shoot - Photo Box',
@@ -2441,16 +3172,23 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       orderNumber:'ORD-2025-003', 
       title:'Wireless Speaker - Tech Photography', 
       status:'Draft', 
-      method:'Photographer',
+      method:'GILS',
       orderType: 'PS',
       photographer:'Mike Rodriguez', 
       deadline:'2025-09-15', 
-      costCenter:'PG-300',
+      costCenter:'90870390 Electronic & Garden',
       priority:'Medium',
+      principle: '#P 2D FLIP',
       brief:'Professional studio photography for new tech product launch. High-end product photography and lifestyle shots for electronics catalog.',
       articles: [
         { name: 'Wireless Bluetooth Speaker [EAN: 4061234567890]', combinedPhoto: 'AA' },
-        { name: 'USB-C Cable [EAN: 8901234567891]', combinedPhoto: 'BB' }
+        { name: 'USB-C Cable [EAN: 8901234567891]', combinedPhoto: 'BB' },
+        { name: 'Charging Dock [EAN: 8901234567892]', combinedPhoto: 'CC' },
+        { name: 'Protective Case [EAN: 8901234567893]', combinedPhoto: 'DD' },
+        { name: 'User Manual [EAN: 8901234567894]', combinedPhoto: 'EE' },
+        { name: 'Power Adapter [EAN: 8901234567895]', combinedPhoto: 'FF' },
+        { name: 'Aux Cable [EAN: 8901234567896]', combinedPhoto: 'GG' },
+        { name: 'Strap [EAN: 8901234567897]', combinedPhoto: 'HH' }
       ],
       budget: 8000,
       deliverables: ['Product Photography', 'Lifestyle Shots', 'Technical Details'],
@@ -2459,9 +3197,9 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       eventId: 'A3825054', // Week 38, 2025, Føtex format
       purchaseGroup: 101, // Electronics
       group: 99,
-      costCenter: 'Bilka.dk',
+      costCenter: '90500512 Bilka Marketing',
       offerId: '10763321',
-      articleNumber: 'ART-ELEC-003',
+      articleNumber: '300123456',
       articleName: 'Wireless Bluetooth Speaker Premium',
       imageRequestId: '123458',
       photoStatus: 'New Shoot - Photographer',
@@ -2511,11 +3249,11 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       orderNumber:'ORD-2025-004', 
       title:'Garden Tools - Product Showcase', 
       status:'Approved', 
-      method:'Photographer',
+      method:'MERRILD',
       orderType: 'PO',
       photographer:'Emily Chen', 
       deadline:'2025-09-07', 
-      costCenter:'PG-400',
+      costCenter:'90870330 Home & Leisure',
       priority:'Critical',
       brief:'Dynamic product shots of garden tools. Focus on durability, functionality, and outdoor lifestyle for spring catalog.',
       articles: [
@@ -2529,7 +3267,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       eventId: 'A3725055', // Week 37, 2025, Bilka format
       purchaseGroup: 101, // Home & Garden
       group: 99,
-      costCenter: 'PDG',
+      costCenter: '90880110 Product Data Governance',
       offerId: '10763322',
       articleNumber: '1234575512',
       articleName: 'Electric Hedge Trimmer Pro',
@@ -2586,12 +3324,15 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       orderType: 'PS',
       photographer:'Emily Chen', 
       deadline:'2025-09-04', 
-      costCenter:'PG-100',
+      costCenter:'90500512 Bilka Marketing',
       priority:'Critical',
       brief:'Organic pasta product line photography for new health-focused marketing campaign. Clean, fresh styling.',
       articles: [
         { name: 'Organic Penne Pasta 500g', combinedPhoto: 'CC' },
-        { name: 'Organic Linguine 400g', combinedPhoto: 'CC' }
+        { name: 'Organic Linguine 400g', combinedPhoto: 'CC' },
+        { name: 'Organic Fusilli 500g', combinedPhoto: 'CC' },
+        { name: 'Organic Spaghetti 500g', combinedPhoto: 'CC' },
+        { name: 'Organic Lasagna Sheets 250g', combinedPhoto: 'CC' }
       ],
       budget: 3200,
       deliverables: ['Product Shots', 'Lifestyle Photography'],
@@ -2600,9 +3341,9 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       eventId: 'A3925056', // Week 39, 2025, Netto format
       purchaseGroup: 101, // Groceries
       group: 99,
-      costCenter: 'Bilka Marketing',
+      costCenter: '90500512 Bilka Marketing',
       offerId: '10763323',
-      articleNumber: 'ART-PAST-005',
+      articleNumber: '500123456',
       articleName: 'Organic Penne Pasta Premium',
       imageRequestId: '123460',
       photoStatus: 'New Shoot - Photo Box',
@@ -2656,7 +3397,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       orderType: 'PO',
       photographer:'Mike Rodriguez', 
       deadline:'2025-08-28', 
-      costCenter:'PG-200',
+      costCenter:'90200512 føtex marketing',
       priority:'Medium',
       brief:'Fresh dairy products for e-commerce catalog. Clean, appetizing shots with consistent lighting.',
       articles: [
@@ -2670,9 +3411,9 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       eventId: 'A3525057', // Week 35, 2025, Føtex format
       purchaseGroup: 101, // Fresh Products
       group: 99,
-      costCenter: 'føtex Marketing',
+      costCenter: '90200512 føtex marketing',
       offerId: '10763324',
-      articleNumber: 'ART-DAIRY-006',
+      articleNumber: '600123456',
       articleName: 'Organic Milk Premium 1L',
       imageRequestId: '123461',
       photoStatus: 'Archive',
@@ -2722,11 +3463,11 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       orderNumber:'ORD-2025-007', 
       title:'Smart Home Devices - Tech Showcase', 
       status:'Complete', 
-      method:'Photographer',
+      method:'Photo Box',
       orderType: 'PS',
       photographer:'Mike Rodriguez', 
       deadline:'2025-09-02', 
-      costCenter:'PG-300',
+      costCenter:'90870390 Electronic & Garden',
       priority:'Medium',
       brief:'Smart home devices photography for holiday campaign preview. Modern, tech-focused styling.',
       articles: [
@@ -2740,7 +3481,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       eventId: 'B3625066', // Week 36, 2025, Bilka format
       purchaseGroup: 103, // Marketing Materials
       group: 99,
-      costCenter: 'Bilka.dk',
+      costCenter: '90500512 Bilka Marketing',
       offerId: '10763325',
       articleNumber: '1234575513',
       articleName: 'Smart Thermostat Pro',
@@ -2792,11 +3533,11 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       orderNumber:'ORD-2025-008', 
       title:'Patio Furniture - Seasonal Showcase', 
       status:'Delivered', 
-      method:'Photographer',
+      method:'M&B',
       orderType: 'PO',
       photographer:'Emily Chen', 
       deadline:'2025-08-20', 
-      costCenter:'PG-400',
+      costCenter:'90870330 Home & Leisure',
       priority:'Medium',
       brief:'Outdoor patio furniture for summer/fall transition catalog. Lifestyle shots with outdoor setting.',
       articles: [
@@ -2810,9 +3551,9 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       eventId: 'A3425059', // Week 34, 2025, Netto format
       purchaseGroup: 101, // Home & Garden
       group: 99,
-      costCenter: 'PDG',
+      costCenter: '90880110 Product Data Governance',
       offerId: '10763326',
-      articleNumber: 'ART-PATIO-008',
+      articleNumber: '800123456',
       articleName: 'Outdoor Dining Set Premium',
       imageRequestId: '123463',
       photoStatus: 'Archive',
@@ -2865,16 +3606,18 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       orderNumber:'ORD-2025-009', 
       title:'Organic Baby Food - Product Launch', 
       status:'Draft', 
-      method:'Photographer',
+      method:'GILS',
       orderType: 'PS',
       photographer:'Sarah Johnson', 
       deadline:'2025-09-10', 
-      costCenter:'PG-100',
+      costCenter:'90500512 Bilka Marketing',
       priority:'High',
       brief:'New organic baby food line launch. Need hero shots, ingredient close-ups, and lifestyle photography with babies.',
       articles: [
         { name: 'Organic Baby Food Puree [EAN: 5901234567901]', combinedPhoto: 'FF' },
-        { name: 'Baby Food Spoon Set [EAN: 5901234567902]', combinedPhoto: 'GG' }
+        { name: 'Baby Food Spoon Set [EAN: 5901234567902]', combinedPhoto: 'GG' },
+        { name: 'Organic Rice Cakes [EAN: 5901234567903]', combinedPhoto: 'FF' },
+        { name: 'Fruit Pouch Variety Pack [EAN: 5901234567904]', combinedPhoto: 'FF' }
       ],
       budget: 8500,
       deliverables: ['Hero Product Shots', 'Ingredient Photography', 'Lifestyle with Babies'],
@@ -2883,9 +3626,9 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       eventId: 'A4125060', 
       purchaseGroup: 100,
       group: 99,
-      costCenter: 'Bilka Marketing',
+      costCenter: '90500512 Bilka Marketing',
       offerId: '10763327',
-      articleNumber: 'ART-BABY-009',
+      articleNumber: '900123456',
       articleName: 'Organic Baby Food Variety Pack',
       imageRequestId: '123470',
       photoStatus: 'New',
@@ -2935,12 +3678,30 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       orderType: 'PS',
       photographer:'Marcus Thompson', 
       deadline:'2025-09-08', 
-      costCenter:'PG-300',
+      costCenter:'90870390 Electronic & Garden',
       priority:'Critical',
       brief:'High-end gaming laptop with RGB lighting. Need dramatic tech shots with special lighting effects.',
       articles: [
         { name: 'Gaming Laptop Pro X1 [EAN: 5901234567903]', combinedPhoto: 'HH' },
-        { name: 'Gaming Mouse [EAN: 5901234567904]', combinedPhoto: 'HH' }
+        { name: 'Gaming Mouse [EAN: 5901234567904]', combinedPhoto: 'HH' },
+        { name: 'Mechanical Keyboard [EAN: 5901234567920]', combinedPhoto: 'II' },
+        { name: 'Gaming Headset [EAN: 5901234567921]', combinedPhoto: 'JJ' },
+        { name: 'Mouse Pad XL [EAN: 5901234567922]', combinedPhoto: 'KK' },
+        { name: 'Laptop Stand [EAN: 5901234567923]', combinedPhoto: 'LL' },
+        { name: 'Webcam 4K [EAN: 5901234567924]', combinedPhoto: 'MM' },
+        { name: 'Microphone [EAN: 5901234567925]', combinedPhoto: 'NN' },
+        { name: 'Capture Card [EAN: 5901234567926]', combinedPhoto: 'OO' },
+        { name: 'Stream Deck [EAN: 5901234567927]', combinedPhoto: 'PP' },
+        { name: 'Green Screen [EAN: 5901234567928]', combinedPhoto: 'QQ' },
+        { name: 'Ring Light [EAN: 5901234567929]', combinedPhoto: 'RR' },
+        { name: 'Cable Management Kit [EAN: 5901234567930]', combinedPhoto: 'SS' },
+        { name: 'USB Hub [EAN: 5901234567931]', combinedPhoto: 'TT' },
+        { name: 'External SSD 1TB [EAN: 5901234567932]', combinedPhoto: 'UU' },
+        { name: 'Gaming Chair [EAN: 5901234567933]', combinedPhoto: 'VV' },
+        { name: 'Monitor 27" 144Hz [EAN: 5901234567934]', combinedPhoto: 'WW' },
+        { name: 'Monitor Arm [EAN: 5901234567935]', combinedPhoto: 'XX' },
+        { name: 'DisplayPort Cable [EAN: 5901234567936]', combinedPhoto: 'YY' },
+        { name: 'HDMI Cable [EAN: 5901234567937]', combinedPhoto: 'ZZ' }
       ],
       budget: 12000,
       deliverables: ['Tech Hero Shots', 'RGB Lighting Effects', 'Detail Macro Shots'],
@@ -2949,9 +3710,9 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       eventId: 'A4225061', 
       purchaseGroup: 101,
       group: 99,
-      costCenter: 'føtex Marketing',
+      costCenter: '90200512 føtex marketing',
       offerId: '10763328',
-      articleNumber: 'ART-LAPTOP-010',
+      articleNumber: '100123456',
       articleName: 'Gaming Laptop Pro X1',
       imageRequestId: '123471',
       photoStatus: 'Samples Requested',
@@ -2997,11 +3758,11 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       orderNumber:'ORD-2025-011', 
       title:'Winter Jacket Collection', 
       status:'Pending Approval', 
-      method:'Photographer',
+      method:'MERRILD',
       orderType: 'PS',
       photographer:'Emily Chen', 
       deadline:'2025-09-12', 
-      costCenter:'PG-200',
+      costCenter:'90200512 føtex marketing',
       priority:'Medium',
       brief:'Winter fashion collection for upcoming season. Need model shots and flat lay product photography.',
       articles: [
@@ -3016,7 +3777,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       eventId: 'A4325062', 
       purchaseGroup: 101,
       group: 99,
-      costCenter: 'Bilka.dk',
+      costCenter: '90500512 Bilka Marketing',
       offerId: '10763329',
       articleNumber: 'ART-JACKET-011',
       articleName: 'Winter Jacket Collection',
@@ -3036,7 +3797,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       orderType: 'PO',
       photographer:'David Kim', 
       deadline:'2025-09-15', 
-      costCenter:'PG-400',
+      costCenter:'90870330 Home & Leisure',
       priority:'Low',
       brief:'Modern kitchen appliance series. Clean, minimalist photography with lifestyle context.',
       articles: [
@@ -3050,7 +3811,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       eventId: 'A4425063', 
       purchaseGroup: 101,
       group: 99,
-      costCenter: 'PDG',
+      costCenter: '90880110 Product Data Governance',
       offerId: '10763330',
       articleNumber: 'ART-KITCHEN-012',
       articleName: 'Kitchen Appliance Set',
@@ -3066,11 +3827,11 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       orderNumber:'ORD-2025-013', 
       title:'Organic Skincare Line', 
       status:'Photo Session', 
-      method:'Photographer',
+      method:'Photo Box',
       orderType: 'PS',
       photographer:'Lisa Wang', 
       deadline:'2025-09-07', 
-      costCenter:'PG-100',
+      costCenter:'90500512 Bilka Marketing',
       priority:'High',
       brief:'Luxury organic skincare products. Need elegant beauty photography with natural lighting.',
       articles: [
@@ -3084,7 +3845,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       eventId: 'A4525064', 
       purchaseGroup: 101,
       group: 99,
-      costCenter: 'Bilka Marketing',
+      costCenter: '90500512 Bilka Marketing',
       offerId: '10763331',
       articleNumber: 'ART-SKINCARE-013',
       articleName: 'Organic Skincare Collection',
@@ -3104,7 +3865,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       orderType: 'PS',
       photographer:'Alex Johnson', 
       deadline:'2025-09-20', 
-      costCenter:'PG-300',
+      costCenter:'90870390 Electronic & Garden',
       priority:'Medium',
       brief:'Smart home security cameras and sensors. Need tech shots showing installation and features.',
       articles: [
@@ -3118,7 +3879,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       eventId: 'A4625065', 
       purchaseGroup: 101,
       group: 99,
-      costCenter: 'føtex Marketing',
+      costCenter: '90200512 føtex marketing',
       offerId: '10763332',
       articleNumber: 'ART-SECURITY-014',
       articleName: 'Smart Security System',
@@ -3134,11 +3895,11 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       orderNumber:'ORD-2025-015', 
       title:'Artisan Bread Collection', 
       status:'Complete', 
-      method:'Photographer',
+      method:'M&B',
       orderType: 'PS',
       photographer:'Maria Garcia', 
       deadline:'2025-08-30', 
-      costCenter:'PG-100',
+      costCenter:'90500512 Bilka Marketing',
       priority:'Low',
       brief:'Artisan bakery products for autumn catalog. Warm, rustic food photography.',
       articles: [
@@ -3152,7 +3913,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       eventId: 'A4725066', 
       purchaseGroup: 101,
       group: 99,
-      costCenter: 'Bilka.dk',
+      costCenter: '90500512 Bilka Marketing',
       offerId: '10763333',
       articleNumber: 'ART-BREAD-015',
       articleName: 'Artisan Bread Selection',
@@ -3168,11 +3929,11 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       orderNumber:'ORD-2025-016', 
       title:'Fitness Equipment - Home Gym', 
       status:'Review', 
-      method:'Photographer',
+      method:'GILS',
       orderType: 'PO',
       photographer:'James Wilson', 
       deadline:'2025-09-18', 
-      costCenter:'PG-400',
+      costCenter:'90870330 Home & Leisure',
       priority:'High',
       brief:'Home fitness equipment showcase. Action shots with models using equipment.',
       articles: [
@@ -3186,7 +3947,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       eventId: 'A4825067', 
       purchaseGroup: 101,
       group: 99,
-      costCenter: 'PDG',
+      costCenter: '90880110 Product Data Governance',
       offerId: '10763334',
       articleNumber: 'ART-FITNESS-016',
       articleName: 'Home Fitness Set',
@@ -3206,7 +3967,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       orderType: 'PS',
       photographer:'Not Assigned', 
       deadline:'2025-09-25', 
-      costCenter:'PG-300',
+      costCenter:'90870390 Electronic & Garden',
       priority:'Medium',
       brief:'Smartphone case, charger, and screen protector bundle. Clean tech photography.',
       articles: [
@@ -3220,7 +3981,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       eventId: 'A4925068', 
       purchaseGroup: 101,
       group: 99,
-      costCenter: 'Bilka Marketing',
+      costCenter: '90500512 Bilka Marketing',
       offerId: '10763335',
       articleNumber: 'ART-PHONE-017',
       articleName: 'Smartphone Accessory Bundle',
@@ -3236,11 +3997,11 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       orderNumber:'ORD-2025-018', 
       title:'Luxury Watch Collection', 
       status:'Samples Received', 
-      method:'Photographer',
+      method:'MERRILD',
       orderType: 'PS',
       photographer:'Catherine Lee', 
       deadline:'2025-09-14', 
-      costCenter:'PG-200',
+      costCenter:'90200512 føtex marketing',
       priority:'Critical',
       brief:'High-end luxury watches. Dramatic lighting with reflections and detail macro shots.',
       articles: [
@@ -3254,7 +4015,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       eventId: 'A5025069', 
       purchaseGroup: 101,
       group: 99,
-      costCenter: 'føtex Marketing',
+      costCenter: '90200512 føtex marketing',
       offerId: '10763336',
       articleNumber: 'ART-WATCH-018',
       articleName: 'Luxury Watch Collection',
@@ -3274,7 +4035,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       orderType: 'PO',
       photographer:'Robert Chen', 
       deadline:'2025-09-11', 
-      costCenter:'PG-400',
+      costCenter:'90870330 Home & Leisure',
       priority:'Medium',
       brief:'Garden tools and equipment for spring gardening season. Outdoor lifestyle shots.',
       articles: [
@@ -3288,7 +4049,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       eventId: 'A5125070', 
       purchaseGroup: 101,
       group: 99,
-      costCenter: 'Bilka.dk',
+      costCenter: '90500512 Bilka Marketing',
       offerId: '10763337',
       articleNumber: 'ART-GARDEN-019',
       articleName: 'Garden Tool Collection',
@@ -3304,11 +4065,11 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       orderNumber:'ORD-2025-020', 
       title:'Gourmet Coffee Beans', 
       status:'Delivered', 
-      method:'Photographer',
+      method:'Photo Box',
       orderType: 'PS',
       photographer:'Ana Rodriguez', 
       deadline:'2025-08-28', 
-      costCenter:'PG-100',
+      costCenter:'90500512 Bilka Marketing',
       priority:'Low',
       brief:'Premium coffee beans from different regions. Warm, appetizing food photography.',
       articles: [
@@ -3322,7 +4083,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       eventId: 'A5225071', 
       purchaseGroup: 101,
       group: 99,
-      costCenter: 'PDG',
+      costCenter: '90880110 Product Data Governance',
       offerId: '10763338',
       articleNumber: 'ART-COFFEE-020',
       articleName: 'Gourmet Coffee Selection',
@@ -3338,11 +4099,11 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       orderNumber:'ORD-2025-021', 
       title:'Children Toys - Educational Series', 
       status:'Draft', 
-      method:'Photographer',
+      method:'M&B',
       orderType: 'PS',
       photographer:'Sophie Turner', 
       deadline:'2025-09-22', 
-      costCenter:'PG-200',
+      costCenter:'90200512 føtex marketing',
       priority:'High',
       brief:'Educational toys for children 3-8 years. Bright, playful photography with kids in action.',
       articles: ['Building Blocks Set [EAN: 5901234567926]', 'Learning Tablet Kids [EAN: 5901234567927]'],
@@ -3353,7 +4114,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       eventId: 'A5325072', 
       purchaseGroup: 101,
       group: 99,
-      costCenter: 'Bilka Marketing',
+      costCenter: '90500512 Bilka Marketing',
       offerId: '10763339',
       articleNumber: 'ART-TOYS-021',
       articleName: 'Educational Toy Set',
@@ -3373,7 +4134,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       orderType: 'PS',
       photographer:'Michael Park', 
       deadline:'2025-09-05', 
-      costCenter:'PG-300',
+      costCenter:'90870390 Electronic & Garden',
       priority:'Critical',
       brief:'High-end wireless headphones launch. Need dramatic tech shots with sound wave effects.',
       articles: ['Wireless Headphones Pro [EAN: 5901234567928]', 'Charging Case [EAN: 5901234567929]'],
@@ -3384,7 +4145,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       eventId: 'A5425073', 
       purchaseGroup: 101,
       group: 99,
-      costCenter: 'føtex Marketing',
+      costCenter: '90200512 føtex marketing',
       offerId: '10763340',
       articleNumber: 'ART-HEADPHONES-022',
       articleName: 'Wireless Headphones Premium',
@@ -3400,11 +4161,11 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       orderNumber:'ORD-2025-023', 
       title:'Outdoor Camping Gear', 
       status:'Pending Approval', 
-      method:'Photographer',
+      method:'GILS',
       orderType: 'PS',
       photographer:'Tom Anderson', 
       deadline:'2025-09-28', 
-      costCenter:'PG-400',
+      costCenter:'90870330 Home & Leisure',
       priority:'Medium',
       brief:'Camping equipment for autumn outdoor adventures. Rugged outdoor lifestyle photography.',
       articles: ['Camping Tent 4-Person [EAN: 5901234567930]', 'Sleeping Bag Winter [EAN: 5901234567931]'],
@@ -3415,7 +4176,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       eventId: 'A5525074', 
       purchaseGroup: 101,
       group: 99,
-      costCenter: 'Bilka.dk',
+      costCenter: '90500512 Bilka Marketing',
       offerId: '10763341',
       articleNumber: 'ART-CAMPING-023',
       articleName: 'Camping Gear Set',
@@ -3431,11 +4192,11 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       orderNumber:'ORD-2025-024', 
       title:'Artisan Chocolate Collection', 
       status:'Approved', 
-      method:'Photographer',
+      method:'MERRILD',
       orderType: 'PS',
       photographer:'Isabella Martinez', 
       deadline:'2025-09-16', 
-      costCenter:'PG-100',
+      costCenter:'90500512 Bilka Marketing',
       priority:'High',
       brief:'Luxury artisan chocolates for holiday season. Elegant food photography with mood lighting.',
       articles: ['Dark Chocolate Truffles [EAN: 5901234567932]', 'Chocolate Gift Box [EAN: 5901234567933]'],
@@ -3446,7 +4207,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       eventId: 'A5625075', 
       purchaseGroup: 101,
       group: 99,
-      costCenter: 'PDG',
+      costCenter: '90880110 Product Data Governance',
       offerId: '10763342',
       articleNumber: 'ART-CHOCOLATE-024',
       articleName: 'Artisan Chocolate Collection',
@@ -3466,7 +4227,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       orderType: 'PS',
       photographer:'Kevin Wright', 
       deadline:'2025-09-13', 
-      costCenter:'PG-300',
+      costCenter:'90870390 Electronic & Garden',
       priority:'Medium',
       brief:'Large format smart TV with ultra-thin design. Modern living room lifestyle photography.',
       articles: ['Smart TV 75 inch [EAN: 5901234567934]', 'TV Mount Wall [EAN: 5901234567935]'],
@@ -3477,7 +4238,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       eventId: 'A5725076', 
       purchaseGroup: 101,
       group: 99,
-      costCenter: 'Bilka Marketing',
+      costCenter: '90500512 Bilka Marketing',
       offerId: '10763343',
       articleNumber: 'ART-TV-025',
       articleName: 'Smart TV Ultra HD',
@@ -3493,11 +4254,11 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       orderNumber:'ORD-2025-026', 
       title:'Luxury Bedding Set', 
       status:'Samples Requested', 
-      method:'Photographer',
+      method:'Photo Box',
       orderType: 'PS',
       photographer:'Rachel Green', 
       deadline:'2025-09-19', 
-      costCenter:'PG-200',
+      costCenter:'90200512 føtex marketing',
       priority:'Low',
       brief:'Premium bedding collection in natural fabrics. Cozy bedroom lifestyle photography.',
       articles: ['Silk Bedsheet Set [EAN: 5901234567936]', 'Down Pillows [EAN: 5901234567937]'],
@@ -3520,11 +4281,11 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       orderNumber:'ORD-2025-027', 
       title:'Electric Bike Urban Series', 
       status:'Complete', 
-      method:'Photographer',
+      method:'M&B',
       orderType: 'PS',
       photographer:'Daniel Foster', 
       deadline:'2025-08-25', 
-      costCenter:'PG-400',
+      costCenter:'90870330 Home & Leisure',
       priority:'High',
       brief:'Urban electric bikes for city commuting. Dynamic action shots in urban environment.',
       articles: ['E-Bike Urban Pro [EAN: 5901234567938]', 'Bike Helmet Smart [EAN: 5901234567939]'],
@@ -3551,7 +4312,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       orderType: 'PS',
       photographer:'Jennifer Liu', 
       deadline:'2025-09-17', 
-      costCenter:'PG-300',
+      costCenter:'90870390 Electronic & Garden',
       priority:'Medium',
       brief:'Smart baby monitoring system with app connectivity. Nursery lifestyle photography.',
       articles: ['Baby Monitor Camera [EAN: 5901234567940]', 'Monitor Base Station [EAN: 5901234567941]'],
@@ -3574,11 +4335,11 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       orderNumber:'ORD-2025-029', 
       title:'Gourmet Spice Collection', 
       status:'New Request', 
-      method:'Photographer',
+      method:'GILS',
       orderType: 'PS',
       photographer:'Not Assigned', 
       deadline:'2025-09-30', 
-      costCenter:'PG-100',
+      costCenter:'90500512 Bilka Marketing',
       priority:'Low',
       brief:'International spice collection for cooking enthusiasts. Colorful food photography.',
       articles: ['Spice Set International [EAN: 5901234567942]', 'Spice Grinder [EAN: 5901234567943]'],
@@ -3601,11 +4362,11 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       orderNumber:'ORD-2025-030', 
       title:'Gaming Chair Pro Series', 
       status:'Samples in Transit', 
-      method:'Photographer',
+      method:'MERRILD',
       orderType: 'PS',
       photographer:'Chris Taylor', 
       deadline:'2025-09-21', 
-      costCenter:'PG-200',
+      costCenter:'90200512 føtex marketing',
       priority:'High',
       brief:'Professional gaming chair with RGB lighting. Gaming setup lifestyle photography.',
       articles: ['Gaming Chair RGB [EAN: 5901234567944]', 'Chair Cushion Set [EAN: 5901234567945]'],
@@ -3632,7 +4393,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       orderType: 'PS',
       photographer:'Mark Davis', 
       deadline:'2025-08-22', 
-      costCenter:'PG-400',
+      costCenter:'90870330 Home & Leisure',
       priority:'Medium',
       brief:'Home solar panel installation kit. Clean energy lifestyle and technical photography.',
       articles: ['Solar Panel 300W [EAN: 5901234567946]', 'Inverter System [EAN: 5901234567947]'],
@@ -3655,11 +4416,11 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       orderNumber:'ORD-2025-032', 
       title:'Artisan Cheese Selection', 
       status:'Processing', 
-      method:'Photographer',
+      method:'Photo Box',
       orderType: 'PS',
       photographer:'Emma Thompson', 
       deadline:'2025-09-15', 
-      costCenter:'PG-100',
+      costCenter:'90500512 Bilka Marketing',
       priority:'Critical',
       brief:'Premium artisan cheese collection for gourmet food catalog. Rustic food photography.',
       articles: ['Artisan Cheese Wheel [EAN: 5901234567948]', 'Cheese Board Set [EAN: 5901234567949]'],
@@ -3686,7 +4447,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       orderType: 'PS',
       photographer:'Ryan Miller', 
       deadline:'2025-09-04', 
-      costCenter:'PG-300',
+      costCenter:'90870390 Electronic & Garden',
       priority:'Critical',
       brief:'Waterproof bluetooth speaker for outdoor use. Action shots with water and outdoor scenes.',
       articles: ['Bluetooth Speaker Waterproof [EAN: 5901234567950]', 'Speaker Stand [EAN: 5901234567951]'],
@@ -3709,11 +4470,11 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       orderNumber:'ORD-2025-034', 
       title:'Designer Handbag Collection', 
       status:'Samples Received', 
-      method:'Photographer',
+      method:'M&B',
       orderType: 'PS',
       photographer:'Victoria Stone', 
       deadline:'2025-09-24', 
-      costCenter:'PG-200',
+      costCenter:'90200512 føtex marketing',
       priority:'High',
       brief:'Luxury designer handbags for fall fashion collection. Elegant fashion photography.',
       articles: ['Leather Handbag Designer [EAN: 5901234567952]', 'Wallet Matching [EAN: 5901234567953]'],
@@ -3740,7 +4501,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       orderType: 'PS',
       photographer:'Steve Johnson', 
       deadline:'2025-09-26', 
-      costCenter:'PG-400',
+      costCenter:'90870330 Home & Leisure',
       priority:'Medium',
       brief:'Professional power tools for construction and DIY. Workshop lifestyle photography.',
       articles: ['Cordless Drill Pro [EAN: 5901234567954]', 'Tool Set Complete [EAN: 5901234567955]'],
@@ -3763,11 +4524,11 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       orderNumber:'ORD-2025-036', 
       title:'Organic Wine Collection', 
       status:'Pending Approval', 
-      method:'Photographer',
+      method:'GILS',
       orderType: 'PS',
       photographer:'Anthony Clark', 
       deadline:'2025-09-29', 
-      costCenter:'PG-100',
+      costCenter:'90500512 Bilka Marketing',
       priority:'Low',
       brief:'Organic and biodynamic wine selection. Elegant wine photography with lifestyle context.',
       articles: ['Organic Red Wine [EAN: 5901234567956]', 'Wine Glass Set Crystal [EAN: 5901234567957]'],
@@ -3794,7 +4555,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       orderType: 'PS',
       photographer:'Nancy Wilson', 
       deadline:'2025-09-23', 
-      costCenter:'PG-300',
+      costCenter:'90870390 Electronic & Garden',
       priority:'High',
       brief:'Smart robot vacuum with app control. Modern home lifestyle photography.',
       articles: ['Robot Vacuum Smart [EAN: 5901234567958]', 'Charging Dock [EAN: 5901234567959]'],
@@ -3817,11 +4578,11 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       orderNumber:'ORD-2025-038', 
       title:'Luxury Perfume Launch', 
       status:'Photo Session', 
-      method:'Photographer',
+      method:'MERRILD',
       orderType: 'PS',
       photographer:'Sophia Martinez', 
       deadline:'2025-09-12', 
-      costCenter:'PG-200',
+      costCenter:'90200512 føtex marketing',
       priority:'Critical',
       brief:'High-end luxury perfume collection launch. Elegant beauty photography with dramatic lighting.',
       articles: ['Luxury Perfume 100ml [EAN: 5901234567960]', 'Perfume Gift Set [EAN: 5901234567961]'],
@@ -3844,11 +4605,11 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       orderNumber:'ORD-2025-039', 
       title:'BBQ Grill Professional', 
       status:'Samples Requested', 
-      method:'Photographer',
+      method:'Photo Box',
       orderType: 'PS',
       photographer:'Jason Lee', 
       deadline:'2025-09-27', 
-      costCenter:'PG-400',
+      costCenter:'90870330 Home & Leisure',
       priority:'Medium',
       brief:'Professional outdoor BBQ grill with accessories. Outdoor cooking lifestyle photography.',
       articles: ['BBQ Grill Pro 6-Burner [EAN: 5901234567962]', 'Grill Tool Set [EAN: 5901234567963]'],
@@ -3871,11 +4632,11 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       orderNumber:'ORD-2025-040', 
       title:'Gourmet Tea Collection', 
       status:'Complete', 
-      method:'Photographer',
+      method:'M&B',
       orderType: 'PS',
       photographer:'Helen Chang', 
       deadline:'2025-08-31', 
-      costCenter:'PG-100',
+      costCenter:'90500512 Bilka Marketing',
       priority:'Low',
       brief:'Premium tea collection from around the world. Zen-like food photography with tea ceremony elements.',
       articles: ['Green Tea Premium [EAN: 5901234567964]', 'Tea Set Ceramic [EAN: 5901234567965]'],
@@ -3893,496 +4654,108 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       createdAt: '2025-08-26T10:30:00Z',
       assignedTo: 'user-photo5',
       comments: []
-    },
-    {
-      orderNumber:'ORD-2025-041', 
-      title:'Mechanical Keyboard Gaming', 
-      status:'Review', 
-      method:'Photo Box',
-      orderType: 'PS',
-      photographer:'Brian Kim', 
-      deadline:'2025-09-18', 
-      costCenter:'PG-300',
-      priority:'High',
-      brief:'High-end mechanical gaming keyboard with RGB. Gaming setup and tech photography.',
-      articles: ['Mechanical Keyboard RGB [EAN: 5901234567966]', 'Keycap Set Custom [EAN: 5901234567967]'],
-      budget: 7800,
-      deliverables: ['Tech Product Shots', 'Gaming Setup Lifestyle', 'RGB Light Effects'],
-      eventId: 'A7325092', 
-      purchaseGroup: 101,
-      offerId: '10763359',
-      articleNumber: 'ART-KEYBOARD-041',
-      articleName: 'Mechanical Keyboard Gaming',
-      imageRequestId: '123502',
-      photoStatus: 'Review',
-      page: 41,
-      createdBy: 'user-promo1',
-      createdAt: '2025-09-08T12:15:00Z',
-      assignedTo: 'user-photo1',
-      comments: []
-    },
-    {
-      orderNumber:'ORD-2025-042', 
-      title:'Luxury Skincare Anti-Aging', 
-      status:'New Request', 
-      method:'Photographer',
-      orderType: 'PS',
-      photographer:'Not Assigned', 
-      deadline:'2025-10-01', 
-      costCenter:'PG-200',
-      priority:'Medium',
-      brief:'Anti-aging skincare line for mature skin. Elegant beauty photography with before/after concepts.',
-      articles: ['Anti-Aging Serum [EAN: 5901234567968]', 'Night Cream Luxury [EAN: 5901234567969]'],
-      budget: 16500,
-      deliverables: ['Beauty Product Photography', 'Lifestyle Mature Beauty', 'Ingredient Close-ups'],
-      eventId: 'A7425093', 
-      purchaseGroup: 101,
-      offerId: '10763360',
-      articleNumber: 'ART-ANTIAGING-042',
-      articleName: 'Anti-Aging Skincare Line',
-      imageRequestId: '123503',
-      photoStatus: 'New',
-      page: 42,
-      createdBy: 'user-promo2',
-      createdAt: '2025-09-08T14:45:00Z',
-      assignedTo: null,
-      comments: []
-    },
-    {
-      orderNumber:'ORD-2025-043', 
-      title:'Smart Doorbell Security', 
-      status:'Samples in Transit', 
-      method:'Photo Box',
-      orderType: 'PS',
-      photographer:'Peter Wilson', 
-      deadline:'2025-09-20', 
-      costCenter:'PG-300',
-      priority:'High',
-      brief:'Smart video doorbell with motion detection. Home security and tech photography.',
-      articles: ['Smart Doorbell Camera [EAN: 5901234567970]', 'Chime Indoor Unit [EAN: 5901234567971]'],
-      budget: 8200,
-      deliverables: ['Tech Product Shots', 'Home Security Demo', 'App Interface'],
-      eventId: 'A7525094', 
-      purchaseGroup: 101,
-      offerId: '10763361',
-      articleNumber: 'ART-DOORBELL-043',
-      articleName: 'Smart Video Doorbell',
-      imageRequestId: '123504',
-      photoStatus: 'Samples in Transit',
-      page: 43,
-      createdBy: 'user-promo1',
-      createdAt: '2025-09-08T16:30:00Z',
-      assignedTo: 'user-photo2',
-      comments: []
-    },
-    {
-      orderNumber:'ORD-2025-044', 
-      title:'Outdoor Furniture Patio Set', 
-      status:'Delivered', 
-      method:'Photographer',
-      orderType: 'PS',
-      photographer:'Lisa Rodriguez', 
-      deadline:'2025-08-29', 
-      costCenter:'PG-400',
-      priority:'Low',
-      brief:'Weather-resistant patio furniture set. Outdoor lifestyle photography with seasonal context.',
-      articles: ['Patio Table Set [EAN: 5901234567972]', 'Outdoor Cushions [EAN: 5901234567973]'],
-      budget: 11200,
-      deliverables: ['Outdoor Lifestyle Photography', 'Product Detail Shots', 'Seasonal Styling'],
-      eventId: 'A7625095', 
-      purchaseGroup: 101,
-      offerId: '10763362',
-      articleNumber: 'ART-PATIO-044',
-      articleName: 'Outdoor Patio Furniture',
-      imageRequestId: '123505',
-      photoStatus: 'Archive',
-      page: 44,
-      createdBy: 'user-promo2',
-      createdAt: '2025-08-24T18:00:00Z',
-      assignedTo: 'user-photo3',
-      comments: []
-    },
-    {
-      orderNumber:'ORD-2025-045', 
-      title:'Artisan Bread Making Kit', 
-      status:'Processing', 
-      method:'Photographer',
-      orderType: 'PS',
-      photographer:'Carlos Garcia', 
-      deadline:'2025-09-25', 
-      costCenter:'PG-100',
-      priority:'Medium',
-      brief:'Complete bread making kit for home bakers. Food photography with process demonstration.',
-      articles: ['Bread Making Kit [EAN: 5901234567974]', 'Sourdough Starter [EAN: 5901234567975]'],
-      budget: 5800,
-      deliverables: ['Food Photography', 'Baking Process Demo', 'Lifestyle Kitchen'],
-      eventId: 'A7725096', 
-      purchaseGroup: 101,
-      offerId: '10763363',
-      articleNumber: 'ART-BREADKIT-045',
-      articleName: 'Artisan Bread Making Kit',
-      imageRequestId: '123506',
-      photoStatus: 'Processing',
-      page: 45,
-      createdBy: 'user-promo1',
-      createdAt: '2025-09-09T08:15:00Z',
-      assignedTo: 'user-photo4',
-      comments: []
-    },
-    {
-      orderNumber:'ORD-2025-046', 
-      title:'Electric Scooter Urban', 
-      status:'Urgent', 
-      method:'Photographer',
-      orderType: 'PS',
-      photographer:'David Thompson', 
-      deadline:'2025-09-06', 
-      costCenter:'PG-400',
-      priority:'Critical',
-      brief:'Urban electric scooter for city commuting. Dynamic action shots in urban environment.',
-      articles: ['Electric Scooter Pro [EAN: 5901234567976]', 'Scooter Helmet [EAN: 5901234567977]'],
-      budget: 13200,
-      deliverables: ['Action Photography', 'Urban Lifestyle', 'Tech Feature Highlights'],
-      eventId: 'A7825097', 
-      purchaseGroup: 101,
-      offerId: '10763364',
-      articleNumber: 'ART-ESCOOTER-046',
-      articleName: 'Electric Scooter Urban',
-      imageRequestId: '123507',
-      photoStatus: 'Urgent',
-      page: 46,
-      createdBy: 'user-promo2',
-      createdAt: '2025-09-04T19:30:00Z',
-      assignedTo: 'user-photo5',
-      comments: []
-    },
-    {
-      orderNumber:'ORD-2025-047', 
-      title:'Designer Sunglasses Collection', 
-      status:'Samples Received', 
-      method:'Photographer',
-      orderType: 'PS',
-      photographer:'Amanda Foster', 
-      deadline:'2025-09-22', 
-      costCenter:'PG-200',
-      priority:'High',
-      brief:'Luxury designer sunglasses for summer/fall transition. Fashion photography with lifestyle context.',
-      articles: ['Designer Sunglasses Aviator [EAN: 5901234567978]', 'Sunglasses Case Leather [EAN: 5901234567979]'],
-      budget: 15800,
-      deliverables: ['Fashion Photography', 'Lifestyle Summer', 'Detail Craftsmanship'],
-      eventId: 'A7925098', 
-      purchaseGroup: 101,
-      offerId: '10763365',
-      articleNumber: 'ART-SUNGLASSES-047',
-      articleName: 'Designer Sunglasses Collection',
-      imageRequestId: '123508',
-      photoStatus: 'Samples Received',
-      page: 47,
-      createdBy: 'user-promo1',
-      createdAt: '2025-09-09T10:45:00Z',
-      assignedTo: 'user-photo1',
-      comments: []
-    },
-    {
-      orderNumber:'ORD-2025-048', 
-      title:'Smart Home Thermostat', 
-      status:'Approved', 
-      method:'Photo Box',
-      orderType: 'PS',
-      photographer:'Richard Davis', 
-      deadline:'2025-09-28', 
-      costCenter:'PG-300',
-      priority:'Medium',
-      brief:'Smart thermostat with energy saving features. Modern home lifestyle and tech photography.',
-      articles: ['Smart Thermostat WiFi [EAN: 5901234567980]', 'Temperature Sensor [EAN: 5901234567981]'],
-      budget: 7400,
-      deliverables: ['Tech Product Shots', 'Home Lifestyle', 'Energy Saving Demo'],
-      eventId: 'A8025099', 
-      purchaseGroup: 101,
-      offerId: '10763366',
-      articleNumber: 'ART-THERMOSTAT-048',
-      articleName: 'Smart Home Thermostat',
-      imageRequestId: '123509',
-      photoStatus: 'Approved',
-      page: 48,
-      createdBy: 'user-promo2',
-      createdAt: '2025-09-09T12:30:00Z',
-      assignedTo: 'user-photo2',
-      comments: []
-    },
-    {
-      orderNumber:'ORD-2025-049', 
-      title:'Luxury Bath Towel Set', 
-      status:'Draft', 
-      method:'Photographer',
-      orderType: 'PS',
-      photographer:'Grace Wilson', 
-      deadline:'2025-10-02', 
-      costCenter:'PG-200',
-      priority:'Low',
-      brief:'Premium cotton bath towel collection. Spa-like bathroom lifestyle photography.',
-      articles: ['Bath Towel Luxury 100% Cotton [EAN: 5901234567982]', 'Towel Set Gift Box [EAN: 5901234567983]'],
-      budget: 6800,
-      deliverables: ['Lifestyle Bathroom', 'Texture Close-ups', 'Spa Styling'],
-      eventId: 'A8125100', 
-      purchaseGroup: 101,
-      offerId: '10763367',
-      articleNumber: 'ART-TOWELS-049',
-      articleName: 'Luxury Bath Towel Set',
-      imageRequestId: '123510',
-      photoStatus: 'New',
-      page: 49,
-      createdBy: 'user-promo1',
-      createdAt: '2025-09-09T14:15:00Z',
-      assignedTo: 'user-photo3',
-      comments: []
-    },
-    {
-      orderNumber:'ORD-2025-050', 
-      title:'Professional Blender High-Speed', 
-      status:'Pending Approval', 
-      method:'Photo Box',
-      orderType: 'PS',
-      photographer:'Michelle Lee', 
-      deadline:'2025-09-30', 
-      costCenter:'PG-400',
-      priority:'High',
-      brief:'High-performance blender for smoothies and food prep. Kitchen lifestyle with action shots.',
-      articles: ['High-Speed Blender Pro [EAN: 5901234567984]', 'Blender Cup Set [EAN: 5901234567985]'],
-      budget: 9600,
-      deliverables: ['Product Photography', 'Kitchen Lifestyle', 'Action Blending Shots'],
-      eventId: 'A8225101', 
-      purchaseGroup: 101,
-      offerId: '10763368',
-      articleNumber: 'ART-BLENDER-050',
-      articleName: 'Professional Blender',
-      imageRequestId: '123511',
-      photoStatus: 'Pending',
-      page: 50,
-      createdBy: 'user-promo2',
-      createdAt: '2025-09-09T16:00:00Z',
-      assignedTo: 'user-photo4',
-      comments: []
-    },
-    {
-      orderNumber:'ORD-2025-051', 
-      title:'Wireless Charging Pad Multi-Device', 
-      status:'Photo Session', 
-      method:'Photo Box',
-      orderType: 'PS',
-      photographer:'Kevin Chang', 
-      deadline:'2025-09-14', 
-      costCenter:'PG-300',
-      priority:'Medium',
-      brief:'Multi-device wireless charging station. Clean tech photography with device compatibility.',
-      articles: ['Wireless Charging Pad 3-in-1 [EAN: 5901234567986]', 'USB-C Cable Fast [EAN: 5901234567987]'],
-      budget: 5200,
-      deliverables: ['Tech Product Shots', 'Device Compatibility Demo', 'Lifestyle Office'],
-      eventId: 'A8325102', 
-      purchaseGroup: 101,
-      offerId: '10763369',
-      articleNumber: 'ART-CHARGER-051',
-      articleName: 'Wireless Charging Station',
-      imageRequestId: '123512',
-      photoStatus: 'In Progress',
-      page: 51,
-      createdBy: 'user-promo1',
-      createdAt: '2025-09-09T17:45:00Z',
-      assignedTo: 'user-photo5',
-      comments: []
-    },
-    {
-      orderNumber:'ORD-2025-052', 
-      title:'Artisan Ceramic Dinnerware', 
-      status:'Complete', 
-      method:'Photographer',
-      orderType: 'PS',
-      photographer:'Diana Miller', 
-      deadline:'2025-09-01', 
-      costCenter:'PG-200',
-      priority:'Low',
-      brief:'Handcrafted ceramic dinnerware collection. Elegant table setting and lifestyle photography.',
-      articles: ['Ceramic Dinner Plate Set [EAN: 5901234567988]', 'Ceramic Bowl Collection [EAN: 5901234567989]'],
-      budget: 8400,
-      deliverables: ['Lifestyle Table Setting', 'Product Detail Shots', 'Artisan Craftsmanship'],
-      eventId: 'A8425103', 
-      purchaseGroup: 101,
-      offerId: '10763370',
-      articleNumber: 'ART-DINNERWARE-052',
-      articleName: 'Artisan Ceramic Collection',
-      imageRequestId: '123513',
-      photoStatus: 'Archive',
-      page: 52,
-      createdBy: 'user-promo2',
-      createdAt: '2025-08-27T09:30:00Z',
-      assignedTo: 'user-photo1',
-      comments: []
-    },
-    {
-      orderNumber:'ORD-2025-053', 
-      title:'Smart Water Bottle Hydration', 
-      status:'Samples Requested', 
-      method:'Photo Box',
-      orderType: 'PS',
-      photographer:'Tyler Brown', 
-      deadline:'2025-09-26', 
-      costCenter:'PG-400',
-      priority:'High',
-      brief:'Smart water bottle with hydration tracking. Active lifestyle and tech photography.',
-      articles: ['Smart Water Bottle 32oz [EAN: 5901234567990]', 'Bottle Cleaning Kit [EAN: 5901234567991]'],
-      budget: 6200,
-      deliverables: ['Tech Product Shots', 'Active Lifestyle', 'App Interface Demo'],
-      eventId: 'A8525104', 
-      purchaseGroup: 101,
-      offerId: '10763371',
-      articleNumber: 'ART-WATERBOTTLE-053',
-      articleName: 'Smart Hydration Bottle',
-      imageRequestId: '123514',
-      photoStatus: 'Samples Requested',
-      page: 53,
-      createdBy: 'user-promo1',
-      createdAt: '2025-09-10T08:00:00Z',
-      assignedTo: 'user-photo2',
-      comments: []
-    },
-    {
-      orderNumber:'ORD-2025-054', 
-      title:'Luxury Watch Band Collection', 
-      status:'Review', 
-      method:'Photographer',
-      orderType: 'PS',
-      photographer:'Olivia Garcia', 
-      deadline:'2025-09-21', 
-      costCenter:'PG-200',
-      priority:'Medium',
-      brief:'Premium watch bands in various materials. Luxury accessory photography with lifestyle context.',
-      articles: ['Leather Watch Band [EAN: 5901234567992]', 'Metal Watch Band Titanium [EAN: 5901234567993]'],
-      budget: 11800,
-      deliverables: ['Luxury Accessory Photography', 'Material Close-ups', 'Lifestyle Elegance'],
-      eventId: 'A8625105', 
-      purchaseGroup: 101,
-      offerId: '10763372',
-      articleNumber: 'ART-WATCHBAND-054',
-      articleName: 'Luxury Watch Band Collection',
-      imageRequestId: '123515',
-      photoStatus: 'Review',
-      page: 54,
-      createdBy: 'user-promo2',
-      createdAt: '2025-09-10T10:30:00Z',
-      assignedTo: 'user-photo3',
-      comments: []
-    },
-    {
-      orderNumber:'ORD-2025-055', 
-      title:'Electric Coffee Grinder Pro', 
-      status:'New Request', 
-      method:'Photo Box',
-      orderType: 'PS',
-      photographer:'Not Assigned', 
-      deadline:'2025-10-03', 
-      costCenter:'PG-100',
-      priority:'Low',
-      brief:'Professional electric coffee grinder with precision settings. Coffee lifestyle photography.',
-      articles: ['Electric Coffee Grinder [EAN: 5901234567994]', 'Coffee Bean Storage [EAN: 5901234567995]'],
-      budget: 4800,
-      deliverables: ['Product Photography', 'Coffee Lifestyle', 'Grinding Demo'],
-      eventId: 'A8725106', 
-      purchaseGroup: 101,
-      offerId: '10763373',
-      articleNumber: 'ART-GRINDER-055',
-      articleName: 'Electric Coffee Grinder',
-      imageRequestId: '123516',
-      photoStatus: 'New',
-      page: 55,
-      createdBy: 'user-promo1',
-      createdAt: '2025-09-10T12:15:00Z',
-      assignedTo: null,
-      comments: []
-    },
-    {
-      orderNumber:'ORD-2025-056', 
-      title:'Ergonomic Office Chair Executive', 
-      status:'Samples in Transit', 
-      method:'Photographer',
-      orderType: 'PS',
-      photographer:'Jonathan Smith', 
-      deadline:'2025-09-24', 
-      costCenter:'PG-200',
-      priority:'High',
-      brief:'Executive ergonomic office chair with premium materials. Office lifestyle photography.',
-      articles: ['Office Chair Executive [EAN: 5901234567996]', 'Chair Mat Protective [EAN: 5901234567997]'],
-      budget: 14200,
-      deliverables: ['Product Photography', 'Office Lifestyle', 'Ergonomic Features'],
-      eventId: 'A8825107', 
-      purchaseGroup: 101,
-      offerId: '10763374',
-      articleNumber: 'ART-OFFICECHAIR-056',
-      articleName: 'Ergonomic Executive Chair',
-      imageRequestId: '123517',
-      photoStatus: 'Samples in Transit',
-      page: 56,
-      createdBy: 'user-promo2',
-      createdAt: '2025-09-10T14:45:00Z',
-      assignedTo: 'user-photo4',
-      comments: []
-    },
-    {
-      orderNumber:'ORD-2025-057', 
-      title:'Air Purifier HEPA Advanced', 
-      status:'Delivered', 
-      method:'Photo Box',
-      orderType: 'PS',
-      photographer:'Sandra Lee', 
-      deadline:'2025-09-02', 
-      costCenter:'PG-300',
-      priority:'Medium',
-      brief:'Advanced HEPA air purifier for home use. Clean lifestyle photography with air quality focus.',
-      articles: ['Air Purifier HEPA [EAN: 5901234567998]', 'Replacement Filter Set [EAN: 5901234567999]'],
-      budget: 10500,
-      deliverables: ['Tech Product Shots', 'Home Lifestyle', 'Air Quality Demo'],
-      eventId: 'A8925108', 
-      purchaseGroup: 101,
-      offerId: '10763375',
-      articleNumber: 'ART-AIRPURIFIER-057',
-      articleName: 'HEPA Air Purifier',
-      imageRequestId: '123518',
-      photoStatus: 'Archive',
-      page: 57,
-      createdBy: 'user-promo1',
-      createdAt: '2025-08-28T16:30:00Z',
-      assignedTo: 'user-photo5',
-      comments: []
-    },
-    {
-      orderNumber:'ORD-2025-058', 
-      title:'Gourmet Olive Oil Collection', 
-      status:'Processing', 
-      method:'Photographer',
-      orderType: 'PS',
-      photographer:'Mario Rossi', 
-      deadline:'2025-09-19', 
-      costCenter:'PG-100',
-      priority:'Critical',
-      brief:'Premium extra virgin olive oils from Mediterranean regions. Gourmet food photography.',
-      articles: ['Extra Virgin Olive Oil [EAN: 5901234568000]', 'Oil Tasting Set [EAN: 5901234568001]'],
-      budget: 7600,
-      deliverables: ['Gourmet Food Photography', 'Lifestyle Cooking', 'Oil Quality Demo'],
-      eventId: 'A9025109', 
-      purchaseGroup: 101,
-      offerId: '10763376',
-      articleNumber: 'ART-OLIVEOIL-058',
-      articleName: 'Gourmet Olive Oil Collection',
-      imageRequestId: '123519',
-      photoStatus: 'Processing',
-      page: 58,
-      createdBy: 'user-promo2',
-      createdAt: '2025-09-10T18:00:00Z',
-      assignedTo: 'user-photo1',
-      comments: []
     }
-  
   ];
 
+  // Migration for new status values
+  const statusMigrationMap = {
+    'Draft': 'Order Created',
+    'New Request': 'Order Created',
+    'Samples Requested': 'Sample ordered',
+    'In Progress': 'Ordered',
+    'Approved': 'Image Ready for use',
+    'Complete': 'Image Ready for use',
+    'Delivered': 'Image Ready for use',
+    'Pending Approval': 'Ordered',
+    'Photo Session': 'Ordered',
+    'Archive': 'Image Ready for use'
+  };
+
+  // Migration for purchase groups
+  const purchaseGroupMigrationMap = {
+    100: 103, // Groceries -> Groceries
+    200: 103, // Fresh Products -> Groceries (fallback)
+    300: 103, // Electronics -> Groceries (fallback)
+    400: 103, // Home & Garden -> Groceries (fallback)
+    500: 103, // Fashion -> Groceries (fallback)
+    600: 103, // Health & Beauty -> Groceries (fallback)
+    700: 103, // Sports & Leisure -> Groceries (fallback)
+    800: 103, // Automotive -> Groceries (fallback)
+    900: 101  // Baby & Kids -> Petfood (just assigning to first valid one for now as mapping is unclear, or maybe 103)
+  };
+
+  // Randomly assign new purchase groups to existing orders for variety if they don't match
+  const validPurchaseGroups = [101, 102, 103, 104, 105, 106];
+  
+  const validContentTypes = [
+    'Packshot',
+    'Product Group Shot (Transparent Background)',
+    'Product Group Shot (Miljø)',
+    'Model Shot (Transparent Background)',
+    'Model Shot (Miljø)',
+    'Detail Shot (Transparent Background)',
+    'Detail Shot (Miljø)',
+    'Premium (Transparent Background)'
+  ];
+
+  if (Array.isArray(allOrders)) {
+    allOrders.forEach((order, index) => {
+      if (statusMigrationMap[order.status]) {
+        order.status = statusMigrationMap[order.status];
+      }
+      // Also migrate photoStatus if needed, though not explicitly requested, it keeps things consistent
+      if (statusMigrationMap[order.photoStatus]) {
+        order.photoStatus = statusMigrationMap[order.photoStatus];
+      }
+
+      // Update Purchase Group
+      // If it's one of the old ones, map it or assign a valid one
+      if (!validPurchaseGroups.includes(order.purchaseGroup)) {
+         // Assign a valid purchase group based on index to distribute them
+         order.purchaseGroup = validPurchaseGroups[index % validPurchaseGroups.length];
+      }
+
+      // Update child level (articles) if they have purchaseGroup
+      if (Array.isArray(order.articles)) {
+        order.articles.forEach((article, artIndex) => {
+            if (article && typeof article === 'object' && article.purchaseGroup) {
+                 if (!validPurchaseGroups.includes(article.purchaseGroup)) {
+                     article.purchaseGroup = order.purchaseGroup; // Sync with order
+                 }
+            }
+             // Also check raw property if it exists
+            if (article && typeof article === 'object' && article.raw && article.raw.purchaseGroup) {
+                 if (!validPurchaseGroups.includes(article.raw.purchaseGroup)) {
+                     article.raw.purchaseGroup = order.purchaseGroup;
+                 }
+            }
+
+            // Update Content Type
+            const ensureValidContentType = (obj, prop) => {
+                if (!obj[prop] || !validContentTypes.includes(obj[prop])) {
+                    // Assign a deterministic but varied content type based on order index and article index
+                    // But mostly Packshot as it's the most common
+                    if ((index + artIndex) % 4 === 0) {
+                         obj[prop] = validContentTypes[(index + artIndex) % validContentTypes.length];
+                    } else {
+                         obj[prop] = 'Packshot';
+                    }
+                }
+            };
+
+            if (article && typeof article === 'object') {
+                ensureValidContentType(article, 'contentType');
+                if (article.raw) {
+                    ensureValidContentType(article.raw, 'contentType');
+                }
+            }
+        });
+      }
+    });
+  }
+
+  ensureArticlesHaveFileNames(allOrders);
+  ensureOrderPreviewImages(allOrders);
   ensureOrderPhotoMetadata(allOrders);
 
   const OrderStoreCtor = window.__OrderStoreCtor || null;
@@ -4776,6 +5149,113 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
     }
   };
 
+  const THEME_STORAGE_KEY = 'rkhThemePreference';
+  const FALLBACK_THEME_STYLE_ID = 'fallback-theme-styles';
+
+  function ensureFallbackThemeCSS() {
+    if (typeof document === 'undefined') return;
+    let styleNode = document.getElementById(FALLBACK_THEME_STYLE_ID);
+    if (!styleNode) {
+      styleNode = document.createElement('style');
+      styleNode.id = FALLBACK_THEME_STYLE_ID;
+      styleNode.textContent = __fallbackThemeCSS;
+      document.head.appendChild(styleNode);
+      return;
+    }
+
+    if (styleNode.textContent !== __fallbackThemeCSS) {
+      styleNode.textContent = __fallbackThemeCSS;
+    }
+  }
+  const AVAILABLE_THEMES = {
+    warm: { label: 'Warm Classic' },
+    cool: { label: 'Coastal Breeze' },
+    midnight: { label: 'Midnight Dusk' },
+    aurora: { label: 'Aurora Glass' },
+    glass: { label: 'Modern Glass' }
+  };
+
+  let activeTheme = 'warm';
+
+  function loadStoredTheme() {
+    if (typeof localStorage === 'undefined') {
+      return 'warm';
+    }
+
+    try {
+      const storedTheme = localStorage.getItem(THEME_STORAGE_KEY);
+      if (storedTheme && Object.prototype.hasOwnProperty.call(AVAILABLE_THEMES, storedTheme)) {
+        return storedTheme;
+      }
+    } catch (error) {
+      console.warn('[Theme] Unable to read stored theme preference:', error);
+    }
+
+    return 'warm';
+  }
+
+  function applyTheme(themeKey, options = {}) {
+  ensureFallbackThemeCSS();
+
+  const resolvedTheme = Object.prototype.hasOwnProperty.call(AVAILABLE_THEMES, themeKey)
+      ? themeKey
+      : 'warm';
+
+    const bodyNode = typeof document !== 'undefined' ? document.body : null;
+    if (options.skipDuplicate && resolvedTheme === activeTheme && bodyNode && bodyNode.getAttribute('data-theme') === resolvedTheme) {
+      return;
+    }
+
+    activeTheme = resolvedTheme;
+    if (bodyNode) {
+      bodyNode.setAttribute('data-theme', resolvedTheme);
+    }
+
+    if (typeof localStorage !== 'undefined') {
+      try {
+        localStorage.setItem(THEME_STORAGE_KEY, resolvedTheme);
+      } catch (error) {
+        console.warn('[Theme] Unable to persist theme preference:', error);
+      }
+    }
+
+    const selector = document.getElementById('themeSelector');
+    if (selector && selector.value !== resolvedTheme) {
+      selector.value = resolvedTheme;
+    }
+
+    if (!options.silent && typeof window.showToast === 'function') {
+      window.showToast(`Theme updated to ${AVAILABLE_THEMES[resolvedTheme].label}`, 'info');
+    }
+  }
+
+  function initializeThemeSelector() {
+    if (typeof document === 'undefined') {
+      return;
+    }
+
+    const selector = document.getElementById('themeSelector');
+    if (!selector) {
+      return;
+    }
+
+    selector.value = activeTheme;
+
+    if (!selector.dataset.boundThemeListener) {
+      selector.addEventListener('change', (event) => {
+        applyTheme(event.target.value);
+      });
+      selector.dataset.boundThemeListener = 'true';
+    }
+  }
+
+  window.selectTheme = function(themeKey) {
+    applyTheme(themeKey);
+  };
+
+  activeTheme = loadStoredTheme();
+  applyTheme(activeTheme, { silent: true, skipDuplicate: true });
+
   function render() {
     // Check authentication
     if (!authSystem.isAuthenticated()) {
@@ -4784,6 +5264,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
     }
 
     const currentUser = authSystem.getCurrentUser();
+    const initialRefreshSummary = buildRefreshSummaryText(currentUser);
     const resolveScopedOrders = () => (
       window.getAllOrdersSnapshot
         ? window.getAllOrdersSnapshot()
@@ -4794,6 +5275,165 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
 
     let orders = authSystem.getFilteredOrders(resolveScopedOrders());
     const stats = getStats(orders);
+
+    const activeThemeKey = document.body?.dataset?.theme || '';
+    const isAuroraTheme = activeThemeKey === 'aurora';
+    const isGlassTheme = activeThemeKey === 'glass';
+    
+    let bulkPanelStyles;
+    
+    if (isAuroraTheme) {
+      bulkPanelStyles = {
+        container: 'display: none; background: radial-gradient(130% 160% at 20% 0%, rgba(248, 251, 255, 0.92), rgba(210, 236, 255, 0.75), rgba(190, 240, 228, 0.65)); border-radius: 20px; border: 1px solid rgba(148, 180, 255, 0.35); box-shadow: 0 36px 70px rgba(17, 33, 68, 0.35); margin-bottom: 28px; backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);',
+        header: 'background: linear-gradient(145deg, rgba(248, 251, 255, 0.55), rgba(210, 236, 255, 0.45), rgba(180, 230, 255, 0.42)); padding: 22px; border-radius: 20px 20px 0 0; border-bottom: 1px solid rgba(148, 180, 255, 0.38);',
+        countPill: 'background: linear-gradient(120deg, rgba(168, 180, 248, 0.95), rgba(125, 211, 252, 0.92)); color: rgba(15, 29, 56, 0.95); padding: 8px 16px; border-radius: 999px; font-size: 13px; font-weight: 600; box-shadow: 0 14px 30px rgba(72, 118, 182, 0.35); border: 1px solid rgba(255, 255, 255, 0.45);',
+        description: 'color: rgba(24, 42, 78, 0.92); font-size: 14px; font-weight: 500; text-shadow: 0 1px 2px rgba(255, 255, 255, 0.45);',
+        buttons: [
+          {
+            id: 'bulkUpdateStatus',
+            icon: '📝',
+            label: 'Update Status',
+            styleBase: 'background: linear-gradient(135deg, rgba(156, 205, 255, 0.98), rgba(99, 179, 237, 0.92)); color: rgba(17, 32, 62, 0.95); border: 1px solid rgba(156, 205, 255, 0.65); padding: 12px 20px; border-radius: 999px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; gap: 6px; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);',
+            baseShadow: '0 14px 32px rgba(71, 116, 179, 0.35)',
+            hoverShadow: '0 22px 42px rgba(71, 116, 179, 0.45)'
+          },
+          {
+            id: 'bulkAssign',
+            icon: '👤',
+            label: 'Assign To',
+            styleBase: 'background: linear-gradient(135deg, rgba(226, 191, 255, 0.95), rgba(178, 201, 255, 0.9)); color: rgba(40, 25, 72, 0.95); border: 1px solid rgba(209, 180, 255, 0.6); padding: 12px 20px; border-radius: 999px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; gap: 6px; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);',
+            baseShadow: '0 14px 32px rgba(120, 92, 192, 0.35)',
+            hoverShadow: '0 22px 42px rgba(120, 92, 192, 0.45)'
+          },
+          {
+            id: 'bulkExport',
+            icon: '📊',
+            label: 'Export',
+            styleBase: 'background: linear-gradient(135deg, rgba(255, 233, 195, 0.95), rgba(255, 208, 153, 0.9)); color: rgba(70, 42, 10, 0.95); border: 1px solid rgba(255, 220, 180, 0.65); padding: 12px 20px; border-radius: 999px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; gap: 6px; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);',
+            baseShadow: '0 14px 32px rgba(173, 112, 33, 0.28)',
+            hoverShadow: '0 22px 42px rgba(173, 112, 33, 0.4)'
+          },
+          {
+            id: 'clearSelection',
+            icon: '✖️',
+            label: 'Clear',
+            styleBase: 'background: linear-gradient(135deg, rgba(255, 255, 255, 0.35), rgba(209, 224, 255, 0.3)); color: rgba(24, 42, 78, 0.9); border: 1px solid rgba(164, 189, 255, 0.55); padding: 12px 20px; border-radius: 999px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; gap: 6px; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);',
+            baseShadow: '0 12px 28px rgba(26, 41, 79, 0.22)',
+            hoverShadow: '0 20px 36px rgba(26, 41, 79, 0.32)'
+          }
+        ]
+      };
+    } else if (isGlassTheme) {
+      bulkPanelStyles = {
+        container: 'display: none; background: rgba(255, 255, 255, 0.65); border-radius: 16px; border: 1px solid rgba(255, 255, 255, 0.6); box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1); margin-bottom: 28px; backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);',
+        header: 'background: rgba(255, 255, 255, 0.4); padding: 20px; border-radius: 16px 16px 0 0; border-bottom: 1px solid rgba(255, 255, 255, 0.5);',
+        countPill: 'background: linear-gradient(135deg, #3b82f6, #2563eb); color: white; padding: 8px 16px; border-radius: 999px; font-size: 13px; font-weight: 600; box-shadow: 0 8px 16px rgba(37, 99, 235, 0.25);',
+        description: 'color: #1e293b; font-size: 14px; font-weight: 500;',
+        buttons: [
+          {
+            id: 'bulkUpdateStatus',
+            icon: '📝',
+            label: 'Update Status',
+            styleBase: 'background: rgba(255, 255, 255, 0.8); color: #1e293b; border: 1px solid rgba(255, 255, 255, 0.6); padding: 10px 18px; border-radius: 999px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; gap: 6px; backdrop-filter: blur(10px);',
+            baseShadow: '0 4px 12px rgba(0, 0, 0, 0.05)',
+            hoverShadow: '0 8px 20px rgba(0, 0, 0, 0.1)'
+          },
+          {
+            id: 'bulkAssign',
+            icon: '👤',
+            label: 'Assign To',
+            styleBase: 'background: rgba(255, 255, 255, 0.8); color: #1e293b; border: 1px solid rgba(255, 255, 255, 0.6); padding: 10px 18px; border-radius: 999px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; gap: 6px; backdrop-filter: blur(10px);',
+            baseShadow: '0 4px 12px rgba(0, 0, 0, 0.05)',
+            hoverShadow: '0 8px 20px rgba(0, 0, 0, 0.1)'
+          },
+          {
+            id: 'bulkExport',
+            icon: '📊',
+            label: 'Export',
+            styleBase: 'background: rgba(255, 255, 255, 0.8); color: #1e293b; border: 1px solid rgba(255, 255, 255, 0.6); padding: 10px 18px; border-radius: 999px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; gap: 6px; backdrop-filter: blur(10px);',
+            baseShadow: '0 4px 12px rgba(0, 0, 0, 0.05)',
+            hoverShadow: '0 8px 20px rgba(0, 0, 0, 0.1)'
+          },
+          {
+            id: 'clearSelection',
+            icon: '✖️',
+            label: 'Clear',
+            styleBase: 'background: rgba(255, 255, 255, 0.5); color: #64748b; border: 1px solid rgba(255, 255, 255, 0.4); padding: 10px 18px; border-radius: 999px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; gap: 6px; backdrop-filter: blur(10px);',
+            baseShadow: '0 2px 8px rgba(0, 0, 0, 0.05)',
+            hoverShadow: '0 6px 16px rgba(0, 0, 0, 0.1)'
+          }
+        ]
+      };
+    } else {
+      bulkPanelStyles = {
+        container: 'display: none; background: #fdf8f1; border-radius: 12px; box-shadow: 0 10px 22px rgba(79, 59, 37, 0.1); margin-bottom: 24px; border: 1px solid rgba(196, 139, 90, 0.18);',
+        header: 'background: linear-gradient(135deg, #f6ede0, #efe2d0); padding: 18px; border-radius: 12px 12px 0 0;',
+        countPill: 'background: #c48b5a; color: white; padding: 6px 12px; border-radius: 16px; font-size: 13px; font-weight: 600; box-shadow: 0 4px 12px rgba(196, 139, 90, 0.35);',
+        description: 'color: #6b5440; font-size: 14px; font-weight: 500;',
+        buttons: [
+          {
+            id: 'bulkUpdateStatus',
+            icon: '📝',
+            label: 'Update Status',
+            styleBase: 'background: linear-gradient(135deg, #9cb89f, #7fa284); color: white; border: none; padding: 10px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; gap: 6px;',
+            baseShadow: '0 6px 12px rgba(127, 162, 132, 0.35)',
+            hoverShadow: '0 10px 20px rgba(127, 162, 132, 0.45)'
+          },
+          {
+            id: 'bulkAssign',
+            icon: '👤',
+            label: 'Assign To',
+            styleBase: 'background: linear-gradient(135deg, #c8a6d9, #b48fc7); color: white; border: none; padding: 10px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; gap: 6px;',
+            baseShadow: '0 6px 12px rgba(180, 143, 199, 0.35)',
+            hoverShadow: '0 10px 20px rgba(180, 143, 199, 0.45)'
+          },
+          {
+            id: 'bulkExport',
+            icon: '📊',
+            label: 'Export',
+            styleBase: 'background: linear-gradient(135deg, #dfb37d, #c48b5a); color: white; border: none; padding: 10px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; gap: 6px;',
+            baseShadow: '0 6px 12px rgba(196, 139, 90, 0.35)',
+            hoverShadow: '0 10px 20px rgba(196, 139, 90, 0.45)'
+          },
+          {
+            id: 'clearSelection',
+            icon: '✖️',
+            label: 'Clear',
+            styleBase: 'background: linear-gradient(135deg, #b4a392, #8f7b63); color: white; border: none; padding: 10px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; gap: 6px;',
+            baseShadow: '0 6px 12px rgba(143, 123, 99, 0.35)',
+            hoverShadow: '0 10px 20px rgba(143, 123, 99, 0.45)'
+          }
+        ]
+      };
+    }
+
+    const bulkButtonsHTML = bulkPanelStyles.buttons.map(btn => {
+      const buttonStyle = `${btn.styleBase} box-shadow: ${btn.baseShadow};`;
+      return `
+                        <button id="${btn.id}" style="${buttonStyle}" 
+                                onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='${btn.hoverShadow}'" 
+                                onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='${btn.baseShadow}'">
+                          <span>${btn.icon}</span> ${btn.label}
+                        </button>`;
+    }).join('');
+
+    const bulkActionsPanelMarkup = `
+                <!-- Bulk Actions Panel -->
+                <div style="${bulkPanelStyles.container}" id="bulkActionsPanel">
+                  <div style="${bulkPanelStyles.header}">
+                    <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
+                      <div class="selected-count-info" style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                        <div style="${bulkPanelStyles.countPill}">
+                          <span id="selectedCount">0</span> selected
+                        </div>
+                        <span style="${bulkPanelStyles.description}">Choose an action to apply to selected items</span>
+                      </div>
+                      <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                        ${bulkButtonsHTML}
+                      </div>
+                    </div>
+                  </div>
+                </div>`;
     
     // Function to refresh orders when needed
     function refreshOrders() {
@@ -4806,256 +5446,106 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
   <div id="fallback-app" style="min-height: 100vh; margin: 0; background: #f3f4f6; display: flex;">
         
         <!-- Modern Sidebar -->
-        <div class="sidebar" id="sidebar">
-          <div class="sidebar-header">
-            <div class="sidebar-title-container">
-                <img src="/CCP_Logog.png" alt="CCP Logo" class="sidebar-logo" />
-                <h1 class="sidebar-title">Content Creation Program</h1>
-              </div>
-            <button class="sidebar-toggle" onclick="toggleSidebar()" title="Toggle Sidebar (Ctrl+B)" aria-label="Toggle Sidebar">
-              <span id="sidebarToggleIcon">◀</span>
-            </button>
-          </div>
-          
-          <nav class="sidebar-nav">
-            <!-- Core Operations -->
-            <div class="nav-section" data-section="core">
-              <button class="nav-section-title" type="button">
-                <span>Core Operations</span>
-                <span class="nav-section-chevron">▾</span>
-              </button>
-              <div class="nav-section-items">
-                <div class="nav-item" data-tooltip="View All Orders" onclick="showView('orders')">
-                  <span class="nav-item-icon">📋</span>
-                  <span class="nav-item-text">Orders Overview</span>
-                </div>
-                ${authSystem.canCreateOrders() ? `
-                  <div class="nav-item" data-tooltip="Create New Order" onclick="showNewOrderModal()">
-                    <span class="nav-item-icon">🆕</span>
-                    <span class="nav-item-text">Create New Order</span>
-                  </div>
-                  <div class="nav-item" data-tooltip="Create/Edit Content with Runware AI (Google Gemini Flash Image 2.5)" onclick="showContentCreationModal()">
-                    <span class="nav-item-icon">🚀</span>
-                    <span class="nav-item-text">Create/Edit Content</span>
-                  </div>
-                ` : ''}
-                <div class="nav-item" data-tooltip="Mass Upload Images to Orders" onclick="showMassUploadModal()">
-                  <span class="nav-item-icon">📤</span>
-                  <span class="nav-item-text">Mass Upload</span>
-                </div>
-              </div>
-            </div>
-
-            <!-- Views & Analytics -->
-            <div class="nav-section" data-section="analytics">
-              <button class="nav-section-title" type="button">
-                <span>Views & Analytics</span>
-                <span class="nav-section-chevron">▾</span>
-              </button>
-              <div class="nav-section-items">
-                <div class="nav-item" data-tooltip="Kanban Board" onclick="showView('kanban')">
-                  <span class="nav-item-icon">📊</span>
-                  <span class="nav-item-text">Kanban Board</span>
-                </div>
-                <div class="nav-item" data-tooltip="Calendar View" onclick="showView('calendar')">
-                  <span class="nav-item-icon">📅</span>
-                  <span class="nav-item-text">Calendar</span>
-                </div>
-                <div class="nav-item" data-tooltip="Workflow View" onclick="showView('workflow')">
-                  <span class="nav-item-icon">🔄</span>
-                  <span class="nav-item-text">Workflow</span>
-                </div>
-                ${authSystem.canCreateOrders() ? `
-                  <div class="nav-item" data-tooltip="Smart Suggestions" onclick="window.showHistoricalSuggestionsModal()">
-                    <span class="nav-item-icon">📊</span>
-                    <span class="nav-item-text">Smart Analytics</span>
-                  </div>
-                ` : ''}
-              </div>
-            </div>
-
-            <!-- Quick Actions -->
-            <div class="nav-section" data-section="quick-actions">
-              <button class="nav-section-title" type="button">
-                <span>Quick Actions</span>
-                <span class="nav-section-chevron">▾</span>
-              </button>
-              <div class="nav-section-items">
-                <div class="nav-item nav-item-urgent" data-tooltip="View High & Critical Priority Orders" onclick="filterOrdersByStatus('urgent')">
-                  <span class="nav-item-icon">🚨</span>
-                  <span class="nav-item-text">Urgent Orders</span>
-                  <span class="nav-item-badge" id="urgentBadge">0</span>
-                </div>
-                <div class="nav-item nav-item-samples" data-tooltip="View Orders with Samples Requested/In Transit/Received" onclick="filterOrdersByStatus('samples')">
-                  <span class="nav-item-icon">📦</span>
-                  <span class="nav-item-text">Samples Ready</span>
-                  <span class="nav-item-badge" id="samplesBadge">0</span>
-                </div>
-                <div class="nav-item nav-item-overdue" data-tooltip="View Orders Past Their Deadline" onclick="filterOrdersByStatus('overdue')">
-                  <span class="nav-item-icon">⏰</span>
-                  <span class="nav-item-text">Overdue Orders</span>
-                  <span class="nav-item-badge" id="overdueBadge">0</span>
-                </div>
-                <div class="nav-item nav-item-today" data-tooltip="View Orders Due Today" onclick="filterOrdersByStatus('today')">
-                  <span class="nav-item-icon">📅</span>
-                  <span class="nav-item-text">Due Today</span>
-                  <span class="nav-item-badge" id="todayBadge">0</span>
-                </div>
-              </div>
-            </div>
-
-            <!-- Data Management -->
-            <div class="nav-section" data-section="data">
-              <button class="nav-section-title" type="button">
-                <span>Data Management</span>
-                <span class="nav-section-chevron">▾</span>
-              </button>
-              <div class="nav-section-items">
-                ${authSystem.canCreateOrders() ? `
-                  <div class="nav-item" data-tooltip="Import SAP PMR" onclick="showSAPImportModal()">
-                    <span class="nav-item-icon">🏢</span>
-                    <span class="nav-item-text">SAP Import</span>
-                  </div>
-                  <div class="nav-item" data-tooltip="Import Excel/CSV" onclick="window.showExcelImportModal()">
-                    <span class="nav-item-icon">📋</span>
-                    <span class="nav-item-text">Excel Import</span>
-                  </div>
-                ` : ''}
-                <div class="nav-item" data-tooltip="Cloudinary Asset Management" onclick="window.showDAMIntegrationModal()">
-                  <span class="nav-item-icon">☁️</span>
-                  <span class="nav-item-text">Cloudinary Assets</span>
-                </div>
-                <div id="toggleBulkMode" class="nav-item" data-tooltip="Bulk Operations">
-                  <span class="nav-item-icon">☑️</span>
-                  <span class="nav-item-text">Bulk Select</span>
-                </div>
-              </div>
-            </div>
-
-            <!-- Templates & Automation -->
-            ${authSystem.canCreateOrders() ? `
-              <div class="nav-section" data-section="automation">
-                <button class="nav-section-title" type="button">
-                  <span>Automation</span>
-                  <span class="nav-section-chevron">▾</span>
-                </button>
-                <div class="nav-section-items">
-                  <div class="nav-item" data-tooltip="Quick Templates" onclick="showQuickTemplatesModal()">
-                    <span class="nav-item-icon">⚡</span>
-                    <span class="nav-item-text">Quick Templates</span>
-                  </div>
-                  <div class="nav-item" data-tooltip="Template Rules Engine" onclick="window.showTemplateRulesModal()">
-                    <span class="nav-item-icon">🎯</span>
-                    <span class="nav-item-text">Template Rules</span>
-                  </div>
-                  <div class="nav-item" data-tooltip="Placeholder Items" onclick="window.showPlaceholderItemsModal()">
-                    <span class="nav-item-icon">📝</span>
-                    <span class="nav-item-text">Placeholder Items</span>
-                  </div>
-                </div>
-              </div>
-            ` : ''}
-
-            <!-- System & Support -->
-            <div class="nav-section" data-section="system">
-              <button class="nav-section-title" type="button">
-                <span>System</span>
-                <span class="nav-section-chevron">▾</span>
-              </button>
-              <div class="nav-section-items">
-                <div class="nav-item" data-tooltip="Request Customization" onclick="window.showCustomizationRequestModal()">
-                  <span class="nav-item-icon">🔧</span>
-                  <span class="nav-item-text">Customizations</span>
-                </div>
-                <div class="nav-item" data-tooltip="System Settings" onclick="showSettings()">
-                  <span class="nav-item-icon">⚙️</span>
-                  <span class="nav-item-text">Settings</span>
-                </div>
-                <div class="nav-item" data-tooltip="User Profile" onclick="showProfile()">
-                  <span class="nav-item-icon">👤</span>
-                  <span class="nav-item-text">Profile</span>
-                </div>
-              </div>
-            </div>
-          </nav>
-        </div>
+        <!-- Sidebar removed -->
 
         <!-- Main Content Area -->
-        <div class="main-content">
-          <div class="content-header">
-            <h1 class="content-title" id="contentTitle">Dashboard Overview</h1>
-            <div class="content-actions">
-              <button class="content-pill-btn content-pill-btn--export content-pill-btn--compact" onclick="exportToCsv()">📊 <span>Export</span></button>
-              <button class="content-pill-btn content-pill-btn--refresh content-pill-btn--compact" onclick="refreshData()">🔄 <span>Refresh</span></button>
-              <div style="display: flex; align-items: center; gap: 12px;">
+        <div class="main-content glass-surface glass-floating">
+          <div class="content-header glass-surface glass-floating">
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <img src="/CCP_Logog.png" alt="CCP Logo" style="height: 40px; width: auto;" />
+              <div style="display: flex; flex-direction: column; justify-content: center;">
+                <span style="font-weight: 700; font-size: 16px; color: #4b3b2a; line-height: 1.2;">Content Creation Program</span>
+                <span id="contentTitle" style="font-size: 12px; color: #85694c; font-weight: 500; line-height: 1.2;">Order Overview</span>
+                <div style="display: flex; gap: 8px; margin-top: 8px;">
+                  ${authSystem.canCreateOrders() ? `
+                  <button class="content-pill-btn content-pill-btn--compact" onclick="showNewOrderModal()" style="background: linear-gradient(135deg, #c48b5a 0%, #a67550 100%); color: white;">➕ <span>Create Order</span></button>
+                  ` : ''}
+                  <button class="content-pill-btn content-pill-btn--compact" onclick="showMassUploadModal()">📤 <span>Mass Upload</span></button>
+                </div>
+              </div>
+            </div>
+            <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 8px;">
+              <div style="display: flex; flex-direction: column; align-items: flex-end; line-height: 1.2; gap: 2px;">
+                <span style="color: #4b3b2a; font-weight: 600; font-size: 14px;">${currentUser.name}</span>
+                <span style="color: #7b5a3d; font-weight: 500; font-size: 12px; text-transform: capitalize;">${currentUser.role}</span>
+              </div>
+              <div class="content-actions" style="display: flex; flex-direction: row; align-items: center; gap: 8px;">
+                <button class="content-pill-btn content-pill-btn--export content-pill-btn--compact" onclick="exportToCsv()" style="width: auto; padding: 6px 12px;">📊 <span>Export</span></button>
+                <button class="content-pill-btn content-pill-btn--refresh content-pill-btn--compact" onclick="refreshData()" style="width: auto; padding: 6px 12px;">🔄 <span>Refresh</span></button>
                 <div style="position: relative;">
-                  <button id="supportMenuBtn" onclick="toggleSupportMenu()" class="content-pill-btn content-pill-btn--support content-pill-btn--compact" style="background: linear-gradient(135deg, #c48b5a 0%, #a67550 100%); color: white;">
-                    <span>📚 Support</span>
-                  </button>
-                  <div id="supportMenuDropdown" style="
-                    display: none;
-                    position: absolute;
-                    top: calc(100% + 8px);
-                    right: 0;
-                    background: #fffaf3;
-                    border: 2px solid #ead7c2;
-                    border-radius: 12px;
-                    box-shadow: 0 12px 24px rgba(79, 59, 37, 0.18);
-                    min-width: 220px;
-                    z-index: 1000;
-                    overflow: hidden;
-                  ">
-                    <div style="padding: 12px 16px; background: linear-gradient(135deg, #f7eedf, #efe0cf); border-bottom: 1px solid #ead7c2;">
-                      <div style="font-weight: 700; font-size: 14px; color: #4b3b2a; display: flex; align-items: center; gap: 8px;">
-                        <span>📚</span>
-                        <span>Support & Resources</span>
+                    <button id="supportMenuBtn" onclick="toggleSupportMenu()" class="content-pill-btn content-pill-btn--support content-pill-btn--compact" style="background: linear-gradient(135deg, #c48b5a 0%, #a67550 100%); color: white; width: auto; padding: 6px 12px;">
+                      <span>📚 Support</span>
+                    </button>
+                    <div id="supportMenuDropdown" class="support-menu-panel glass-surface glass-floating" style="
+                      display: none;
+                      position: absolute;
+                      top: calc(100% + 8px);
+                      right: 0;
+                      background: #fffaf3;
+                      border: 2px solid #ead7c2;
+                      border-radius: 12px;
+                      box-shadow: 0 12px 24px rgba(79, 59, 37, 0.18);
+                      min-width: 220px;
+                      z-index: 1000;
+                      overflow: hidden;
+                    ">
+                      <div style="padding: 12px 16px; background: linear-gradient(135deg, #f7eedf, #efe0cf); border-bottom: 1px solid #ead7c2;">
+                        <div style="font-weight: 700; font-size: 14px; color: #4b3b2a; display: flex; align-items: center; gap: 8px;">
+                          <span>📚</span>
+                          <span>Support & Resources</span>
+                        </div>
+                      </div>
+                      <div style="padding: 8px;">
+                        <div class="support-menu-theme">
+                          <label for="themeSelector">Theme</label>
+                          <select id="themeSelector">
+                            <option value="warm">Warm Classic</option>
+                            <option value="cool">Coastal Breeze</option>
+                            <option value="midnight">Midnight Dusk</option>
+                            <option value="aurora">Aurora Glass</option>
+                            <option value="glass">Modern Glass</option>
+                          </select>
+                        </div>
+                        <div class="support-menu-divider"></div>
+                        <button onclick="openStyleGuide()" class="support-menu-item">
+                          <span class="support-menu-icon">🎨</span>
+                          <div class="support-menu-content">
+                            <span class="support-menu-label">Photo Reference Guide</span>
+                            <span class="support-menu-desc">Textile photography standards</span>
+                          </div>
+                        </button>
+                        <button onclick="openUserManual()" class="support-menu-item">
+                          <span class="support-menu-icon">📖</span>
+                          <div class="support-menu-content">
+                            <span class="support-menu-label">User Manual</span>
+                            <span class="support-menu-desc">Complete documentation</span>
+                          </div>
+                        </button>
+                        <button onclick="openScannerGuide()" class="support-menu-item">
+                          <span class="support-menu-icon">📷</span>
+                          <div class="support-menu-content">
+                            <span class="support-menu-label">Scanner Guide</span>
+                            <span class="support-menu-desc">Barcode scanning help</span>
+                          </div>
+                        </button>
+                        <div class="support-menu-divider"></div>
+                        <button onclick="showAboutModal()" class="support-menu-item">
+                          <span class="support-menu-icon">ℹ️</span>
+                          <div class="support-menu-content">
+                            <span class="support-menu-label">About</span>
+                            <span class="support-menu-desc">App version & info</span>
+                          </div>
+                        </button>
                       </div>
                     </div>
-                    <div style="padding: 8px;">
-                      <button onclick="openStyleGuide()" class="support-menu-item">
-                        <span class="support-menu-icon">🎨</span>
-                        <div class="support-menu-content">
-                          <span class="support-menu-label">Photo Reference Guide</span>
-                          <span class="support-menu-desc">Textile photography standards</span>
-                        </div>
-                      </button>
-                      <button onclick="openUserManual()" class="support-menu-item">
-                        <span class="support-menu-icon">📖</span>
-                        <div class="support-menu-content">
-                          <span class="support-menu-label">User Manual</span>
-                          <span class="support-menu-desc">Complete documentation</span>
-                        </div>
-                      </button>
-                      <button onclick="openScannerGuide()" class="support-menu-item">
-                        <span class="support-menu-icon">📷</span>
-                        <div class="support-menu-content">
-                          <span class="support-menu-label">Scanner Guide</span>
-                          <span class="support-menu-desc">Barcode scanning help</span>
-                        </div>
-                      </button>
-                      <div style="height: 1px; background: #ead7c2; margin: 8px 4px;"></div>
-                      <button onclick="showAboutModal()" class="support-menu-item">
-                        <span class="support-menu-icon">ℹ️</span>
-                        <div class="support-menu-content">
-                          <span class="support-menu-label">About</span>
-                          <span class="support-menu-desc">App version & info</span>
-                        </div>
-                      </button>
-                    </div>
                   </div>
-                </div>
-                <button onclick="logout()" class="content-pill-btn content-pill-btn--logout content-pill-btn--compact"><span>Logout</span></button>
-                <div style="display: flex; flex-direction: column; align-items: flex-end; line-height: 1.2;">
-                  <span style="color: #4b3b2a; font-weight: 600; font-size: 14px;">${currentUser.name}</span>
-                  <span style="color: #7b5a3d; font-weight: 500; font-size: 12px; text-transform: capitalize;">${currentUser.role}</span>
-                </div>
               </div>
             </div>
           </div>
           
           <div class="content-body">
             <!-- Main Content Area -->
-            <div id="mainContent">
+            <div id="mainContent" style="display: flex; flex-direction: column; flex: 1;">
               <!-- Dashboard View -->
               <div id="dashboardView" style="display: none;">
                 <!-- Dashboard Stats Grid -->
@@ -5078,33 +5568,37 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
               <div id="ordersView">
                 <!-- Compact Filter Row: Event ID + Search -->
                 <div class="orders-filter-bar">
+                  <select id="orderTypeFilter"
+                          onchange="handleOrderTypeFilterChange(this.value)"
+                          style="padding: 6px 10px; border: 1px solid rgba(216, 164, 88, 0.65); border-radius: 8px; font-size: 13px; font-family: monospace; font-weight: 500; background: #fffaf3; cursor: pointer; min-width: 140px; color: #6b5440; flex: 0 0 auto;">
+                    <option value="">Order Type</option>
+                    <option value="Photo Service">Photo Service</option>
+                    <option value="Photo order">Photo order</option>
+                  </select>
                   <select id="salesOrgFilter"
                           onchange="handleSalesOrgFilterChange(this.value)"
                           style="padding: 6px 10px; border: 1px solid rgba(216, 164, 88, 0.65); border-radius: 8px; font-size: 13px; font-family: monospace; font-weight: 500; background: #fffaf3; cursor: pointer; min-width: 140px; color: #6b5440; flex: 0 0 auto;">
-                    <option value="">All Sales Orgs</option>
+                    <option value="">Sales Orgs</option>
                     <!-- Sales org options populated on load -->
                   </select>
                   <select id="tacticTypeFilter"
                           onchange="handleTacticTypeFilterChange(this.value)"
                           style="padding: 6px 10px; border: 1px solid rgba(216, 164, 88, 0.65); border-radius: 8px; font-size: 13px; font-family: monospace; font-weight: 500; background: #fffaf3; cursor: pointer; min-width: 160px; color: #6b5440; flex: 0 0 auto;">
-                    <option value="">All Tactic Types</option>
+                    <option value="">Tactic Types</option>
                     <!-- Tactic types populated dynamically -->
                   </select>
                   <select id="tacticFilter"
                           onchange="handleTacticFilterChange(this.value)"
                           style="padding: 6px 10px; border: 1px solid rgba(216, 164, 88, 0.65); border-radius: 8px; font-size: 13px; font-family: monospace; font-weight: 500; background: #fffaf3; cursor: pointer; min-width: 150px; color: #6b5440; flex: 0 0 auto;">
-                    <option value="">All Tactics</option>
+                    <option value="">Tactics</option>
                     <!-- Tactics populated dynamically -->
                   </select>
                   <select id="eventIdFilter" 
                           onchange="handleEventFilterChange(this.value)" 
                           style="padding: 6px 10px; border: 1px solid rgba(216, 164, 88, 0.65); border-radius: 8px; font-size: 13px; font-family: monospace; font-weight: 500; background: #fffaf3; cursor: pointer; min-width: 150px; color: #6b5440; flex: 0 0 auto;">
-                    <option value="">All Events</option>
+                    <option value="">Events</option>
                     <!-- Event IDs from PMR will be populated here -->
                   </select>
-                  <div id="eventIdOrderCount" style="font-size: 12px; color: #78350f; font-weight: 600; white-space: nowrap; flex: 0 0 auto;">
-                    Select a Sales Org, Event, Status, Tactic Type, or Tactic to view orders
-                  </div>
                   <div style="width: 1px; height: 24px; background: rgba(196, 139, 90, 0.25); margin: 0 4px; flex: 0 0 auto;"></div>
                   <input id="searchBox" placeholder="🔍 Search orders..." 
                          style="flex: 1 1 220px; padding: 6px 12px; border: 1px solid rgba(196, 139, 90, 0.35); border-radius: 8px; font-size: 13px; background: #fffaf3; color: #4b3b2a;" />
@@ -5112,119 +5606,153 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
                           style="padding: 6px 12px; border: 1px solid rgba(196, 139, 90, 0.35); border-radius: 8px; background: linear-gradient(135deg, #fff0db, #f7e1c3); color: #7b5a3d; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 10px rgba(123, 90, 61, 0.18); flex: 0 0 auto;">
                     Quick Filters ▾
                   </button>
-                  <div id="quickFiltersPanel" style="display: none; position: absolute; top: calc(100% + 8px); left: 0; right: 0; z-index: 40; background: #fffaf3; border-radius: 12px; box-shadow: 0 12px 24px rgba(79, 59, 37, 0.18); border: 1px solid rgba(196, 139, 90, 0.22); padding: 18px; max-height: 320px; overflow-y: auto;">
-                    <h3 style="margin: 0 0 12px; font-size: 14px; color: #4b3b2a; font-weight: 600; letter-spacing: 0.2px; text-transform: uppercase;">🔍 Quick Filters</h3>
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px;">
-                      <div onclick="filterOrdersByStatus('all')" style="background: linear-gradient(135deg, #fffaf3, #f4e8d8); border-radius: 10px; box-shadow: 0 6px 14px rgba(79, 59, 37, 0.12); padding: 14px; text-align: center; cursor: pointer; transition: all 0.3s ease; border-left: 4px solid #bfa079;" 
-                           onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 10px 20px rgba(79, 59, 37, 0.18)'"
-                           onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 6px 14px rgba(79, 59, 37, 0.12)';">
-                        <div style="font-size: 20px; font-weight: 700; color: #6b5440; margin-bottom: 6px;" id="allOrdersCount">0</div>
-                        <div style="font-size: 11px; color: #6b5440; text-transform: uppercase; letter-spacing: 0.4px;">📋 All Orders</div>
+                  <button id="clearFiltersButton" onclick="window.clearOrderFilters && window.clearOrderFilters()"
+                          style="padding: 6px 12px; border: 1px solid rgba(196, 139, 90, 0.35); border-radius: 8px; background: linear-gradient(135deg, #fef3c7, #fde68a); color: #92400e; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 10px rgba(180, 140, 60, 0.18); flex: 0 0 auto;">
+                    Clear Filters ✕
+                  </button>
+                  <div id="quickFiltersPanel" style="display: none; position: absolute; top: calc(100% + 8px); left: 0; right: 0; z-index: 1000; background: #fffaf3; border-radius: 12px; box-shadow: 0 12px 24px rgba(79, 59, 37, 0.18); border: 1px solid rgba(196, 139, 90, 0.22); padding: 18px; max-height: 320px; overflow-y: auto;">
+                    <div style="font-weight: 700; font-size: 14px; color: #4b3b2a; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center;">
+                      <span>🔍 Quick Filters</span>
+                      <button onclick="resetQuickFilters()" style="background: none; border: none; color: #c48b5a; font-size: 11px; cursor: pointer; text-decoration: underline;">Reset</button>
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px;">
+                      <!-- Cost center -->
+                      <div class="filter-group">
+                        <label style="display: block; font-size: 11px; font-weight: 600; color: #85694c; margin-bottom: 4px;">Cost Center</label>
+                        <select id="filterCostCenter" class="filter-select" style="width: 100%; padding: 6px; border-radius: 6px; border: 1px solid #ead7c2; background: rgba(255, 255, 255, 0.5); color: #4b3b2a;">
+                          <option value="">All</option>
+                          <option value="1001">1001 - Marketing</option>
+                          <option value="1002">1002 - Sales</option>
+                          <option value="1003">1003 - Production</option>
+                        </select>
                       </div>
-                      <div onclick="filterOrdersByStatus('draft')" style="background: linear-gradient(135deg, #fff6ea, #f2e0c6); border-radius: 10px; box-shadow: 0 6px 14px rgba(79, 59, 37, 0.12); padding: 14px; text-align: center; cursor: pointer; transition: all 0.3s ease; border-left: 4px solid #d0b48c;" 
-                           onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 10px 20px rgba(79, 59, 37, 0.18)'"
-                           onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 6px 14px rgba(79, 59, 37, 0.12)';">
-                        <div style="font-size: 20px; font-weight: 700; color: #7b5a3d; margin-bottom: 6px;" id="draftOrdersCount">0</div>
-                        <div style="font-size: 11px; color: #6b5440; text-transform: uppercase; letter-spacing: 0.4px;">📝 Draft</div>
+
+                      <!-- Purchase group -->
+                      <div class="filter-group">
+                        <label style="display: block; font-size: 11px; font-weight: 600; color: #85694c; margin-bottom: 4px;">Purchase Group</label>
+                        <select id="filterPurchaseGroup" class="filter-select" style="width: 100%; padding: 6px; border-radius: 6px; border: 1px solid #ead7c2; background: rgba(255, 255, 255, 0.5); color: #4b3b2a;">
+                          <option value="">All</option>
+                          <option value="101">101 - Petfood</option>
+                          <option value="102">102 - Coffee/Tea</option>
+                          <option value="103">103 - Groceries</option>
+                          <option value="104">104 - Confectionary</option>
+                          <option value="105">105 - Dry Food</option>
+                          <option value="106">106 - Frozen</option>
+                        </select>
                       </div>
-                      <div onclick="filterOrdersByStatus('pending')" style="background: linear-gradient(135deg, #fff3df, #f0d3a7); border-radius: 10px; box-shadow: 0 6px 14px rgba(79, 59, 37, 0.12); padding: 14px; text-align: center; cursor: pointer; transition: all 0.3s ease; border-left: 4px solid #d8a458;" 
-                           onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 10px 20px rgba(79, 59, 37, 0.18)'"
-                           onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 6px 14px rgba(79, 59, 37, 0.12)';">
-                        <div style="font-size: 20px; font-weight: 700; color: #b0722e; margin-bottom: 6px;" id="pendingOrdersCount">0</div>
-                        <div style="font-size: 11px; color: #6b5440; text-transform: uppercase; letter-spacing: 0.4px;">⏳ Pending</div>
+
+                      <!-- Content type -->
+                      <div class="filter-group">
+                        <label style="display: block; font-size: 11px; font-weight: 600; color: #85694c; margin-bottom: 4px;">Content Type</label>
+                        <select id="filterContentType" class="filter-select" style="width: 100%; padding: 6px; border-radius: 6px; border: 1px solid #ead7c2; background: rgba(255, 255, 255, 0.5); color: #4b3b2a;">
+                          <option value="">All</option>
+                          <option value="photography">Photography</option>
+                          <option value="video">Video</option>
+                          <option value="3d">3D Render</option>
+                        </select>
                       </div>
-                      <div onclick="filterOrdersByStatus('approved')" style="background: linear-gradient(135deg, #f0f8f4, #dcebe3); border-radius: 10px; box-shadow: 0 6px 14px rgba(79, 59, 37, 0.12); padding: 14px; text-align: center; cursor: pointer; transition: all 0.3s ease; border-left: 4px solid #8fb0a3;" 
-                           onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 10px 20px rgba(79, 59, 37, 0.18)'"
-                           onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 6px 14px rgba(79, 59, 37, 0.12)';">
-                        <div style="font-size: 20px; font-weight: 700; color: #5f7f74; margin-bottom: 6px;" id="approvedOrdersCount">0</div>
-                        <div style="font-size: 11px; color: #6b5440; text-transform: uppercase; letter-spacing: 0.4px;">✅ Approved</div>
+
+                      <!-- Dam Shot type -->
+                      <div class="filter-group">
+                        <label style="display: block; font-size: 11px; font-weight: 600; color: #85694c; margin-bottom: 4px;">DAM Shot Type</label>
+                        <select id="filterDamShotType" class="filter-select" style="width: 100%; padding: 6px; border-radius: 6px; border: 1px solid #ead7c2; background: rgba(255, 255, 255, 0.5); color: #4b3b2a;">
+                          <option value="">All</option>
+                          <option value="packshot">Packshot</option>
+                          <option value="lifestyle">Lifestyle</option>
+                          <option value="detail">Detail</option>
+                        </select>
                       </div>
-                      <div onclick="filterOrdersByStatus('samples')" style="background: linear-gradient(135deg, #f6f0ff, #e6dbf5); border-radius: 10px; box-shadow: 0 6px 14px rgba(79, 59, 37, 0.12); padding: 14px; text-align: center; cursor: pointer; transition: all 0.3s ease; border-left: 4px solid #bfa3d6;" 
-                           onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 10px 20px rgba(79, 59, 37, 0.18)'"
-                           onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 6px 14px rgba(79, 59, 37, 0.12)';">
-                        <div style="font-size: 20px; font-weight: 700; color: #8767b2; margin-bottom: 6px;" id="samplesOrdersCount">0</div>
-                        <div style="font-size: 11px; color: #6b5440; text-transform: uppercase; letter-spacing: 0.4px;">📦 Samples</div>
+
+                      <!-- Aktivitet -->
+                      <div class="filter-group">
+                        <label style="display: block; font-size: 11px; font-weight: 600; color: #85694c; margin-bottom: 4px;">Aktivitet</label>
+                        <select id="filterAktivitet" class="filter-select" style="width: 100%; padding: 6px; border-radius: 6px; border: 1px solid #ead7c2; background: rgba(255, 255, 255, 0.5); color: #4b3b2a;">
+                          <option value="">All</option>
+                          <option value="campaign">Campaign</option>
+                          <option value="social">Social Media</option>
+                          <option value="ecom">E-commerce</option>
+                        </select>
                       </div>
-                      <div onclick="filterOrdersByStatus('In Progress')" style="background: linear-gradient(135deg, #fff1e6, #f0d3bb); border-radius: 10px; box-shadow: 0 6px 14px rgba(79, 59, 37, 0.12); padding: 14px; text-align: center; cursor: pointer; transition: all 0.3s ease; border-left: 4px solid #c48b5a;" 
-                           onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 10px 20px rgba(79, 59, 37, 0.18)'"
-                           onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 6px 14px rgba(79, 59, 37, 0.12)';">
-                        <div style="font-size: 20px; font-weight: 700; color: #a66b38; margin-bottom: 6px;" id="inProgressOrdersCount">0</div>
-                        <div style="font-size: 11px; color: #6b5440; text-transform: uppercase; letter-spacing: 0.4px;">🔄 In Progress</div>
+
+                      <!-- Production -->
+                      <div class="filter-group">
+                        <label style="display: block; font-size: 11px; font-weight: 600; color: #85694c; margin-bottom: 4px;">Production</label>
+                        <select id="filterProduction" class="filter-select" style="width: 100%; padding: 6px; border-radius: 6px; border: 1px solid #ead7c2; background: rgba(255, 255, 255, 0.5); color: #4b3b2a;">
+                          <option value="">All</option>
+                          <option value="internal">Internal Studio</option>
+                          <option value="external">External Agency</option>
+                        </select>
                       </div>
-                      <div onclick="filterOrdersByStatus('review')" style="background: linear-gradient(135deg, #f3f9ef, #e3eed8); border-radius: 10px; box-shadow: 0 6px 14px rgba(79, 59, 37, 0.12); padding: 14px; text-align: center; cursor: pointer; transition: all 0.3s ease; border-left: 4px solid #a5b68f;" 
-                           onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 10px 20px rgba(79, 59, 37, 0.18)'"
-                           onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 6px 14px rgba(79, 59, 37, 0.12)';">
-                        <div style="font-size: 20px; font-weight: 700; color: #6f7f5a; margin-bottom: 6px;" id="reviewOrdersCount">0</div>
-                        <div style="font-size: 11px; color: #6b5440; text-transform: uppercase; letter-spacing: 0.4px;">🔍 Review</div>
+
+                      <!-- Principle -->
+                      <div class="filter-group">
+                        <label style="display: block; font-size: 11px; font-weight: 600; color: #85694c; margin-bottom: 4px;">Principle</label>
+                        <select id="filterPrinciple" class="filter-select" style="width: 100%; padding: 6px; border-radius: 6px; border: 1px solid #ead7c2; background: rgba(255, 255, 255, 0.5); color: #4b3b2a;">
+                          <option value="">All</option>
+                          <option value="#P 2D">#P 2D</option>
+                          <option value="#P 2P">#P 2P</option>
+                          <option value="#P 2D FLIP">#P 2D FLIP</option>
+                          <option value="#P 2J FLIP">#P 2J FLIP</option>
+                          <option value="#P 2I">#P 2I</option>
+                          <option value="#P 2J">#P 2J</option>
+                          <option value="#P 2K">#P 2K</option>
+                          <option value="#P 2H">#P 2H</option>
+                          <option value="#P 2K FLIP">#P 2K FLIP</option>
+                          <option value="#P 2N">#P 2N</option>
+                          <option value="#P 2M">#P 2M</option>
+                          <option value="#P 4A">#P 4A</option>
+                          <option value="#P 3E">#P 3E</option>
+                          <option value="#P 4C">#P 4C</option>
+                          <option value="#P 4E">#P 4E</option>
+                        </select>
                       </div>
-                      <div onclick="filterOrdersByStatus('completed')" style="background: linear-gradient(135deg, #eff7f2, #dcebdc); border-radius: 10px; box-shadow: 0 6px 14px rgba(79, 59, 37, 0.12); padding: 14px; text-align: center; cursor: pointer; transition: all 0.3s ease; border-left: 4px solid #7fa284;" 
-                           onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 10px 20px rgba(79, 59, 37, 0.18)'"
-                           onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 6px 14px rgba(79, 59, 37, 0.12)';">
-                        <div style="font-size: 20px; font-weight: 700; color: #54735d; margin-bottom: 6px;" id="completedOrdersCount">0</div>
-                        <div style="font-size: 11px; color: #6b5440; text-transform: uppercase; letter-spacing: 0.4px;">🎉 Complete</div>
+
+                      <!-- Status -->
+                      <div class="filter-group">
+                        <label style="display: block; font-size: 11px; font-weight: 600; color: #85694c; margin-bottom: 4px;">Status</label>
+                        <select id="filterStatus" class="filter-select" style="width: 100%; padding: 6px; border-radius: 6px; border: 1px solid #ead7c2; background: rgba(255, 255, 255, 0.5); color: #4b3b2a;">
+                          <option value="">All</option>
+                          <option value="draft">Draft</option>
+                          <option value="pending">Pending</option>
+                          <option value="approved">Approved</option>
+                          <option value="rejected">Rejected</option>
+                          <option value="samples">Samples Ready</option>
+                        </select>
                       </div>
+                    </div>
+                    
+                    <div style="margin-top: 16px; display: flex; justify-content: flex-end;">
+                      <button onclick="applyQuickFilters()" style="padding: 8px 16px; background: linear-gradient(135deg, #c48b5a 0%, #a67550 100%); color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 600; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">Apply Filters</button>
                     </div>
                   </div>
                 </div>
 
-                <!-- Bulk Actions Panel -->
-                <div style="display: none; background: #fdf8f1; border-radius: 12px; box-shadow: 0 10px 22px rgba(79, 59, 37, 0.1); margin-bottom: 24px; border: 1px solid rgba(196, 139, 90, 0.18);" id="bulkActionsPanel">
-                  <div style="background: linear-gradient(135deg, #f6ede0, #efe2d0); padding: 18px; border-radius: 12px 12px 0 0;">
-                    <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
-                      <div class="selected-count-info" style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
-                        <div style="background: #c48b5a; color: white; padding: 6px 12px; border-radius: 16px; font-size: 13px; font-weight: 600; box-shadow: 0 4px 12px rgba(196, 139, 90, 0.35);">
-                          <span id="selectedCount">0</span> selected
-                        </div>
-                        <span style="color: #6b5440; font-size: 14px; font-weight: 500;">Choose an action to apply to selected items</span>
-                      </div>
-                      <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-                        <button id="bulkUpdateStatus" style="background: linear-gradient(135deg, #9cb89f, #7fa284); color: white; border: none; padding: 10px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; box-shadow: 0 6px 12px rgba(127, 162, 132, 0.35); display: flex; align-items: center; gap: 6px;" 
-                                onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 10px 20px rgba(127, 162, 132, 0.45)'" 
-                                onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 6px 12px rgba(127, 162, 132, 0.35)'">
-                          <span>📝</span> Update Status
-                        </button>
-                        <button id="bulkAssign" style="background: linear-gradient(135deg, #c8a6d9, #b48fc7); color: white; border: none; padding: 10px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; box-shadow: 0 6px 12px rgba(180, 143, 199, 0.35); display: flex; align-items: center; gap: 6px;" 
-                                onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 10px 20px rgba(180, 143, 199, 0.45)'" 
-                                onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 6px 12px rgba(180, 143, 199, 0.35)'">
-                          <span>👤</span> Assign To
-                        </button>
-                        <button id="bulkExport" style="background: linear-gradient(135deg, #dfb37d, #c48b5a); color: white; border: none; padding: 10px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; box-shadow: 0 6px 12px rgba(196, 139, 90, 0.35); display: flex; align-items: center; gap: 6px;" 
-                                onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 10px 20px rgba(196, 139, 90, 0.45)'" 
-                                onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 6px 12px rgba(196, 139, 90, 0.35)'">
-                          <span>📊</span> Export
-                        </button>
-                        <button id="clearSelection" style="background: linear-gradient(135deg, #b4a392, #8f7b63); color: white; border: none; padding: 10px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; box-shadow: 0 6px 12px rgba(143, 123, 99, 0.35); display: flex; align-items: center; gap: 6px;" 
-                                onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 10px 20px rgba(143, 123, 99, 0.45)'" 
-                                onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 6px 12px rgba(143, 123, 99, 0.35)'">
-                          <span>✖️</span> Clear
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                ${bulkActionsPanelMarkup}
 
                 <div class="orders-table-container">
                   <table class="orders-table">
                     <thead>
-                      <tr style="background: linear-gradient(135deg, #f7eedf, #efe0cf);">
+                      <tr style="background: var(--theme-table-header-bg);">
                         <th style="width: 55px; min-width: 55px; max-width: 55px; height: 55px; display: none; padding: 0; text-align: center;" class="bulk-checkbox"><input type="checkbox" id="selectAllOrders"></th>
-                        <th style="padding: 4px; text-align: center; border-bottom: 1px solid rgba(196, 139, 90, 0.22); width: 32px;" aria-label="Expand"></th>
-                        <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: #4b3b2a; border-bottom: 1px solid rgba(196, 139, 90, 0.22);">Order Number</th>
-                        <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: #4b3b2a; border-bottom: 1px solid rgba(196, 139, 90, 0.22);">Page</th>
-                        <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: #4b3b2a; border-bottom: 1px solid rgba(196, 139, 90, 0.22);">Offer ID</th>
-                        <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: #4b3b2a; border-bottom: 1px solid rgba(196, 139, 90, 0.22);">Group</th>
-                        <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: #4b3b2a; border-bottom: 1px solid rgba(196, 139, 90, 0.22);">Cost Center</th>
-                        <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: #4b3b2a; border-bottom: 1px solid rgba(196, 139, 90, 0.22);">Order Type</th>
-                        <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: #4b3b2a; border-bottom: 1px solid rgba(196, 139, 90, 0.22);">Offer Name</th>
-                        <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: #4b3b2a; border-bottom: 1px solid rgba(196, 139, 90, 0.22);">Shot Type</th>
-                        <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: #4b3b2a; border-bottom: 1px solid rgba(196, 139, 90, 0.22);">Photo Ref.</th>
-                        <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: #4b3b2a; border-bottom: 1px solid rgba(196, 139, 90, 0.22);">Production</th>
-                        <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: #4b3b2a; border-bottom: 1px solid rgba(196, 139, 90, 0.22);">Principle</th>
-                        <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: #4b3b2a; border-bottom: 1px solid rgba(196, 139, 90, 0.22);">File Name</th>
-                        <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: #4b3b2a; border-bottom: 1px solid rgba(196, 139, 90, 0.22); width: 92px;">Comments</th>
-                        <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: #4b3b2a; border-bottom: 1px solid rgba(196, 139, 90, 0.22);">Status</th>
-                        <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: #4b3b2a; border-bottom: 1px solid rgba(196, 139, 90, 0.22); width: 80px;">Briefing</th>
-                        <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: #4b3b2a; border-bottom: 1px solid rgba(196, 139, 90, 0.22);">Deadline</th>
+                        <th style="padding: 4px; text-align: center; border-bottom: 1px solid var(--theme-table-border); width: 32px;" aria-label="Expand"></th>
+                        <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: var(--theme-table-header-text); border-bottom: 1px solid var(--theme-table-border);">Order Number</th>
+                        <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: var(--theme-table-header-text); border-bottom: 1px solid var(--theme-table-border);">Title</th>
+                        <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: var(--theme-table-header-text); border-bottom: 1px solid var(--theme-table-border);">Page</th>
+                        <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: var(--theme-table-header-text); border-bottom: 1px solid var(--theme-table-border);">Offer ID</th>
+                        <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: var(--theme-table-header-text); border-bottom: 1px solid var(--theme-table-border);">Group</th>
+                        <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: var(--theme-table-header-text); border-bottom: 1px solid var(--theme-table-border);">Cost Center</th>
+                        <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: var(--theme-table-header-text); border-bottom: 1px solid var(--theme-table-border);">Order Type</th>
+                        <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: var(--theme-table-header-text); border-bottom: 1px solid var(--theme-table-border);">Offer Name</th>
+                        <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: var(--theme-table-header-text); border-bottom: 1px solid var(--theme-table-border);">Shot Type</th>
+                        <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: var(--theme-table-header-text); border-bottom: 1px solid var(--theme-table-border);">Photo Ref.</th>
+                        <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: var(--theme-table-header-text); border-bottom: 1px solid var(--theme-table-border);">Production</th>
+                        <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: var(--theme-table-header-text); border-bottom: 1px solid var(--theme-table-border);">Principle</th>
+                        <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: var(--theme-table-header-text); border-bottom: 1px solid var(--theme-table-border);">File Name</th>
+                        <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: var(--theme-table-header-text); border-bottom: 1px solid var(--theme-table-border); width: 92px;">Comments</th>
+                        <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: var(--theme-table-header-text); border-bottom: 1px solid var(--theme-table-border);">Status</th>
+                        <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: var(--theme-table-header-text); border-bottom: 1px solid var(--theme-table-border); width: 80px;">Briefing</th>
+                        <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: var(--theme-table-header-text); border-bottom: 1px solid var(--theme-table-border);">Deadline</th>
                       </tr>
                     </thead>
                     <tbody id="ordersBody" style="background: #fffaf3;">
@@ -5310,21 +5838,153 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       </div>
 
       <style>
-        /* Sidebar layout refinements */
+        :root {
+          --theme-app-bg: #f3f4f6;
+          --theme-shell-bg: #f3f4f6;
+          --theme-surface-bg: #fffaf3;
+          --theme-surface-alt-bg: #f7eedf;
+          --theme-border: rgba(196, 139, 90, 0.3);
+          --theme-text: #4b3b2a;
+          --theme-muted: #6b5440;
+          --theme-support-btn: linear-gradient(135deg, #c48b5a 0%, #a67550 100%);
+          --theme-support-btn-text: #ffffff;
+          --theme-input-bg: rgba(255, 250, 243, 0.94);
+        }
+
+        body {
+          background: var(--theme-app-bg) !important;
+          color: var(--theme-text);
+        }
+
+        body[data-theme='warm'] {
+          --theme-app-bg: #f3f4f6;
+          --theme-shell-bg: #f3f4f6;
+          --theme-surface-bg: #fffaf3;
+          --theme-surface-alt-bg: #f7eedf;
+          --theme-border: rgba(196, 139, 90, 0.3);
+          --theme-text: #4b3b2a;
+          --theme-muted: #6b5440;
+          --theme-support-btn: linear-gradient(135deg, #c48b5a 0%, #a67550 100%);
+          --theme-support-btn-text: #ffffff;
+          --theme-input-bg: rgba(255, 250, 243, 0.94);
+        }
+
+        body[data-theme='cool'] {
+          --theme-app-bg: #e9f2ff;
+          --theme-shell-bg: #dee7f3;
+          --theme-surface-bg: #f8fbff;
+          --theme-surface-alt-bg: #e0ecff;
+          --theme-border: rgba(59, 130, 246, 0.25);
+          --theme-text: #1e293b;
+          --theme-muted: #334155;
+          --theme-support-btn: linear-gradient(135deg, #60a5fa 0%, #2563eb 100%);
+          --theme-support-btn-text: #f8fafc;
+          --theme-input-bg: rgba(248, 251, 255, 0.96);
+        }
+
+        body[data-theme='midnight'] {
+          --theme-app-bg: #0f172a;
+          --theme-shell-bg: #111827;
+          --theme-surface-bg: #1f2937;
+          --theme-surface-alt-bg: #111827;
+          --theme-border: rgba(148, 163, 184, 0.35);
+          --theme-text: #e2e8f0;
+          --theme-muted: #94a3b8;
+          --theme-support-btn: linear-gradient(135deg, #6366f1 0%, #4338ca 100%);
+          --theme-support-btn-text: #f8fafc;
+          --theme-input-bg: rgba(17, 24, 39, 0.94);
+        }
+
+        #fallback-app {
+          background: var(--theme-shell-bg) !important;
+          color: var(--theme-text);
+        }
+
+        #supportMenuDropdown {
+          background: var(--theme-surface-bg) !important;
+          border-color: var(--theme-border) !important;
+          color: var(--theme-text) !important;
+        }
+
+        .support-menu-item {
+          color: var(--theme-text) !important;
+        }
+
+        .support-menu-item:hover {
+          background: var(--theme-surface-alt-bg) !important;
+        }
+
+        .support-menu-label {
+          color: var(--theme-text) !important;
+        }
+
+        .support-menu-desc {
+          color: var(--theme-muted) !important;
+        }
+
+        .support-menu-theme {
+          display: flex;
+          flex-direction: column;
+          gap: 6px;
+          padding: 8px 4px 12px;
+        }
+
+        .support-menu-theme label {
+          font-size: 11px;
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+          font-weight: 600;
+          color: var(--theme-muted) !important;
+        }
+
+        .support-menu-theme select {
+          width: 100%;
+          padding: 9px 12px;
+          border-radius: 12px;
+          border: 1px solid var(--theme-border) !important;
+          background: var(--theme-input-bg) !important;
+          color: var(--theme-text) !important;
+          font-size: 13px;
+          font-weight: 500;
+          cursor: pointer;
+          backdrop-filter: var(--theme-blur-strength);
+          transition: box-shadow 0.2s ease, transform 0.2s ease;
+        }
+
+        .support-menu-theme select:focus {
+          outline: none;
+          box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
+          transform: translateY(-1px);
+        }
+
+        .support-menu-divider {
+          height: 1px;
+          background: var(--theme-border);
+          margin: 8px 4px;
+        }
+
+        .content-pill-btn--support {
+          background: var(--theme-support-btn) !important;
+          color: var(--theme-support-btn-text) !important;
+        }
+
         .sidebar {
           width: 260px;
-          background: transparent;
-          backdrop-filter: none;
-          border: none;
-          box-shadow: none;
-          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          background: var(--theme-shell-bg);
+          backdrop-filter: var(--theme-pane-blur);
+          border: 1px solid var(--theme-pane-border);
+          box-shadow: var(--theme-pane-shadow);
+          transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          will-change: width;
           position: relative;
           z-index: 100;
           display: flex;
           flex-direction: column;
           border-radius: 0;
-          margin: 12px 0 18px 18px;
-          min-height: calc(100vh - 36px);
+          margin: 0;
+          min-height: 100vh;
+          align-self: stretch;
+          overflow-x: hidden; /* Prevent content from overflowing during transition */
         }
 
         .sidebar.collapsed {
@@ -5338,21 +5998,22 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
 
         .sidebar.collapsed .nav-item {
           justify-content: center;
-          padding: 12px 14px;
+          padding: 12px 0; /* Reduced padding to fit icon */
           margin: 6px;
         }
 
         .sidebar-header {
-          padding: 12px 48px 18px 20px;
+          padding: 12px 20px 18px; /* Fixed padding */
           border-bottom: none;
           display: flex;
           align-items: center;
-          justify-content: center;
+          justify-content: flex-start; /* Align left to keep logo stable */
           background: transparent;
           position: relative;
           min-height: 96px;
           box-sizing: border-box;
           border-radius: 0;
+          overflow: hidden;
         }
 
         .sidebar-title-container {
@@ -5363,6 +6024,14 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
           gap: 10px;
           margin-bottom: 0;
           text-align: center;
+          width: 100%; /* Ensure it takes full width */
+          transition: opacity 0.2s ease;
+        }
+
+        .sidebar.collapsed .sidebar-title-container {
+           opacity: 1;
+           justify-content: center;
+           padding: 0;
         }
 
         .sidebar-logo {
@@ -5375,6 +6044,14 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
           padding: 0;
           box-shadow: none;
           transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        /* Show a small logo or icon when collapsed if needed, or just hide the main logo container */
+        .sidebar.collapsed .sidebar-logo {
+           width: 40px;
+           height: 40px;
+           opacity: 1;
+           margin: 0;
         }
 
         .sidebar-title-container:hover .sidebar-logo {
@@ -5429,13 +6106,13 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
         }
 
         .sidebar-toggle {
-          background: transparent;
-          border: none;
+          background: rgba(255, 255, 255, 0.05);
+          border: 1px solid transparent;
           cursor: pointer;
           padding: 8px;
-          border-radius: 12px;
-          transition: color 0.2s ease, transform 0.2s ease;
-          color: #4b3b2a;
+          border-radius: 14px;
+          transition: color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+          color: var(--theme-text);
           font-size: 16px;
           display: flex;
           align-items: center;
@@ -5445,21 +6122,22 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
           top: 34px;
           width: 36px;
           height: 36px;
-          backdrop-filter: none;
-          box-shadow: none;
+          backdrop-filter: var(--theme-pane-blur);
+          box-shadow: 0 10px 18px rgba(15, 23, 42, 0.12);
         }
 
         .sidebar.collapsed .sidebar-toggle {
           right: 12px;
-          color: #3a2617;
+          color: var(--theme-text);
           transform: translateX(-6px);
         }
 
         .sidebar-toggle:hover,
         .sidebar-toggle:focus-visible {
-          color: #311f12;
+          color: var(--theme-text);
           outline: none;
           transform: translateY(-1px);
+          box-shadow: 0 16px 26px rgba(17, 24, 39, 0.18);
         }
 
         .sidebar.collapsed .sidebar-toggle:hover,
@@ -5469,6 +6147,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
 
         .sidebar-toggle:active {
           transform: translateY(1px);
+          box-shadow: 0 8px 14px rgba(17, 24, 39, 0.16);
         }
 
         .sidebar.collapsed .sidebar-toggle:active {
@@ -5489,16 +6168,19 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
         }
 
         .nav-section {
-          margin: 0 12px 10px;
-          border-radius: 12px;
-          background: transparent;
-          border: none;
+          margin: 0 12px 12px;
+          border-radius: 18px;
+          background: rgba(255, 255, 255, 0.02);
+          border: 1px solid transparent;
           overflow: hidden;
-          transition: background 0.2s ease;
+          transition: background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+          backdrop-filter: var(--theme-blur-strength);
         }
 
         .nav-section:hover {
-          background: rgba(75, 59, 42, 0.06);
+          background: var(--theme-surface-alt-bg);
+          border-color: var(--theme-border);
+          box-shadow: 0 16px 24px rgba(15, 23, 42, 0.12);
         }
 
         .nav-section-title {
@@ -5509,20 +6191,24 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
           gap: 12px;
           background: transparent;
           border: none;
-          color: #4b3b2a;
+          color: var(--theme-muted);
           padding: 14px 18px;
           font-size: 11px;
           font-weight: 600;
           letter-spacing: 0.1em;
           text-transform: uppercase;
           cursor: pointer;
-          transition: color 0.2s ease, background 0.2s ease;
+          transition: color 0.2s ease, background 0.2s ease, opacity 0.2s ease, height 0.2s ease, padding 0.2s ease;
+          height: 45px; /* Fixed height for smooth transition */
+          box-sizing: border-box;
+          white-space: nowrap;
+          overflow: hidden;
         }
 
         .nav-section-title:hover,
         .nav-section-title:focus-visible {
-          background: rgba(75, 59, 42, 0.08);
-          color: #3a2617;
+          background: rgba(255, 255, 255, 0.06);
+          color: var(--theme-text);
           outline: none;
         }
 
@@ -5554,9 +6240,9 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
 
         .sidebar.collapsed .nav-section-title {
           opacity: 0;
-          padding: 0;
+          padding: 0 18px;
           height: 0;
-          overflow: hidden;
+          pointer-events: none;
         }
 
         .sidebar.collapsed .nav-section {
@@ -5570,29 +6256,58 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
           gap: 12px;
           padding: 10px 16px;
           margin: 2px 4px;
-          border-radius: 10px;
+          border-radius: 14px;
           cursor: pointer;
-          transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+          transition: background 0.25s ease, border-color 0.25s ease, color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease, padding 0.25s ease;
           text-decoration: none;
-          color: #4b3b2a;
-          background: transparent;
+          color: var(--theme-text);
+          background: rgba(255, 255, 255, 0.02);
           border: 1px solid transparent;
+          backdrop-filter: var(--theme-blur-strength);
         }
 
         .nav-item:hover,
         .nav-item:focus-visible {
-          background: rgba(75, 59, 42, 0.1);
-          border-color: rgba(75, 59, 42, 0.14);
-          color: #2f2115;
+          background: var(--theme-surface-alt-bg);
+          border-color: var(--theme-border);
+          color: var(--theme-text);
           transform: translateX(4px);
           outline: none;
+          box-shadow: 0 12px 22px rgba(17, 24, 39, 0.12);
         }
 
         .nav-item.active {
-          background: rgba(75, 59, 42, 0.18);
-          color: #2f2115;
-          box-shadow: none;
-          border-color: rgba(75, 59, 42, 0.22);
+          background: var(--theme-surface-alt-bg);
+          color: var(--theme-text);
+          box-shadow: 0 16px 30px rgba(17, 24, 39, 0.12);
+          border-color: var(--theme-border);
+        }
+
+        body[data-theme='aurora'] .nav-item {
+          background: rgba(255, 255, 255, 0.08);
+          border-color: rgba(255, 255, 255, 0.18);
+          box-shadow: 0 25px 45px rgba(45, 98, 197, 0.28);
+        }
+
+        body[data-theme='aurora'] .nav-item:hover,
+        body[data-theme='aurora'] .nav-item:focus-visible {
+          box-shadow: 0 42px 76px rgba(148, 180, 255, 0.35);
+        }
+
+        body[data-theme='aurora'] .nav-item-overdue,
+        body[data-theme='aurora'] .nav-item-overdue:hover {
+          background: rgba(248, 113, 113, 0.16) !important;
+          border-color: rgba(248, 113, 113, 0.28) !important;
+          color: rgba(254, 242, 242, 0.98) !important;
+          box-shadow: 0 28px 46px rgba(248, 113, 113, 0.25) !important;
+        }
+
+        body[data-theme='aurora'] .nav-item-today,
+        body[data-theme='aurora'] .nav-item-today:hover {
+          background: rgba(45, 212, 191, 0.18) !important;
+          border-color: rgba(45, 212, 191, 0.28) !important;
+          color: rgba(240, 253, 250, 0.98) !important;
+          box-shadow: 0 28px 46px rgba(45, 212, 191, 0.22) !important;
         }
 
         .nav-item-icon {
@@ -5600,6 +6315,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
           width: 20px;
           text-align: center;
           transition: margin 0.2s ease, transform 0.2s ease;
+          flex-shrink: 0; /* Prevent icon from shrinking */
         }
 
         .nav-item:hover .nav-item-icon {
@@ -5613,12 +6329,17 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
         .nav-item-text {
           font-size: 14px;
           font-weight: 500;
-          transition: opacity 0.2s ease;
+          transition: opacity 0.2s ease, width 0.2s ease;
+          white-space: nowrap;
+          overflow: hidden;
+          opacity: 1;
+          width: auto; /* Allow natural width */
         }
 
         .sidebar.collapsed .nav-item-text {
           opacity: 0;
-          display: none;
+          width: 0;
+          margin: 0;
         }
 
         .nav-item::after {
@@ -5733,13 +6454,18 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
         }
 
         #ordersView {
-          width: calc(100% + 64px);
+          width: auto;
           margin-left: -32px;
           margin-right: -32px;
+          display: flex;
+          flex-direction: column;
+          flex: 1;
+          min-height: 0;
         }
 
         .orders-filter-bar {
           position: relative;
+          z-index: 20;
           display: flex;
           flex-wrap: wrap;
           align-items: center;
@@ -5748,25 +6474,30 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
           width: 100%;
           margin: 0;
           padding: 16px 24px;
-          background: #fdf8f1;
-          border-radius: 16px 16px 0 0;
-          border: 1px solid rgba(196, 139, 90, 0.18);
-          border-bottom: 1px solid rgba(196, 139, 90, 0.24);
-          box-shadow: 0 10px 24px rgba(79, 59, 37, 0.1);
+          background: var(--theme-surface-bg);
+          border-radius: 18px 18px 0 0;
+          border: 1px solid var(--theme-border);
+          border-bottom: 1px solid var(--theme-border);
+          box-shadow: var(--theme-pane-shadow);
+          backdrop-filter: var(--theme-pane-blur);
           box-sizing: border-box;
         }
 
         .orders-table-container {
-          background: #fffaf3;
-          border-radius: 16px;
-          border: 1px solid rgba(196, 139, 90, 0.18);
-          box-shadow: 0 10px 24px rgba(79, 59, 37, 0.1);
+          background: var(--theme-surface-bg);
+          border-radius: 18px;
+          border: 1px solid var(--theme-border);
+          box-shadow: var(--theme-pane-shadow);
+          backdrop-filter: var(--theme-pane-blur);
           overflow: hidden;
           width: 100%;
           margin: 0 0 24px;
           border-top-left-radius: 0;
           border-top-right-radius: 0;
           border-top: none;
+          flex: 1;
+          display: flex;
+          flex-direction: column;
         }
 
         @media (max-width: 768px) {
@@ -5788,38 +6519,43 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
             margin: 0 0 20px;
             border-top-left-radius: 0;
             border-top-right-radius: 0;
+            flex: 1;
           }
         }
 
         /* Main content area */
         .main-content {
           flex: 1;
-          background: #f3f4f6;
-          backdrop-filter: none;
-          margin: 20px;
-          margin-left: 20px;
-          border-radius: 16px;
+          background: var(--theme-surface-bg);
+          backdrop-filter: var(--theme-pane-blur);
+          margin: 0;
+          border-radius: 0;
+          border: none;
           box-shadow: none;
           overflow: hidden;
           display: flex;
           flex-direction: column;
-          transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1), background 0.4s ease;
         }
 
         .content-header {
-          background: linear-gradient(135deg, rgba(248, 232, 212, 0.95), rgba(237, 209, 179, 0.9));
+          background: linear-gradient(135deg, var(--theme-surface-bg), var(--theme-surface-alt-bg));
           padding: 24px 32px;
-          border-bottom: 1px solid rgba(156, 110, 60, 0.18);
+          border-bottom: 1px solid var(--theme-border);
           display: flex;
           justify-content: space-between;
           align-items: center;
+          backdrop-filter: var(--theme-pane-blur);
+          position: relative;
+          z-index: 5;
         }
 
         .content-title {
           font-size: 24px;
           font-weight: 700;
-          color: #4b3b2a;
+          color: var(--theme-text);
           margin: 0;
+          letter-spacing: -0.01em;
         }
 
         .content-actions {
@@ -5828,50 +6564,24 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
           align-items: center;
         }
 
-        .content-pill-btn {
-          display: inline-flex;
-          align-items: center;
-          gap: 8px;
-          padding: 10px 22px;
-          font-size: 14px;
-          font-weight: 600;
-          color: #fffaf3;
-          background: linear-gradient(135deg, #e2b684, #c7925b);
-          border-radius: 999px;
-          border: 1px solid rgba(108, 78, 52, 0.25);
-          box-shadow: 0 10px 20px rgba(79, 59, 37, 0.18);
-          cursor: pointer;
-          transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
-          text-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
-        }
-
-        .content-pill-btn:hover {
-          transform: translateY(-1px);
-          box-shadow: 0 12px 24px rgba(79, 59, 37, 0.22);
-          filter: brightness(1.02);
-        }
-
-        .content-pill-btn:active {
-          transform: translateY(0);
-          box-shadow: 0 6px 14px rgba(79, 59, 37, 0.18);
-          filter: brightness(0.98);
-        }
-
         .content-pill-btn--export {
-          background: linear-gradient(135deg, #efc892, #c48b5a);
+          background: var(--theme-export-gradient) !important;
         }
 
         .content-pill-btn--refresh {
-          background: linear-gradient(135deg, #d2c3ac, #a3876a);
+          background: var(--theme-refresh-gradient) !important;
         }
 
         .content-pill-btn--logout {
-          background: linear-gradient(135deg, #c76f5c, #a85544);
+          background: var(--theme-logout-gradient) !important;
         }
 
         .content-pill-btn--compact {
-          padding: 8px 18px;
-          font-size: 13px;
+          padding: 5px 12px;
+          font-size: 12px;
+          gap: 6px;
+          height: 30px;
+          min-height: 30px;
         }
 
         /* Support Menu Styles */
@@ -5926,6 +6636,8 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
           flex: 1;
           padding: 32px;
           overflow-y: auto;
+          display: flex;
+          flex-direction: column;
         }
 
         /* Enhanced Quick Action Buttons */
@@ -6198,8 +6910,11 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
             window.updateQuickActionBadges();
           }
           
-          // Show success message
+          // Show success message and update refresh metadata
           setTimeout(() => {
+            if (typeof window.markDataRefreshed === 'function') {
+              window.markDataRefreshed('Manual refresh');
+            }
             showToast('✅ Data refreshed successfully!', 'success');
           }, 500);
         }
@@ -7415,11 +8130,16 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
               <div>
                 <label style="display: block; font-weight: 500; margin-bottom: 4px;">Cost Center</label>
                 <select name="costCenter" style="width: 100%; padding: 8px; border: 1px solid #d1d5db; border-radius: 4px;">
-                  <option value="">Select cost center...</option>
-                  <option value="Bilka.dk">Bilka.dk</option>
-                  <option value="føtex Marketing">føtex Marketing</option>
-                  <option value="Bilka Marketing">Bilka Marketing</option>
-                  <option value="PDG">PDG</option>
+<option value="">Select cost center...</option>
+                  <option value="90500512 Bilka Marketing">90500512 Bilka Marketing</option>
+                  <option value="90200512 føtex marketing">90200512 føtex marketing</option>
+                  <option value="90510512 BR">90510512 BR</option>
+                  <option value="90880220 Chilled, Meat & poultry">90880220 Chilled, Meat & poultry</option>
+                  <option value="90870390 Electronic & Garden">90870390 Electronic & Garden</option>
+                  <option value="90870330 Home & Leisure">90870330 Home & Leisure</option>
+                  <option value="90700572 Netto Marketing">90700572 Netto Marketing</option>
+                  <option value="90880110 Product Data Governance">90880110 Product Data Governance</option>
+                  <option value="90740310 Textile">90740310 Textile</option>
                 </select>
               </div>
 
@@ -7567,7 +8287,6 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       console.log('[Sidebar] Toggle function called');
       const sidebar = document.getElementById('sidebar');
       const toggleIcon = document.getElementById('sidebarToggleIcon');
-      const mainContent = document.querySelector('.main-content');
       
       if (!sidebar || !toggleIcon) {
         console.log('[Sidebar] Missing elements - sidebar:', !!sidebar, 'toggleIcon:', !!toggleIcon);
@@ -7585,21 +8304,11 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
         sidebar.classList.remove('collapsed');
         toggleIcon.style.transform = 'rotate(0deg)';
         toggleIcon.textContent = '◀';
-        
-        // Reset main content margin to normal spacing
-        if (mainContent) {
-          mainContent.style.marginLeft = '20px';
-        }
       } else {
         // Collapsing sidebar
         sidebar.classList.add('collapsed');
         toggleIcon.style.transform = 'rotate(180deg)';
         toggleIcon.textContent = '◀'; // Keep same character, just rotate it
-        
-        // Keep main content in place, just let it expand naturally
-        if (mainContent) {
-          mainContent.style.marginLeft = '0px'; // No movement, just natural expansion
-        }
       }
       
       // Remove transitioning class after animation completes
@@ -7608,7 +8317,9 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       }, 300);
     };
 
-    initializeSidebarSections();
+  applyTheme(activeTheme, { silent: true, skipDuplicate: true });
+  initializeThemeSelector();
+  initializeSidebarSections();
 
     const tbody = document.getElementById('ordersBody');
     const samplesBody = document.getElementById('samplesBody');
@@ -7619,16 +8330,61 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
     let selectedItems = new Set();
     let expandedOrders = new Set();
     let statusFilterOverride = '';
+  let quickFiltersOpen = false;
 
   const SALES_ORG_OPTIONS = ['Bilka', 'føtex', 'netto', 'Fætter BR', 'Salling'];
+  const PRINCIPLE_OPTIONS = ['#P 2D', '#P 2P', '#P 2D FLIP', '#P 2J FLIP', '#P 2I', '#P 2J', '#P 2K', '#P 2H', '#P 2K FLIP', '#P 2N', '#P 2M', '#P 4A', '#P 3E', '#P 4C', '#P 4E'];
   const DEFAULT_TACTIC_TYPE = 'Print';
   const DEFAULT_TACTIC = 'Leaflet';
     const orderFilters = {
       salesOrg: '',
       eventId: '',
       tacticType: '',
-      tactic: ''
+      tactic: '',
+      orderType: ''
     };
+
+    function clearOrderFilters() {
+      orderFilters.salesOrg = '';
+      orderFilters.eventId = '';
+      orderFilters.tacticType = '';
+      orderFilters.tactic = '';
+      orderFilters.orderType = '';
+      statusFilterOverride = '';
+
+      const selectIds = ['salesOrgFilter', 'eventIdFilter', 'tacticTypeFilter', 'tacticFilter', 'orderTypeFilter'];
+      selectIds.forEach((id) => {
+        const select = document.getElementById(id);
+        if (select) {
+          select.value = '';
+        }
+      });
+
+        const searchInput = document.getElementById('searchBox');
+        if (searchInput) {
+          searchInput.value = '';
+        }
+
+      const filterInfo = document.querySelector('#mainContent .filter-info');
+      if (filterInfo) {
+        filterInfo.remove();
+      }
+
+      if (typeof updateOrderFilterSummary === 'function') {
+        updateOrderFilterSummary([]);
+      }
+
+      if (typeof drawOrderRows === 'function') {
+        drawOrderRows();
+      }
+
+      const panel = document.getElementById('quickFiltersPanel');
+      if (panel && quickFiltersOpen) {
+        toggleQuickFilters();
+      }
+    }
+
+    window.clearOrderFilters = clearOrderFilters;
 
     function getAccessibleOrders() {
       const sourceOrders = (typeof window.resolveOrdersSnapshot === 'function') ? window.resolveOrdersSnapshot() : (window.rkhOrders || []);
@@ -7639,7 +8395,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
     }
 
     function hasPrimaryOrderFilter() {
-      return Boolean(orderFilters.salesOrg || orderFilters.eventId || orderFilters.tacticType || orderFilters.tactic || statusFilterOverride);
+      return Boolean(orderFilters.salesOrg || orderFilters.eventId || orderFilters.tacticType || orderFilters.tactic || orderFilters.orderType || statusFilterOverride);
     }
 
     function normalizeFilterValue(value) {
@@ -7648,6 +8404,70 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
 
     function normalizeComparisonValue(value) {
       return normalizeFilterValue(value).toLowerCase();
+    }
+
+    function resolveSalesOrgFromSap(sapItem) {
+      if (!sapItem || typeof sapItem !== 'object') {
+        return '';
+      }
+
+      const candidateFields = [
+        sapItem.salesOrg,
+        sapItem.salesOrganisation,
+        sapItem.salesOrganization,
+        sapItem.salesOrgName,
+        sapItem.format,
+        sapItem.channel
+      ];
+
+      for (const field of candidateFields) {
+        const candidate = normalizeFilterValue(field);
+        if (!candidate) continue;
+
+        const normalized = normalizeComparisonValue(candidate);
+        const matchedOption = SALES_ORG_OPTIONS.find(option => normalizeComparisonValue(option) === normalized);
+        if (matchedOption) {
+          return matchedOption;
+        }
+
+        if (normalized.includes('bilka')) return 'Bilka';
+        if (normalized.includes('føtex') || normalized.includes('fotex')) return 'føtex';
+        if (normalized.includes('netto')) return 'netto';
+        if (normalized.includes('salling')) return 'Salling';
+        if (normalized.includes('fætter') || normalized.includes('faetter') || normalized.includes('br')) return 'Fætter BR';
+
+        return candidate;
+      }
+
+      const numericPurchaseGroup = parseInt(sapItem.purchaseGroup, 10);
+      if (!Number.isNaN(numericPurchaseGroup)) {
+        if (numericPurchaseGroup >= 100 && numericPurchaseGroup < 200) return 'Bilka';
+        if (numericPurchaseGroup >= 200 && numericPurchaseGroup < 300) return 'føtex';
+        if (numericPurchaseGroup >= 300 && numericPurchaseGroup < 400) return 'netto';
+        if (numericPurchaseGroup >= 400 && numericPurchaseGroup < 500) return 'Salling';
+      }
+
+      const costCenterCandidate = normalizeFilterValue(sapItem.costCenter);
+      if (costCenterCandidate) {
+        const normalizedCostCenter = normalizeComparisonValue(costCenterCandidate);
+        if (normalizedCostCenter.includes('bilka')) return 'Bilka';
+        if (normalizedCostCenter.includes('føtex') || normalizedCostCenter.includes('fotex')) return 'føtex';
+        if (normalizedCostCenter.includes('netto')) return 'netto';
+        if (normalizedCostCenter.includes('salling')) return 'Salling';
+        if (normalizedCostCenter.includes('fætter') || normalizedCostCenter.includes('faetter') || normalizedCostCenter.includes('br')) return 'Fætter BR';
+      }
+
+      return '';
+    }
+
+    function resolveProductionMethod(sapItem) {
+      const raw = sapItem ? (sapItem.production || sapItem.productionMethod || sapItem.method) : '';
+      return normalizeFilterValue(raw);
+    }
+
+    if (typeof window !== 'undefined') {
+      window.resolveSalesOrgFromSap = resolveSalesOrgFromSap;
+      window.resolveProductionMethod = resolveProductionMethod;
     }
 
     const PRODUCTION_METHOD_OPTIONS = [
@@ -7817,6 +8637,16 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
         order.salesOrg = getRandomSalesOrg();
       }
 
+      // Assign Principle if missing
+      if (!order.principle) {
+        if (fallbackIndex !== null && !Number.isNaN(fallbackIndex)) {
+          const pIndex = Math.abs(fallbackIndex) % PRINCIPLE_OPTIONS.length;
+          order.principle = PRINCIPLE_OPTIONS[pIndex];
+        } else {
+          order.principle = PRINCIPLE_OPTIONS[Math.floor(Math.random() * PRINCIPLE_OPTIONS.length)];
+        }
+      }
+
       order.tacticType = DEFAULT_TACTIC_TYPE;
       order.tactic = DEFAULT_TACTIC;
       applyProductionNormalization(order);
@@ -7848,6 +8678,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       const expectedEventId = normalizeComparisonValue(orderFilters.eventId);
       const expectedTacticType = normalizeComparisonValue(orderFilters.tacticType);
       const expectedTactic = normalizeComparisonValue(orderFilters.tactic);
+      const expectedOrderType = normalizeComparisonValue(orderFilters.orderType);
 
       if (!hasPrimaryOrderFilter()) {
         return orderList;
@@ -7878,6 +8709,18 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
         if (expectedTactic) {
           const actualTactic = normalizeComparisonValue(getTacticValue(order));
           if (!actualTactic || actualTactic !== expectedTactic) {
+            return false;
+          }
+        }
+
+        if (expectedOrderType) {
+          // Map filter selection to data codes (PS/PO)
+          let targetCode = expectedOrderType;
+          if (expectedOrderType === 'photo service') targetCode = 'ps';
+          else if (expectedOrderType === 'photo order') targetCode = 'po';
+
+          const actualOrderType = normalizeComparisonValue(order.orderType);
+          if (!actualOrderType || actualOrderType !== targetCode) {
             return false;
           }
         }
@@ -8003,7 +8846,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       if (!select) return;
 
       const previousValue = orderFilters.salesOrg;
-      select.innerHTML = '<option value="">All Sales Orgs</option>';
+  select.innerHTML = '<option value="">Sales Orgs</option>';
 
       SALES_ORG_OPTIONS.forEach(org => {
         const option = document.createElement('option');
@@ -8024,7 +8867,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
         .sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
 
       const previousValue = orderFilters.tacticType;
-      select.innerHTML = '<option value="">All Tactic Types</option>';
+  select.innerHTML = '<option value="">Tactic Types</option>';
 
       types.forEach(type => {
         const option = document.createElement('option');
@@ -8056,7 +8899,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
         .sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
 
       const previousValue = orderFilters.tactic;
-      select.innerHTML = '<option value="">All Tactics</option>';
+  select.innerHTML = '<option value="">Tactics</option>';
 
       tactics.forEach(tactic => {
         const option = document.createElement('option');
@@ -8100,6 +8943,11 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       refreshOrdersAfterFilterChange();
     }
 
+    function handleOrderTypeFilterChange(value) {
+      orderFilters.orderType = normalizeFilterValue(value);
+      refreshOrdersAfterFilterChange();
+    }
+
     function refreshOrderFilters() {
       populateSalesOrgFilterOptions();
       populateTacticTypeFilterOptions();
@@ -8118,6 +8966,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
     window.handleTacticTypeFilterChange = handleTacticTypeFilterChange;
     window.handleTacticFilterChange = handleTacticFilterChange;
     window.handleEventFilterChange = handleEventFilterChange;
+    window.handleOrderTypeFilterChange = handleOrderTypeFilterChange;
     window.refreshOrderFilters = refreshOrderFilters;
   window.setStatusFilterOverride = setStatusFilterOverride;
 
@@ -8128,7 +8977,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
     const templates = {
       'product-hero': {
         title: 'Product Hero Photography',
-        method: 'Photographer',
+        method: 'Photo Box',
         priority: 'High',
         brief: 'Create high-impact hero shots for product marketing campaign. Focus on dramatic lighting, clean backgrounds, and compelling product presentation that captures attention and drives sales.',
         articles: 'Product Sample',
@@ -8150,7 +8999,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       },
       'lifestyle-campaign': {
         title: 'Lifestyle Photography Campaign',
-        method: 'External Studio',
+        method: 'M&B',
         priority: 'High',
         brief: 'Professional lifestyle photography featuring products in real-world scenarios with models. Focus on emotional connection and aspirational lifestyle messaging.',
         articles: 'Product Samples, Props, Models',
@@ -8161,7 +9010,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       },
       'detail-macro': {
         title: 'Detail & Macro Photography',
-        method: 'Internal Studio',
+        method: 'Photo Box',
         priority: 'Medium',
         brief: 'Close-up detail photography highlighting product features, textures, and craftsmanship. Technical precision with focus on product quality and specifications.',
         articles: 'Product Sample',
@@ -8183,7 +9032,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       },
       'video-product': {
         title: 'Product Video Showcase',
-        method: 'External Studio',
+        method: 'GILS',
         priority: 'High',
         brief: 'Professional product video showcasing features, benefits, and usage scenarios. Include 360° rotation, close-ups, and lifestyle integration.',
         articles: 'Product Sample, Usage Props',
@@ -8194,7 +9043,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       },
       'seasonal-campaign': {
         title: 'Seasonal Campaign Photography',
-        method: 'Photographer',
+        method: 'M&B',
         priority: 'Medium',
         brief: 'Seasonal themed photography for holiday marketing campaigns. Incorporate seasonal elements, colors, and themes relevant to current season.',
         articles: 'Product Samples, Seasonal Decorations',
@@ -8205,7 +9054,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       },
       'packaging-shots': {
         title: 'Packaging & Unboxing Photography',
-        method: 'Internal Studio',
+        method: 'MERRILD',
         priority: 'Low',
         brief: 'Professional packaging photography and unboxing experience documentation. Focus on brand presentation and customer experience journey.',
         articles: 'Packaged Products, Unboxing Materials',
@@ -8227,7 +9076,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       },
       'influencer-kit': {
         title: 'Influencer Content Kit',
-        method: 'Photographer',
+        method: 'GILS',
         priority: 'Medium',
         brief: 'Content creation for influencer partnerships and brand collaborations. Include lifestyle shots, product styling, and social-ready formats.',
         articles: 'Product Samples, Lifestyle Props',
@@ -8238,7 +9087,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       },
       'technical-specs': {
         title: 'Technical Specification Photography',
-        method: 'Internal Studio',
+        method: 'Photo Box',
         priority: 'Low',
         brief: 'Technical documentation photography for manuals, specifications, and professional documentation. Focus on clarity and instructional value.',
         articles: 'Product Sample, Technical Components',
@@ -8249,7 +9098,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       },
       'brand-storytelling': {
         title: 'Brand Storytelling Campaign',
-        method: 'External Studio',
+        method: 'M&B',
         priority: 'High',
         brief: 'Comprehensive brand storytelling through visual content. Showcase brand values, heritage, and emotional connection with premium artistic approach.',
         articles: 'Product Range, Brand Elements, Models',
@@ -8739,13 +9588,13 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
 
     const ARTICLE_CONTENT_TYPE_OPTIONS = [
       'Packshot',
-      'Hero',
-      'Lifestyle',
-      'Detail',
-      'Editorial',
-      'Campaign',
-      'Social',
-      'Video'
+      'Product Group Shot (Transparent Background)',
+      'Product Group Shot (Miljø)',
+      'Model Shot (Transparent Background)',
+      'Model Shot (Miljø)',
+      'Detail Shot (Transparent Background)',
+      'Detail Shot (Miljø)',
+      'Premium (Transparent Background)'
     ];
     const DEFAULT_ARTICLE_CONTENT_TYPE = ARTICLE_CONTENT_TYPE_OPTIONS[0];
 
@@ -8798,10 +9647,17 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
         .replace(/\s{2,}/g, ' ')
         .trim();
 
+      let articleNumber = articleMatch ? articleMatch[1].trim() : '';
+      
+      // If the name consists only of digits and articleNumber is empty, treat name as article number
+      if (!articleNumber && /^\d+$/.test(cleanName)) {
+        articleNumber = cleanName;
+      }
+
       return {
         name: cleanName,
         ean: eanMatch ? eanMatch[1].trim() : '',
-        articleNumber: articleMatch ? articleMatch[1].trim() : ''
+        articleNumber: articleNumber
       };
     }
 
@@ -8845,32 +9701,68 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       };
     }
 
+    function handleTemplateChange() {
+      syncNewOrderArticleContentState();
+    }
+    window.handleTemplateChange = handleTemplateChange;
+
     function syncNewOrderArticleContentState() {
       const lines = getNewOrderArticleLines();
+      const templateSelect = document.querySelector('select[name="template"]');
+      const selectedTemplate = templateSelect ? templateSelect.value : '';
+      
+      // Define template rules
+      const templateRules = {
+        "Women's Fashion": ["Front Packshot", "Back Packshot"],
+        "Men's Fashion": ["Front Packshot", "Back Packshot"],
+        "Children Fashion": ["Front Packshot", "Back Packshot"],
+        "Shoes": ["Packshot facing Right", "Packshot Facing Left"],
+        "Bags & Accessories": ["Front Packshot", "Back Packshot"],
+        "Jewelry & Watches": ["Front Packshot"],
+        "Home": ["Front Packshot", "Back Packshot"],
+        "Beauty": ["Front Packshot"]
+      };
+
       if (!lines.length) {
         newOrderArticleContentState = [];
         renderArticleContentTypeConfigurator();
         return;
       }
 
-      const previous = newOrderArticleContentState.map(entry => ({ ...entry, __used: false }));
-      const next = lines.map(raw => {
-        const matchIndex = previous.findIndex(entry => !entry.__used && entry.raw === raw);
-        if (matchIndex !== -1) {
-          previous[matchIndex].__used = true;
-          return {
-            raw,
-            contentType: previous[matchIndex].contentType || DEFAULT_ARTICLE_CONTENT_TYPE
-          };
-        }
+      // If a template is selected, we regenerate the list to enforce the template rules
+      if (selectedTemplate && templateRules[selectedTemplate]) {
+         const contentTypes = templateRules[selectedTemplate];
+         const next = [];
+         lines.forEach(raw => {
+            contentTypes.forEach(type => {
+               next.push({
+                 raw,
+                 contentType: type
+               });
+            });
+         });
+         newOrderArticleContentState = next;
+      } else {
+          // Original logic for manual mode
+          const previous = newOrderArticleContentState.map(entry => ({ ...entry, __used: false }));
+          const next = lines.map(raw => {
+            const matchIndex = previous.findIndex(entry => !entry.__used && entry.raw === raw);
+            if (matchIndex !== -1) {
+              previous[matchIndex].__used = true;
+              return {
+                raw,
+                contentType: previous[matchIndex].contentType || DEFAULT_ARTICLE_CONTENT_TYPE
+              };
+            }
+    
+            return {
+              raw,
+              contentType: DEFAULT_ARTICLE_CONTENT_TYPE
+            };
+          });
+          newOrderArticleContentState = next;
+      }
 
-        return {
-          raw,
-          contentType: DEFAULT_ARTICLE_CONTENT_TYPE
-        };
-      });
-
-      newOrderArticleContentState = next;
       renderArticleContentTypeConfigurator();
     }
 
@@ -8882,7 +9774,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
 
       if (!newOrderArticleContentState.length) {
         container.innerHTML = `
-          <div style="padding:14px;border:1px dashed rgba(196, 139, 90, 0.35);border-radius:12px;background:rgba(255,250,243,0.6);color:#6b5440;font-size:12px;">
+          <div style="padding:10px;border:1px dashed rgba(196, 139, 90, 0.35);border-radius:8px;background:rgba(255,250,243,0.6);color:#6b5440;font-size:12px;">
             Add article numbers above to configure content type per article.
           </div>
         `;
@@ -8898,14 +9790,14 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
           .join('');
 
         return `
-          <div style="display:grid;grid-template-columns:1fr 160px;gap:12px;align-items:center;padding:10px 12px;border-bottom:1px solid rgba(196, 139, 90, 0.18);">
+          <div style="display:grid;grid-template-columns:1fr 140px;gap:8px;align-items:center;padding:8px 10px;border-bottom:1px solid rgba(196, 139, 90, 0.18);">
             <div style="font-size:12px;color:#4b3b2a;line-height:1.4;word-break:break-word;">
-              <div style="font-weight:600;margin-bottom:4px;">Article ${index + 1}</div>
-              <div style="font-family:'Courier New', monospace;font-size:11px;color:#6b5440;background:rgba(196, 139, 90, 0.08);padding:6px 8px;border-radius:6px;">${escapeHtml(entry.raw)}</div>
+              <div style="font-weight:600;margin-bottom:2px;">Article ${index + 1}</div>
+              <div style="font-family:'Courier New', monospace;font-size:11px;color:#6b5440;background:rgba(196, 139, 90, 0.08);padding:4px 6px;border-radius:4px;">${escapeHtml(entry.raw)}</div>
             </div>
             <div>
-              <label style="display:block;font-size:11px;font-weight:600;color:#6b5440;margin-bottom:4px;">Content Type</label>
-              <select style="width:100%;padding:10px;border:2px solid #ead7c2;border-radius:8px;font-size:12px;background:white;transition:border-color 0.2s ease;" 
+              <label style="display:block;font-size:11px;font-weight:600;color:#6b5440;margin-bottom:2px;">Content Type</label>
+              <select style="width:100%;padding:6px 8px;border:1px solid #ead7c2;border-radius:6px;font-size:12px;background:white;transition:border-color 0.2s ease;" 
                       onfocus="this.style.borderColor='#c48b5a'" 
                       onblur="this.style.borderColor='#ead7c2'"
                       onchange="handleArticleContentTypeChange(${index}, this.value)">
@@ -8917,8 +9809,8 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       }).join('');
 
       container.innerHTML = `
-        <div style="border:1px solid rgba(196, 139, 90, 0.28);border-radius:12px;overflow:hidden;background:white;box-shadow:0 12px 24px rgba(112,82,50,0.08);">
-          <div style="background:rgba(253, 244, 230, 0.65);padding:10px 12px;font-size:12px;font-weight:600;color:#4b3b2a;">Article Content Types</div>
+        <div style="border:1px solid rgba(196, 139, 90, 0.28);border-radius:8px;overflow:hidden;background:white;box-shadow:0 12px 24px rgba(112,82,50,0.08);">
+          <div style="background:rgba(253, 244, 230, 0.65);padding:8px 10px;font-size:12px;font-weight:600;color:#4b3b2a;">Article Content Types</div>
           <div>${rows}</div>
         </div>
       `;
@@ -8959,8 +9851,8 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       modal.style.cssText = `
         position: fixed;
         top: 0;
-        left: 260px;
-        width: 650px;
+        left: 0;
+        width: 550px;
         height: 100vh;
         background: rgba(255, 250, 243, 0.97);
         backdrop-filter: blur(22px);
@@ -8970,64 +9862,67 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
         overflow-y: auto;
         transform: translateX(-100%);
         transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        padding: 28px;
+        padding: 20px;
       `;
 
       modal.innerHTML = `
-  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 2px solid rgba(196, 139, 90, 0.28);">
-          <div style="display: flex; align-items: center; gap: 12px;">
-            <img src="/CCP_Logog.png" alt="CCP Logo" style="width: 32px; height: 32px; object-fit: contain;" />
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 2px solid rgba(196, 139, 90, 0.28);">
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <img src="/CCP_Logog.png" alt="CCP Logo" style="width: 24px; height: 24px; object-fit: contain;" />
             <div>
-              <h3 style="margin: 0; font-size: 22px; color: #4b3b2a; font-weight: 600;">Create New Content Project</h3>
-              <p style="margin: 4px 0 0; font-size: 12px; color: rgba(107, 84, 64, 0.78); letter-spacing: 0.3px;">Streamline new requests with the warm CCP workspace aesthetic.</p>
+              <h3 style="margin: 0; font-size: 18px; color: #4b3b2a; font-weight: 600;">Create New Photo Order</h3>
+              <p style="margin: 2px 0 0; font-size: 11px; color: rgba(107, 84, 64, 0.78); letter-spacing: 0.3px;">Streamline new requests with the warm CCP workspace aesthetic.</p>
             </div>
           </div>
-          <button onclick="closeNewOrderModal()" style="background: #ef4444; color: white; border: none; border-radius: 50%; width: 36px; height: 36px; cursor: pointer; font-size: 18px; display: flex; align-items: center; justify-content: center; transition: all 0.2s ease;" onmouseover="this.style.background='#dc2626'" onmouseout="this.style.background='#ef4444'">×</button>
+          <button onclick="closeNewOrderModal()" style="background: #ef4444; color: white; border: none; border-radius: 50%; width: 28px; height: 28px; cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center; transition: all 0.2s ease;" onmouseover="this.style.background='#dc2626'" onmouseout="this.style.background='#ef4444'">×</button>
         </div>
 
-  <div style="background: linear-gradient(135deg, #fdf4e6 0%, #f2e4d2 100%); padding: 24px; border-radius: 16px; box-sizing: border-box; border: 1px solid rgba(196, 139, 90, 0.24); box-shadow: 0 18px 32px rgba(112, 82, 50, 0.12);">
+  <div style="background: linear-gradient(135deg, #fdf4e6 0%, #f2e4d2 100%); padding: 16px; border-radius: 12px; box-sizing: border-box; border: 1px solid rgba(196, 139, 90, 0.24); box-shadow: 0 18px 32px rgba(112, 82, 50, 0.12);">
           <form id="newOrderForm" onsubmit="handleNewOrderSubmit(event)">
-            <div style="margin-bottom: 20px;">
-              <label style="display: block; font-weight: 600; margin-bottom: 6px; color: #4b3b2a; font-size: 14px;">Order Title</label>
-    <input name="title" required style="width: 100%; box-sizing: border-box; padding: 14px; border: 2px solid #ead7c2; border-radius: 8px; font-size: 16px; transition: border-color 0.2s ease;" 
+            <div style="margin-bottom: 12px;">
+              <label style="display: block; font-weight: 600; margin-bottom: 4px; color: #4b3b2a; font-size: 12px;">Order Title</label>
+    <input name="title" required style="width: 100%; box-sizing: border-box; padding: 8px 12px; border: 1px solid #ead7c2; border-radius: 6px; font-size: 13px; transition: border-color 0.2s ease;" 
                      placeholder="e.g., Premium Product Photography Session"
       onfocus="this.style.borderColor='#c48b5a'" onblur="this.style.borderColor='#ead7c2'">
             </div>
 
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
               <div style="min-width: 0;">
-                <label style="display: block; font-weight: 600; margin-bottom: 6px; color: #4b3b2a; font-size: 14px;">Cost Center</label>
-    <select name="costCenter" required style="width: 100%; box-sizing: border-box; padding: 14px; border: 2px solid #ead7c2; border-radius: 8px; font-size: 16px; transition: border-color 0.2s ease;"
+                <label style="display: block; font-weight: 600; margin-bottom: 4px; color: #4b3b2a; font-size: 12px;">Cost Center</label>
+    <select name="costCenter" required style="width: 100%; box-sizing: border-box; padding: 8px 12px; border: 1px solid #ead7c2; border-radius: 6px; font-size: 13px; transition: border-color 0.2s ease;"
       onfocus="this.style.borderColor='#c48b5a'" onblur="this.style.borderColor='#ead7c2'">
-                  <option value="">Select cost center...</option>
-                  <option value="Bilka.dk">Bilka.dk</option>
-                  <option value="Bilka Marketing">Bilka Marketing</option>
-                  <option value="Føtex">Føtex</option>
-                  <option value="Netto">Netto</option>
-                  <option value="PG-100">PG-100</option>
-                  <option value="PG-200">PG-200</option>
-                  <option value="PG-300">PG-300</option>
-                  <option value="PG-400">PG-400</option>
+<option value="">Select cost center...</option>
+                  <option value="90500512 Bilka Marketing">90500512 Bilka Marketing</option>
+                  <option value="90200512 føtex marketing">90200512 føtex marketing</option>
+                  <option value="90510512 BR">90510512 BR</option>
+                  <option value="90880220 Chilled, Meat & poultry">90880220 Chilled, Meat & poultry</option>
+                  <option value="90870390 Electronic & Garden">90870390 Electronic & Garden</option>
+                  <option value="90870330 Home & Leisure">90870330 Home & Leisure</option>
+                  <option value="90700572 Netto Marketing">90700572 Netto Marketing</option>
+                  <option value="90880110 Product Data Governance">90880110 Product Data Governance</option>
+                  <option value="90740310 Textile">90740310 Textile</option>
                 </select>
               </div>
               <div style="min-width: 0;">
-                <label style="display: block; font-weight: 600; margin-bottom: 6px; color: #4b3b2a; font-size: 14px;">Purchase Group</label>
-    <select name="purchaseGroup" required style="width: 100%; box-sizing: border-box; padding: 14px; border: 2px solid #ead7c2; border-radius: 8px; font-size: 16px; transition: border-color 0.2s ease;"
+                <label style="display: block; font-weight: 600; margin-bottom: 4px; color: #4b3b2a; font-size: 12px;">Purchase Group</label>
+    <select name="purchaseGroup" required style="width: 100%; box-sizing: border-box; padding: 8px 12px; border: 1px solid #ead7c2; border-radius: 6px; font-size: 13px; transition: border-color 0.2s ease;"
       onfocus="this.style.borderColor='#c48b5a'" onblur="this.style.borderColor='#ead7c2'">
                   <option value="">Select purchase group...</option>
-                  <option value="101">101 - Groceries</option>
-                  <option value="102">102 - Fresh Produce</option>
-                  <option value="103">103 - Marketing Materials</option>
-                  <option value="104">104 - Seasonal Items</option>
+                  <option value="101">101 - Petfood</option>
+                  <option value="102">102 - Coffee/Tea</option>
+                  <option value="103">103 - Groceries</option>
+                  <option value="104">104 - Confectionary</option>
+                  <option value="105">105 - Dry Food</option>
+                  <option value="106">106 - Frozen</option>
                 </select>
               </div>
             </div>
 
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
               <div style="min-width: 0;">
-                <label style="display: block; font-weight: 600; margin-bottom: 6px; color: #4b3b2a; font-size: 14px;">Production</label>
-    <select name="method" required style="width: 100%; box-sizing: border-box; padding: 14px; border: 2px solid #ead7c2; border-radius: 8px; font-size: 16px; transition: border-color 0.2s ease;"
-      onfocus="this.style.borderColor='#c48b5a'" onblur="this.style.borderColor='#ead7c2'">
+                <label style="display: block; font-weight: 600; margin-bottom: 4px; color: #4b3b2a; font-size: 12px;">Production</label>
+                <select name="method" required style="width: 100%; box-sizing: border-box; padding: 8px 12px; border: 1px solid #ead7c2; border-radius: 6px; font-size: 13px; transition: border-color 0.2s ease;"
+                  onfocus="this.style.borderColor='#c48b5a'" onblur="this.style.borderColor='#ead7c2'">
                   <option value="">Select production...</option>
                   <option value="Photo Box">Photo Box</option>
                   <option value="M&B">M&B</option>
@@ -9036,72 +9931,112 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
                 </select>
               </div>
               <div style="min-width: 0;">
-                <label style="display: block; font-weight: 600; margin-bottom: 6px; color: #4b3b2a; font-size: 14px;">Order Type</label>
-    <select name="orderType" required style="width: 100%; box-sizing: border-box; padding: 14px; border: 2px solid #ead7c2; border-radius: 8px; font-size: 16px; transition: border-color 0.2s ease;"
-      onfocus="this.style.borderColor='#c48b5a'" onblur="this.style.borderColor='#ead7c2'">
-                  <option value="PO" selected>PO - Photo Order</option>
-                  <option value="PS">PS - Photo Service</option>
+                <label style="display: block; font-weight: 600; margin-bottom: 4px; color: #4b3b2a; font-size: 12px;">Template</label>
+                <select name="template" style="width: 100%; box-sizing: border-box; padding: 8px 12px; border: 1px solid #ead7c2; border-radius: 6px; font-size: 13px; transition: border-color 0.2s ease;"
+                  onfocus="this.style.borderColor='#c48b5a'" onblur="this.style.borderColor='#ead7c2'" onchange="handleTemplateChange()">
+                  <option value="">Select Template...</option>
+                  <option value="Women's Fashion">Women's Fashion</option>
+                  <option value="Men's Fashion">Men's Fashion</option>
+                  <option value="Children Fashion">Children Fashion</option>
+                  <option value="Shoes">Shoes</option>
+                  <option value="Bags & Accessories">Bags & Accessories</option>
+                  <option value="Jewelry & Watches">Jewelry & Watches</option>
+                  <option value="Home">Home</option>
+                  <option value="Beauty">Beauty</option>
                 </select>
               </div>
             </div>
 
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
               <div style="min-width: 0;">
-                <label style="display: block; font-weight: 600; margin-bottom: 6px; color: #4b3b2a; font-size: 14px;">Deadline</label>
-      <input name="deadline" type="date" required style="width: 100%; box-sizing: border-box; padding: 14px; border: 2px solid #ead7c2; border-radius: 8px; font-size: 16px; transition: border-color 0.2s ease;"
+                <label style="display: block; font-weight: 600; margin-bottom: 4px; color: #4b3b2a; font-size: 12px;">Content Type</label>
+                <select name="contentType" style="width: 100%; box-sizing: border-box; padding: 8px 12px; border: 1px solid #ead7c2; border-radius: 6px; font-size: 13px; transition: border-color 0.2s ease;"
+      onfocus="this.style.borderColor='#c48b5a'" onblur="this.style.borderColor='#ead7c2'">
+                  <option value="">Select content type...</option>
+                  <option value="Packshot">Packshot</option>
+                  <option value="Product Group Shot (Transparent Background)">Product Group Shot (Transparent Background)</option>
+                  <option value="Product Group Shot (Miljø)">Product Group Shot (Miljø)</option>
+                  <option value="Model Shot (Transparent Background)">Model Shot (Transparent Background)</option>
+                  <option value="Model Shot (Miljø)">Model Shot (Miljø)</option>
+                  <option value="Detail Shot (Transparent Background)">Detail Shot (Transparent Background)</option>
+                  <option value="Detail Shot (Miljø)">Detail Shot (Miljø)</option>
+                  <option value="Premium (Transparent Background)">Premium (Transparent Background)</option>
+                </select>
+              </div>
+              <div style="min-width: 0;">
+                <label style="display: block; font-weight: 600; margin-bottom: 4px; color: #4b3b2a; font-size: 12px;">DAM Shot Type</label>
+                <select name="shotType" style="width: 100%; box-sizing: border-box; padding: 8px 12px; border: 1px solid #ead7c2; border-radius: 6px; font-size: 13px; transition: border-color 0.2s ease;"
+      onfocus="this.style.borderColor='#c48b5a'" onblur="this.style.borderColor='#ead7c2'">
+                  <option value="">Select shot type...</option>
+                  <option value="Front">Front</option>
+                  <option value="Front - Top">Front - Top</option>
+                  <option value="Front - Left Angle">Front - Left Angle</option>
+                  <option value="Front - Right Angle">Front - Right Angle</option>
+                  <option value="Left Side">Left Side</option>
+                  <option value="Right Side">Right Side</option>
+                  <option value="Back">Back</option>
+                  <option value="Top">Top</option>
+                  <option value="Bottom">Bottom</option>
+                </select>
+              </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
+              <div style="min-width: 0;">
+                <label style="display: block; font-weight: 600; margin-bottom: 4px; color: #4b3b2a; font-size: 12px;">Deadline</label>
+      <input name="deadline" type="date" required style="width: 100%; box-sizing: border-box; padding: 8px 12px; border: 1px solid #ead7c2; border-radius: 6px; font-size: 13px; transition: border-color 0.2s ease;"
         onfocus="this.style.borderColor='#c48b5a'" onblur="this.style.borderColor='#ead7c2'">
               </div>
               <div style="min-width: 0;">
-                <label style="display: block; font-weight: 600; margin-bottom: 6px; color: #4b3b2a; font-size: 14px;">Budget (DKK)</label>
-      <input name="budget" type="number" min="0" style="width: 100%; box-sizing: border-box; padding: 14px; border: 2px solid #ead7c2; border-radius: 8px; font-size: 16px; transition: border-color 0.2s ease;" placeholder="0"
+                <label style="display: block; font-weight: 600; margin-bottom: 4px; color: #4b3b2a; font-size: 12px;">Budget (DKK)</label>
+      <input name="budget" type="number" min="0" style="width: 100%; box-sizing: border-box; padding: 8px 12px; border: 1px solid #ead7c2; border-radius: 6px; font-size: 13px; transition: border-color 0.2s ease;" placeholder="0"
         onfocus="this.style.borderColor='#c48b5a'" onblur="this.style.borderColor='#ead7c2'">
               </div>
             </div>
 
-            <div style="margin-bottom: 20px;">
-              <label style="display: block; font-weight: 600; margin-bottom: 6px; color: #4b3b2a; font-size: 14px;">Brief Description</label>
-              <textarea name="brief" required rows="3" style="width: 100%; box-sizing: border-box; padding: 14px; border: 2px solid #ead7c2; border-radius: 8px; font-size: 16px; resize: vertical; transition: border-color 0.2s ease;" 
+            <div style="margin-bottom: 12px;">
+              <label style="display: block; font-weight: 600; margin-bottom: 4px; color: #4b3b2a; font-size: 12px;">Brief Description</label>
+              <textarea name="brief" required rows="2" style="width: 100%; box-sizing: border-box; padding: 8px 12px; border: 1px solid #ead7c2; border-radius: 6px; font-size: 13px; resize: vertical; transition: border-color 0.2s ease;" 
                         placeholder="Provide detailed instructions for the content creation..."
                         onfocus="this.style.borderColor='#c48b5a'" onblur="this.style.borderColor='#ead7c2'"></textarea>
             </div>
 
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
               <div style="min-width: 0;">
-                <label style="display: block; font-weight: 600; margin-bottom: 6px; color: #4b3b2a; font-size: 14px;">Photo Reference / Shooting Type</label>
-                <select name="photoReference" style="width: 100%; box-sizing: border-box; padding: 14px; border: 2px solid #ead7c2; border-radius: 8px; font-size: 16px; transition: border-color 0.2s ease;"
+                <label style="display: block; font-weight: 600; margin-bottom: 4px; color: #4b3b2a; font-size: 12px;">Photo Reference / Shooting Type</label>
+                <select name="photoReference" style="width: 100%; box-sizing: border-box; padding: 8px 12px; border: 1px solid #ead7c2; border-radius: 6px; font-size: 13px; transition: border-color 0.2s ease;"
       onfocus="this.style.borderColor='#c48b5a'" onblur="this.style.borderColor='#ead7c2'">
                   <option value="">Select photo reference...</option>
                   ${PHOTO_REFERENCE_OPTIONS.map(option => `<option value="${option}">${option}</option>`).join('')}
                 </select>
               </div>
               <div style="min-width: 0;">
-                <label style="display: block; font-weight: 600; margin-bottom: 6px; color: #4b3b2a; font-size: 14px;">Image Request ID</label>
-                <input name="imageRequestId" type="text" style="width: 100%; box-sizing: border-box; padding: 14px; border: 2px solid #ead7c2; border-radius: 8px; font-size: 16px; transition: border-color 0.2s ease;" placeholder="IR123456" autocomplete="off"
+                <label style="display: block; font-weight: 600; margin-bottom: 4px; color: #4b3b2a; font-size: 12px;">Activity</label>
+                <input name="activity" type="text" style="width: 100%; box-sizing: border-box; padding: 8px 12px; border: 1px solid #ead7c2; border-radius: 6px; font-size: 13px; transition: border-color 0.2s ease;" placeholder="e.g., Summer Campaign" autocomplete="off"
       onfocus="this.style.borderColor='#c48b5a'" onblur="this.style.borderColor='#ead7c2'">
-                <div style="margin-top: 6px; font-size: 12px; color: #6b5440;">Leave blank to auto-generate the next available ID.</div>
               </div>
             </div>
 
-            <div style="margin-bottom: 24px;">
-              <label style="display: block; font-weight: 600; margin-bottom: 6px; color: #4b3b2a; font-size: 14px;">
+            <div style="margin-bottom: 16px;">
+              <label style="display: block; font-weight: 600; margin-bottom: 4px; color: #4b3b2a; font-size: 12px;">
                 <span style="display: flex; align-items: center; gap: 8px;">
                   <span>Article Numbers (EAN/GTIN)</span>
-                  <span style="font-size: 18px;" title="Scan or enter multiple article numbers">📦</span>
+                  <span style="font-size: 16px;" title="Scan or enter multiple article numbers">📦</span>
                 </span>
               </label>
-              <textarea id="newOrderArticles" name="articles" required rows="4" style="width: 100%; box-sizing: border-box; padding: 14px; border: 2px solid #ead7c2; border-radius: 8px; font-size: 16px; resize: vertical; transition: border-color 0.2s ease; font-family: 'Courier New', monospace;" 
+              <textarea id="newOrderArticles" name="articles" required rows="3" style="width: 100%; box-sizing: border-box; padding: 8px 12px; border: 1px solid #ead7c2; border-radius: 6px; font-size: 13px; resize: vertical; transition: border-color 0.2s ease; font-family: 'Courier New', monospace;" 
                         placeholder="Scan or enter article numbers here (one per line)...&#10;Example:&#10;5901234567890&#10;5901234567891&#10;5901234567892"
                         oninput="handleNewOrderArticlesInput()"
                         onfocus="this.style.borderColor='#c48b5a'" onblur="this.style.borderColor='#ead7c2'"></textarea>
-              <div style="margin-top: 6px; font-size: 12px; color: #6b5440;">
+              <div style="margin-top: 4px; font-size: 11px; color: #6b5440;">
                 💡 Tip: You can scan barcodes directly into this field, or type article numbers manually (one per line)
               </div>
-              <div id="articleContentTypeConfigurator" style="margin-top: 16px;"></div>
+              <div id="articleContentTypeConfigurator" style="margin-top: 12px;"></div>
             </div>
 
-            <div style="display: flex; gap: 12px; justify-content: flex-end;">
-              <button type="button" onclick="closeNewOrderModal()" style="padding: 14px 24px; background: #6b5440; color: white; border: none; border-radius: 10px; cursor: pointer; font-weight: 500; transition: all 0.2s ease; box-shadow: 0 10px 24px rgba(107, 84, 64, 0.25);" onmouseover="this.style.background='#4b3b2a'; this.style.transform='translateY(-1px)'" onmouseout="this.style.background='#6b5440'; this.style.transform='translateY(0)'">Cancel</button>
-                <button type="submit" style="padding: 14px 28px; background: linear-gradient(135deg, #c48b5a 0%, #a66b38 100%); color: white; border: none; border-radius: 10px; cursor: pointer; font-weight: 600; box-shadow: 0 8px 20px rgba(166, 107, 56, 0.35); transition: all 0.2s ease;" onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform='translateY(0)'">Create Order</button>
+            <div style="display: flex; gap: 10px; justify-content: flex-end;">
+              <button type="button" onclick="closeNewOrderModal()" style="padding: 10px 16px; background: #6b5440; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 500; font-size: 13px; transition: all 0.2s ease; box-shadow: 0 4px 12px rgba(107, 84, 64, 0.25);" onmouseover="this.style.background='#4b3b2a'; this.style.transform='translateY(-1px)'" onmouseout="this.style.background='#6b5440'; this.style.transform='translateY(0)'">Cancel</button>
+                <button type="submit" style="padding: 10px 20px; background: linear-gradient(135deg, #c48b5a 0%, #a66b38 100%); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 13px; box-shadow: 0 4px 12px rgba(166, 107, 56, 0.35); transition: all 0.2s ease;" onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform='translateY(0)'">Create Order</button>
               </div>
             </form>
           </div>
@@ -9129,13 +10064,6 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
         modal.style.transform = 'translateX(0)';
       }, 10);
 
-      // Shift main content to the right to make space for the larger modal
-      const mainContent = document.querySelector('.main-content');
-      if (mainContent) {
-        mainContent.style.marginLeft = '650px';
-        mainContent.style.transition = 'margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
-      }
-
       // Focus on the first input
       setTimeout(() => {
         document.querySelector('#newOrderForm input[name="title"]')?.focus();
@@ -9159,12 +10087,6 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
           modal.remove();
         }, 300);
       }
-
-      // Reset main content position
-      const mainContent = document.querySelector('.main-content');
-      if (mainContent) {
-        mainContent.style.marginLeft = '0';
-      }
     }
 
     // Handle new order form submission
@@ -9174,7 +10096,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       const formData = new FormData(event.target);
       const currentUser = authSystem.getCurrentUser();
   const selectedPhotoReference = (formData.get('photoReference') || '').trim();
-  const rawImageRequestInput = (formData.get('imageRequestId') || '').trim();
+  const activityInput = (formData.get('activity') || '').trim();
       const rawArticlesValue = (formData.get('articles') || '').toString();
 
       syncNewOrderArticleContentState();
@@ -9218,22 +10140,26 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       const newOrder = {
         orderNumber: orderNumber,
         title: formData.get('title'),
+        contentType: formData.get('contentType'),
+        shotType: formData.get('shotType'),
+        orderType: 'PO',
         method: formData.get('method'),
         priority: formData.get('priority'),
         deadline: formData.get('deadline'),
         budget: formData.get('budget') ? parseFloat(formData.get('budget')) : null,
         photographer: formData.get('photographer') || null,
         brief: formData.get('brief'),
-  articles: articleEntries,
-        status: 'Draft',
+        articles: articleEntries,
+        status: 'Order Created',
         createdBy: currentUser.name,
         createdDate: new Date().toLocaleDateString(),
         updatedAt: new Date().toISOString(),
         comments: [],
         deliverables: ['Product Photos', 'High-Resolution Images'],
         photoReference: selectedPhotoReference || null,
-        imageRequestId: rawImageRequestInput,
-        photoStatus: 'New Request'
+        activity: activityInput,
+        photoStatus: 'New Request',
+        purchaseGroup: formData.get('purchaseGroup')
       };
 
       ensureOrderPhotoMetadata([newOrder]);
@@ -10111,21 +11037,13 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
             ? window.rkhOrders
             : (typeof allOrders !== 'undefined' ? allOrders : []));
 
-      console.log('[DEBUG] Base orders count:', baseOrders.length);
-      console.log('[DEBUG] Available order numbers:', baseOrders.map(o => o.orderNumber));
-
       // Prefer finding from base orders so we mutate the canonical object
       let order = baseOrders.find(o => String(o.orderNumber) === String(orderNumber));
-
-      console.log('[DEBUG] Found order in base orders:', !!order);
 
       if (!order && window.authSystem && typeof authSystem.getFilteredOrders === 'function') {
         try {
           const filtered = authSystem.getFilteredOrders(baseOrders) || [];
-          console.log('[DEBUG] Filtered orders count:', filtered.length);
-          console.log('[DEBUG] Filtered order numbers:', filtered.map(o => o.orderNumber));
           order = filtered.find(o => String(o.orderNumber) === String(orderNumber)) || order;
-          console.log('[DEBUG] Found order in filtered orders:', !!order);
         } catch (err) {
           console.error('[Orders] Unable to resolve order from filtered list:', err);
         }
@@ -10138,22 +11056,13 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       }
 
       console.log('[DEBUG] Opening modal for order:', order.orderNumber, order.title);
+      console.log('[DEBUG] Articles for modal:', order.articles);
 
       const safeAuth = window.authSystem || {};
       const currentUser = typeof safeAuth.getCurrentUser === 'function' ? safeAuth.getCurrentUser() : { name: 'Guest', role: 'viewer' };
       const canManageOrders = typeof safeAuth.canManageOrders === 'function' ? safeAuth.canManageOrders() : false;
       const canAssignWork = typeof safeAuth.canAssignWork === 'function' ? safeAuth.canAssignWork() : false;
       const canEditOrder = typeof safeAuth.canEditOrder === 'function' ? safeAuth.canEditOrder(order) : (canManageOrders || canAssignWork);
-
-      const statusOptions = [
-        'Draft',
-        'New Request',
-        'Samples Requested',
-        'In Progress',
-        'Approved',
-        'Complete',
-        'Delivered'
-      ];
 
       const teamMembers = [
         'Unassigned',
@@ -10168,181 +11077,148 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
 
       const modal = document.createElement('div');
       modal.className = 'order-details-modal';
-      modal.style.cssText = 'position:fixed;inset:0;background:rgba(46,34,23,0.55);display:flex;align-items:center;justify-content:center;z-index:1000;padding:32px 18px;';
+      modal.style.cssText = 'position:fixed;inset:0;background:rgba(46,34,23,0.55);display:flex;align-items:center;justify-content:center;z-index:1000;padding:20px;';
 
       const articlesMarkup = renderArticleCards(order.articles);
       const articlesCount = Array.isArray(order.articles) ? order.articles.length : 0;
       const assignedOwner = order.photographer || 'Unassigned';
       const salesOrgLabel = order.salesOrg || 'Not set';
-      const budgetMarkup = order.budget ? `<div style="display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-radius:10px;background:rgba(255,255,255,0.6);margin-top:10px;border:1px solid rgba(196,139,90,0.25);"><span style="font-size:12px;letter-spacing:0.05em;color:#82694c;text-transform:uppercase;">Budget</span><span style="font-weight:600;color:#3a2a1d;">${order.budget}</span></div>` : '';
+      const budgetMarkup = order.budget ? `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;border-radius:8px;background:rgba(255,255,255,0.6);margin-top:8px;border:1px solid rgba(196,139,90,0.25);"><span style="font-size:11px;letter-spacing:0.05em;color:#82694c;text-transform:uppercase;">Budget</span><span style="font-weight:600;color:#3a2a1d;font-size:13px;">${order.budget}</span></div>` : '';
+      
       const eventOrBriefBlock = order.eventId ? `
-          <div style="padding:20px;border-radius:16px;background:rgba(254,243,199,0.85);border:1px solid rgba(212,163,94,0.35);box-shadow:0 18px 36px rgba(62,44,30,0.12);">
-            <h3 style="margin:0 0 16px;font-size:16px;color:#3b2b1a;display:flex;align-items:center;gap:8px;font-weight:700;">🏢 SAP PMR Integration</h3>
-            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;font-size:13px;color:#3b2b1a;">
+          <div style="padding:14px;border-radius:12px;background:rgba(254,243,199,0.85);border:1px solid rgba(212,163,94,0.35);box-shadow:0 10px 20px rgba(62,44,30,0.08);">
+            <h3 style="margin:0 0 10px;font-size:14px;color:#3b2b1a;display:flex;align-items:center;gap:6px;font-weight:700;">🏢 SAP PMR Integration</h3>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:8px;font-size:12px;color:#3b2b1a;">
               <div><strong>Event ID:</strong> ${order.eventId}</div>
-              <div><strong>Purchase Group:</strong> ${order.purchaseGroup} - ${(typeof purchaseGroups !== 'undefined' && purchaseGroups) ? (purchaseGroups[order.purchaseGroup] || 'Unknown') : 'Unknown'}</div>
+              <div><strong>Purchase Group:</strong> ${order.purchaseGroup}</div>
               <div><strong>Offer ID:</strong> ${order.offerId || 'N/A'}</div>
               <div><strong>Article Number:</strong> ${order.articleNumber || 'N/A'}</div>
               <div><strong>Image Request ID:</strong> ${order.imageRequestId || 'N/A'}</div>
-              <div><strong>Photo Status:</strong> <span style="display:inline-flex;align-items:center;padding:4px 10px;border-radius:999px;background:#${order.photoStatus === 'Archive' ? '10b981' : order.photoStatus === 'New Shoot - Photo Box' ? '3b82f6' : 'f59e0b'};color:white;font-size:12px;">${order.photoStatus || 'Not Set'}</span></div>
+              <div><strong>Photo Status:</strong> <span style="display:inline-flex;align-items:center;padding:2px 8px;border-radius:999px;background:#${order.photoStatus === 'Archive' ? '10b981' : order.photoStatus === 'New Shoot - Photo Box' ? '3b82f6' : 'f59e0b'};color:white;font-size:11px;">${order.photoStatus || 'Not Set'}</span></div>
               ${order.cloudinaryUrl ? `<div><strong>Cloudinary:</strong> <a href="${order.cloudinaryUrl}" target="_blank" style="color:#b15d1d;">View Image</a></div>` : ''}
             </div>
           </div>
         ` : '';
         
       const briefBlock = order.brief ? `
-          <div style="padding:20px;border-radius:16px;background:rgba(253,250,246,0.85);border:1px solid rgba(196,139,90,0.35);box-shadow:0 18px 36px rgba(62,44,30,0.12);">
-            <h3 style="margin:0 0 12px;font-size:16px;color:#3b2b1a;font-weight:700;">📝 Creative Brief</h3>
-            <div style="font-size:14px;line-height:1.6;color:#3b2b1a;white-space:pre-wrap;">${order.brief}</div>
+          <div style="padding:14px;border-radius:12px;background:rgba(253,250,246,0.85);border:1px solid rgba(196,139,90,0.35);">
+            <h3 style="margin:0 0 8px;font-size:14px;color:#3b2b1a;font-weight:700;">📝 Creative Brief</h3>
+            <div style="font-size:13px;line-height:1.5;color:#3b2b1a;white-space:pre-wrap;">${order.brief}</div>
           </div>
         ` : '';
 
       const uploadFormMarkup = canEditOrder ? `
-            <div style="background:rgba(255,255,255,0.9);padding:16px;border-radius:12px;margin-bottom:16px;border:2px dashed rgba(196,139,90,0.4);">
-              <div style="text-align:center;color:#6b5440;margin-bottom:12px;">
-                <span style="font-size:24px;">📸</span>
-                <div style="margin-top:6px;font-size:13px;">Upload content for this order</div>
+            <div style="background:rgba(255,255,255,0.9);padding:12px;border-radius:10px;margin-bottom:12px;border:2px dashed rgba(196,139,90,0.4);">
+              <div style="text-align:center;color:#6b5440;margin-bottom:8px;">
+                <span style="font-size:20px;">📸</span>
+                <div style="margin-top:4px;font-size:12px;">Upload content</div>
               </div>
-              <input type="file" id="contentUpload-${orderNumber}" accept="image/*,video/*,.pdf,.zip,.rar" multiple style="width:100%;padding:10px;border:1px solid rgba(196,139,90,0.4);border-radius:10px;font-size:13px;margin-bottom:12px;background:rgba(255,255,255,0.95);">
+              <input type="file" id="contentUpload-${orderNumber}" accept="image/*,video/*,.pdf,.zip,.rar" multiple style="width:100%;padding:8px;border:1px solid rgba(196,139,90,0.4);border-radius:8px;font-size:12px;margin-bottom:8px;background:rgba(255,255,255,0.95);">
               <div style="text-align:right;">
-                <button onclick="uploadContent('${orderNumber}')" style="background:#7fa284;color:white;border:none;padding:8px 18px;border-radius:10px;cursor:pointer;font-size:13px;font-weight:600;">Upload Files</button>
+                <button onclick="uploadContent('${orderNumber}')" style="background:#7fa284;color:white;border:none;padding:6px 14px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:600;">Upload</button>
               </div>
             </div>
           ` : '';
 
       const uploadedContentMarkup = order.uploadedContent && order.uploadedContent.length
         ? order.uploadedContent.map((file, index) => `
-          <div style="background:white;padding:14px;border-radius:12px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;border-left:4px solid #7fa284;box-shadow:0 8px 16px rgba(62,44,30,0.08);">
-            <div style="display:flex;align-items:center;gap:12px;">
-              <div style="font-size:24px;">${file.type.startsWith('image/') ? '🖼️' : file.type.startsWith('video/') ? '🎥' : file.type === 'application/pdf' ? '📄' : '📁'}</div>
+          <div style="background:white;padding:10px;border-radius:10px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;border-left:3px solid #7fa284;box-shadow:0 4px 8px rgba(62,44,30,0.05);">
+            <div style="display:flex;align-items:center;gap:10px;">
+              <div style="font-size:20px;">${file.type.startsWith('image/') ? '🖼️' : file.type.startsWith('video/') ? '🎥' : file.type === 'application/pdf' ? '📄' : '📁'}</div>
               <div>
-                <div style="font-weight:600;color:#3a2a1d;">${file.name}</div>
-                <div style="font-size:12px;color:#7c6248;">${(file.size / 1024 / 1024).toFixed(2)} MB • Uploaded by ${file.uploadedBy} • ${new Date(file.uploadedAt).toLocaleDateString()}</div>
+                <div style="font-weight:600;color:#3a2a1d;font-size:13px;">${file.name}</div>
+                <div style="font-size:11px;color:#7c6248;">${(file.size / 1024 / 1024).toFixed(2)} MB • ${file.uploadedBy}</div>
               </div>
             </div>
-            <div style="display:flex;gap:8px;">
-              <button onclick="previewContent('${orderNumber}', ${index})" style="background:#c48b5a;color:white;border:none;padding:6px 12px;border-radius:8px;cursor:pointer;font-size:12px;">Preview</button>
-              <button onclick="downloadContent('${orderNumber}', ${index})" style="background:#6b5440;color:white;border:none;padding:6px 12px;border-radius:8px;cursor:pointer;font-size:12px;">Download</button>
+            <div style="display:flex;gap:6px;">
+              <button onclick="previewContent('${orderNumber}', ${index})" style="background:#c48b5a;color:white;border:none;padding:4px 10px;border-radius:6px;cursor:pointer;font-size:11px;">Preview</button>
+              <button onclick="downloadContent('${orderNumber}', ${index})" style="background:#6b5440;color:white;border:none;padding:4px 10px;border-radius:6px;cursor:pointer;font-size:11px;">Download</button>
             </div>
           </div>
         `).join('')
-        : '<div style="text-align:center;color:#7c6248;font-style:italic;padding:20px;">No content uploaded yet</div>';
+        : '<div style="text-align:center;color:#7c6248;font-style:italic;padding:12px;font-size:12px;">No content uploaded yet</div>';
 
       const comments = order.comments || [];
       const commentsMarkup = comments.length
         ? comments.map(comment => `
-          <div style="background:white;padding:16px;border-radius:12px;margin-bottom:10px;border-left:4px solid #c48b5a;box-shadow:0 8px 16px rgba(62,44,30,0.08);">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-              <div style="font-weight:600;color:#3a2a1d;">${comment.userName} <span style="font-size:12px;color:#7c6248;">(${comment.userRole})</span></div>
-              <div style="font-size:12px;color:#7c6248;">${new Date(comment.createdAt).toLocaleDateString()} ${new Date(comment.createdAt).toLocaleTimeString()}</div>
+          <div style="background:white;padding:12px;border-radius:10px;margin-bottom:8px;border-left:3px solid #c48b5a;box-shadow:0 4px 8px rgba(62,44,30,0.05);">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+              <div style="font-weight:600;color:#3a2a1d;font-size:13px;">${comment.userName} <span style="font-size:11px;color:#7c6248;">(${comment.userRole})</span></div>
+              <div style="font-size:11px;color:#7c6248;">${new Date(comment.createdAt).toLocaleDateString()}</div>
             </div>
-            <div style="color:#3a2a1d;line-height:1.5;">${comment.message}</div>
+            <div style="color:#3a2a1d;line-height:1.4;font-size:13px;">${comment.message}</div>
           </div>
         `).join('')
-        : '<div style="text-align:center;color:#7c6248;font-style:italic;padding:20px;">No comments yet</div>';
+        : '<div style="text-align:center;color:#7c6248;font-style:italic;padding:12px;font-size:12px;">No comments yet</div>';
 
       modal.innerHTML = `
-        <div style="position:relative;width:min(820px,95vw);max-height:88vh;overflow-y:auto;border-radius:18px;padding:36px 32px 30px;background:linear-gradient(135deg,rgba(255,255,255,0.96),rgba(249,245,240,0.92));box-shadow:0 40px 70px rgba(34,25,18,0.3);border:1px solid rgba(194,147,104,0.4);backdrop-filter:blur(26px);display:flex;flex-direction:column;gap:28px;">
-          <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:16px;">
+        <div style="position:relative;width:min(700px,95vw);max-height:90vh;overflow-y:auto;border-radius:16px;padding:24px;background:linear-gradient(135deg,rgba(255,255,255,0.98),rgba(252,250,247,0.95));box-shadow:0 25px 50px rgba(34,25,18,0.25);border:1px solid rgba(194,147,104,0.3);backdrop-filter:blur(20px);display:flex;flex-direction:column;gap:16px;">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;">
             <div style="flex:1;min-width:0;">
-              <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8a6d4c;font-weight:600;">${salesOrgLabel} · ${order.orderNumber}</div>
-              <h2 style="margin:10px 0 12px;font-size:28px;color:#372614;font-weight:700;line-height:1.2;">${order.title}</h2>
-              <div style="display:flex;align-items:center;gap:12px;font-size:13px;color:#715b43;">
+              <div style="font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#8a6d4c;font-weight:600;">${salesOrgLabel} · ${order.orderNumber}</div>
+              <h2 style="margin:6px 0 8px;font-size:22px;color:#372614;font-weight:700;line-height:1.2;">${order.title}</h2>
+              <div style="display:flex;align-items:center;gap:10px;font-size:12px;color:#715b43;">
                 <span>Created ${order.createdDate}</span>
-                <span style="width:6px;height:6px;border-radius:50%;background:#c48b5a;display:inline-block;"></span>
+                <span style="width:4px;height:4px;border-radius:50%;background:#c48b5a;display:inline-block;"></span>
                 <span>Deadline ${order.deadline}</span>
               </div>
             </div>
-            <button onclick="this.closest('.order-details-modal').remove()" style="background:rgba(255,255,255,0.45);border:1px solid rgba(117,90,58,0.25);width:42px;height:42px;border-radius:12px;color:#5c4631;font-size:24px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(12px);">×</button>
+            <button onclick="this.closest('.order-details-modal').remove()" style="background:rgba(255,255,255,0.5);border:1px solid rgba(117,90,58,0.2);width:32px;height:32px;border-radius:8px;color:#5c4631;font-size:20px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;">×</button>
           </div>
 
-          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;">
-            <div style="padding:18px;border-radius:14px;background:rgba(255,255,255,0.7);border:1px solid rgba(196,139,90,0.25);box-shadow:0 16px 30px rgba(62,44,30,0.12);">
-              <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.12em;color:#7c6248;font-weight:600;">Status</div>
-              <div style="margin-top:10px;">
-                <span class="status ${order.status.replace(/\s+/g, '')}" style="display:inline-flex;align-items:center;padding:6px 12px;border-radius:999px;font-size:12px;">${order.status}</span>
-              </div>
-            </div>
-          </div>
-
-          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:26px;align-items:start;">
-            <div>
-              <div style="padding:18px;border-radius:14px;background:rgba(255,255,255,0.78);border:1px solid rgba(196,139,90,0.25);box-shadow:0 12px 24px rgba(62,44,30,0.1);display:flex;flex-direction:column;gap:10px;">
-                <div style="display:flex;justify-content:space-between;color:#7c6248;font-weight:600;">Created By<span style="color:#3a2a1d;font-weight:600;">${order.createdBy}</span></div>
-                <div style="display:flex;justify-content:space-between;color:#7c6248;font-weight:600;">Order Type<span style="color:#3a2a1d;font-weight:600;">${order.orderType || 'Standard'}</span></div>
-                <div style="display:flex;justify-content:space-between;color:#7c6248;font-weight:600;">Sales Org<span style="color:#3a2a1d;font-weight:600;">${salesOrgLabel}</span></div>
-                ${order.channel ? `<div style="display:flex;justify-content:space-between;color:#7c6248;font-weight:600;">Channel<span style="color:#3a2a1d;font-weight:600;">${order.channel}</span></div>` : ''}
-              </div>
-              ${budgetMarkup}
-            </div>
-            <div style="padding:20px;border-radius:16px;background:rgba(253,250,246,0.85);border:1px solid rgba(196,139,90,0.35);box-shadow:0 18px 36px rgba(62,44,30,0.12);">
-              <h3 style="margin:0 0 16px;font-size:16px;color:#3b2b1a;display:flex;align-items:center;gap:8px;font-weight:700;">Workflow Controls</h3>
-              <div style="margin-bottom:16px;font-size:13px;color:#6f583f;">
-                <strong style="display:block;color:#3a2a1d;margin-bottom:6px;">Current Status</strong>
-                <span class="status ${order.status.replace(/\s+/g, '')}" style="display:inline-flex;align-items:center;padding:6px 12px;border-radius:999px;font-size:12px;">${order.status}</span>
-              </div>
-              ${canManageOrders ? `
-                <div style="margin-bottom:18px;">
-                  <label for="statusSelect_${orderNumber}" style="display:block;font-size:12px;text-transform:uppercase;letter-spacing:0.1em;color:#7c6248;font-weight:600;margin-bottom:6px;">Update Status</label>
-                  <select id="statusSelect_${orderNumber}" style="width:100%;padding:10px 12px;border:1px solid rgba(148,109,71,0.35);border-radius:10px;background:rgba(255,255,255,0.9);color:#3a2a1d;font-size:14px;">
-                    ${statusOptions.map(status => `<option value="${status}" ${status === order.status ? 'selected' : ''}>${status}</option>`).join('')}
-                  </select>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;align-items:start;">
+            <div style="padding:14px;border-radius:12px;background:rgba(255,255,255,0.6);border:1px solid rgba(196,139,90,0.2);display:flex;flex-direction:column;gap:8px;">
+                <div style="display:flex;justify-content:space-between;align-items:center;color:#7c6248;font-weight:600;font-size:13px;">Status
+                  <span class="status ${order.status.replace(/\s+/g, '')}" style="display:inline-flex;align-items:center;padding:2px 8px;border-radius:999px;font-size:11px;">${order.status}</span>
                 </div>
-              ` : ''}
-              <div style="margin-bottom:18px;">
-                <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.1em;color:#7c6248;font-weight:600;margin-bottom:6px;">Assigned To</div>
-                <div style="font-size:14px;color:#3a2a1d;font-weight:600;">${assignedOwner}</div>
-              </div>
-              ${canAssignWork ? `
-                <div style="margin-bottom:18px;">
-                  <label for="assignSelect_${orderNumber}" style="display:block;font-size:12px;text-transform:uppercase;letter-spacing:0.1em;color:#7c6248;font-weight:600;margin-bottom:6px;">Reassign Order</label>
-                  <select id="assignSelect_${orderNumber}" style="width:100%;padding:10px 12px;border:1px solid rgba(148,109,71,0.35);border-radius:10px;background:rgba(255,255,255,0.9);color:#3a2a1d;font-size:14px;">
-                    ${teamMembers.map(member => `<option value="${member}" ${(member === order.photographer || (member === 'Unassigned' && !order.photographer)) ? 'selected' : ''}>${member}</option>`).join('')}
-                  </select>
+                <div style="display:flex;justify-content:space-between;color:#7c6248;font-weight:600;font-size:13px;">Created By<span style="color:#3a2a1d;">${order.createdBy}</span></div>
+                <div style="display:flex;justify-content:space-between;color:#7c6248;font-weight:600;font-size:13px;">Order Type<span style="color:#3a2a1d;">${order.orderType || 'Standard'}</span></div>
+                <div style="display:flex;justify-content:space-between;color:#7c6248;font-weight:600;font-size:13px;">Sales Org<span style="color:#3a2a1d;">${salesOrgLabel}</span></div>
+                <div style="display:flex;justify-content:space-between;align-items:center;color:#7c6248;font-weight:600;font-size:13px;">
+                  Assigned To
+                  ${canAssignWork ? `
+                    <select id="assignSelect_${orderNumber}" onchange="updateOrderWorkflow('${orderNumber}')" style="padding:2px 6px;border-radius:4px;border:1px solid rgba(196,139,90,0.4);background:rgba(255,255,255,0.9);font-size:12px;color:#3a2a1d;max-width:140px;">
+                      ${teamMembers.map(member => `<option value="${member}" ${order.photographer === member || (member === 'Unassigned' && !order.photographer) ? 'selected' : ''}>${member}</option>`).join('')}
+                    </select>
+                  ` : `<span style="color:#3a2a1d;">${assignedOwner}</span>`}
                 </div>
-              ` : ''}
-              ${(canManageOrders || canAssignWork) ? `
-                <button onclick="updateOrderWorkflow('${orderNumber}')" style="width:100%;margin-top:4px;background:linear-gradient(135deg,#b88358 0%,#8e6238 100%);color:white;border:none;padding:12px 16px;border-radius:12px;font-weight:600;font-size:14px;cursor:pointer;box-shadow:0 12px 25px rgba(145,101,60,0.3);transition:transform 0.15s ease;">Save Updates</button>
-              ` : ''}
             </div>
+            ${budgetMarkup}
           </div>
 
           ${eventOrBriefBlock}
-          
           ${briefBlock}
 
-          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:26px;">
-            <div style="padding:20px;border-radius:16px;background:rgba(253,250,246,0.88);border:1px solid rgba(196,139,90,0.3);box-shadow:0 14px 28px rgba(62,44,30,0.1);">
-              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
-                <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.1em;color:#7c6248;font-weight:600;">Articles</div>
-                <div style="font-size:12px;color:#8a6d4c;">${articlesCount} items</div>
-              </div>
-              <div>${articlesMarkup}</div>
+          <div style="padding:16px;border-radius:12px;background:rgba(253,250,246,0.8);border:1px solid rgba(196,139,90,0.25);">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+              <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.1em;color:#7c6248;font-weight:600;">Articles</div>
+              <div style="font-size:11px;color:#8a6d4c;">${articlesCount} items</div>
             </div>
+            <div>${articlesMarkup}</div>
           </div>
 
-          <div style="padding:20px;border-radius:16px;background:rgba(249,250,251,0.9);border:1px solid rgba(196,139,90,0.25);box-shadow:0 14px 28px rgba(62,44,30,0.08);">
-            <h3 style="margin:0 0 16px;font-size:16px;color:#3b2b1a;display:flex;align-items:center;gap:8px;font-weight:700;">📁 Uploaded Content</h3>
+          <div style="padding:16px;border-radius:12px;background:rgba(249,250,251,0.8);border:1px solid rgba(196,139,90,0.2);">
+            <h3 style="margin:0 0 10px;font-size:14px;color:#3b2b1a;display:flex;align-items:center;gap:6px;font-weight:700;">📁 Uploaded Content</h3>
             ${uploadFormMarkup}
-            <div id="uploadedContent-${orderNumber}" style="max-height:260px;overflow-y:auto;">${uploadedContentMarkup}</div>
+            <div id="uploadedContent-${orderNumber}" style="max-height:200px;overflow-y:auto;">${uploadedContentMarkup}</div>
           </div>
 
-          <div style="padding:20px;border-radius:16px;background:rgba(249,250,251,0.9);border:1px solid rgba(196,139,90,0.25);box-shadow:0 14px 28px rgba(62,44,30,0.08);">
-            <h3 style="margin:0 0 16px;font-size:16px;color:#3b2b1a;display:flex;align-items:center;gap:8px;font-weight:700;">💬 Comments (${comments.length})</h3>
-            <div style="background:rgba(255,255,255,0.95);padding:12px;border-radius:12px;margin-bottom:16px;">
-              <textarea id="newComment-${orderNumber}" placeholder="Add a comment..." style="width:100%;padding:10px;border:1px solid rgba(196,139,90,0.4);border-radius:10px;resize:vertical;min-height:70px;font-family:inherit;font-size:14px;"></textarea>
-              <div style="margin-top:8px;text-align:right;">
-                <button onclick="addComment('${orderNumber}')" style="background:#c48b5a;color:white;border:none;padding:8px 20px;border-radius:10px;cursor:pointer;font-size:13px;font-weight:600;">Add Comment</button>
+          <div style="padding:16px;border-radius:12px;background:rgba(249,250,251,0.8);border:1px solid rgba(196,139,90,0.2);">
+            <h3 style="margin:0 0 10px;font-size:14px;color:#3b2b1a;display:flex;align-items:center;gap:6px;font-weight:700;">💬 Comments (${comments.length})</h3>
+            <div style="background:rgba(255,255,255,0.9);padding:10px;border-radius:10px;margin-bottom:12px;">
+              <textarea id="newComment-${orderNumber}" placeholder="Add a comment..." style="width:100%;padding:8px;border:1px solid rgba(196,139,90,0.4);border-radius:8px;resize:vertical;min-height:60px;font-family:inherit;font-size:13px;"></textarea>
+              <div style="margin-top:6px;text-align:right;">
+                <button onclick="addComment('${orderNumber}')" style="background:#c48b5a;color:white;border:none;padding:6px 16px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:600;">Add Comment</button>
               </div>
             </div>
-            <div style="max-height:300px;overflow-y:auto;">${commentsMarkup}</div>
+            <div style="max-height:240px;overflow-y:auto;">${commentsMarkup}</div>
           </div>
 
-          <div style="display:flex;justify-content:flex-end;gap:12px;">
+          <div style="display:flex;justify-content:flex-end;gap:10px;">
             ${canManageOrders ? `
-              <button onclick="showOrderHistory('${orderNumber}')" style="border:none;padding:12px 24px;border-radius:12px;background:rgba(94,73,52,0.12);color:#4b3825;font-weight:600;font-size:14px;cursor:pointer;">View History</button>
+              <button onclick="showOrderHistory('${orderNumber}')" style="border:none;padding:10px 20px;border-radius:10px;background:rgba(94,73,52,0.1);color:#4b3825;font-weight:600;font-size:13px;cursor:pointer;">View History</button>
             ` : ''}
-            <button onclick="this.closest('.order-details-modal').remove()" style="border:none;padding:12px 26px;border-radius:12px;background:linear-gradient(135deg,#76604b 0%,#3d2d1e 100%);color:white;font-weight:600;font-size:14px;cursor:pointer;box-shadow:0 12px 24px rgba(61,45,30,0.25);">Close</button>
+            <button onclick="this.closest('.order-details-modal').remove()" style="border:none;padding:10px 22px;border-radius:10px;background:linear-gradient(135deg,#76604b 0%,#3d2d1e 100%);color:white;font-weight:600;font-size:13px;cursor:pointer;">Close</button>
           </div>
         </div>
       `;
@@ -10627,8 +11503,29 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       }
 
       const orders = window.authSystem.getFilteredOrders(baseOrders);
-      let filteredByActiveFilters = hasPrimaryOrderFilter() ? applyActiveOrderFilters(orders) : orders;
+      const filtersActive = hasPrimaryOrderFilter();
+      let filteredByActiveFilters = filtersActive ? applyActiveOrderFilters(orders) : [];
       let statusFiltered = { orders: filteredByActiveFilters, label: '' };
+
+      if (!filtersActive) {
+        updateOrderFilterSummary([]);
+        if (tbody) {
+          tbody.innerHTML = `
+            <tr>
+              <td colspan="18" style="padding: 18px; text-align: center; color: #7b5a3d; font-size: 14px; font-weight: 600; background: rgba(253, 244, 230, 0.65); border-bottom: 1px solid rgba(196, 139, 90, 0.2);">
+                Select at least one filter to fetch and display orders.
+              </td>
+            </tr>
+          `;
+        }
+        if (typeof updateBulkActionsPanel === 'function') {
+          updateBulkActionsPanel();
+        }
+        if (typeof updateFilterTileCounts === 'function') {
+          updateFilterTileCounts();
+        }
+        return;
+      }
 
       if (statusFilterOverride) {
         statusFiltered = applyStatusFilter(filteredByActiveFilters, statusFilterOverride);
@@ -10653,6 +11550,9 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       
       if (tbody) {
         const placeholderSpan = '<span style="color:#9ca3af;">—</span>';
+        const activeTheme = document.body?.dataset?.theme || '';
+        const isAuroraTheme = activeTheme === 'aurora';
+        const isGlassTheme = activeTheme === 'glass';
 
         const formatPurchaseGroupDisplay = (value) => {
           if (value === undefined || value === null || value === '') {
@@ -10707,20 +11607,38 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
           const assetName = firstAsset?.name ? firstAsset.name : 'Preview asset';
 
           return `
-            <div style="display:flex;align-items:center;gap:8px;">
-              <div style="width:40px;height:40px;border-radius:8px;overflow:hidden;box-shadow:0 3px 8px rgba(0,0,0,0.08);background:#f9f4ec;flex-shrink:0;">
-                <img src="${previewSource}" alt="Preview for ${order.orderNumber}" data-preview="${previewSource}" 
-                  style="width:100%;height:100%;object-fit:cover;cursor:pointer;"
-                  onmouseenter="showThumbnailPreview(event, this.dataset.preview)"
-                  onmouseleave="hideThumbnailPreview()"
-                  onclick="openThumbnailModal(event, this.dataset.preview)">
-              </div>
-              <span style="font-size:11px;color:#6b5440;max-width:140px;display:inline-block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${assetName}</span>
+            <div style="display:flex;align-items:center;">
+              <span 
+                data-preview="${previewSource}"
+                onmouseenter="showThumbnailPreview(event, this.dataset.preview)"
+                onmouseleave="hideThumbnailPreview()"
+                onclick="openThumbnailModal(event, this.dataset.preview)"
+                style="font-size:11px;color:#6b5440;max-width:180px;display:inline-block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer;text-decoration:underline;text-decoration-style:dotted;text-underline-offset:2px;">
+                ${assetName}
+              </span>
             </div>
           `;
         };
 
         const buildChildDetailsTable = (order, normalizedArticles) => {
+          const childPanelStyle = isAuroraTheme
+            ? 'background:linear-gradient(145deg, rgba(248, 251, 255, 0.9), rgba(218, 234, 255, 0.78));border:1px solid rgba(163, 201, 255, 0.45);border-radius:0 0 14px 14px;overflow:auto;max-height:220px;box-shadow:0 18px 38px rgba(43, 74, 120, 0.25);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);margin-top:-1px;'
+            : isGlassTheme
+            ? 'background:rgba(255, 255, 255, 0.75);border:1px solid rgba(255, 255, 255, 0.6);border-radius:0 0 14px 14px;overflow:auto;max-height:220px;box-shadow:0 18px 38px rgba(0, 0, 0, 0.1);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);margin-top:-1px;'
+            : 'background:white;border:1px solid rgba(196, 139, 90, 0.25);border-radius:0 0 10px 10px;overflow:auto;max-height:220px;margin-top:-1px;';
+          const childHeaderStyle = isAuroraTheme
+            ? 'background:linear-gradient(90deg, rgba(248, 251, 255, 0.9), rgba(210, 234, 255, 0.8));'
+            : isGlassTheme
+            ? 'background:rgba(255, 255, 255, 0.5);backdrop-filter:blur(8px);'
+            : 'background:rgba(253, 244, 230, 0.6);';
+          const childCellBorder = isAuroraTheme ? 'rgba(160, 199, 255, 0.35)' : isGlassTheme ? 'rgba(255, 255, 255, 0.5)' : 'rgba(196, 139, 90, 0.18)';
+          const childCellTextColor = isAuroraTheme || isGlassTheme ? 'color:rgba(25, 40, 74, 0.92);' : '';
+          const childCellBackground = isAuroraTheme ? 'background:rgba(255, 255, 255, 0.08);' : isGlassTheme ? 'background:rgba(255, 255, 255, 0.2);' : '';
+          const duplicateHighlightStyle = isAuroraTheme
+            ? 'background:rgba(255, 255, 255, 0.55);border-left:3px solid rgba(120, 197, 255, 0.7);font-weight:600;color:rgba(18, 32, 58, 0.95);'
+            : isGlassTheme
+            ? 'background:rgba(255, 255, 255, 0.6);border-left:3px solid #3b82f6;font-weight:600;color:#1e293b;'
+            : 'background:#fef3c7;border-left:3px solid #f59e0b;font-weight:600;color:#92400e;';
           const hasOrderLevelDetail = Boolean(order.imageRequestId || order.articleNumber || order.articleName || order.purchaseGroup);
           const dataSource = normalizedArticles.length ? normalizedArticles : (hasOrderLevelDetail ? [{
             name: order.articleName || '',
@@ -10734,6 +11652,8 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
               purchaseGroup: order.purchaseGroup
             }
           }] : []);
+
+          const isPhotoOrder = order.orderType === 'PO';
 
           const rows = dataSource.length ? dataSource.map((article, index) => {
             const raw = article && typeof article.raw === 'object' ? article.raw : {};
@@ -10758,42 +11678,42 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
                                 allCombinedPhotos.filter(cp => cp === combinedPhoto).length > 1;
             
             const combinedPhotoStyle = isDuplicate 
-              ? 'background:#fef3c7;border-left:3px solid #f59e0b;font-weight:600;color:#92400e;'
+              ? duplicateHighlightStyle
               : '';
 
             return `
               <tr>
-                <td style="padding:6px 10px;border-bottom:1px solid rgba(196, 139, 90, 0.18);font-size:11px;">${imageRequestId || placeholderSpan}</td>
-                <td style="padding:6px 10px;border-bottom:1px solid rgba(196, 139, 90, 0.18);font-size:11px;">${articleNumber || placeholderSpan}</td>
-                <td style="padding:6px 10px;border-bottom:1px solid rgba(196, 139, 90, 0.18);font-size:11px;">${unitOfMeasure || placeholderSpan}</td>
-                <td style="padding:6px 10px;border-bottom:1px solid rgba(196, 139, 90, 0.18);font-size:11px;">${articleName || placeholderSpan}</td>
-                <td style="padding:6px 10px;border-bottom:1px solid rgba(196, 139, 90, 0.18);font-size:11px;">${netContent || placeholderSpan}</td>
-                <td style="padding:6px 10px;border-bottom:1px solid rgba(196, 139, 90, 0.18);font-size:11px;">${purchaseGroup || placeholderSpan}</td>
-                <td style="padding:6px 10px;border-bottom:1px solid rgba(196, 139, 90, 0.18);font-size:11px;">${contentType || placeholderSpan}</td>
-                <td style="padding:6px 10px;border-bottom:1px solid rgba(196, 139, 90, 0.18);font-size:11px;${combinedPhotoStyle}">${combinedPhoto || placeholderSpan}</td>
-                <td style="padding:6px 10px;border-bottom:1px solid rgba(196, 139, 90, 0.18);font-size:11px;">${fileName || placeholderSpan}</td>
+                ${!isPhotoOrder ? `<td style="padding:6px 10px;border-bottom:1px solid ${childCellBorder};font-size:11px;${childCellTextColor}${childCellBackground}">${imageRequestId || placeholderSpan}</td>` : ''}
+                <td style="padding:6px 10px;border-bottom:1px solid ${childCellBorder};font-size:11px;${childCellTextColor}${childCellBackground}">${articleNumber || placeholderSpan}</td>
+                <td style="padding:6px 10px;border-bottom:1px solid ${childCellBorder};font-size:11px;${childCellTextColor}${childCellBackground}">${unitOfMeasure || placeholderSpan}</td>
+                <td style="padding:6px 10px;border-bottom:1px solid ${childCellBorder};font-size:11px;${childCellTextColor}${childCellBackground}">${articleName || placeholderSpan}</td>
+                <td style="padding:6px 10px;border-bottom:1px solid ${childCellBorder};font-size:11px;${childCellTextColor}${childCellBackground}">${netContent || placeholderSpan}</td>
+                <td style="padding:6px 10px;border-bottom:1px solid ${childCellBorder};font-size:11px;${childCellTextColor}${childCellBackground}">${purchaseGroup || placeholderSpan}</td>
+                <td style="padding:6px 10px;border-bottom:1px solid ${childCellBorder};font-size:11px;${childCellTextColor}${childCellBackground}">${contentType || placeholderSpan}</td>
+                <td style="padding:6px 10px;border-bottom:1px solid ${childCellBorder};font-size:11px;${childCellTextColor}${childCellBackground}${combinedPhotoStyle}">${combinedPhoto || placeholderSpan}</td>
+                <td style="padding:6px 10px;border-bottom:1px solid ${childCellBorder};font-size:11px;${childCellTextColor}${childCellBackground}">${fileName || placeholderSpan}</td>
               </tr>
             `;
           }).join('') : `
             <tr>
-              <td colspan="9" style="padding:12px;color:#9ca3af;text-align:center;border-bottom:1px solid rgba(196, 139, 90, 0.2);">No article details available for this order.</td>
+              <td colspan="${isPhotoOrder ? 8 : 9}" style="padding:12px;color:#9ca3af;text-align:center;border-bottom:1px solid rgba(196, 139, 90, 0.2);">No article details available for this order.</td>
             </tr>
           `;
 
           return `
-            <div style="background:white;border:1px solid rgba(196, 139, 90, 0.25);border-radius:10px;overflow:auto;max-height:220px;">
+            <div style="${childPanelStyle}">
               <table style="width:100%;border-collapse:collapse;">
-                <thead style="background:rgba(253, 244, 230, 0.6);">
+                <thead style="${childHeaderStyle}">
                   <tr>
-                    <th style="text-align:left;padding:8px 10px;font-size:11px;color:#6b5440;font-weight:600;">Image Request ID</th>
-                    <th style="text-align:left;padding:8px 10px;font-size:11px;color:#6b5440;font-weight:600;">Article Number</th>
-                    <th style="text-align:left;padding:8px 10px;font-size:11px;color:#6b5440;font-weight:600;">Unit of Measure</th>
-                    <th style="text-align:left;padding:8px 10px;font-size:11px;color:#6b5440;font-weight:600;">Article Name</th>
-                    <th style="text-align:left;padding:8px 10px;font-size:11px;color:#6b5440;font-weight:600;">Net Content</th>
-                    <th style="text-align:left;padding:8px 10px;font-size:11px;color:#6b5440;font-weight:600;">Purchase Group</th>
-                    <th style="text-align:left;padding:8px 10px;font-size:11px;color:#6b5440;font-weight:600;">Content Type</th>
-                    <th style="text-align:left;padding:8px 10px;font-size:11px;color:#6b5440;font-weight:600;">Combined Photo</th>
-                    <th style="text-align:left;padding:8px 10px;font-size:11px;color:#6b5440;font-weight:600;">File Name</th>
+                    ${!isPhotoOrder ? `<th style="text-align:left;padding:8px 10px;font-size:11px;color:${isAuroraTheme || isGlassTheme ? 'rgba(20, 34, 60, 0.9)' : '#6b5440'};font-weight:600;">Image Request ID</th>` : ''}
+                    <th style="text-align:left;padding:8px 10px;font-size:11px;color:${isAuroraTheme || isGlassTheme ? 'rgba(20, 34, 60, 0.9)' : '#6b5440'};font-weight:600;">Article Number</th>
+                    <th style="text-align:left;padding:8px 10px;font-size:11px;color:${isAuroraTheme || isGlassTheme ? 'rgba(20, 34, 60, 0.9)' : '#6b5440'};font-weight:600;">Unit of Measure</th>
+                    <th style="text-align:left;padding:8px 10px;font-size:11px;color:${isAuroraTheme || isGlassTheme ? 'rgba(20, 34, 60, 0.9)' : '#6b5440'};font-weight:600;">Article Name</th>
+                    <th style="text-align:left;padding:8px 10px;font-size:11px;color:${isAuroraTheme || isGlassTheme ? 'rgba(20, 34, 60, 0.9)' : '#6b5440'};font-weight:600;">Net Content</th>
+                    <th style="text-align:left;padding:8px 10px;font-size:11px;color:${isAuroraTheme || isGlassTheme ? 'rgba(20, 34, 60, 0.9)' : '#6b5440'};font-weight:600;">Purchase Group</th>
+                    <th style="text-align:left;padding:8px 10px;font-size:11px;color:${isAuroraTheme || isGlassTheme ? 'rgba(20, 34, 60, 0.9)' : '#6b5440'};font-weight:600;">Content Type</th>
+                    <th style="text-align:left;padding:8px 10px;font-size:11px;color:${isAuroraTheme || isGlassTheme ? 'rgba(20, 34, 60, 0.9)' : '#6b5440'};font-weight:600;">Combined Photo</th>
+                    <th style="text-align:left;padding:8px 10px;font-size:11px;color:${isAuroraTheme || isGlassTheme ? 'rgba(20, 34, 60, 0.9)' : '#6b5440'};font-weight:600;">File Name</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -10811,9 +11731,26 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
             console.log('DEBUG: Found ORD-2025-009 in render list:', o);
           }
           const isOverdue = o.deadline ? (new Date(o.deadline) < new Date() && o.status !== 'Complete' && o.status !== 'Delivered') : false;
-          const deadlineStyle = isOverdue ? 'color: #dc2626; font-weight: bold;' : 'color: #4b3b2a;';
+          const baseTextColor = isAuroraTheme || isGlassTheme ? 'rgba(24, 42, 78, 0.95)' : '#4b3b2a';
+          const baseCellTextColor = isAuroraTheme || isGlassTheme ? 'color: rgba(24, 42, 78, 0.95) !important;' : 'color: #4b3b2a !important;';
+          const rowStyle = isAuroraTheme
+            ? 'cursor: pointer; background: linear-gradient(145deg, rgba(248, 251, 255, 0.9), rgba(223, 238, 255, 0.78)); color: rgba(24, 42, 78, 0.95) !important; box-shadow: 0 10px 24px rgba(25, 48, 92, 0.12);'
+            : isGlassTheme
+            ? 'cursor: pointer; background: rgba(255, 255, 255, 0.65); color: rgba(24, 42, 78, 0.95) !important; box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(255, 255, 255, 0.5);'
+            : 'cursor: pointer; color: #4b3b2a !important;';
           const commentCount = (o.comments || []).length;
           const unreadComments = window.commentSystem ? window.commentSystem.getUnreadCommentCount(o.orderNumber) : 0;
+          const commentButtonStyle = isAuroraTheme
+            ? `background: ${commentCount > 0 ? 'linear-gradient(120deg, rgba(168, 180, 248, 0.95), rgba(125, 211, 252, 0.9))' : 'rgba(255, 255, 255, 0.35)'}; color: rgba(17, 32, 62, 0.95); border: 1px solid rgba(148, 180, 255, 0.55); padding: 6px 14px; border-radius: 999px; cursor: pointer; font-size: 11px; position: relative; box-shadow: 0 12px 26px rgba(72, 118, 182, 0.35); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);`
+            : isGlassTheme
+            ? `background: ${commentCount > 0 ? 'linear-gradient(135deg, #3b82f6, #2563eb)' : 'rgba(255, 255, 255, 0.5)'}; color: ${commentCount > 0 ? 'white' : '#64748b'}; border: 1px solid rgba(255, 255, 255, 0.6); padding: 6px 14px; border-radius: 999px; cursor: pointer; font-size: 11px; position: relative; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); backdrop-filter: blur(10px);`
+            : `background: ${commentCount > 0 ? '#c48b5a' : '#6b5440'}; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 11px; position: relative;`;
+          const unreadBadgeStyle = isAuroraTheme
+            ? 'position: absolute; top: -6px; right: -6px; background: rgba(255, 82, 82, 0.92); color: white; border-radius: 999px; width: 16px; height: 16px; font-size: 10px; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(255, 255, 255, 0.65); box-shadow: 0 6px 14px rgba(239, 68, 68, 0.35);'
+            : isGlassTheme
+            ? 'position: absolute; top: -6px; right: -6px; background: #ef4444; color: white; border-radius: 999px; width: 16px; height: 16px; font-size: 10px; display: flex; align-items: center; justify-content: center; border: 1px solid white; box-shadow: 0 2px 6px rgba(239, 68, 68, 0.4);'
+            : 'position: absolute; top: -5px; right: -5px; background: #ef4444; color: white; border-radius: 50%; width: 14px; height: 14px; font-size: 9px; display: flex; align-items: center; justify-content: center;';
+          const deadlineStyle = isOverdue ? 'color: #dc2626; font-weight: bold;' : `color: ${baseTextColor};`;
           const normalizedArticles = normalizeArticles(o.articles);
           const isExpanded = expandedOrders.has(o.orderNumber);
           const expandIcon = `<span class="order-expand-arrow ${isExpanded ? 'is-open' : ''}">◀</span>`;
@@ -10822,49 +11759,56 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
           const groupDisplay = o.group || placeholderSpan;
           const costCenterDisplay = o.costCenter || placeholderSpan;
           const orderTypeDisplay = (o.orderType || 'PS');
+          const activityDisplay = o.title || placeholderSpan;
           const rawPage = o.page ?? o.pageNumber ?? o.pageNo ?? o.catalogPage ?? o.pamPage ?? o.pageReference ?? '';
           const parsedPage = parseInt(rawPage, 10);
           const pageDisplay = !isNaN(parsedPage) && parsedPage >= 0 ? String(parsedPage) : (rawPage ? String(rawPage).trim() : placeholderSpan);
           const offerId = o.offerId || placeholderSpan;
-          const offerName = o.title || placeholderSpan;
+          const offerName = o.offerName || o.articleName || placeholderSpan;
           const shotType = o.photoStatus || placeholderSpan;
           const photoRef = o.photoReference || placeholderSpan;
-          const principle = o.salesOrg || placeholderSpan;
+          const principle = o.principle || placeholderSpan;
           const productionInfo = buildProductionInfo(o);
           const previewCell = buildPreviewCell(o);
 
+          const childRowBackground = isAuroraTheme
+            ? 'background:linear-gradient(145deg, rgba(248, 251, 255, 0.92), rgba(223, 238, 255, 0.82)); border-bottom:1px solid rgba(151, 190, 255, 0.35);'
+            : isGlassTheme
+            ? 'background: rgba(255, 255, 255, 0.4); border-bottom: 1px solid rgba(255, 255, 255, 0.5);'
+            : 'background:#fffaf3;border-bottom:1px solid rgba(196, 139, 90, 0.2);';
           const articleDetailsRow = isExpanded ? `
             <tr class="order-articles-row" data-parent-order="${o.orderNumber}">
               <td class="bulk-checkbox" style="display: none; width: 55px; min-width: 55px; max-width: 55px; height: 55px; padding: 0; text-align: center;"></td>
-              <td colspan="17" style="background:#fffaf3;padding:10px 18px 16px;border-bottom:1px solid rgba(196, 139, 90, 0.2);">
+              <td colspan="17" style="${childRowBackground}padding:0 20px 12px;">
                 ${buildChildDetailsTable(o, normalizedArticles)}
               </td>
             </tr>
           ` : '';
 
           return `
-          <tr onclick="showOrderDetails('${o.orderNumber}')" style="cursor: pointer; color: #4b3b2a !important;" class="${window.selectedItems && window.selectedItems.has(o.orderNumber) ? 'selected-row' : ''}">
+          <tr onclick="showOrderDetails('${o.orderNumber}')" style="${rowStyle}" class="${window.selectedItems && window.selectedItems.has(o.orderNumber) ? 'selected-row' : ''}">
             <td class="bulk-checkbox" style="display: none; width: 55px; min-width: 55px; max-width: 55px; height: 55px; padding: 0; text-align: center;"><input type="checkbox" class="item-checkbox" data-id="${o.orderNumber}" onclick="event.stopPropagation()"></td>
             <td style="padding:4px;text-align:center;width:32px;">
               <button type="button" class="order-expand-button" aria-label="${expandLabel}" title="${expandLabel}" onclick="toggleOrderExpansion('${o.orderNumber}', event)">${expandIcon}</button>
             </td>
-            <td style="padding:6px 8px;color: #4b3b2a !important;font-size:12px;"><strong>${o.orderNumber}</strong></td>
-            <td style="padding:6px 8px;color: #4b3b2a !important;font-size:12px;">${pageDisplay}</td>
-            <td style="padding:6px 8px;color: #4b3b2a !important;font-size:12px;">${offerId}</td>
-            <td style="padding:6px 8px;color: #4b3b2a !important;font-size:12px;">${groupDisplay}</td>
-            <td style="padding:6px 8px;color: #4b3b2a !important;font-size:12px;">${costCenterDisplay}</td>
-            <td style="padding:6px 8px;color: #4b3b2a !important;font-size:12px;">${orderTypeDisplay}</td>
-            <td style="padding:6px 8px;color: #4b3b2a !important;min-width:150px;font-size:12px;">${offerName}</td>
-            <td style="padding:6px 8px;color: #4b3b2a !important;font-size:12px;">${shotType}</td>
-            <td style="padding:6px 8px;color: #4b3b2a !important;font-size:12px;">${photoRef}</td>
-            <td style="padding:6px 8px;color: #4b3b2a !important;font-size:12px;">${productionInfo}</td>
-            <td style="padding:6px 8px;color: #4b3b2a !important;font-size:12px;">${principle}</td>
-            <td style="padding:6px 8px;color: #4b3b2a !important;font-size:12px;">${previewCell}</td>
-            <td style="padding:4px 6px;text-align: center; color: #4b3b2a !important;">
+            <td style="padding:6px 8px;${baseCellTextColor}font-size:12px;"><strong>${o.orderNumber}</strong></td>
+            <td style="padding:6px 8px;${baseCellTextColor}font-size:12px;">${activityDisplay}</td>
+            <td style="padding:6px 8px;${baseCellTextColor}font-size:12px;">${pageDisplay}</td>
+            <td style="padding:6px 8px;${baseCellTextColor}font-size:12px;">${offerId}</td>
+            <td style="padding:6px 8px;${baseCellTextColor}font-size:12px;">${groupDisplay}</td>
+            <td style="padding:6px 8px;${baseCellTextColor}font-size:12px;">${costCenterDisplay}</td>
+            <td style="padding:6px 8px;${baseCellTextColor}font-size:12px;">${orderTypeDisplay}</td>
+            <td style="padding:6px 8px;${baseCellTextColor}min-width:150px;font-size:12px;">${offerName}</td>
+            <td style="padding:6px 8px;${baseCellTextColor}font-size:12px;">${shotType}</td>
+            <td style="padding:6px 8px;${baseCellTextColor}font-size:12px;">${photoRef}</td>
+            <td style="padding:6px 8px;${baseCellTextColor}font-size:12px;">${productionInfo}</td>
+            <td style="padding:6px 8px;${baseCellTextColor}font-size:12px;">${principle}</td>
+            <td style="padding:6px 8px;${baseCellTextColor}font-size:12px;">${previewCell}</td>
+            <td style="padding:4px 6px;text-align: center; ${baseCellTextColor}">
               <button onclick="event.stopPropagation(); window.commentSystem && window.commentSystem.showCommentsModal('${o.orderNumber}')" 
-                style="background: ${commentCount > 0 ? '#c48b5a' : '#6b5440'}; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 11px; position: relative;">
+                style="${commentButtonStyle}">
                 💬 ${commentCount}
-                ${unreadComments > 0 ? `<span style="position: absolute; top: -5px; right: -5px; background: #ef4444; color: white; border-radius: 50%; width: 14px; height: 14px; font-size: 9px; display: flex; align-items: center; justify-content: center;">${unreadComments}</span>` : ''}
+                ${unreadComments > 0 ? `<span style="${unreadBadgeStyle}">${unreadComments}</span>` : ''}
               </button>
             </td>
             <td style="padding:6px 8px;"><span class="status ${o.status.replace(/\s+/g, '')}">${o.status || 'Unknown'}</span></td>
@@ -10886,8 +11830,6 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
         updateFilterTileCounts();
       }
     }
-
-    let quickFiltersOpen = false;
 
     function toggleQuickFilters() {
       const panel = document.getElementById('quickFiltersPanel');
@@ -11688,9 +12630,17 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
 
         tbody.innerHTML = filtered.map(o => {
           const isOverdue = o.deadline ? (new Date(o.deadline) < new Date() && o.status !== 'Complete' && o.status !== 'Delivered') : false;
-          const deadlineStyle = isOverdue ? 'color: #dc2626; font-weight: bold;' : 'color: #4b3b2a;';
+          const baseTextColor = isAuroraTheme ? 'rgba(24, 42, 78, 0.95)' : '#4b3b2a';
+          const baseCellTextColor = isAuroraTheme ? 'color: rgba(24, 42, 78, 0.95) !important;' : 'color: #4b3b2a !important;';
+          const deadlineStyle = isOverdue ? 'color: #dc2626; font-weight: bold;' : `color: ${baseTextColor};`;
           const commentCount = (o.comments || []).length;
           const unreadComments = window.commentSystem ? window.commentSystem.getUnreadCommentCount(o.orderNumber) : 0;
+          const commentButtonStyle = isAuroraTheme
+            ? `background: ${commentCount > 0 ? 'linear-gradient(120deg, rgba(168, 180, 248, 0.95), rgba(125, 211, 252, 0.9))' : 'rgba(255, 255, 255, 0.35)'}; color: rgba(17, 32, 62, 0.95); border: 1px solid rgba(148, 180, 255, 0.55); padding: 6px 14px; border-radius: 999px; cursor: pointer; font-size: 11px; position: relative; box-shadow: 0 12px 26px rgba(72, 118, 182, 0.35); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);`
+            : `background: ${commentCount > 0 ? '#c48b5a' : '#6b5440'}; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; position: relative;`;
+          const unreadBadgeStyle = isAuroraTheme
+            ? 'position: absolute; top: -6px; right: -6px; background: rgba(255, 82, 82, 0.92); color: white; border-radius: 999px; width: 16px; height: 16px; font-size: 10px; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(255, 255, 255, 0.65); box-shadow: 0 6px 14px rgba(239, 68, 68, 0.35);'
+            : 'position: absolute; top: -4px; right: -4px; background: #ef4444; color: white; border-radius: 50%; width: 16px; height: 16px; font-size: 10px; display: flex; align-items: center; justify-content: center;';
           const isExpanded = expandedOrders.has(o.orderNumber);
           const expandIcon = `<span class="order-expand-arrow ${isExpanded ? 'is-open' : ''}">◀</span>`;
           const expandLabel = isExpanded ? 'Collapse articles' : 'Expand articles';
@@ -11706,24 +12656,31 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
           const shotType = o.photoStatus || placeholderSpan;
           const photoRef = o.photoReference || placeholderSpan;
           const productionInfo = buildQuickProductionInfo(o);
-          const principle = o.salesOrg || placeholderSpan;
+          const principle = o.principle || placeholderSpan;
           const previewCell = buildQuickPreviewCell(o);
 
           const articleDetailsContent = typeof buildChildDetailsTable === 'function'
             ? buildChildDetailsTable(o, normalizedArticles)
             : renderArticleCards(o.articles);
 
+          const childRowBackground = isAuroraTheme
+            ? 'background:linear-gradient(145deg, rgba(248, 251, 255, 0.92), rgba(223, 238, 255, 0.82)); border-bottom:1px solid rgba(151, 190, 255, 0.35);'
+            : 'background:#fffaf3;border-bottom:1px solid rgba(196, 139, 90, 0.2);';
           const articleDetailsRow = isExpanded ? `
             <tr class="order-articles-row" data-parent-order="${o.orderNumber}">
               <td class="bulk-checkbox" style="display: none; width: 55px; min-width: 55px; max-width: 55px; height: 55px; padding: 0; text-align: center;"></td>
-              <td colspan="15" style="background:#fffaf3;padding:16px 24px 24px;border-bottom:1px solid rgba(196, 139, 90, 0.2);">
+              <td colspan="15" style="${childRowBackground}padding:16px 24px 24px;">
                 ${articleDetailsContent}
               </td>
             </tr>
           ` : '';
 
+          const quickRowBackground = isAuroraTheme
+            ? 'background:linear-gradient(145deg, rgba(248, 251, 255, 0.9), rgba(223, 238, 255, 0.78));color:rgba(24,42,78,0.95) !important;box-shadow:0 10px 22px rgba(24,46,88,0.12);'
+            : 'background:#fef3c7;color:#4b3b2a !important;';
+
           return `
-          <tr onclick="showOrderDetails('${o.orderNumber}')" style="cursor: pointer; background: #fef3c7; color:#4b3b2a !important;">
+          <tr onclick="showOrderDetails('${o.orderNumber}')" style="cursor: pointer; ${quickRowBackground}">
             <td class="bulk-checkbox" style="display: none; width: 55px; min-width: 55px; max-width: 55px; height: 55px; padding: 0; text-align: center;"><input type="checkbox" class="item-checkbox" data-id="${o.orderNumber}" onclick="event.stopPropagation()"></td>
             <td style="text-align:center;">
               <button type="button" class="order-expand-button" aria-label="${expandLabel}" title="${expandLabel}" onclick="toggleOrderExpansion('${o.orderNumber}', event)">${expandIcon}</button>
@@ -11739,14 +12696,14 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
             <td>${productionInfo}</td>
             <td>${principle}</td>
             <td>${previewCell}</td>
-            <td style="text-align: center;">
+            <td style="text-align: center;${baseCellTextColor}">
               <button onclick="event.stopPropagation(); window.commentSystem && window.commentSystem.showCommentsModal('${o.orderNumber}')" 
-                style="background: ${commentCount > 0 ? '#c48b5a' : '#6b5440'}; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; position: relative;">
+                style="${commentButtonStyle}">
                 💬 ${commentCount}
-                ${unreadComments > 0 ? `<span style="position: absolute; top: -4px; right: -4px; background: #ef4444; color: white; border-radius: 50%; width: 16px; height: 16px; font-size: 10px; display: flex; align-items: center; justify-content: center;">${unreadComments}</span>` : ''}
+                ${unreadComments > 0 ? `<span style="${unreadBadgeStyle}">${unreadComments}</span>` : ''}
               </button>
             </td>
-            <td><span class="status ${o.status.replace(/\s+/g, '')}">${o.status || 'Unknown'}</span></td>
+            <td style="${baseCellTextColor}"><span class="status ${o.status.replace(/\s+/g, '')}">${o.status || 'Unknown'}</span></td>
             <td style="${deadlineStyle}">${o.deadline || placeholderSpan}${isOverdue ? ' ⚠️' : ''}</td>
           </tr>
           ${articleDetailsRow}
@@ -11907,6 +12864,11 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
           
           order.uploadedContent.push(fileData);
           
+          // Update status to 'Image Ready for use' if images are uploaded
+          if (file.type.startsWith('image/')) {
+            order.status = 'Image Ready for use';
+          }
+
           // Show success message
           showToast(`File "${file.name}" uploaded successfully`, 'success');
           
@@ -12462,38 +13424,89 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
 
     // Create Order Modal
     function showCreateOrderModal() {
+      const activeTheme = document.body?.dataset?.theme || '';
+      const isAuroraTheme = activeTheme === 'aurora';
+      const modalCardStyle = isAuroraTheme
+        ? 'background:linear-gradient(145deg, rgba(248, 251, 255, 0.95), rgba(222, 236, 255, 0.85), rgba(190, 243, 228, 0.75));border-radius:20px;padding:32px;max-width:800px;width:95%;max-height:80vh;overflow-y:auto;border:1px solid rgba(168, 199, 255, 0.48);box-shadow:0 48px 90px rgba(27, 45, 82, 0.35);backdrop-filter:blur(28px);-webkit-backdrop-filter:blur(28px);'
+        : 'background:white;border-radius:12px;padding:32px;max-width:800px;width:95%;max-height:80vh;overflow-y:auto;';
+      const headingColor = isAuroraTheme ? 'rgba(17, 32, 62, 0.95)' : '#4b3b2a';
+      const labelStyle = isAuroraTheme
+        ? 'display:block;margin-bottom:8px;font-weight:500;color:rgba(24, 42, 78, 0.9);'
+        : 'display:block;margin-bottom:8px;font-weight:500;color:#4b3b2a;';
+      const inputStyle = isAuroraTheme
+        ? 'width:100%;padding:10px 12px;border:1px solid rgba(146, 194, 255, 0.45);border-radius:10px;background:rgba(255,255,255,0.82);color:rgba(18,32,58,0.95);box-shadow:0 8px 18px rgba(148, 180, 255, 0.18);'
+        : 'width:100%;padding:8px;border:1px solid #d1d5db;border-radius:4px;';
+      const textareaStyle = isAuroraTheme ? `${inputStyle}min-height:120px;` : 'width:100%;padding:8px;border:1px solid #d1d5db;border-radius:4px;';
+      const primaryButtonStyle = isAuroraTheme
+        ? 'background:linear-gradient(135deg, rgba(168, 180, 248, 0.95), rgba(125, 211, 252, 0.9));color:rgba(15, 29, 56, 0.95);border:none;padding:12px 24px;border-radius:999px;cursor:pointer;font-weight:600;box-shadow:0 14px 30px rgba(94, 132, 189, 0.35);'
+        : 'background:#b48fc7;color:white;border:none;padding:12px 24px;border-radius:6px;cursor:pointer;font-weight:500;';
+      const secondaryButtonStyle = isAuroraTheme
+        ? 'background:rgba(255,255,255,0.35);color:rgba(17, 32, 62, 0.9);border:1px solid rgba(148, 180, 255, 0.45);padding:12px 24px;border-radius:999px;cursor:pointer;font-weight:500;'
+        : 'background:#6b5440;color:white;border:none;padding:12px 24px;border-radius:6px;cursor:pointer;';
+      const closeButtonColor = isAuroraTheme ? 'rgba(24, 42, 78, 0.85)' : '#6b5440';
       const modal = document.createElement('div');
       modal.className = 'create-order-modal';
       modal.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;z-index:1000';
       modal.innerHTML = `
-        <div style="background:white;border-radius:12px;padding:32px;max-width:800px;width:95%;max-height:80vh;overflow-y:auto;">
+        <div style="${modalCardStyle}">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;">
-            <h2 style="margin:0;font-size:24px;color:#4b3b2a;">📝 Create New Order</h2>
-            <button onclick="this.closest('.create-order-modal').remove()" style="background:none;border:none;font-size:28px;cursor:pointer;color:#6b5440;">×</button>
+            <h2 style="margin:0;font-size:24px;color:${headingColor};">📝 Create New Order</h2>
+            <button onclick="this.closest('.create-order-modal').remove()" style="background:none;border:none;font-size:28px;cursor:pointer;color:${closeButtonColor};">×</button>
           </div>
           <form id="createOrderForm" onsubmit="handleCreateOrder(event)">
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px;">
               <div>
-                <label style="display:block;margin-bottom:8px;font-weight:500;color:#4b3b2a;">Order Title</label>
-                <input name="title" required style="width:100%;padding:8px;border:1px solid #d1d5db;border-radius:4px;" placeholder="e.g., Summer Collection Photography">
+                <label style="${labelStyle}">Order Title</label>
+                <input name="title" required style="${inputStyle}" placeholder="e.g., Summer Collection Photography">
               </div>
               <div>
-                <label style="display:block;margin-bottom:8px;font-weight:500;color:#4b3b2a;">Priority</label>
-                <select name="priority" style="width:100%;padding:8px;border:1px solid #d1d5db;border-radius:4px;">
-                  <option value="Low">Low</option>
-                  <option value="Medium" selected>Medium</option>
-                  <option value="High">High</option>
-                  <option value="Urgent">Urgent</option>
+                <label style="${labelStyle}">Deadline</label>
+                <input type="date" name="deadline" required style="${inputStyle}">
+              </div>
+              <div>
+                <label style="${labelStyle}">Production</label>
+                <select name="method" required style="${inputStyle}">
+                  <option value="">Select Method...</option>
+                  <option value="Photo Box">Photo Box</option>
+                  <option value="M&B">M&B</option>
+                  <option value="GILS">GILS</option>
+                  <option value="MERRILD">MERRILD</option>
                 </select>
+              </div>
+              <div>
+                <label style="${labelStyle}">Template</label>
+                <select name="template" style="${inputStyle}">
+                  <option value="">Select Template...</option>
+                  <option value="Women's Fashion">Women's Fashion</option>
+                  <option value="Men's Fashion">Men's Fashion</option>
+                  <option value="Children Fashion">Children Fashion</option>
+                  <option value="Shoes">Shoes</option>
+                  <option value="Bags & Accessories">Bags & Accessories</option>
+                  <option value="Jewelry & Watches">Jewelry & Watches</option>
+                  <option value="Home">Home</option>
+                  <option value="Beauty">Beauty</option>
+                </select>
+              </div>
+              <div>
+                <label style="${labelStyle}">Budget (SEK)</label>
+                <input type="number" name="budget" min="0" step="100" style="${inputStyle}" placeholder="0">
+              </div>
+              <div>
+                <label style="${labelStyle}">Cost Center</label>
+                <input name="costCenter" style="${inputStyle}" placeholder="e.g. PG-100">
               </div>
             </div>
             <div style="margin-bottom:20px;">
-              <label style="display:block;margin-bottom:8px;font-weight:500;color:#4b3b2a;">Brief & Instructions</label>
-              <textarea name="brief" rows="4" style="width:100%;padding:8px;border:1px solid #d1d5db;border-radius:4px;" placeholder="Detailed brief..."></textarea>
+              <label style="${labelStyle}">Articles (One per line)</label>
+              <textarea name="articles" rows="3" style="${textareaStyle}" placeholder="E.g. Premium Dog Food 2kg [EAN: 123...]"></textarea>
+            </div>
+            <div style="margin-bottom:20px;">
+              <label style="${labelStyle}">Brief & Instructions</label>
+              <textarea name="brief" rows="4" style="${textareaStyle}" placeholder="Detailed brief..."></textarea>
             </div>
             <div style="display:flex;gap:12px;margin-top:24px;">
-              <button type="submit" style="background:#b48fc7;color:white;border:none;padding:12px 24px;border-radius:6px;cursor:pointer;font-weight:500;">Create Order</button>
-              <button type="button" onclick="this.closest('.create-order-modal').remove()" style="background:#6b5440;color:white;border:none;padding:12px 24px;border-radius:6px;cursor:pointer;">Cancel</button>
+              <button type="submit" style="${primaryButtonStyle}">Create Order</button>
+              <button type="button" onclick="this.closest('.create-order-modal').remove()" style="${secondaryButtonStyle}">Cancel</button>
             </div>
           </form>
         </div>
@@ -12803,34 +13816,50 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
     window.simulatePMRRequest = function() {
       // Sample articles for different purchase groups
       const sampleArticles = {
-        100: [ // Groceries
+        101: [ // Petfood
+          { name: 'Premium Dog Food 2kg', number: 'ART-DOG-' + Math.floor(Math.random() * 1000) },
+          { name: 'Cat Treats Salmon Flavor', number: 'ART-CAT-' + Math.floor(Math.random() * 1000) },
+          { name: 'Bird Seed Mix 1kg', number: 'ART-BRD-' + Math.floor(Math.random() * 1000) }
+        ],
+        102: [ // Coffee/Tea
+          { name: 'Arabica Coffee Beans 500g', number: 'ART-COF-' + Math.floor(Math.random() * 1000) },
+          { name: 'Earl Grey Tea Bags 50pk', number: 'ART-TEA-' + Math.floor(Math.random() * 1000) },
+          { name: 'Instant Coffee Gold 200g', number: 'ART-INS-' + Math.floor(Math.random() * 1000) }
+        ],
+        103: [ // Groceries
           { name: 'Premium Olive Oil Extra Virgin 500ml', number: 'ART-OIL-' + Math.floor(Math.random() * 1000) },
           { name: 'Organic Quinoa Red 400g', number: 'ART-QUI-' + Math.floor(Math.random() * 1000) },
-          { name: 'Artisan Bread Sourdough', number: 'ART-BRD-' + Math.floor(Math.random() * 1000) },
-          { name: 'Free Range Eggs Large 12pk', number: 'ART-EGG-' + Math.floor(Math.random() * 1000) }
+          { name: 'Artisan Bread Sourdough', number: 'ART-BRD-' + Math.floor(Math.random() * 1000) }
         ],
-        200: [ // Fresh Products
-          { name: 'Norwegian Salmon Fillet 400g', number: 'ART-SAL-' + Math.floor(Math.random() * 1000) },
-          { name: 'Organic Baby Spinach 150g', number: 'ART-SPI-' + Math.floor(Math.random() * 1000) },
-          { name: 'Fresh Strawberries 250g', number: 'ART-STR-' + Math.floor(Math.random() * 1000) },
-          { name: 'Greek Feta Cheese 200g', number: 'ART-FET-' + Math.floor(Math.random() * 1000) }
+        104: [ // Confectionary
+          { name: 'Milk Chocolate Bar 100g', number: 'ART-CHO-' + Math.floor(Math.random() * 1000) },
+          { name: 'Gummy Bears 200g', number: 'ART-GUM-' + Math.floor(Math.random() * 1000) },
+          { name: 'Licorice Mix 150g', number: 'ART-LIC-' + Math.floor(Math.random() * 1000) }
         ],
-        300: [ // Electronics
-          { name: 'Wireless Gaming Mouse RGB', number: 'ART-MOU-' + Math.floor(Math.random() * 1000) },
-          { name: 'USB-C Fast Charger 65W', number: 'ART-CHR-' + Math.floor(Math.random() * 1000) },
-          { name: 'Bluetooth Noise Cancelling Headphones', number: 'ART-HEA-' + Math.floor(Math.random() * 1000) },
-          { name: 'Smart Watch Fitness Tracker', number: 'ART-WAT-' + Math.floor(Math.random() * 1000) }
+        105: [ // Dry Food
+          { name: 'Basmati Rice 1kg', number: 'ART-RIC-' + Math.floor(Math.random() * 1000) },
+          { name: 'Pasta Penne 500g', number: 'ART-PAS-' + Math.floor(Math.random() * 1000) },
+          { name: 'Canned Tomatoes 400g', number: 'ART-TOM-' + Math.floor(Math.random() * 1000) }
         ],
-        400: [ // Home & Garden
-          { name: 'Solar Pathway Lights Set of 6', number: 'ART-SOL-' + Math.floor(Math.random() * 1000) },
-          { name: 'Ceramic Plant Pots Set', number: 'ART-POT-' + Math.floor(Math.random() * 1000) },
-          { name: 'Outdoor Cushion Covers 4pk', number: 'ART-CUS-' + Math.floor(Math.random() * 1000) },
-          { name: 'Garden Tool Set Professional', number: 'ART-TOO-' + Math.floor(Math.random() * 1000) }
+        106: [ // Frozen
+          { name: 'Frozen Peas 500g', number: 'ART-PEA-' + Math.floor(Math.random() * 1000) },
+          { name: 'Ice Cream Vanilla 1L', number: 'ART-ICE-' + Math.floor(Math.random() * 1000) },
+          { name: 'Frozen Pizza Pepperoni', number: 'ART-PIZ-' + Math.floor(Math.random() * 1000) }
         ]
       };
 
       // Cost centers
-      const costCenters = ['Bilka.dk', 'Bilka Marketing', 'Føtex', 'Netto', 'PG-100', 'PG-200', 'PG-300', 'PG-400'];
+      const costCenters = [
+        '90500512 Bilka Marketing',
+        '90200512 føtex marketing',
+        '90510512 BR',
+        '90880220 Chilled, Meat & poultry',
+        '90870390 Electronic & Garden',
+        '90870330 Home & Leisure',
+        '90700572 Netto Marketing',
+        '90880110 Product Data Governance',
+        '90740310 Textile'
+      ];
       
       // Shot types
       const shotTypes = ['#13 EMBALLAGE', '#12 FRI OPSTILLING', '#11 PACKSHOT', 'Archive', 'Lifestyle', 'Detail Macro', 'Environment'];
@@ -12842,8 +13871,8 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       const now = new Date();
       const weekNum = Math.ceil((now.getTime() - new Date(now.getFullYear(), 0, 1).getTime()) / (7 * 24 * 60 * 60 * 1000));
       
-      // Random purchase group (100, 200, 300, 400)
-      const purchaseGroups = [100, 200, 300, 400];
+      // Random purchase group
+      const purchaseGroups = [101, 102, 103, 104, 105, 106];
       const randomPG = purchaseGroups[Math.floor(Math.random() * purchaseGroups.length)];
       
       // Random number of articles (1-3)
@@ -12906,11 +13935,189 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
         if (!availableOrders || availableOrders.length === 0) {
           // Create some sample data if orders are not available
           const sampleOrders = [
-            { orderNumber: 'ORD001', title: 'Sample Order 1', status: 'Draft', priority: 'Medium', photographer: 'John Doe', method: 'Digital', deadline: '2025-09-10', purchaseGroup: 'PG1', eventId: 'E001' },
-            { orderNumber: 'ORD002', title: 'Sample Order 2', status: 'Pending', priority: 'High', photographer: 'Jane Smith', method: 'Print', deadline: '2025-09-12', purchaseGroup: 'PG2', eventId: 'E002' },
-            { orderNumber: 'ORD003', title: 'Sample Order 3', status: 'Approved', priority: 'Medium', photographer: 'Bob Wilson', method: 'Digital', deadline: '2025-09-15', purchaseGroup: 'PG1', eventId: 'E003' },
-            { orderNumber: 'ORD004', title: 'Sample Order 4', status: 'In Progress', priority: 'Low', photographer: 'Alice Brown', method: 'Print', deadline: '2025-09-18', purchaseGroup: 'PG3', eventId: 'E004' },
-            { orderNumber: 'ORD005', title: 'Sample Order 5', status: 'Complete', priority: 'High', photographer: 'Mike Davis', method: 'Digital', deadline: '2025-09-20', purchaseGroup: 'PG2', eventId: 'E005' }
+            { 
+              orderNumber: 'ORD-2025-001', 
+              title: 'Premium Dog Food - Hero Shot', 
+              status: 'In Progress', 
+              priority: 'Critical', 
+              photographer: 'Mike Rodriguez', 
+              method: 'Photo Box', 
+              deadline: '2025-09-06', 
+              purchaseGroup: '101', 
+              eventId: 'A4025052',
+              articles: [
+                { name: 'Premium Dog Food 2kg [EAN: 5901234567890]', unitOfMeasure: 'EA', netContent: '2000g' },
+                { name: 'Premium Dog Food 5kg [EAN: 5901234567891]', unitOfMeasure: 'EA', netContent: '5000g' }
+              ]
+            },
+            { 
+              orderNumber: 'ORD-2025-002', 
+              title: 'Espresso Beans - E-commerce Photography', 
+              status: 'Samples Requested', 
+              priority: 'Medium', 
+              photographer: 'Emily Chen', 
+              method: 'Photo Box', 
+              deadline: '2025-09-05', 
+              purchaseGroup: '102', 
+              eventId: 'A4125053',
+              articles: [
+                { name: 'Espresso Beans 500g [EAN: 2001234567892]', unitOfMeasure: 'EA', netContent: '500g' },
+                { name: 'Espresso Beans 1kg [EAN: 2001234567893]', unitOfMeasure: 'EA', netContent: '1000g' }
+              ]
+            },
+            { 
+              orderNumber: 'ORD-2025-003', 
+              title: 'Wireless Speaker - Tech Photography', 
+              status: 'Draft', 
+              priority: 'Medium', 
+              photographer: 'Mike Rodriguez', 
+              method: 'M&B', 
+              deadline: '2025-09-15', 
+              purchaseGroup: '103', 
+              eventId: 'A3825054',
+              articles: [
+                { name: 'Wireless Bluetooth Speaker [EAN: 4061234567890]', combinedPhoto: 'AA', unitOfMeasure: 'EA', netContent: '1' },
+                { name: 'USB-C Cable [EAN: 8901234567891]', combinedPhoto: 'BB', unitOfMeasure: 'EA', netContent: '1' },
+                { name: 'Charging Dock [EAN: 8901234567892]', combinedPhoto: 'CC', unitOfMeasure: 'EA', netContent: '1' },
+                { name: 'Protective Case [EAN: 8901234567893]', combinedPhoto: 'DD', unitOfMeasure: 'EA', netContent: '1' },
+                { name: 'User Manual [EAN: 8901234567894]', combinedPhoto: 'EE', unitOfMeasure: 'EA', netContent: '1' },
+                { name: 'Power Adapter [EAN: 8901234567895]', combinedPhoto: 'FF', unitOfMeasure: 'EA', netContent: '1' },
+                { name: 'Aux Cable [EAN: 8901234567896]', combinedPhoto: 'GG', unitOfMeasure: 'EA', netContent: '1' },
+                { name: 'Strap [EAN: 8901234567897]', combinedPhoto: 'HH', unitOfMeasure: 'EA', netContent: '1' }
+              ]
+            },
+            { 
+              orderNumber: 'ORD-2025-004', 
+              title: 'Garden Tools - Product Showcase', 
+              status: 'Approved', 
+              priority: 'Critical', 
+              photographer: 'Emily Chen', 
+              method: 'GILS', 
+              deadline: '2025-09-07', 
+              purchaseGroup: '103', 
+              eventId: 'A3725055',
+              articles: [
+                { name: 'Electric Hedge Trimmer', fileName: 'ENV.000010.jpg', unitOfMeasure: 'EA', netContent: '1' },
+                { name: 'Garden Gloves Set', fileName: 'ENV.000011.jpg', unitOfMeasure: 'EA', netContent: '1' }
+              ]
+            },
+            { 
+              orderNumber: 'ORD-2025-005', 
+              title: 'Organic Pasta - Product Photography', 
+              status: 'Pending Approval', 
+              priority: 'Critical', 
+              photographer: 'Emily Chen', 
+              method: 'Photo Box', 
+              deadline: '2025-09-04', 
+              purchaseGroup: '105', 
+              eventId: 'A3925056',
+              articles: [
+                { name: 'Organic Penne Pasta 500g', combinedPhoto: 'CC', unitOfMeasure: 'EA', netContent: '500g' },
+                { name: 'Organic Linguine 400g', combinedPhoto: 'CC', unitOfMeasure: 'EA', netContent: '400g' },
+                { name: 'Organic Fusilli 500g', combinedPhoto: 'CC', unitOfMeasure: 'EA', netContent: '500g' },
+                { name: 'Organic Spaghetti 500g', combinedPhoto: 'CC', unitOfMeasure: 'EA', netContent: '500g' },
+                { name: 'Organic Lasagna Sheets 250g', combinedPhoto: 'CC', unitOfMeasure: 'EA', netContent: '250g' }
+              ]
+            },
+            { 
+              orderNumber: 'ORD-2025-006', 
+              title: 'Frozen Pizza Selection', 
+              status: 'In Progress', 
+              priority: 'High', 
+              photographer: 'Sarah Jones', 
+              method: 'MERRILD', 
+              deadline: '2025-09-10', 
+              purchaseGroup: '106', 
+              eventId: 'A4225057',
+              articles: [
+                { name: 'Pepperoni Pizza 350g', unitOfMeasure: 'EA', netContent: '350g' },
+                { name: 'Margherita Pizza 330g', unitOfMeasure: 'EA', netContent: '330g' },
+                { name: 'Vegetable Pizza 360g', unitOfMeasure: 'EA', netContent: '360g' }
+              ]
+            },
+            { 
+              orderNumber: 'ORD-2025-007', 
+              title: 'Chocolate Assortment', 
+              status: 'New', 
+              priority: 'Low', 
+              photographer: 'Mike Rodriguez', 
+              method: 'Photo Box', 
+              deadline: '2025-09-20', 
+              purchaseGroup: '104', 
+              eventId: 'A4325058',
+              articles: [
+                { name: 'Dark Chocolate Bar 100g', unitOfMeasure: 'EA', netContent: '100g' },
+                { name: 'Milk Chocolate Bar 100g', unitOfMeasure: 'EA', netContent: '100g' },
+                { name: 'Hazelnut Chocolate Bar 100g', unitOfMeasure: 'EA', netContent: '100g' },
+                { name: 'White Chocolate Bar 100g', unitOfMeasure: 'EA', netContent: '100g' }
+              ]
+            },
+            { 
+              orderNumber: 'ORD-2025-008', 
+              title: 'Cat Food Pouches', 
+              status: 'Samples Requested', 
+              priority: 'Medium', 
+              photographer: 'Emily Chen', 
+              method: 'Photo Box', 
+              deadline: '2025-09-12', 
+              purchaseGroup: '101', 
+              eventId: 'A4425059',
+              articles: [
+                { name: 'Chicken in Gravy 85g', unitOfMeasure: 'EA', netContent: '85g' },
+                { name: 'Salmon in Jelly 85g', unitOfMeasure: 'EA', netContent: '85g' },
+                { name: 'Beef Chunks 85g', unitOfMeasure: 'EA', netContent: '85g' }
+              ]
+            },
+            { 
+              orderNumber: 'ORD-2025-009', 
+              title: 'Breakfast Cereal Campaign', 
+              status: 'Approved', 
+              priority: 'High', 
+              photographer: 'Sarah Jones', 
+              method: 'GILS', 
+              deadline: '2025-09-08', 
+              purchaseGroup: '105', 
+              eventId: 'A4525060',
+              articles: [
+                { name: 'Corn Flakes 500g', unitOfMeasure: 'EA', netContent: '500g' },
+                { name: 'Oat Clusters 450g', unitOfMeasure: 'EA', netContent: '450g' }
+              ]
+            },
+            { 
+              orderNumber: 'ORD-2025-010', 
+              title: 'Mega Confectionary Launch', 
+              status: 'In Progress', 
+              priority: 'Critical', 
+              photographer: 'Mike Rodriguez', 
+              method: 'M&B', 
+              deadline: '2025-09-01', 
+              purchaseGroup: '104', 
+              eventId: 'A4625061',
+              articles: [
+                { name: 'Gummy Bears 200g', unitOfMeasure: 'EA', netContent: '200g' },
+                { name: 'Sour Worms 200g', unitOfMeasure: 'EA', netContent: '200g' },
+                { name: 'Cola Bottles 200g', unitOfMeasure: 'EA', netContent: '200g' },
+                { name: 'Fruit Chews 150g', unitOfMeasure: 'EA', netContent: '150g' },
+                { name: 'Lollipops Mixed 300g', unitOfMeasure: 'EA', netContent: '300g' },
+                { name: 'Marshmallows 250g', unitOfMeasure: 'EA', netContent: '250g' },
+                { name: 'Chocolate Buttons 120g', unitOfMeasure: 'EA', netContent: '120g' },
+                { name: 'Jelly Beans 180g', unitOfMeasure: 'EA', netContent: '180g' },
+                { name: 'Licorice Allsorts 200g', unitOfMeasure: 'EA', netContent: '200g' },
+                { name: 'Peppermint Creams 150g', unitOfMeasure: 'EA', netContent: '150g' },
+                { name: 'Toffee Eclairs 200g', unitOfMeasure: 'EA', netContent: '200g' },
+                { name: 'Fudge Cubes 150g', unitOfMeasure: 'EA', netContent: '150g' },
+                { name: 'Bubblegum Balls 100g', unitOfMeasure: 'EA', netContent: '100g' },
+                { name: 'Sherbet Lemons 120g', unitOfMeasure: 'EA', netContent: '120g' },
+                { name: 'Rhubarb & Custard 120g', unitOfMeasure: 'EA', netContent: '120g' },
+                { name: 'Pear Drops 120g', unitOfMeasure: 'EA', netContent: '120g' },
+                { name: 'Chocolate Raisins 150g', unitOfMeasure: 'EA', netContent: '150g' },
+                { name: 'Chocolate Peanuts 150g', unitOfMeasure: 'EA', netContent: '150g' },
+                { name: 'Mint Humbugs 120g', unitOfMeasure: 'EA', netContent: '120g' },
+                { name: 'Butterscotch 120g', unitOfMeasure: 'EA', netContent: '120g' },
+                { name: 'Fruit Pastilles 150g', unitOfMeasure: 'EA', netContent: '150g' },
+                { name: 'Wine Gums 180g', unitOfMeasure: 'EA', netContent: '180g' }
+              ]
+            }
           ];
 
           assignSalesOrgMetadata(sampleOrders);
@@ -13402,7 +14609,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
           const newOrder = {
             orderNumber: orderNumber,
             title: row.Title.trim(),
-            status: 'Draft',
+            status: 'Order Created',
             method: row.Method || 'Photographer',
             photographer: row.Photographer || 'Unassigned',
             assignedTo: row.Photographer ? authSystem.getUserIdByName(row.Photographer) : null,
@@ -13456,6 +14663,9 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
         }
         if (typeof window.updateQuickActionBadges === 'function') {
           window.updateQuickActionBadges();
+        }
+        if (typeof window.markDataRefreshed === 'function') {
+          window.markDataRefreshed('CPT import');
         }
         
         // Show success message
@@ -13930,7 +15140,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       const newOrder = {
         orderNumber: `ORD-2025-${String(allOrders.length + 1).padStart(3, '0')}`,
         title: formData.get('title'),
-        status: 'Draft',
+        status: 'Order Created',
         method: formData.get('method'),
         photographer: formData.get('photographer') || 'Unassigned',
         assignedTo: formData.get('photographer') ? authSystem.getUserIdByName(formData.get('photographer')) : null,
@@ -16661,13 +17871,14 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
       const newOrder = {
         orderNumber: 'ORD-' + Date.now(),
         title: formData.get('title'),
-        priority: formData.get('priority'),
+        priority: formData.get('priority') || 'Medium',
         method: formData.get('method'),
         brief: formData.get('brief'),
         status: 'New',
         photographer: formData.get('photographer') || 'Not Assigned',
         deadline: formData.get('deadline'),
         budget: formData.get('budget') || 0,
+        costCenter: formData.get('costCenter') || '',
         createdBy: currentUser.id,
         createdAt: new Date().toISOString(),
         assignedTo: formData.get('photographer') ? formData.get('photographer').replace(/\s*\(.*\)/, '') : null,
@@ -16680,7 +17891,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
   photoReference: selectedPhotoReference || null,
   imageRequestId: rawImageRequestInput,
         photoStatus: 'New',
-        articles: formData.get('articles') ? formData.get('articles').split('\n').filter(a => a.trim()) : [],
+        articles: processArticlesWithTemplate(formData.get('articles'), formData.get('template')),
         deliverables: ['Product Photography'],
         comments: []
       };
@@ -18140,6 +19351,22 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
               <span class="context-menu-item-detail">Create printable barcode labels</span>
             </div>
           </div>
+          <div class="context-menu-divider"></div>
+          <div class="context-menu-item" data-action="pmr_simulation">
+            <span class="context-menu-item-icon">🎲</span>
+            <div class="context-menu-item-label">
+              <span>Simulate PMR Request</span>
+              <span class="context-menu-item-detail">Generate dummy orders from SAP</span>
+            </div>
+          </div>
+          <div class="context-menu-divider"></div>
+          <div class="context-menu-item" data-action="logout">
+            <span class="context-menu-item-icon">🚪</span>
+            <div class="context-menu-item-label">
+              <span>Logout</span>
+              <span class="context-menu-item-detail">Sign out of your account</span>
+            </div>
+          </div>
         `;
         
         // Add event listeners
@@ -18255,6 +19482,20 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
             break;
           case 'barcode':
             showBarcodeGeneratorModal();
+            break;
+          case 'pmr_simulation':
+            if (typeof window.showSAPImportModal === 'function') {
+              window.showSAPImportModal();
+            } else {
+              showToast('PMR Simulation not available', 'error');
+            }
+            break;
+          case 'logout':
+            if (typeof window.logout === 'function') {
+              window.logout();
+            } else {
+              showToast('Logout function not available', 'error');
+            }
             break;
         }
       }
@@ -18425,10 +19666,7 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING...');
     localStorage.setItem('runwareApiKey', apiKey);
     if (typeof window !== 'undefined') window.runwareConfig = runwareConfig;
     console.log('✅ Runware API configured successfully!');
-    showToast('✅ Runware API configured successfully!', 'success');
-    
-    // Test the connection
-    testGoogleAIConnection();
+    console.log('ℹ️ Connection test skipped (AI integrations disabled).');
     return runwareConfig;
   };
 
