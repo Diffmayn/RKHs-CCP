@@ -105,6 +105,37 @@ const __fallbackThemeCSS = `
           --theme-logout-gradient: linear-gradient(135deg, #c76f5c, #a85544);
         }
 
+        body[data-theme='cupertino'] {
+          /* Cupertino Light - Apple-inspired, subtle contrast */
+          --theme-app-bg: linear-gradient(180deg, #fbfbfd 0%, #f5f5f7 100%);
+          --theme-shell-bg: rgba(255, 255, 255, 0.82);
+          --theme-surface-bg: rgba(255, 255, 255, 0.94);
+          --theme-surface-alt-bg: rgba(245, 245, 247, 0.92);
+          --theme-border: rgba(29, 29, 31, 0.12);
+          --theme-text: #1d1d1f;
+          --theme-muted: #6e6e73;
+          --theme-support-btn: linear-gradient(135deg, rgba(10, 132, 255, 0.92) 0%, rgba(0, 122, 255, 0.92) 100%);
+          --theme-support-btn-text: #ffffff;
+          --theme-input-bg: rgba(255, 255, 255, 0.9);
+          --theme-pane-bg: rgba(255, 255, 255, 0.78);
+          --theme-pane-blur: blur(18px);
+          --theme-pane-border: rgba(29, 29, 31, 0.12);
+          --theme-pane-shadow: 0 26px 42px rgba(0, 0, 0, 0.12);
+          --theme-accent: rgba(10, 132, 255, 0.95);
+          --theme-accent-soft: rgba(0, 122, 255, 0.75);
+          --theme-btn-text: #ffffff;
+          --theme-highlight: rgba(255, 255, 255, 0.7);
+          --theme-surface-gloss: inset 0 1px 0 rgba(255, 255, 255, 0.6);
+          --theme-glow-accent: rgba(10, 132, 255, 0.28);
+          --theme-blur-strength: blur(18px);
+          --theme-export-gradient: linear-gradient(135deg, rgba(10, 132, 255, 0.9), rgba(59, 130, 246, 0.82));
+          --theme-refresh-gradient: linear-gradient(135deg, rgba(52, 199, 89, 0.88), rgba(16, 185, 129, 0.76));
+          --theme-logout-gradient: linear-gradient(135deg, rgba(255, 59, 48, 0.9), rgba(220, 38, 38, 0.82));
+          --theme-table-header-bg: linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(245, 245, 247, 0.98));
+          --theme-table-header-text: #1d1d1f;
+          --theme-table-border: rgba(29, 29, 31, 0.12);
+        }
+
         body[data-theme='cool'] {
           --theme-app-bg: linear-gradient(160deg, #e9f2ff 0%, #d7e6ff 55%, #f5f9ff 100%);
           --theme-shell-bg: rgba(233, 242, 255, 0.75);
@@ -214,6 +245,481 @@ const __fallbackThemeCSS = `
           --theme-logout-gradient: linear-gradient(135deg, #f87171, #ef4444);
         }
 
+        body[data-theme='gemini'] {
+          /* Gemini AI Theme - Modern, Minimalistic, Efficient */
+          --theme-app-bg: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+          --theme-shell-bg: rgba(15, 23, 42, 0.95);
+          --theme-surface-bg: rgba(30, 41, 59, 0.8);
+          --theme-surface-alt-bg: rgba(51, 65, 85, 0.5);
+          --theme-border: rgba(148, 163, 184, 0.2);
+          --theme-text: #f1f5f9;
+          --theme-muted: #94a3b8;
+          --theme-support-btn: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+          --theme-support-btn-text: #ffffff;
+          --theme-input-bg: rgba(15, 23, 42, 0.6);
+          --theme-pane-bg: rgba(30, 41, 59, 0.7);
+          --theme-pane-blur: blur(24px);
+          --theme-pane-border: rgba(148, 163, 184, 0.15);
+          --theme-pane-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+          --theme-accent: #8b5cf6;
+          --theme-accent-soft: #a78bfa;
+          --theme-btn-text: #ffffff;
+          --theme-highlight: rgba(255, 255, 255, 0.1);
+          --theme-surface-gloss: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+          --theme-glow-accent: rgba(139, 92, 246, 0.3);
+          --theme-blur-strength: blur(20px);
+          --theme-export-gradient: linear-gradient(135deg, #8b5cf6, #6366f1);
+          --theme-refresh-gradient: linear-gradient(135deg, #10b981, #059669);
+          --theme-logout-gradient: linear-gradient(135deg, #ef4444, #dc2626);
+        }
+
+        body[data-theme='monochrome'] {
+          /* Monochrome Theme - Black, White, Grey */
+          --theme-app-bg: #000000;
+          --theme-shell-bg: #111111;
+          --theme-surface-bg: #1a1a1a;
+          --theme-surface-alt-bg: #222222;
+          --theme-border: rgba(255, 255, 255, 0.1);
+          --theme-text: #ffffff;
+          --theme-muted: #888888;
+          --theme-support-btn: linear-gradient(135deg, #ffffff 0%, #cccccc 100%);
+          --theme-support-btn-text: #000000;
+          --theme-input-bg: rgba(255, 255, 255, 0.05);
+          --theme-pane-bg: rgba(26, 26, 26, 0.9);
+          --theme-pane-blur: blur(8px);
+          --theme-pane-border: rgba(255, 255, 255, 0.15);
+          --theme-pane-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+          --theme-accent: #ffffff;
+          --theme-accent-soft: #cccccc;
+          --theme-btn-text: #000000;
+          --theme-highlight: rgba(255, 255, 255, 0.2);
+          --theme-surface-gloss: inset 0 1px 0 rgba(255, 255, 255, 0.1);
+          --theme-glow-accent: rgba(255, 255, 255, 0.3);
+          --theme-blur-strength: blur(8px);
+          --theme-export-gradient: linear-gradient(135deg, #ffffff, #aaaaaa);
+          --theme-refresh-gradient: linear-gradient(135deg, #cccccc, #888888);
+          --theme-logout-gradient: linear-gradient(135deg, #666666, #333333);
+        }
+
+        body[data-theme='copilot'] {
+          /* Apple-Inspired Premium Design - Minimalistic, Refined, Purposeful */
+          
+          /* Clean, neutral background - not distracting */
+          --theme-app-bg: #fafafa;
+          
+          /* Subtle, elevated surfaces */
+          --theme-shell-bg: #ffffff;
+          --theme-surface-bg: #ffffff;
+          --theme-surface-alt-bg: #f5f5f7;
+          
+          /* Barely-there borders for definition */
+          --theme-border: rgba(0, 0, 0, 0.08);
+          
+          /* Apple's precise text hierarchy */
+          --theme-text: #1d1d1f;
+          --theme-muted: #6e6e73;
+          
+          /* Refined accent - not aggressive */
+          --theme-support-btn: linear-gradient(180deg, #007aff 0%, #0051d5 100%);
+          --theme-support-btn-text: #ffffff;
+          
+          /* Clean input styling */
+          --theme-input-bg: #ffffff;
+          
+          /* Subtle glass effect - barely noticeable */
+          --theme-pane-bg: rgba(255, 255, 255, 0.92);
+          --theme-pane-blur: blur(20px) saturate(180%);
+          --theme-pane-border: rgba(0, 0, 0, 0.08);
+          --theme-pane-shadow: 
+            0 0 0 0.5px rgba(0, 0, 0, 0.04),
+            0 2px 4px rgba(0, 0, 0, 0.04),
+            0 8px 16px rgba(0, 0, 0, 0.08);
+          
+          /* Apple's signature blue */
+          --theme-accent: #007aff;
+          --theme-accent-soft: #0a84ff;
+          --theme-btn-text: #ffffff;
+          
+          /* Minimal highlights */
+          --theme-highlight: rgba(0, 0, 0, 0.03);
+          --theme-surface-gloss: none;
+          
+          /* Subtle glow - barely perceptible */
+          --theme-glow-accent: rgba(0, 122, 255, 0.1);
+          --theme-blur-strength: blur(20px);
+          
+          /* Purposeful action colors */
+          --theme-export-gradient: linear-gradient(180deg, #007aff 0%, #0051d5 100%);
+          --theme-refresh-gradient: linear-gradient(180deg, #34c759 0%, #248a3d 100%);
+          --theme-logout-gradient: linear-gradient(180deg, #ff3b30 0%, #d70015 100%);
+          
+          /* Apple's semantic colors - carefully chosen */
+          --theme-success: #34c759;
+          --theme-warning: #ff9500;
+          --theme-error: #ff3b30;
+          --theme-info: #007aff;
+          
+          /* Precise animations - Apple's timing */
+          --theme-transition-fast: 200ms cubic-bezier(0.25, 0.1, 0.25, 1);
+          --theme-transition-base: 300ms cubic-bezier(0.25, 0.1, 0.25, 1);
+          --theme-transition-slow: 400ms cubic-bezier(0.25, 0.1, 0.25, 1);
+          
+          /* Apple's shadow system */
+          --theme-hover-shadow: 
+            0 0 0 0.5px rgba(0, 0, 0, 0.04),
+            0 2px 4px rgba(0, 0, 0, 0.06),
+            0 12px 24px rgba(0, 0, 0, 0.12);
+        }
+
+        /* Apple-style refined component styling */
+        body[data-theme='copilot'] {
+          font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Segoe UI', system-ui, sans-serif;
+          -webkit-font-smoothing: antialiased;
+          -moz-osx-font-smoothing: grayscale;
+          text-rendering: optimizeLegibility;
+        }
+
+        body[data-theme='copilot'] .auth-viewport {
+          background: linear-gradient(180deg, #fafafa 0%, #f5f5f7 100%);
+        }
+
+        body[data-theme='copilot'] .auth-card {
+          background: rgba(255, 255, 255, 0.95);
+          backdrop-filter: blur(20px) saturate(180%);
+          border: 0.5px solid rgba(0, 0, 0, 0.08);
+          box-shadow: 
+            0 0 0 0.5px rgba(0, 0, 0, 0.04),
+            0 8px 16px rgba(0, 0, 0, 0.08),
+            0 24px 48px rgba(0, 0, 0, 0.08);
+          border-radius: 18px;
+        }
+
+        body[data-theme='copilot'] .auth-input {
+          background: #ffffff;
+          border: 0.5px solid rgba(0, 0, 0, 0.12);
+          color: #1d1d1f;
+          font-size: 17px;
+          padding: 12px 16px;
+          border-radius: 10px;
+          transition: all var(--theme-transition-fast);
+        }
+
+        body[data-theme='copilot'] .auth-input:focus {
+          border-color: #007aff;
+          box-shadow: 
+            0 0 0 3px rgba(0, 122, 255, 0.1);
+          outline: none;
+        }
+
+        body[data-theme='copilot'] .auth-input::placeholder {
+          color: #6e6e73;
+        }
+
+        /* Buttons - Apple's refined style */
+        body[data-theme='copilot'] button:not(.btn-text),
+        body[data-theme='copilot'] .btn-primary {
+          background: linear-gradient(180deg, #007aff 0%, #0051d5 100%);
+          border: none;
+          color: #ffffff;
+          font-size: 17px;
+          font-weight: 600;
+          padding: 12px 24px;
+          border-radius: 10px;
+          cursor: pointer;
+          transition: all var(--theme-transition-fast);
+          box-shadow: 
+            0 1px 2px rgba(0, 122, 255, 0.16),
+            0 2px 8px rgba(0, 122, 255, 0.08);
+        }
+
+        body[data-theme='copilot'] button:not(.btn-text):hover,
+        body[data-theme='copilot'] .btn-primary:hover {
+          transform: translateY(-1px);
+          box-shadow: 
+            0 2px 4px rgba(0, 122, 255, 0.2),
+            0 8px 16px rgba(0, 122, 255, 0.12);
+        }
+
+        body[data-theme='copilot'] button:not(.btn-text):active,
+        body[data-theme='copilot'] .btn-primary:active {
+          transform: translateY(0);
+          transition: all 100ms cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Secondary buttons - subtle */
+        body[data-theme='copilot'] .btn-secondary {
+          background: rgba(0, 0, 0, 0.04);
+          border: none;
+          color: #007aff;
+          font-weight: 600;
+        }
+
+        body[data-theme='copilot'] .btn-secondary:hover {
+          background: rgba(0, 0, 0, 0.06);
+        }
+
+        /* Tables - clean, scannable */
+        body[data-theme='copilot'] table {
+          background: #ffffff;
+          border: 0.5px solid rgba(0, 0, 0, 0.08);
+          border-radius: 12px;
+          overflow: hidden;
+        }
+
+        body[data-theme='copilot'] thead {
+          background: #fafafa;
+          border-bottom: 0.5px solid rgba(0, 0, 0, 0.08);
+        }
+
+        body[data-theme='copilot'] thead th {
+          color: #6e6e73;
+          font-size: 13px;
+          font-weight: 600;
+          text-transform: uppercase;
+          letter-spacing: 0.4px;
+          padding: 12px 16px;
+        }
+
+        body[data-theme='copilot'] tbody tr {
+          background: #ffffff;
+          border-bottom: 0.5px solid rgba(0, 0, 0, 0.06);
+          transition: background var(--theme-transition-fast);
+        }
+
+        body[data-theme='copilot'] tbody tr:hover {
+          background: #fafafa;
+        }
+
+        body[data-theme='copilot'] tbody tr:last-child {
+          border-bottom: none;
+        }
+
+        body[data-theme='copilot'] tbody td {
+          color: #1d1d1f;
+          font-size: 15px;
+          padding: 14px 16px;
+        }
+
+        /* Cards - elevated but subtle */
+        body[data-theme='copilot'] .glass-surface,
+        body[data-theme='copilot'] .card {
+          background: #ffffff;
+          border: 0.5px solid rgba(0, 0, 0, 0.08);
+          border-radius: 12px;
+          box-shadow: 
+            0 0 0 0.5px rgba(0, 0, 0, 0.04),
+            0 2px 4px rgba(0, 0, 0, 0.04),
+            0 8px 16px rgba(0, 0, 0, 0.06);
+          transition: all var(--theme-transition-base);
+        }
+
+        body[data-theme='copilot'] .glass-surface:hover,
+        body[data-theme='copilot'] .card:hover {
+          box-shadow: 
+            0 0 0 0.5px rgba(0, 0, 0, 0.04),
+            0 4px 8px rgba(0, 0, 0, 0.06),
+            0 12px 24px rgba(0, 0, 0, 0.08);
+          transform: translateY(-2px);
+        }
+
+        /* Status badges - Apple's semantic colors */
+        body[data-theme='copilot'] .status-badge {
+          background: rgba(0, 0, 0, 0.04);
+          color: #1d1d1f;
+          border: none;
+          padding: 4px 10px;
+          border-radius: 6px;
+          font-size: 12px;
+          font-weight: 600;
+          letter-spacing: 0.3px;
+        }
+
+        body[data-theme='copilot'] .status-badge.success {
+          background: rgba(52, 199, 89, 0.1);
+          color: #248a3d;
+        }
+
+        body[data-theme='copilot'] .status-badge.warning {
+          background: rgba(255, 149, 0, 0.1);
+          color: #c93400;
+        }
+
+        body[data-theme='copilot'] .status-badge.error {
+          background: rgba(255, 59, 48, 0.1);
+          color: #d70015;
+        }
+
+        body[data-theme='copilot'] .status-badge.info {
+          background: rgba(0, 122, 255, 0.1);
+          color: #0051d5;
+        }
+
+        /* Toast notifications - refined */
+        body[data-theme='copilot'] .toast {
+          background: rgba(29, 29, 31, 0.96);
+          backdrop-filter: blur(20px) saturate(180%);
+          border: none;
+          border-radius: 12px;
+          box-shadow: 
+            0 4px 8px rgba(0, 0, 0, 0.12),
+            0 12px 24px rgba(0, 0, 0, 0.16);
+          color: #ffffff;
+          padding: 14px 18px;
+          font-size: 15px;
+          font-weight: 500;
+        }
+
+        /* Inputs - clean and clear */
+        body[data-theme='copilot'] input[type="text"],
+        body[data-theme='copilot'] input[type="email"],
+        body[data-theme='copilot'] input[type="password"],
+        body[data-theme='copilot'] input[type="search"],
+        body[data-theme='copilot'] textarea,
+        body[data-theme='copilot'] select {
+          background: #ffffff;
+          border: 0.5px solid rgba(0, 0, 0, 0.12);
+          color: #1d1d1f;
+          font-size: 15px;
+          padding: 10px 14px;
+          border-radius: 8px;
+          transition: all var(--theme-transition-fast);
+        }
+
+        body[data-theme='copilot'] input:focus,
+        body[data-theme='copilot'] textarea:focus,
+        body[data-theme='copilot'] select:focus {
+          border-color: #007aff;
+          box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
+          outline: none;
+        }
+
+        /* Scrollbar - minimal and refined */
+        body[data-theme='copilot'] ::-webkit-scrollbar {
+          width: 8px;
+          height: 8px;
+        }
+
+        body[data-theme='copilot'] ::-webkit-scrollbar-track {
+          background: transparent;
+        }
+
+        body[data-theme='copilot'] ::-webkit-scrollbar-thumb {
+          background: rgba(0, 0, 0, 0.2);
+          border-radius: 4px;
+          border: 2px solid transparent;
+          background-clip: padding-box;
+        }
+
+        body[data-theme='copilot'] ::-webkit-scrollbar-thumb:hover {
+          background: rgba(0, 0, 0, 0.3);
+          background-clip: padding-box;
+        }
+
+        /* Loading spinner - Apple style */
+        body[data-theme='copilot'] .loading-spinner {
+          background: rgba(255, 255, 255, 0.96);
+          backdrop-filter: blur(20px) saturate(180%);
+        }
+
+        body[data-theme='copilot'] .loading-spinner::before {
+          border: 2px solid rgba(0, 122, 255, 0.2);
+          border-top-color: #007aff;
+        }
+
+        /* Modals - centered and refined */
+        body[data-theme='copilot'] .modal {
+          background: rgba(255, 255, 255, 0.96);
+          backdrop-filter: blur(20px) saturate(180%);
+          border: 0.5px solid rgba(0, 0, 0, 0.08);
+          border-radius: 16px;
+          box-shadow: 
+            0 8px 16px rgba(0, 0, 0, 0.08),
+            0 24px 48px rgba(0, 0, 0, 0.12);
+        }
+
+        /* Dividers - subtle */
+        body[data-theme='copilot'] hr,
+        body[data-theme='copilot'] .divider {
+          border: none;
+          border-top: 0.5px solid rgba(0, 0, 0, 0.08);
+        }
+
+        /* Typography refinements */
+        body[data-theme='copilot'] h1,
+        body[data-theme='copilot'] h2,
+        body[data-theme='copilot'] h3 {
+          color: #1d1d1f;
+          font-weight: 700;
+          letter-spacing: -0.5px;
+        }
+
+        body[data-theme='copilot'] p {
+          color: #1d1d1f;
+          line-height: 1.5;
+        }
+
+        body[data-theme='copilot'] .muted {
+          color: #6e6e73;
+        }
+
+        /* Links - Apple blue */
+        body[data-theme='copilot'] a {
+          color: #007aff;
+          text-decoration: none;
+          transition: opacity var(--theme-transition-fast);
+        }
+
+        body[data-theme='copilot'] a:hover {
+          opacity: 0.7;
+        }
+
+        /* Ensure proper contrast for all text elements */
+        body[data-theme='copilot'] label {
+          color: #1d1d1f;
+          font-weight: 500;
+        }
+
+        body[data-theme='copilot'] .secondary-text {
+          color: #6e6e73;
+        }
+
+        /* Support menu specific styling */
+        body[data-theme='copilot'] #supportMenuDropdown {
+          background: rgba(255, 255, 255, 0.96) !important;
+          backdrop-filter: blur(20px) saturate(180%) !important;
+          border: 0.5px solid rgba(0, 0, 0, 0.08) !important;
+          box-shadow: 
+            0 8px 16px rgba(0, 0, 0, 0.08),
+            0 24px 48px rgba(0, 0, 0, 0.12) !important;
+        }
+
+        body[data-theme='copilot'] .support-menu-panel {
+          background: rgba(255, 255, 255, 0.96) !important;
+          backdrop-filter: blur(20px) saturate(180%) !important;
+        }
+          --theme-surface-alt-bg: #222222;
+          --theme-border: #444444;
+          --theme-text: #ffffff;
+          --theme-muted: #aaaaaa;
+          --theme-support-btn: transparent;
+          --theme-support-btn-text: #ffffff;
+          --theme-input-bg: #222222;
+          --theme-pane-bg: #1a1a1a;
+          --theme-pane-blur: none;
+          --theme-pane-border: #444444;
+          --theme-pane-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+          --theme-accent: #ffffff;
+          --theme-accent-soft: #cccccc;
+          --theme-btn-text: #ffffff;
+          --theme-highlight: rgba(255, 255, 255, 0.1);
+          --theme-surface-gloss: none;
+          --theme-glow-accent: rgba(255, 255, 255, 0.2);
+          --theme-blur-strength: none;
+          --theme-export-gradient: linear-gradient(135deg, #444444, #222222);
+          --theme-refresh-gradient: linear-gradient(135deg, #444444, #222222);
+          --theme-logout-gradient: linear-gradient(135deg, #444444, #222222);
+        }
+
         /* Fix for dropdown transparency issues in Glass theme */
         body[data-theme='glass'] #supportMenuDropdown,
         body[data-theme='glass'] .support-menu-panel {
@@ -221,6 +727,15 @@ const __fallbackThemeCSS = `
           backdrop-filter: blur(30px) !important;
           box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25) !important;
           border: 1px solid rgba(255, 255, 255, 0.8) !important;
+        }
+
+        /* Fix for dropdown transparency issues in Gemini theme */
+        body[data-theme='gemini'] #supportMenuDropdown,
+        body[data-theme='gemini'] .support-menu-panel {
+          background: rgba(30, 41, 59, 0.95) !important;
+          backdrop-filter: blur(30px) !important;
+          box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5) !important;
+          border: 1px solid rgba(148, 163, 184, 0.2) !important;
         }
 
         /* Performance optimizations */
@@ -625,6 +1140,128 @@ const __fallbackThemeCSS = `
           box-shadow: inset -1px 0 rgba(255, 255, 255, 0.12);
         }
 
+        /* Gemini Theme Table Overrides */
+        body[data-theme='gemini'] .orders-table-container {
+          background: rgba(30, 41, 59, 0.6) !important;
+          border: 1px solid rgba(148, 163, 184, 0.15) !important;
+          box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4) !important;
+          backdrop-filter: blur(20px);
+        }
+
+        body[data-theme='gemini'] .orders-table {
+          background: rgba(15, 23, 42, 0.8) !important;
+          border: 1px solid rgba(148, 163, 184, 0.1) !important;
+          border-radius: 12px;
+          overflow: hidden;
+          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        body[data-theme='gemini'] .orders-table thead tr {
+          background: rgba(30, 41, 59, 0.95) !important;
+          color: #f1f5f9 !important;
+          border-bottom: 1px solid rgba(148, 163, 184, 0.2) !important;
+        }
+
+        body[data-theme='gemini'] .orders-table th {
+            background: transparent !important;
+            color: #94a3b8 !important;
+            text-transform: uppercase;
+            font-size: 12px;
+            letter-spacing: 0.05em;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.2) !important;
+        }
+
+        body[data-theme='gemini'] .orders-table tbody {
+          background: transparent !important;
+        }
+
+        body[data-theme='gemini'] .orders-table th,
+        body[data-theme='gemini'] .orders-table td {
+          border-color: rgba(148, 163, 184, 0.1) !important;
+          color: #e2e8f0 !important;
+        }
+
+        body[data-theme='gemini'] .orders-table tbody tr {
+          background: rgba(30, 41, 59, 0.4) !important;
+          border-bottom: 1px solid rgba(148, 163, 184, 0.1) !important;
+          color: #cbd5e1 !important;
+          transition: background 0.2s ease;
+        }
+
+        body[data-theme='gemini'] .orders-table tbody tr:nth-child(even) {
+          background: rgba(15, 23, 42, 0.6) !important;
+        }
+
+        body[data-theme='gemini'] .orders-table tbody tr:hover {
+          background: rgba(51, 65, 85, 0.8) !important;
+          color: #f8fafc !important;
+        }
+
+        body[data-theme='gemini'] .orders-table tbody tr.selected-row {
+          background: rgba(139, 92, 246, 0.15) !important;
+          border-left: 3px solid #8b5cf6 !important;
+        }
+
+        /* Force override for cell text color */
+        body[data-theme='gemini'] #fallback-app tbody tr td {
+            color: #cbd5e1 !important;
+        }
+
+        /* Monochrome Theme Overrides */
+        body[data-theme='monochrome'] #fallback-app .btn {
+            background: transparent !important;
+            border: 1px solid #ffffff !important;
+            color: #ffffff !important;
+            box-shadow: none !important;
+        }
+        body[data-theme='monochrome'] #fallback-app .btn:hover {
+            background: rgba(255, 255, 255, 0.1) !important;
+        }
+        body[data-theme='monochrome'] .orders-table-container {
+            background: #000000 !important;
+            border: 1px solid #333 !important;
+            box-shadow: none !important;
+        }
+        body[data-theme='monochrome'] .orders-table {
+            background: #000000 !important;
+            border: 1px solid #333 !important;
+            box-shadow: none !important;
+            border-radius: 0 !important;
+        }
+        body[data-theme='monochrome'] .orders-table thead tr {
+            background: #111 !important;
+            color: #fff !important;
+            border-bottom: 1px solid #333 !important;
+        }
+        body[data-theme='monochrome'] .orders-table th {
+            background: transparent !important;
+            color: #fff !important;
+            border-bottom: 1px solid #333 !important;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        body[data-theme='monochrome'] .orders-table tbody {
+            background: transparent !important;
+        }
+        body[data-theme='monochrome'] .orders-table tbody tr {
+            background: #000 !important;
+            color: #fff !important;
+            border-bottom: 1px solid #333 !important;
+        }
+        body[data-theme='monochrome'] .orders-table tbody tr:hover {
+            background: #222 !important;
+        }
+        body[data-theme='monochrome'] #fallback-app tbody tr td {
+            color: #fff !important;
+            border-color: #333 !important;
+        }
+        body[data-theme='monochrome'] #supportMenuDropdown,
+        body[data-theme='monochrome'] .support-menu-panel {
+            background: #000 !important;
+            border: 1px solid #333 !important;
+            color: #fff !important;
+        }
+
         body[data-theme='aurora'] #supportMenuDropdown,
         body[data-theme='aurora'] #quickFiltersPanel {
           background: rgba(7, 12, 24, 0.9) !important;
@@ -741,6 +1378,45 @@ const __fallbackThemeCSS = `
     return (typeof window !== 'undefined' && window.geminiConfig) ? window.geminiConfig : geminiConfig;
   }
 
+  // ============================================================================
+  // Validation Helper Functions (DRY Principle)
+  // ============================================================================
+  
+  /**
+   * Validates Runware/Google AI configuration
+   * @returns {boolean} True if config is valid, false otherwise
+   */
+  function validateRunwareConfig() {
+    const cfg = getRunwareConfig();
+    if (!cfg || !cfg.apiKey) {
+      console.warn('[Runware] API key not configured');
+      showToast('❌ Runware API key not configured', 'error');
+      if (typeof showGoogleAISetupModal === 'function') {
+        showGoogleAISetupModal();
+      }
+      return false;
+    }
+    return true;
+  }
+
+  /**
+   * Validates Google Gemini AI configuration
+   * @returns {boolean} True if config is valid, false otherwise
+   */
+  function validateGeminiConfig() {
+    const cfg = getGeminiConfig();
+    if (!cfg || !cfg.apiKey) {
+      console.warn('[Gemini] API key not configured');
+      showToast('❌ Google Gemini API key not configured', 'error');
+      return false;
+    }
+    return true;
+  }
+
+  // ============================================================================
+  // Google AI Setup Modal & Configuration
+  // ============================================================================
+
   if (typeof window !== 'undefined' && !window.RunwareWebSocketManager) {
     console.log('[Init:0] Starting WebSocket stub creation...');
     window._runwareStub = true;
@@ -853,9 +1529,8 @@ const __fallbackThemeCSS = `
     showToast('Testing Runware API connection...', 'info');
 
     setTimeout(async () => {
-      const cfg = getRunwareConfig();
-      if (!cfg.apiKey) {
-        showToast('Runware API key is missing.', 'warning');
+      // Use validation helper instead of duplicate code
+      if (!validateRunwareConfig()) {
         return;
       }
 
@@ -876,12 +1551,7 @@ const __fallbackThemeCSS = `
   window.showGoogleAISetupModal = showGoogleAISetupModal;
   window.saveGoogleAIKey = saveGoogleAIKey;
   window.checkGoogleAIAvailability = checkGoogleAIAvailability;
-  window.testGoogleAIConnection = testGoogleAIConnection;
-
-  window.testRunwareConnection = function() {
-    return testGoogleAIConnection();
-  };
-
+  
   // Function to save/download processed images
   function saveProcessedImage(imageUrl, operation = 'processed') {
     try {
@@ -965,11 +1635,8 @@ const __fallbackThemeCSS = `
       return;
     }
     
-    // Check Runware API configuration
-    const cfg = getRunwareConfig();
-    if (!cfg.apiKey) {
-      showToast('❌ Runware API key not configured', 'error');
-      console.log('❌ Runware API key missing. Current config:', cfg);
+    // Use validation helper instead of duplicate code
+    if (!validateRunwareConfig()) {
       return;
     }
     
@@ -1001,10 +1668,13 @@ const __fallbackThemeCSS = `
   window.processImageWithGeminiAI = async function(operation, instructions, imageData) {
     console.log('processImageWithGeminiAI called');
 
-    const config = getGeminiConfig();
-    if (!config.apiKey) {
-      showToast('❌ Google Gemini API key not configured', 'error');
+    // Use validation helper instead of duplicate code
+    if (!validateGeminiConfig()) {
       return;
+    }
+
+    if (typeof LoadingSpinner !== 'undefined') {
+      LoadingSpinner.show('Processing with AI...', 'Generating image with Google Gemini');
     }
 
     try {
@@ -1016,6 +1686,10 @@ const __fallbackThemeCSS = `
       // Ensure we pass base64 content, not a data URL
       const base64Content = (typeof imageData === 'string' && imageData.indexOf(',') !== -1) ? imageData.split(',')[1] : imageData;
       const result = await window.processWithGeminiAI(prompt, base64Content);
+
+      if (typeof LoadingSpinner !== 'undefined') {
+        LoadingSpinner.hide();
+      }
 
       if (result) {
         console.log('Gemini AI processing successful:', result);
@@ -1035,17 +1709,12 @@ const __fallbackThemeCSS = `
 
     } catch (error) {
       console.error('Gemini AI processing error:', error);
+      if (typeof LoadingSpinner !== 'undefined') {
+        LoadingSpinner.hide();
+      }
       showToast('❌ Gemini processing error: ' + error.message, 'error');
     }
   };
-
-  window.testGoogleAIConnection = testGoogleAIConnection;
-
-  // Test Runware connection (alias for backward compatibility)
-  window.testRunwareConnection = function() {
-    return testGoogleAIConnection();
-  };
-
 
   // Post Production functions - Define immediately for global access
   window.handleMethodChange = function(selectElement) {
@@ -1367,6 +2036,9 @@ const __fallbackThemeCSS = `
 
   // Export and refresh functions - Define globally for immediate access
   window.exportToCsv = function() {
+    if (typeof LoadingSpinner !== 'undefined') {
+      LoadingSpinner.show('Exporting data...', 'Preparing CSV file');
+    }
     try {
       // Determine current view
       const currentView = getCurrentView();
@@ -1443,6 +2115,9 @@ const __fallbackThemeCSS = `
         URL.revokeObjectURL(a.href);
         
         const filterInfo = searchBox && searchBox.value.trim() ? ' (filtered)' : '';
+        if (typeof LoadingSpinner !== 'undefined') {
+          LoadingSpinner.hide();
+        }
         showToast('📊 Exported ' + orders.length + ' orders' + filterInfo + ' to CSV', 'success');
         
       } else if (currentView === 'samples') {
@@ -1474,10 +2149,16 @@ const __fallbackThemeCSS = `
         showToast('📊 Exported ' + window.samples.length + ' samples to CSV', 'success');
         
       } else {
+        if (typeof LoadingSpinner !== 'undefined') {
+          LoadingSpinner.hide();
+        }
         showToast('⚠️ Export not available for current view', 'warning');
       }
     } catch (error) {
       console.error('Export error:', error);
+      if (typeof LoadingSpinner !== 'undefined') {
+        LoadingSpinner.hide();
+      }
       showToast('❌ Export failed. Please try again.', 'error');
     }
   };
@@ -2262,7 +2943,7 @@ const __fallbackThemeCSS = `
     ? (...args) => orderHelpers.createNormalizedArticle(...args)
     : () => null;
 
-  const normalizeArticles = orderHelpers?.normalizeArticles
+  const _baseNormalizeArticles = orderHelpers?.normalizeArticles
     ? (...args) => orderHelpers.normalizeArticles(...args)
     : (articles) => {
         if (!Array.isArray(articles)) return [];
@@ -2271,30 +2952,91 @@ const __fallbackThemeCSS = `
             // Parse string format: "Name [EAN: 123]"
             const eanMatch = article.match(/\[EAN:\s*(\d+)\]/);
             const name = article.replace(/\[EAN:\s*\d+\]/, '').trim();
+            // Use stable hash for model letter and filename
+            let hash = 0;
+            for (let i = 0; i < name.length; i++) { hash = name.charCodeAt(i) + ((hash << 5) - hash); }
+            const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            const randomLetter = letters[Math.abs(hash) % letters.length];
+            const fileNum = (Math.abs(hash) % 900000) + 100000;
+            const generatedFileName = `SG_${fileNum}`;
+            
             return {
               name: name,
               articleNumber: eanMatch ? eanMatch[1] : '',
+              photoGroup: `Model ${randomLetter}`,
               raw: {
                 articleName: name,
                 articleNumber: eanMatch ? eanMatch[1] : '',
                 unitOfMeasure: 'EA',
-                fileName: `ENV.${String(index + 1).padStart(6, '0')}.jpg`
+                fileName: generatedFileName,
+                photoGroup: `Model ${randomLetter}`
               }
             };
           }
           // Handle object format
+          const name = article.name || article.articleName || '';
+          let hash = 0;
+          for (let i = 0; i < name.length; i++) { hash = name.charCodeAt(i) + ((hash << 5) - hash); }
+          const fileNum = (Math.abs(hash) % 900000) + 100000;
+          const generatedFileName = `SG_${fileNum}`;
+
+          // Fix for old naming convention - ensure we use SG_ format
+          let finalFileName = article.fileName || generatedFileName;
+          if (finalFileName && finalFileName.startsWith('ENV.')) {
+            finalFileName = generatedFileName;
+          }
+
+          // Generate consistent upload time if missing
+          let uploadedAt = article.uploadedAt;
+          if (!uploadedAt) {
+            const daysAgo = Math.abs(hash) % 14; // Last 2 weeks
+            const hoursAgo = Math.abs(hash) % 24;
+            const date = new Date();
+            date.setDate(date.getDate() - daysAgo);
+            date.setHours(date.getHours() - hoursAgo);
+            uploadedAt = date.toISOString();
+          }
+
+          // Generate random DAM Shot Type if missing
+          const damShotTypes = [
+            'Front', 'Front - Top', 'Front - Left Angle', 'Front - Right Angle',
+            'Left Side', 'Right Side', 'Back', 'Top', 'Bottom'
+          ];
+          const shotType = article.shotType || damShotTypes[Math.abs(hash) % damShotTypes.length];
+
           return {
-            name: article.name || article.articleName || '',
+            name: name,
             articleNumber: article.articleNumber || '',
             combinedPhoto: article.combinedPhoto || '',
-            fileName: article.fileName || '',
+            fileName: finalFileName,
+            uploadedAt: uploadedAt,
+            photoGroup: article.photoGroup || '',
+            shotType: shotType,
             raw: {
               ...article,
               unitOfMeasure: article.unitOfMeasure || 'EA',
-              fileName: article.fileName || `ENV.${String(index + 1).padStart(6, '0')}.jpg`
+              fileName: finalFileName,
+              uploadedAt: uploadedAt,
+              shotType: shotType
             }
           };
         });
+    };
+
+  const normalizeArticles = (articles) => {
+      const result = _baseNormalizeArticles(articles);
+      return result.map(article => {
+          if (!article.photoGroup) {
+             const name = article.name || '';
+             let hash = 0;
+             for (let i = 0; i < name.length; i++) { hash = name.charCodeAt(i) + ((hash << 5) - hash); }
+             const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+             const randomLetter = letters[Math.abs(hash) % letters.length];
+             article.photoGroup = `Model ${randomLetter}`;
+             if (article.raw) article.raw.photoGroup = article.photoGroup;
+          }
+          return article;
+      });
     };
 
   const getArticleTextList = orderHelpers?.getArticleTextList
@@ -2322,6 +3064,7 @@ const __fallbackThemeCSS = `
           const name = article.name || raw.articleName || 'Unknown Article';
           const uom = article.unitOfMeasure || raw.unitOfMeasure || 'EA';
           const netContent = article.netContent || raw.netContent || 'N/A';
+          const shotType = article.shotType || raw.shotType || '';
           
           return `
             <div style="padding:12px;background:rgba(255, 255, 255, 0.9);border:1px solid rgba(196, 139, 90, 0.2);border-radius:8px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;">
@@ -2332,6 +3075,7 @@ const __fallbackThemeCSS = `
               <div style="text-align:right;">
                 <div style="font-size:11px;color:#7c6248;background:rgba(196, 139, 90, 0.1);padding:2px 6px;border-radius:4px;display:inline-block;">${uom}</div>
                 <div style="font-size:11px;color:#7c6248;margin-top:2px;">${netContent}</div>
+                ${shotType ? `<div style="font-size:11px;color:#7c6248;margin-top:2px;">${shotType}</div>` : ''}
               </div>
             </div>
           `;
@@ -2454,8 +3198,12 @@ const __fallbackThemeCSS = `
     return false;
   }
 
-  // Expose test function globally
-  window.testGeminiConnection = testGeminiConnection;
+  // Expose test function globally - only in debug mode
+  if (typeof Logger !== 'undefined' && Logger.isDebugMode()) {
+    window.testGeminiConnection = testGeminiConnection;
+  } else {
+    window.testGeminiConnection = () => console.warn('⚠️ Test functions disabled. Enable with: Logger.enable()');
+  }
 
   // Function to process images with Google Gemini API (supports Google AI with AQ key or Vertex with OAuth)
   async function processWithGeminiAI(prompt, imageData = null, options = {}) {
@@ -4698,6 +5446,65 @@ const __fallbackThemeCSS = `
     'Premium (Transparent Background)'
   ];
 
+  // Migration: Update order numbers to 6-digit format
+  (function migrateOrderNumbers() {
+    let counter = 100001;
+    if (Array.isArray(allOrders)) {
+        allOrders.forEach(order => {
+        // Check if it's already in the new format (6 digits)
+        if (!/^\d{6}$/.test(order.orderNumber)) {
+            const oldOrderNumber = order.orderNumber;
+            const newOrderNumber = String(counter++);
+            order.orderNumber = newOrderNumber;
+            
+            // Update comments referencing this order
+            if (order.comments) {
+            order.comments.forEach(comment => {
+                if (comment.orderId === oldOrderNumber) {
+                comment.orderId = newOrderNumber;
+                }
+            });
+            }
+        } else {
+            // If it is already a number, ensure counter is higher
+            const num = parseInt(order.orderNumber, 10);
+            if (!isNaN(num) && num >= counter) {
+                counter = num + 1;
+            }
+        }
+
+        // Migration: Update Net Content
+        if (!order.netContent) {
+            // Randomly assign 1. or a gram value
+            const isGram = Math.random() > 0.5;
+            order.netContent = isGram ? `${Math.floor(Math.random() * 500 + 100)} grams` : '1.';
+        }
+        });
+    }
+    // Save the counter for next generation
+    window.lastOrderNumber = counter - 1;
+  })();
+
+  // Helper to generate next order number
+  window.generateNextOrderNumber = function() {
+      if (typeof window.lastOrderNumber === 'undefined') {
+          // Find max existing order number
+          let max = 100000;
+          const orders = window.rkhOrders || (typeof allOrders !== 'undefined' ? allOrders : []) || [];
+          if (orders) {
+              orders.forEach(o => {
+                  const num = parseInt(o.orderNumber, 10);
+                  if (!isNaN(num) && num > max) {
+                      max = num;
+                  }
+              });
+          }
+          window.lastOrderNumber = max;
+      }
+      window.lastOrderNumber++;
+      return String(window.lastOrderNumber);
+  };
+
   if (Array.isArray(allOrders)) {
     allOrders.forEach((order, index) => {
       if (statusMigrationMap[order.status]) {
@@ -4800,6 +5607,125 @@ const __fallbackThemeCSS = `
     }
 
     window.resolveOrdersSnapshot = resolveOrdersSnapshot;
+
+    // Debug helper: mark a single CPT line item as removed (without using import UI)
+    // Usage (browser console): window.debugMarkRemovedInCpt('IR123456', 'ART-1002')
+    // NOTE: Only available when debug mode is enabled (Logger.enable())
+    if (typeof Logger !== 'undefined' && Logger.isDebugMode()) {
+      window.debugMarkRemovedInCpt = function(imageRequestId = 'IR123456', articleNumber = 'ART-1002') {
+      try {
+        const nowIso = new Date().toISOString();
+        const normalize = (value) => String(value ?? '').trim().toLowerCase();
+        const targetIr = normalize(imageRequestId);
+        const targetArticle = normalize(articleNumber);
+
+        const snapshot = resolveOrdersSnapshot();
+        const orders = Array.isArray(snapshot) ? snapshot : [];
+
+        const order = orders.find(o => {
+          if (!o || o.orderType !== 'PS') return false;
+          const ir = o.imageRequestId || o.imageRequest || o.orderNumber;
+          return normalize(ir) === targetIr;
+        });
+
+        if (!order) {
+          const msg = `Order not found for Image Request ID: ${imageRequestId}`;
+          if (typeof showToast === 'function') showToast(msg, 'warning');
+          console.warn('[Debug] ', msg);
+          return false;
+        }
+
+        const articles = Array.isArray(order.articles) ? order.articles : [];
+        const findArticleIndex = (list) => list.findIndex((a) => {
+          if (!a) return false;
+          if (typeof a === 'string') {
+            return normalize(a).includes(targetArticle);
+          }
+          const key = a.articleNumber || a.article || a.ean || a.sku || a.name;
+          return normalize(key) === targetArticle;
+        });
+
+        const articleIndex = findArticleIndex(articles);
+        if (articleIndex === -1) {
+          const msg = `Article not found in order ${order.orderNumber || imageRequestId}: ${articleNumber}`;
+          if (typeof showToast === 'function') showToast(msg, 'warning');
+          console.warn('[Debug] ', msg);
+          return false;
+        }
+
+        const nextArticles = articles.map((a, idx) => {
+          if (idx !== articleIndex) return a;
+          if (typeof a === 'string') {
+            return {
+              name: a,
+              articleNumber: articleNumber,
+              status: 'Removed in CPT',
+              cptRemoved: true,
+              cptRemovedAt: nowIso
+            };
+          }
+          return {
+            ...a,
+            status: 'Removed in CPT',
+            cptRemoved: true,
+            cptRemovedAt: nowIso
+          };
+        });
+
+        const patch = { articles: nextArticles, updatedAt: nowIso };
+        const store = typeof window.__orderStoreInstance === 'object' ? window.__orderStoreInstance : null;
+
+        const applyPatchToCollection = (collection) => {
+          if (!Array.isArray(collection)) return;
+          const index = collection.findIndex((item) => String(item?.orderNumber) === String(order.orderNumber));
+          if (index !== -1) {
+            collection[index] = { ...collection[index], ...patch };
+          }
+        };
+
+        if (store && typeof store.patch === 'function') {
+          store.patch(order.orderNumber, patch);
+        } else {
+          applyPatchToCollection(window.rkhOrders);
+          if (typeof allOrders !== 'undefined' && Array.isArray(allOrders)) {
+            applyPatchToCollection(allOrders);
+          }
+          if (typeof window.ensureOrderStoreSubscription === 'function') {
+            window.ensureOrderStoreSubscription();
+          }
+        }
+
+        try {
+          if (typeof localStorage !== 'undefined') {
+            const latest = resolveOrdersSnapshot();
+            localStorage.setItem('photoOrders', JSON.stringify(latest));
+            localStorage.setItem('orders', JSON.stringify(latest));
+          }
+        } catch (storageError) {
+          console.warn('[Debug] Storage sync failed', storageError);
+        }
+
+        if (typeof window.drawOrderRows === 'function') {
+          window.drawOrderRows();
+        }
+
+        const msg = `Marked ${articleNumber} as Removed in CPT (IR ${imageRequestId})`;
+        if (typeof showToast === 'function') showToast(msg, 'success');
+        console.log('[Debug] ✅', msg);
+        return true;
+      } catch (e) {
+        console.error('[Debug] Failed to mark Removed in CPT', e);
+        if (typeof showToast === 'function') showToast('Failed to mark item as Removed in CPT', 'error');
+        return false;
+      }
+    };
+    } else {
+      // Provide helpful message if debug function is called without debug mode
+      window.debugMarkRemovedInCpt = function() {
+        console.warn('⚠️ Debug functions are disabled. Enable with: Logger.enable()');
+        return false;
+      };
+    }
 
   const ensureOrderStoreSubscription = () => {
     if (window.__orderStoreSubscriptionActive) {
@@ -5169,10 +6095,14 @@ const __fallbackThemeCSS = `
   }
   const AVAILABLE_THEMES = {
     warm: { label: 'Warm Classic' },
+    cupertino: { label: 'Cupertino Light' },
     cool: { label: 'Coastal Breeze' },
     midnight: { label: 'Midnight Dusk' },
     aurora: { label: 'Aurora Glass' },
-    glass: { label: 'Modern Glass' }
+    glass: { label: 'Modern Glass' },
+    gemini: { label: 'Gemini AI' },
+    monochrome: { label: 'Monochrome' },
+    copilot: { label: ' Premium' }
   };
 
   let activeTheme = 'warm';
@@ -5500,10 +6430,14 @@ const __fallbackThemeCSS = `
                           <label for="themeSelector">Theme</label>
                           <select id="themeSelector">
                             <option value="warm">Warm Classic</option>
+                            <option value="cupertino">Cupertino Light</option>
                             <option value="cool">Coastal Breeze</option>
                             <option value="midnight">Midnight Dusk</option>
                             <option value="aurora">Aurora Glass</option>
                             <option value="glass">Modern Glass</option>
+                            <option value="gemini">Gemini AI</option>
+                            <option value="monochrome">Monochrome</option>
+                            <option value="copilot"> Premium</option>
                           </select>
                         </div>
                         <div class="support-menu-divider"></div>
@@ -5749,9 +6683,10 @@ const __fallbackThemeCSS = `
                         <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: var(--theme-table-header-text); border-bottom: 1px solid var(--theme-table-border);">Production</th>
                         <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: var(--theme-table-header-text); border-bottom: 1px solid var(--theme-table-border);">Principle</th>
                         <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: var(--theme-table-header-text); border-bottom: 1px solid var(--theme-table-border);">File Name</th>
+                        <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: var(--theme-table-header-text); border-bottom: 1px solid var(--theme-table-border);">Upload Time</th>
                         <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: var(--theme-table-header-text); border-bottom: 1px solid var(--theme-table-border); width: 92px;">Comments</th>
-                        <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: var(--theme-table-header-text); border-bottom: 1px solid var(--theme-table-border);">Status</th>
                         <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: var(--theme-table-header-text); border-bottom: 1px solid var(--theme-table-border); width: 80px;">Briefing</th>
+                        <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: var(--theme-table-header-text); border-bottom: 1px solid var(--theme-table-border);">Status</th>
                         <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: var(--theme-table-header-text); border-bottom: 1px solid var(--theme-table-border);">Deadline</th>
                       </tr>
                     </thead>
@@ -5867,6 +6802,19 @@ const __fallbackThemeCSS = `
           --theme-support-btn: linear-gradient(135deg, #c48b5a 0%, #a67550 100%);
           --theme-support-btn-text: #ffffff;
           --theme-input-bg: rgba(255, 250, 243, 0.94);
+        }
+
+        body[data-theme='cupertino'] {
+          --theme-app-bg: #f5f5f7;
+          --theme-shell-bg: rgba(255, 255, 255, 0.82);
+          --theme-surface-bg: rgba(255, 255, 255, 0.94);
+          --theme-surface-alt-bg: rgba(245, 245, 247, 0.92);
+          --theme-border: rgba(29, 29, 31, 0.12);
+          --theme-text: #1d1d1f;
+          --theme-muted: #6e6e73;
+          --theme-support-btn: linear-gradient(135deg, rgba(10, 132, 255, 0.92) 0%, rgba(0, 122, 255, 0.92) 100%);
+          --theme-support-btn-text: #ffffff;
+          --theme-input-bg: rgba(255, 255, 255, 0.9);
         }
 
         body[data-theme='cool'] {
@@ -7026,6 +7974,9 @@ const __fallbackThemeCSS = `
               document.body.removeChild(a);
               URL.revokeObjectURL(a.href);
               
+              if (typeof LoadingSpinner !== 'undefined') {
+                LoadingSpinner.hide();
+              }
               showToast('📊 Exported ' + window.samples.length + ' samples to CSV', 'success');
               
             } else {
@@ -7877,14 +8828,24 @@ const __fallbackThemeCSS = `
         };
 
         // Expose AI functions globally
-        window.testNanoBananaConnection = testNanoBananaConnection;
+        // Wrap debug/test functions to only work in debug mode
+        if (typeof Logger !== 'undefined' && Logger.isDebugMode()) {
+          window.testNanoBananaConnection = testNanoBananaConnection;
+          window.testPostProductionUI = testPostProductionUI;
+          window.debugShowPostProduction = debugShowPostProduction;
+          window.nanoBananaConfig = nanoBananaConfig; // For debugging
+        } else {
+          // Provide stub functions with helpful messages
+          window.testNanoBananaConnection = () => console.warn('⚠️ Test functions disabled. Enable with: Logger.enable()');
+          window.testPostProductionUI = () => console.warn('⚠️ Test functions disabled. Enable with: Logger.enable()');
+          window.debugShowPostProduction = () => console.warn('⚠️ Debug functions disabled. Enable with: Logger.enable()');
+        }
+        
+        // These are not debug functions - keep them available
         window.previewAIChanges = previewAIChanges;
         window.showNanoBananaPreviewModal = showNanoBananaPreviewModal;
         window.applyNanoBananaChanges = applyNanoBananaChanges;
-        window.testPostProductionUI = testPostProductionUI;
-        window.debugShowPostProduction = debugShowPostProduction;
         window.configureNanoBananaAPI = configureNanoBananaAPI;
-        window.nanoBananaConfig = nanoBananaConfig; // For debugging
 
       </script>
 
@@ -9707,7 +10668,27 @@ const __fallbackThemeCSS = `
     window.handleTemplateChange = handleTemplateChange;
 
     function syncNewOrderArticleContentState() {
-      const lines = getNewOrderArticleLines();
+      // Read both textareas directly to ensure line-by-line alignment
+      const articleField = document.getElementById('newOrderArticles');
+      const nameField = document.getElementById('newOrderArticleNames');
+      
+      const rawArticleLines = articleField ? articleField.value.split('\n') : [];
+      const rawNameLines = nameField ? nameField.value.split('\n') : [];
+      
+      // Filter out empty article lines but preserve the association with names based on index
+      const lines = [];
+      const nameLines = [];
+      
+      rawArticleLines.forEach((line, index) => {
+        const trimmed = line.trim();
+        if (trimmed.length > 0) {
+          lines.push(trimmed);
+          // Get corresponding name line, trim it, or default to empty string
+          const nameLine = rawNameLines[index] ? rawNameLines[index].trim() : '';
+          nameLines.push(nameLine);
+        }
+      });
+
       const templateSelect = document.querySelector('select[name="template"]');
       const selectedTemplate = templateSelect ? templateSelect.value : '';
       
@@ -9733,11 +10714,15 @@ const __fallbackThemeCSS = `
       if (selectedTemplate && templateRules[selectedTemplate]) {
          const contentTypes = templateRules[selectedTemplate];
          const next = [];
-         lines.forEach(raw => {
+         lines.forEach((raw, index) => {
+            const articleName = nameLines[index] || '';
             contentTypes.forEach(type => {
                next.push({
                  raw,
-                 contentType: type
+                 articleName,
+                 contentType: type,
+                 combinedPhoto: '',
+                 shotType: ''
                });
             });
          });
@@ -9745,19 +10730,26 @@ const __fallbackThemeCSS = `
       } else {
           // Original logic for manual mode
           const previous = newOrderArticleContentState.map(entry => ({ ...entry, __used: false }));
-          const next = lines.map(raw => {
+          const next = lines.map((raw, index) => {
+            const articleName = nameLines[index] || '';
             const matchIndex = previous.findIndex(entry => !entry.__used && entry.raw === raw);
             if (matchIndex !== -1) {
               previous[matchIndex].__used = true;
               return {
                 raw,
-                contentType: previous[matchIndex].contentType || DEFAULT_ARTICLE_CONTENT_TYPE
+                articleName: articleName,
+                contentType: previous[matchIndex].contentType || DEFAULT_ARTICLE_CONTENT_TYPE,
+                combinedPhoto: previous[matchIndex].combinedPhoto || '',
+                shotType: previous[matchIndex].shotType || ''
               };
             }
     
             return {
               raw,
-              contentType: DEFAULT_ARTICLE_CONTENT_TYPE
+              articleName,
+              contentType: DEFAULT_ARTICLE_CONTENT_TYPE,
+              combinedPhoto: '',
+              shotType: ''
             };
           });
           newOrderArticleContentState = next;
@@ -9781,28 +10773,72 @@ const __fallbackThemeCSS = `
         return;
       }
 
+      const combinedPhotoOptions = [''].concat(Array.from({length: 26}, (_, i) => String.fromCharCode(65 + i)));
+      const shotTypeOptions = ['', 'Front', 'Front - Top', 'Front - Left Angle', 'Front - Right Angle', 'Left Side', 'Right Side', 'Back', 'Top', 'Bottom'];
+
       const rows = newOrderArticleContentState.map((entry, index) => {
-        const options = ARTICLE_CONTENT_TYPE_OPTIONS
+        const contentTypeOptionsHtml = ARTICLE_CONTENT_TYPE_OPTIONS
           .map(option => {
             const selected = option === entry.contentType ? ' selected' : '';
             return `<option value="${escapeHtml(option)}"${selected}>${escapeHtml(option)}</option>`;
           })
           .join('');
 
+        const combinedPhotoOptionsHtml = combinedPhotoOptions
+          .map(option => {
+             const val = option === '' ? '' : option;
+             const label = option === '' ? 'Select...' : option;
+             const selected = val === entry.combinedPhoto ? ' selected' : '';
+             return `<option value="${val}"${selected}>${label}</option>`;
+          })
+          .join('');
+
+        const shotTypeOptionsHtml = shotTypeOptions
+          .map(option => {
+             const val = option === '' ? '' : option;
+             const label = option === '' ? 'Select...' : option;
+             const selected = val === entry.shotType ? ' selected' : '';
+             return `<option value="${val}"${selected}>${label}</option>`;
+          })
+          .join('');
+
+        const articleNameDisplay = entry.articleName ? `<div style="font-size:11px;color:#6b5440;margin-bottom:4px;font-weight:500;">${escapeHtml(entry.articleName)}</div>` : '';
+
         return `
-          <div style="display:grid;grid-template-columns:1fr 140px;gap:8px;align-items:center;padding:8px 10px;border-bottom:1px solid rgba(196, 139, 90, 0.18);">
-            <div style="font-size:12px;color:#4b3b2a;line-height:1.4;word-break:break-word;">
+          <div style="padding:12px;border-bottom:1px solid rgba(196, 139, 90, 0.18);">
+            <div style="font-size:12px;color:#4b3b2a;line-height:1.4;word-break:break-word;margin-bottom:8px;">
               <div style="font-weight:600;margin-bottom:2px;">Article ${index + 1}</div>
+              ${articleNameDisplay}
               <div style="font-family:'Courier New', monospace;font-size:11px;color:#6b5440;background:rgba(196, 139, 90, 0.08);padding:4px 6px;border-radius:4px;">${escapeHtml(entry.raw)}</div>
             </div>
-            <div>
-              <label style="display:block;font-size:11px;font-weight:600;color:#6b5440;margin-bottom:2px;">Content Type</label>
-              <select style="width:100%;padding:6px 8px;border:1px solid #ead7c2;border-radius:6px;font-size:12px;background:white;transition:border-color 0.2s ease;" 
-                      onfocus="this.style.borderColor='#c48b5a'" 
-                      onblur="this.style.borderColor='#ead7c2'"
-                      onchange="handleArticleContentTypeChange(${index}, this.value)">
-                ${options}
-              </select>
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;">
+              <div>
+                <label style="display:block;font-size:10px;font-weight:600;color:#6b5440;margin-bottom:2px;">Content Type</label>
+                <select style="width:100%;padding:6px 8px;border:1px solid #ead7c2;border-radius:6px;font-size:11px;background:white;transition:border-color 0.2s ease;" 
+                        onfocus="this.style.borderColor='#c48b5a'" 
+                        onblur="this.style.borderColor='#ead7c2'"
+                        onchange="handleArticleFieldChange(${index}, 'contentType', this.value)">
+                  ${contentTypeOptionsHtml}
+                </select>
+              </div>
+              <div>
+                <label style="display:block;font-size:10px;font-weight:600;color:#6b5440;margin-bottom:2px;">Combined Photo</label>
+                <select style="width:100%;padding:6px 8px;border:1px solid #ead7c2;border-radius:6px;font-size:11px;background:white;transition:border-color 0.2s ease;" 
+                        onfocus="this.style.borderColor='#c48b5a'" 
+                        onblur="this.style.borderColor='#ead7c2'"
+                        onchange="handleArticleFieldChange(${index}, 'combinedPhoto', this.value)">
+                  ${combinedPhotoOptionsHtml}
+                </select>
+              </div>
+              <div>
+                <label style="display:block;font-size:10px;font-weight:600;color:#6b5440;margin-bottom:2px;">DAM Shot Type</label>
+                <select style="width:100%;padding:6px 8px;border:1px solid #ead7c2;border-radius:6px;font-size:11px;background:white;transition:border-color 0.2s ease;" 
+                        onfocus="this.style.borderColor='#c48b5a'" 
+                        onblur="this.style.borderColor='#ead7c2'"
+                        onchange="handleArticleFieldChange(${index}, 'shotType', this.value)">
+                  ${shotTypeOptionsHtml}
+                </select>
+              </div>
             </div>
           </div>
         `;
@@ -9810,7 +10846,7 @@ const __fallbackThemeCSS = `
 
       container.innerHTML = `
         <div style="border:1px solid rgba(196, 139, 90, 0.28);border-radius:8px;overflow:hidden;background:white;box-shadow:0 12px 24px rgba(112,82,50,0.08);">
-          <div style="background:rgba(253, 244, 230, 0.65);padding:8px 10px;font-size:12px;font-weight:600;color:#4b3b2a;">Article Content Types</div>
+          <div style="background:rgba(253, 244, 230, 0.65);padding:8px 10px;font-size:12px;font-weight:600;color:#4b3b2a;">Article Configuration</div>
           <div>${rows}</div>
         </div>
       `;
@@ -9820,18 +10856,22 @@ const __fallbackThemeCSS = `
       syncNewOrderArticleContentState();
     }
 
-    function handleArticleContentTypeChange(index, value) {
+    function handleArticleFieldChange(index, field, value) {
       if (!newOrderArticleContentState[index]) {
         return;
       }
 
       const nextValue = (value || '').trim();
-      newOrderArticleContentState[index].contentType = nextValue || DEFAULT_ARTICLE_CONTENT_TYPE;
-      renderArticleContentTypeConfigurator();
+      if (field === 'contentType') {
+         newOrderArticleContentState[index].contentType = nextValue || DEFAULT_ARTICLE_CONTENT_TYPE;
+      } else {
+         newOrderArticleContentState[index][field] = nextValue;
+      }
     }
 
     window.handleNewOrderArticlesInput = handleNewOrderArticlesInput;
-    window.handleArticleContentTypeChange = handleArticleContentTypeChange;
+    window.handleArticleFieldChange = handleArticleFieldChange;
+    window.handleArticleContentTypeChange = (index, value) => handleArticleFieldChange(index, 'contentType', value);
 
     // Show new order modal as large side panel
     function showNewOrderModal() {
@@ -9949,40 +10989,6 @@ const __fallbackThemeCSS = `
 
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
               <div style="min-width: 0;">
-                <label style="display: block; font-weight: 600; margin-bottom: 4px; color: #4b3b2a; font-size: 12px;">Content Type</label>
-                <select name="contentType" style="width: 100%; box-sizing: border-box; padding: 8px 12px; border: 1px solid #ead7c2; border-radius: 6px; font-size: 13px; transition: border-color 0.2s ease;"
-      onfocus="this.style.borderColor='#c48b5a'" onblur="this.style.borderColor='#ead7c2'">
-                  <option value="">Select content type...</option>
-                  <option value="Packshot">Packshot</option>
-                  <option value="Product Group Shot (Transparent Background)">Product Group Shot (Transparent Background)</option>
-                  <option value="Product Group Shot (Miljø)">Product Group Shot (Miljø)</option>
-                  <option value="Model Shot (Transparent Background)">Model Shot (Transparent Background)</option>
-                  <option value="Model Shot (Miljø)">Model Shot (Miljø)</option>
-                  <option value="Detail Shot (Transparent Background)">Detail Shot (Transparent Background)</option>
-                  <option value="Detail Shot (Miljø)">Detail Shot (Miljø)</option>
-                  <option value="Premium (Transparent Background)">Premium (Transparent Background)</option>
-                </select>
-              </div>
-              <div style="min-width: 0;">
-                <label style="display: block; font-weight: 600; margin-bottom: 4px; color: #4b3b2a; font-size: 12px;">DAM Shot Type</label>
-                <select name="shotType" style="width: 100%; box-sizing: border-box; padding: 8px 12px; border: 1px solid #ead7c2; border-radius: 6px; font-size: 13px; transition: border-color 0.2s ease;"
-      onfocus="this.style.borderColor='#c48b5a'" onblur="this.style.borderColor='#ead7c2'">
-                  <option value="">Select shot type...</option>
-                  <option value="Front">Front</option>
-                  <option value="Front - Top">Front - Top</option>
-                  <option value="Front - Left Angle">Front - Left Angle</option>
-                  <option value="Front - Right Angle">Front - Right Angle</option>
-                  <option value="Left Side">Left Side</option>
-                  <option value="Right Side">Right Side</option>
-                  <option value="Back">Back</option>
-                  <option value="Top">Top</option>
-                  <option value="Bottom">Bottom</option>
-                </select>
-              </div>
-            </div>
-
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
-              <div style="min-width: 0;">
                 <label style="display: block; font-weight: 600; margin-bottom: 4px; color: #4b3b2a; font-size: 12px;">Deadline</label>
       <input name="deadline" type="date" required style="width: 100%; box-sizing: border-box; padding: 8px 12px; border: 1px solid #ead7c2; border-radius: 6px; font-size: 13px; transition: border-color 0.2s ease;"
         onfocus="this.style.borderColor='#c48b5a'" onblur="this.style.borderColor='#ead7c2'">
@@ -10001,35 +11007,38 @@ const __fallbackThemeCSS = `
                         onfocus="this.style.borderColor='#c48b5a'" onblur="this.style.borderColor='#ead7c2'"></textarea>
             </div>
 
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
-              <div style="min-width: 0;">
-                <label style="display: block; font-weight: 600; margin-bottom: 4px; color: #4b3b2a; font-size: 12px;">Photo Reference / Shooting Type</label>
-                <select name="photoReference" style="width: 100%; box-sizing: border-box; padding: 8px 12px; border: 1px solid #ead7c2; border-radius: 6px; font-size: 13px; transition: border-color 0.2s ease;"
-      onfocus="this.style.borderColor='#c48b5a'" onblur="this.style.borderColor='#ead7c2'">
-                  <option value="">Select photo reference...</option>
-                  ${PHOTO_REFERENCE_OPTIONS.map(option => `<option value="${option}">${option}</option>`).join('')}
-                </select>
-              </div>
-              <div style="min-width: 0;">
-                <label style="display: block; font-weight: 600; margin-bottom: 4px; color: #4b3b2a; font-size: 12px;">Activity</label>
-                <input name="activity" type="text" style="width: 100%; box-sizing: border-box; padding: 8px 12px; border: 1px solid #ead7c2; border-radius: 6px; font-size: 13px; transition: border-color 0.2s ease;" placeholder="e.g., Summer Campaign" autocomplete="off"
-      onfocus="this.style.borderColor='#c48b5a'" onblur="this.style.borderColor='#ead7c2'">
-              </div>
+            <div style="margin-bottom: 12px;">
+              <label style="display: block; font-weight: 600; margin-bottom: 4px; color: #4b3b2a; font-size: 12px;">Activity</label>
+              <input name="activity" type="text" style="width: 100%; box-sizing: border-box; padding: 8px 12px; border: 1px solid #ead7c2; border-radius: 6px; font-size: 13px; transition: border-color 0.2s ease;" placeholder="e.g., Summer Campaign" autocomplete="off"
+    onfocus="this.style.borderColor='#c48b5a'" onblur="this.style.borderColor='#ead7c2'">
             </div>
 
             <div style="margin-bottom: 16px;">
-              <label style="display: block; font-weight: 600; margin-bottom: 4px; color: #4b3b2a; font-size: 12px;">
-                <span style="display: flex; align-items: center; gap: 8px;">
-                  <span>Article Numbers (EAN/GTIN)</span>
-                  <span style="font-size: 16px;" title="Scan or enter multiple article numbers">📦</span>
-                </span>
-              </label>
-              <textarea id="newOrderArticles" name="articles" required rows="3" style="width: 100%; box-sizing: border-box; padding: 8px 12px; border: 1px solid #ead7c2; border-radius: 6px; font-size: 13px; resize: vertical; transition: border-color 0.2s ease; font-family: 'Courier New', monospace;" 
-                        placeholder="Scan or enter article numbers here (one per line)...&#10;Example:&#10;5901234567890&#10;5901234567891&#10;5901234567892"
-                        oninput="handleNewOrderArticlesInput()"
-                        onfocus="this.style.borderColor='#c48b5a'" onblur="this.style.borderColor='#ead7c2'"></textarea>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                <div>
+                  <label style="display: block; font-weight: 600; margin-bottom: 4px; color: #4b3b2a; font-size: 12px;">
+                    <span style="display: flex; align-items: center; gap: 8px;">
+                      <span>Article Numbers (EAN/GTIN)</span>
+                      <span style="font-size: 16px;" title="Scan or enter multiple article numbers">📦</span>
+                    </span>
+                  </label>
+                  <textarea id="newOrderArticles" name="articles" required rows="5" style="width: 100%; box-sizing: border-box; padding: 8px 12px; border: 1px solid #ead7c2; border-radius: 6px; font-size: 13px; resize: vertical; transition: border-color 0.2s ease; font-family: 'Courier New', monospace;" 
+                            placeholder="Scan or enter article numbers here (one per line)...&#10;Example:&#10;5901234567890&#10;5901234567891"
+                            oninput="handleNewOrderArticlesInput()"
+                            onfocus="this.style.borderColor='#c48b5a'" onblur="this.style.borderColor='#ead7c2'"></textarea>
+                </div>
+                <div>
+                  <label style="display: block; font-weight: 600; margin-bottom: 4px; color: #4b3b2a; font-size: 12px;">
+                    <span>Article Names (Optional)</span>
+                  </label>
+                  <textarea id="newOrderArticleNames" name="articleNames" rows="5" style="width: 100%; box-sizing: border-box; padding: 8px 12px; border: 1px solid #ead7c2; border-radius: 6px; font-size: 13px; resize: vertical; transition: border-color 0.2s ease; font-family: 'Courier New', monospace;" 
+                            placeholder="Enter article names here (one per line)...&#10;Example:&#10;Organic Coffee&#10;Green Tea"
+                            oninput="handleNewOrderArticlesInput()"
+                            onfocus="this.style.borderColor='#c48b5a'" onblur="this.style.borderColor='#ead7c2'"></textarea>
+                </div>
+              </div>
               <div style="margin-top: 4px; font-size: 11px; color: #6b5440;">
-                💡 Tip: You can scan barcodes directly into this field, or type article numbers manually (one per line)
+                💡 Tip: You can scan barcodes directly into the left field. Match names on the right line-by-line.
               </div>
               <div id="articleContentTypeConfigurator" style="margin-top: 12px;"></div>
             </div>
@@ -10104,9 +11113,14 @@ const __fallbackThemeCSS = `
       let articleEntries = Array.isArray(newOrderArticleContentState)
         ? newOrderArticleContentState.map((entry, index) => {
             const base = buildArticlePayloadFromRaw(entry.raw, index);
+            if (entry.articleName) {
+                base.name = entry.articleName;
+            }
             return {
               ...base,
               contentType: entry.contentType || DEFAULT_ARTICLE_CONTENT_TYPE,
+              combinedPhoto: entry.combinedPhoto || '',
+              shotType: entry.shotType || '',
               sourceLine: entry.raw
             };
           })
@@ -10123,6 +11137,8 @@ const __fallbackThemeCSS = `
           return {
             ...base,
             contentType: DEFAULT_ARTICLE_CONTENT_TYPE,
+            combinedPhoto: '',
+            shotType: '',
             sourceLine: line
           };
         });
@@ -10134,13 +11150,14 @@ const __fallbackThemeCSS = `
       }
 
       // Generate order number
-      const orderNumber = 'ORD-' + Date.now();
+      const orderNumber = window.generateNextOrderNumber();
 
       // Create new order object
       const newOrder = {
         orderNumber: orderNumber,
         title: formData.get('title'),
         contentType: formData.get('contentType'),
+        combinedPhoto: formData.get('combinedPhoto'),
         shotType: formData.get('shotType'),
         orderType: 'PO',
         method: formData.get('method'),
@@ -10594,9 +11611,13 @@ const __fallbackThemeCSS = `
         return;
       }
       
+      if (typeof LoadingSpinner !== 'undefined') {
+        LoadingSpinner.show('Processing with Runware AI...', 'Using Google Gemini Flash Image 2.5 model');
+      }
+      
       showToast('🚀 Processing with Runware API (Google Gemini Flash Image 2.5)...', 'info');
       
-      // Use existing AI processing function
+      // Use existing AI processing function - will handle LoadingSpinner.hide()
       window.processImageWithAI();
     }
 
@@ -10621,7 +11642,12 @@ const __fallbackThemeCSS = `
 
     // Test selected AI service (always Nano Banana/Runware)
     function testSelectedAIService() {
-      testRunwareConnection();
+      if (typeof Logger !== 'undefined' && Logger.isDebugMode()) {
+        testRunwareConnection();
+      } else {
+        console.warn('testSelectedAIService: Debug mode is disabled. Enable with Logger.enable() in console.');
+        showToast('⚠️ Debug mode disabled. Enable with Logger.enable() in console.', 'warning');
+      }
     }
 
     // Process content with selected AI service (always Nano Banana/Runware)
@@ -11079,7 +12105,8 @@ const __fallbackThemeCSS = `
       modal.className = 'order-details-modal';
       modal.style.cssText = 'position:fixed;inset:0;background:rgba(46,34,23,0.55);display:flex;align-items:center;justify-content:center;z-index:1000;padding:20px;';
 
-      const articlesMarkup = renderArticleCards(order.articles);
+      const normalizedArticles = normalizeArticles(order.articles);
+      const articlesMarkup = renderArticleCards(normalizedArticles);
       const articlesCount = Array.isArray(order.articles) ? order.articles.length : 0;
       const assignedOwner = order.photographer || 'Unassigned';
       const salesOrgLabel = order.salesOrg || 'Not set';
@@ -11198,7 +12225,7 @@ const __fallbackThemeCSS = `
           </div>
 
           <div style="padding:16px;border-radius:12px;background:rgba(249,250,251,0.8);border:1px solid rgba(196,139,90,0.2);">
-            <h3 style="margin:0 0 10px;font-size:14px;color:#3b2b1a;display:flex;align-items:center;gap:6px;font-weight:700;">📁 Uploaded Content</h3>
+            <h3 style="margin:0 0 10px;font-size:14px;color:#3b2b1a;display:flex;align-items:center;gap:6px;font-weight:700;">📁 Uploaded Content (${(order.uploadedContent || []).length})</h3>
             ${uploadFormMarkup}
             <div id="uploadedContent-${orderNumber}" style="max-height:200px;overflow-y:auto;">${uploadedContentMarkup}</div>
           </div>
@@ -11620,6 +12647,28 @@ const __fallbackThemeCSS = `
           `;
         };
 
+        const renderFileNameWithPreview = (fileName, uploadedAt, cloudinaryUrl) => {
+          if (!uploadedAt || uploadedAt === placeholderSpan) return fileName || placeholderSpan;
+          
+          const imageUrl = cloudinaryUrl || 'https://res.cloudinary.com/demo/image/upload/sample.jpg';
+          const tooltipId = 'preview-' + Math.random().toString(36).substr(2, 9);
+          
+          return `
+            <div style="position: relative; display: inline-block;" 
+                 onmouseenter="const el = document.getElementById('${tooltipId}'); if(el) el.style.display='block';" 
+                 onmouseleave="const el = document.getElementById('${tooltipId}'); if(el) el.style.display='none';">
+                <a href="${imageUrl}" target="_blank" style="color: #2563eb; text-decoration: underline; cursor: pointer;" onclick="event.stopPropagation();">
+                    ${fileName}
+                </a>
+                <div id="${tooltipId}" style="display: none; position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%); 
+                            z-index: 1000; background: white; padding: 4px; border: 1px solid #ccc; border-radius: 4px; 
+                            box-shadow: 0 4px 6px rgba(0,0,0,0.1); width: 200px; text-align: center; pointer-events: none;">
+                    <img src="${imageUrl}" style="max-width: 100%; height: auto; display: block; border-radius: 2px;" alt="Preview" />
+                </div>
+            </div>
+          `;
+        };
+
         const buildChildDetailsTable = (order, normalizedArticles) => {
           const childPanelStyle = isAuroraTheme
             ? 'background:linear-gradient(145deg, rgba(248, 251, 255, 0.9), rgba(218, 234, 255, 0.78));border:1px solid rgba(163, 201, 255, 0.45);border-radius:0 0 14px 14px;overflow:auto;max-height:220px;box-shadow:0 18px 38px rgba(43, 74, 120, 0.25);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);margin-top:-1px;'
@@ -11654,19 +12703,37 @@ const __fallbackThemeCSS = `
           }] : []);
 
           const isPhotoOrder = order.orderType === 'PO';
+          const isPhotoServiceOrder = order.orderType === 'PS';
 
           const rows = dataSource.length ? dataSource.map((article, index) => {
             const raw = article && typeof article.raw === 'object' ? article.raw : {};
             const imageRequestId = raw.imageRequestId || order.imageRequestId || placeholderSpan;
             const articleNumber = article.articleNumber || raw.articleNumber || order.articleNumber || placeholderSpan;
             const unitOfMeasure = raw.unitOfMeasure || raw.uom || raw.unit || order.unitOfMeasure || placeholderSpan;
-            const articleName = article.name || raw.articleName || order.articleName || placeholderSpan;
+            const articleNameValue = article.name || raw.articleName || order.articleName || placeholderSpan;
             const netContent = raw.netContent || raw.netWeight || raw.size || order.netContent || placeholderSpan;
             const purchaseGroupValue = raw.purchaseGroup ?? order.purchaseGroup;
             const purchaseGroup = formatPurchaseGroupDisplay(purchaseGroupValue);
-            const combinedPhoto = raw.combinedPhoto || article.combinedPhoto || placeholderSpan;
+            const combinedPhoto = raw.combinedPhoto || article.combinedPhoto || order.combinedPhoto || placeholderSpan;
             const fileName = raw.fileName || article.fileName || placeholderSpan;
+            const uploadedAt = raw.uploadedAt || article.uploadedAt || placeholderSpan;
+            const formattedUploadTime = uploadedAt !== placeholderSpan 
+              ? new Date(uploadedAt).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })
+              : placeholderSpan;
             const contentType = article.contentType || raw.contentType || placeholderSpan;
+            const photoGroup = article.photoGroup || raw.photoGroup || placeholderSpan;
+            const shotType = article.shotType || raw.shotType || placeholderSpan;
+            const cloudinaryUrl = raw.cloudinaryUrl || article.cloudinaryUrl || order.cloudinaryUrl || null;
+
+            const articleStatus = (article.status || raw.status || '').toString().trim();
+            const isRemovedFromCpt = /removed\s+in\s+cpt/i.test(articleStatus);
+            const removedBadge = isRemovedFromCpt
+              ? `<span style="margin-left:8px;background:rgba(239, 68, 68, 0.12);color:rgba(185, 28, 28, 0.9);border:1px solid rgba(239, 68, 68, 0.22);border-radius:999px;padding:2px 8px;font-size:10px;font-weight:700;white-space:nowrap;">🚫 Removed in CPT</span>`
+              : '';
+            const removedNameStyle = isRemovedFromCpt
+              ? 'opacity:0.62;text-decoration:line-through;text-decoration-thickness:1px;'
+              : '';
+            const articleName = `<span style="${removedNameStyle}">${articleNameValue || placeholderSpan}</span>${removedBadge}`;
 
             // Check for duplicates in combined photo values
             const allCombinedPhotos = dataSource.map(a => {
@@ -11685,18 +12752,21 @@ const __fallbackThemeCSS = `
               <tr>
                 ${!isPhotoOrder ? `<td style="padding:6px 10px;border-bottom:1px solid ${childCellBorder};font-size:11px;${childCellTextColor}${childCellBackground}">${imageRequestId || placeholderSpan}</td>` : ''}
                 <td style="padding:6px 10px;border-bottom:1px solid ${childCellBorder};font-size:11px;${childCellTextColor}${childCellBackground}">${articleNumber || placeholderSpan}</td>
-                <td style="padding:6px 10px;border-bottom:1px solid ${childCellBorder};font-size:11px;${childCellTextColor}${childCellBackground}">${unitOfMeasure || placeholderSpan}</td>
-                <td style="padding:6px 10px;border-bottom:1px solid ${childCellBorder};font-size:11px;${childCellTextColor}${childCellBackground}">${articleName || placeholderSpan}</td>
-                <td style="padding:6px 10px;border-bottom:1px solid ${childCellBorder};font-size:11px;${childCellTextColor}${childCellBackground}">${netContent || placeholderSpan}</td>
+                ${!isPhotoOrder ? `<td style="padding:6px 10px;border-bottom:1px solid ${childCellBorder};font-size:11px;${childCellTextColor}${childCellBackground}">${unitOfMeasure || placeholderSpan}</td>` : ''}
+                <td style="padding:6px 10px;border-bottom:1px solid ${childCellBorder};font-size:11px;${childCellTextColor}${childCellBackground}">${articleName}</td>
+                ${!isPhotoOrder ? `<td style="padding:6px 10px;border-bottom:1px solid ${childCellBorder};font-size:11px;${childCellTextColor}${childCellBackground}">${netContent || placeholderSpan}</td>` : ''}
                 <td style="padding:6px 10px;border-bottom:1px solid ${childCellBorder};font-size:11px;${childCellTextColor}${childCellBackground}">${purchaseGroup || placeholderSpan}</td>
-                <td style="padding:6px 10px;border-bottom:1px solid ${childCellBorder};font-size:11px;${childCellTextColor}${childCellBackground}">${contentType || placeholderSpan}</td>
-                <td style="padding:6px 10px;border-bottom:1px solid ${childCellBorder};font-size:11px;${childCellTextColor}${childCellBackground}${combinedPhotoStyle}">${combinedPhoto || placeholderSpan}</td>
-                <td style="padding:6px 10px;border-bottom:1px solid ${childCellBorder};font-size:11px;${childCellTextColor}${childCellBackground}">${fileName || placeholderSpan}</td>
+                ${isPhotoServiceOrder ? `<td style="padding:6px 10px;border-bottom:1px solid ${childCellBorder};font-size:11px;${childCellTextColor}${childCellBackground}">${photoGroup || placeholderSpan}</td>` : ''}
+                ${!isPhotoServiceOrder ? `<td style="padding:6px 10px;border-bottom:1px solid ${childCellBorder};font-size:11px;${childCellTextColor}${childCellBackground}">${contentType || placeholderSpan}</td>` : ''}
+                ${!isPhotoServiceOrder ? `<td style="padding:6px 10px;border-bottom:1px solid ${childCellBorder};font-size:11px;${childCellTextColor}${childCellBackground}${combinedPhotoStyle}">${combinedPhoto || placeholderSpan}</td>` : ''}
+                ${isPhotoOrder ? `<td style="padding:6px 10px;border-bottom:1px solid ${childCellBorder};font-size:11px;${childCellTextColor}${childCellBackground}">${shotType}</td>` : ''}
+                ${!isPhotoServiceOrder ? `<td style="padding:6px 10px;border-bottom:1px solid ${childCellBorder};font-size:11px;${childCellTextColor}${childCellBackground}">${renderFileNameWithPreview(fileName, uploadedAt, cloudinaryUrl)}</td>` : ''}
+                ${!isPhotoServiceOrder ? `<td style="padding:6px 10px;border-bottom:1px solid ${childCellBorder};font-size:11px;${childCellTextColor}${childCellBackground}">${formattedUploadTime}</td>` : ''}
               </tr>
             `;
           }).join('') : `
             <tr>
-              <td colspan="${isPhotoOrder ? 8 : 9}" style="padding:12px;color:#9ca3af;text-align:center;border-bottom:1px solid rgba(196, 139, 90, 0.2);">No article details available for this order.</td>
+              <td colspan="12" style="padding:12px;color:#9ca3af;text-align:center;border-bottom:1px solid rgba(196, 139, 90, 0.2);">No article details available for this order.</td>
             </tr>
           `;
 
@@ -11707,13 +12777,16 @@ const __fallbackThemeCSS = `
                   <tr>
                     ${!isPhotoOrder ? `<th style="text-align:left;padding:8px 10px;font-size:11px;color:${isAuroraTheme || isGlassTheme ? 'rgba(20, 34, 60, 0.9)' : '#6b5440'};font-weight:600;">Image Request ID</th>` : ''}
                     <th style="text-align:left;padding:8px 10px;font-size:11px;color:${isAuroraTheme || isGlassTheme ? 'rgba(20, 34, 60, 0.9)' : '#6b5440'};font-weight:600;">Article Number</th>
-                    <th style="text-align:left;padding:8px 10px;font-size:11px;color:${isAuroraTheme || isGlassTheme ? 'rgba(20, 34, 60, 0.9)' : '#6b5440'};font-weight:600;">Unit of Measure</th>
+                    ${!isPhotoOrder ? `<th style="text-align:left;padding:8px 10px;font-size:11px;color:${isAuroraTheme || isGlassTheme ? 'rgba(20, 34, 60, 0.9)' : '#6b5440'};font-weight:600;">Unit of Measure</th>` : ''}
                     <th style="text-align:left;padding:8px 10px;font-size:11px;color:${isAuroraTheme || isGlassTheme ? 'rgba(20, 34, 60, 0.9)' : '#6b5440'};font-weight:600;">Article Name</th>
-                    <th style="text-align:left;padding:8px 10px;font-size:11px;color:${isAuroraTheme || isGlassTheme ? 'rgba(20, 34, 60, 0.9)' : '#6b5440'};font-weight:600;">Net Content</th>
+                    ${!isPhotoOrder ? `<th style="text-align:left;padding:8px 10px;font-size:11px;color:${isAuroraTheme || isGlassTheme ? 'rgba(20, 34, 60, 0.9)' : '#6b5440'};font-weight:600;">Net Content</th>` : ''}
                     <th style="text-align:left;padding:8px 10px;font-size:11px;color:${isAuroraTheme || isGlassTheme ? 'rgba(20, 34, 60, 0.9)' : '#6b5440'};font-weight:600;">Purchase Group</th>
-                    <th style="text-align:left;padding:8px 10px;font-size:11px;color:${isAuroraTheme || isGlassTheme ? 'rgba(20, 34, 60, 0.9)' : '#6b5440'};font-weight:600;">Content Type</th>
-                    <th style="text-align:left;padding:8px 10px;font-size:11px;color:${isAuroraTheme || isGlassTheme ? 'rgba(20, 34, 60, 0.9)' : '#6b5440'};font-weight:600;">Combined Photo</th>
-                    <th style="text-align:left;padding:8px 10px;font-size:11px;color:${isAuroraTheme || isGlassTheme ? 'rgba(20, 34, 60, 0.9)' : '#6b5440'};font-weight:600;">File Name</th>
+                    ${isPhotoServiceOrder ? `<th style="text-align:left;padding:8px 10px;font-size:11px;color:${isAuroraTheme || isGlassTheme ? 'rgba(20, 34, 60, 0.9)' : '#6b5440'};font-weight:600;">Photo Group</th>` : ''}
+                    ${!isPhotoServiceOrder ? `<th style="text-align:left;padding:8px 10px;font-size:11px;color:${isAuroraTheme || isGlassTheme ? 'rgba(20, 34, 60, 0.9)' : '#6b5440'};font-weight:600;">Content Type</th>` : ''}
+                    ${!isPhotoServiceOrder ? `<th style="text-align:left;padding:8px 10px;font-size:11px;color:${isAuroraTheme || isGlassTheme ? 'rgba(20, 34, 60, 0.9)' : '#6b5440'};font-weight:600;">Combined Photo</th>` : ''}
+                    ${isPhotoOrder ? `<th style="text-align:left;padding:8px 10px;font-size:11px;color:${isAuroraTheme || isGlassTheme ? 'rgba(20, 34, 60, 0.9)' : '#6b5440'};font-weight:600;">DAM Shot Type</th>` : ''}
+                    ${!isPhotoServiceOrder ? `<th style="text-align:left;padding:8px 10px;font-size:11px;color:${isAuroraTheme || isGlassTheme ? 'rgba(20, 34, 60, 0.9)' : '#6b5440'};font-weight:600;">File Name</th>` : ''}
+                    ${!isPhotoServiceOrder ? `<th style="text-align:left;padding:8px 10px;font-size:11px;color:${isAuroraTheme || isGlassTheme ? 'rgba(20, 34, 60, 0.9)' : '#6b5440'};font-weight:600;">Upload Time</th>` : ''}
                   </tr>
                 </thead>
                 <tbody>
@@ -11793,17 +12866,23 @@ const __fallbackThemeCSS = `
             </td>
             <td style="padding:6px 8px;${baseCellTextColor}font-size:12px;"><strong>${o.orderNumber}</strong></td>
             <td style="padding:6px 8px;${baseCellTextColor}font-size:12px;">${activityDisplay}</td>
-            <td style="padding:6px 8px;${baseCellTextColor}font-size:12px;">${pageDisplay}</td>
-            <td style="padding:6px 8px;${baseCellTextColor}font-size:12px;">${offerId}</td>
-            <td style="padding:6px 8px;${baseCellTextColor}font-size:12px;">${groupDisplay}</td>
+            <td style="padding:6px 8px;${baseCellTextColor}font-size:12px;">${o.orderType === 'PO' ? '' : pageDisplay}</td>
+            <td style="padding:6px 8px;${baseCellTextColor}font-size:12px;">${o.orderType === 'PO' ? '' : offerId}</td>
+            <td style="padding:6px 8px;${baseCellTextColor}font-size:12px;">${o.orderType === 'PO' ? '' : groupDisplay}</td>
             <td style="padding:6px 8px;${baseCellTextColor}font-size:12px;">${costCenterDisplay}</td>
             <td style="padding:6px 8px;${baseCellTextColor}font-size:12px;">${orderTypeDisplay}</td>
-            <td style="padding:6px 8px;${baseCellTextColor}min-width:150px;font-size:12px;">${offerName}</td>
+            <td style="padding:6px 8px;${baseCellTextColor}min-width:150px;font-size:12px;">${o.orderType === 'PO' ? '' : offerName}</td>
             <td style="padding:6px 8px;${baseCellTextColor}font-size:12px;">${shotType}</td>
             <td style="padding:6px 8px;${baseCellTextColor}font-size:12px;">${photoRef}</td>
             <td style="padding:6px 8px;${baseCellTextColor}font-size:12px;">${productionInfo}</td>
-            <td style="padding:6px 8px;${baseCellTextColor}font-size:12px;">${principle}</td>
-            <td style="padding:6px 8px;${baseCellTextColor}font-size:12px;">${previewCell}</td>
+            <td style="padding:6px 8px;${baseCellTextColor}font-size:12px;">${o.orderType === 'PO' ? '' : principle}</td>
+            <td style="padding:6px 8px;${baseCellTextColor}font-size:12px;">${o.orderType === 'PO' ? '' : renderFileNameWithPreview(o.fileName || 'SG_' + Math.floor(Math.random() * 900000 + 100000), o.uploadedAt, o.cloudinaryUrl)}</td>
+            <td style="padding:6px 8px;${baseCellTextColor}font-size:12px;">
+              ${o.orderType === 'PO' ? '' : (o.uploadedAt 
+                ? new Date(o.uploadedAt).toLocaleString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }).replace(',', '')
+                : `<span style="color:#2563eb;cursor:pointer;text-decoration:underline;" onclick="event.stopPropagation(); window.showMassUploadModal()">Ready for Upload</span>`)
+              }
+            </td>
             <td style="padding:4px 6px;text-align: center; ${baseCellTextColor}">
               <button onclick="event.stopPropagation(); window.commentSystem && window.commentSystem.showCommentsModal('${o.orderNumber}')" 
                 style="${commentButtonStyle}">
@@ -11811,10 +12890,10 @@ const __fallbackThemeCSS = `
                 ${unreadComments > 0 ? `<span style="${unreadBadgeStyle}">${unreadComments}</span>` : ''}
               </button>
             </td>
-            <td style="padding:6px 8px;"><span class="status ${o.status.replace(/\s+/g, '')}">${o.status || 'Unknown'}</span></td>
             <td style="padding:6px 8px;text-align:center;" title="${o.brief ? o.brief.substring(0, 150) + (o.brief.length > 150 ? '...' : '') : 'No briefing available'}">
               ${o.brief ? '<span style="color:#10b981;font-size:18px;cursor:help;">📋</span>' : '<span style="color:#d1d5db;font-size:18px;">—</span>'}
             </td>
+            <td style="padding:6px 8px;"><span class="status ${o.status.replace(/\s+/g, '')}">${o.status || 'Unknown'}</span></td>
             <td style="padding:6px 8px;${deadlineStyle} font-size:12px;">${o.deadline || placeholderSpan}${isOverdue ? ' ⚠️' : ''}</td>
           </tr>
           ${articleDetailsRow}`;
@@ -13106,16 +14185,18 @@ const __fallbackThemeCSS = `
 
               const nextUploadedContent = [...existingContent, record];
               order.uploadedContent = nextUploadedContent;
+              order.uploadedAt = timestamp; // Update order level upload timestamp
 
               if (store && typeof store.patch === 'function') {
-                store.patch(order.orderNumber, { uploadedContent: nextUploadedContent });
+                store.patch(order.orderNumber, { uploadedContent: nextUploadedContent, uploadedAt: timestamp });
               } else if (Array.isArray(window.rkhOrders)) {
                 const windowOrderIndex = window.rkhOrders.findIndex((item) => String(item?.orderNumber) === String(order.orderNumber));
                 if (windowOrderIndex !== -1) {
                   const currentOrder = window.rkhOrders[windowOrderIndex] || {};
                   window.rkhOrders[windowOrderIndex] = {
                     ...currentOrder,
-                    uploadedContent: nextUploadedContent
+                    uploadedContent: nextUploadedContent,
+                    uploadedAt: timestamp
                   };
                 }
               }
@@ -14487,12 +15568,26 @@ const __fallbackThemeCSS = `
       // Parse headers
       const headers = lines[0].split(',').map(h => h.trim().replace(/"/g, ''));
       
-      // Required headers
-      const requiredHeaders = ['Title', 'Method', 'Priority', 'Deadline', 'Brief', 'Articles', 'Deliverables', 'Photographer'];
-      const missingHeaders = requiredHeaders.filter(req => !headers.some(h => h.toLowerCase() === req.toLowerCase()));
-      
-      if (missingHeaders.length > 0) {
-        throw new Error(`Missing required headers: ${missingHeaders.join(', ')}`);
+      const normalizedHeaders = headers.map(h => (h || '').toLowerCase());
+
+      const hasHeader = (candidates) =>
+        candidates.some(candidate => normalizedHeaders.includes(candidate.toLowerCase()));
+
+      const isCptStyleImport =
+        hasHeader(['Image Request ID', 'ImageRequestId', 'imageRequestId']) &&
+        hasHeader(['Offer ID', 'OfferId', 'offerId']) &&
+        (hasHeader(['Article Number', 'ArticleNumber', 'articleNumber']) ||
+          hasHeader(['Article Name', 'ArticleName', 'articleName']) ||
+          hasHeader(['Articles']));
+
+      // Required headers for legacy manual import
+      const legacyRequiredHeaders = ['Title', 'Method', 'Priority', 'Deadline', 'Brief', 'Articles', 'Deliverables', 'Photographer'];
+
+      if (!isCptStyleImport) {
+        const missingHeaders = legacyRequiredHeaders.filter(req => !headers.some(h => h.toLowerCase() === req.toLowerCase()));
+        if (missingHeaders.length > 0) {
+          throw new Error(`Missing required headers: ${missingHeaders.join(', ')}`);
+        }
       }
       
       // Parse data rows
@@ -14588,13 +15683,282 @@ const __fallbackThemeCSS = `
         return;
       }
       
+      if (typeof LoadingSpinner !== 'undefined') {
+        LoadingSpinner.show('Importing orders...', 'Processing CSV data');
+      }
+      
       const { data } = currentImportData;
       let importedCount = 0;
       let errors = [];
+
+      const getRowValue = (row, candidates) => {
+        if (!row || typeof row !== 'object') return '';
+        for (const key of candidates) {
+          if (Object.prototype.hasOwnProperty.call(row, key) && row[key] !== undefined && row[key] !== null) {
+            return String(row[key]).trim();
+          }
+          // fallback: match case-insensitively
+          const matchKey = Object.keys(row).find(k => (k || '').toLowerCase() === key.toLowerCase());
+          if (matchKey && row[matchKey] !== undefined && row[matchKey] !== null) {
+            return String(row[matchKey]).trim();
+          }
+        }
+        return '';
+      };
+
+      const parseArticlesField = (value) => {
+        if (!value) return [];
+        return String(value)
+          .split(';')
+          .map(v => v.trim())
+          .filter(Boolean)
+          .map((name) => ({ name, articleName: name }));
+      };
+
+      const normalizeArticleKey = (article) => {
+        if (!article) return '';
+        if (typeof article === 'string') {
+          return article.trim().toLowerCase();
+        }
+
+        const articleNumber = (article.articleNumber || article.articleNo || '').toString().trim();
+        if (articleNumber) return `an:${articleNumber.toLowerCase()}`;
+
+        const ean = (article.ean || article.EAN || article.barcode || article.gtin || '').toString().replace(/\s+/g, '').trim();
+        if (ean) return `ean:${ean.toLowerCase()}`;
+
+        const name = (article.name || article.articleName || article.title || '').toString().trim();
+        if (name) return `name:${name.toLowerCase()}`;
+
+        return '';
+      };
+
+      const coerceExistingArticleObject = (payload) => {
+        if (!payload) return null;
+        if (typeof payload === 'string') {
+          const name = payload.trim();
+          if (!name) return null;
+          return { name, articleName: name };
+        }
+        if (typeof payload === 'object' && !Array.isArray(payload)) {
+          return { ...payload };
+        }
+        return null;
+      };
+
+      const mergeCptArticles = (existingOrder, incomingArticles, nowIso) => {
+        const prevList = Array.isArray(existingOrder?.articles)
+          ? existingOrder.articles.map(coerceExistingArticleObject).filter(Boolean)
+          : [];
+
+        const nextMap = new Map();
+        (Array.isArray(incomingArticles) ? incomingArticles : []).forEach((article) => {
+          const key = normalizeArticleKey(article);
+          if (!key) return;
+          nextMap.set(key, { ...article });
+        });
+
+        const merged = [];
+        const seen = new Set();
+
+        // Keep existing entries; mark missing as removed
+        prevList.forEach((prev) => {
+          const key = normalizeArticleKey(prev);
+          if (!key || seen.has(key)) return;
+          seen.add(key);
+
+          if (nextMap.has(key)) {
+            const next = nextMap.get(key);
+            nextMap.delete(key);
+            const nextStatus = (next.status || '').toString().trim();
+            const prevStatus = (prev.status || '').toString().trim();
+            const wasRemoved = /removed\s+in\s+cpt/i.test(prevStatus);
+            merged.push({
+              ...prev,
+              ...next,
+              status: nextStatus || (wasRemoved ? '' : prevStatus),
+              removedFromOffer: false,
+              removedAt: null,
+            });
+          } else {
+            merged.push({
+              ...prev,
+              status: 'Removed in CPT',
+              removedFromOffer: true,
+              removedAt: prev.removedAt || nowIso,
+            });
+          }
+        });
+
+        // Append any new CPT articles
+        for (const [key, next] of nextMap.entries()) {
+          if (!key || seen.has(key)) continue;
+          seen.add(key);
+          merged.push({
+            ...next,
+            status: (next.status || '').toString().trim(),
+            removedFromOffer: false,
+            removedAt: null,
+          });
+        }
+
+        // Stable: active first, removed last
+        const active = merged.filter(a => !/removed\s+in\s+cpt/i.test(String(a.status || '')));
+        const removed = merged.filter(a => /removed\s+in\s+cpt/i.test(String(a.status || '')));
+        return [...active, ...removed];
+      };
+
+      const rowLooksLikeCpt = (row) => {
+        const offerId = getRowValue(row, ['Offer ID', 'OfferId', 'offerId']);
+        const imageRequestId = getRowValue(row, ['Image Request ID', 'ImageRequestId', 'imageRequestId']);
+        return Boolean(offerId && imageRequestId);
+      };
       
       try {
+        const nowIso = new Date().toISOString();
+
+        // CPT-style import: group by offerId + imageRequestId => one Photo Service order per unique Image Request
+        const cptRows = data.filter(rowLooksLikeCpt);
+        const legacyRows = data.filter(row => !rowLooksLikeCpt(row));
+
+        if (cptRows.length) {
+          const grouped = new Map();
+
+          cptRows.forEach((row) => {
+            const offerId = getRowValue(row, ['Offer ID', 'OfferId', 'offerId']);
+            const offerName = getRowValue(row, ['Offer Name', 'OfferName', 'offerName', 'Title']);
+            const rawImageRequestId = getRowValue(row, ['Image Request ID', 'ImageRequestId', 'imageRequestId']);
+            const normalizedIr = (typeof formatImageRequestId === 'function')
+              ? formatImageRequestId(rawImageRequestId)
+              : (rawImageRequestId || '').trim();
+
+            const groupKey = `${offerId}::${normalizedIr}`;
+
+            const articleName = getRowValue(row, ['Article Name', 'ArticleName', 'articleName']);
+            const articleNumber = getRowValue(row, ['Article Number', 'ArticleNumber', 'articleNumber']);
+            const ean = getRowValue(row, ['EAN', 'ean', 'Barcode', 'barcode', 'GTIN', 'gtin']);
+            const variant = getRowValue(row, ['Variant', 'variant', 'Variant Name', 'variantName']);
+            const quantity = getRowValue(row, ['Qty', 'Quantity', 'quantity']);
+            const unitOfMeasure = getRowValue(row, ['Unit of Measure', 'UnitOfMeasure', 'unitOfMeasure', 'UoM', 'uom', 'Unit']);
+            const netContent = getRowValue(row, ['Net Content', 'NetContent', 'netContent', 'Net Weight', 'netWeight', 'Size', 'size']);
+            const purchaseGroup = getRowValue(row, ['Purchase Group', 'PurchaseGroup', 'purchaseGroup']);
+            const photoGroup = getRowValue(row, ['Photo Group', 'PhotoGroup', 'photoGroup']);
+            const status = getRowValue(row, ['Status', 'status']);
+
+            const articlesFromField = parseArticlesField(getRowValue(row, ['Articles', 'articles']));
+            const rowArticle = (articleName || articleNumber || ean)
+              ? [{
+                  name: articleName || '',
+                  articleName: articleName || '',
+                  articleNumber: articleNumber || '',
+                  ean: ean || '',
+                  variant: variant || '',
+                  quantity: quantity || '',
+                  unitOfMeasure: unitOfMeasure || '',
+                  netContent: netContent || '',
+                  purchaseGroup: purchaseGroup || '',
+                  photoGroup: photoGroup || '',
+                  imageRequestId: normalizedIr,
+                  status: status || '',
+                }]
+              : articlesFromField.map(a => ({ ...a, imageRequestId: normalizedIr }));
+
+            const entry = grouped.get(groupKey) || {
+              offerId,
+              offerName,
+              imageRequestId: normalizedIr,
+              baseRow: row,
+              articles: [],
+            };
+
+            entry.offerName = entry.offerName || offerName;
+            entry.articles.push(...rowArticle);
+            grouped.set(groupKey, entry);
+          });
+
+          for (const [, group] of grouped.entries()) {
+            const existing = allOrders.find(o =>
+              o && o.orderType === 'PS' &&
+              String(o.offerId || '').trim() === String(group.offerId || '').trim() &&
+              String(o.imageRequestId || o.orderNumber || '').trim() === String(group.imageRequestId || '').trim()
+            );
+
+            const orderNumber = group.imageRequestId;
+            const title = group.offerName || `Photo Service (Offer ${group.offerId})`;
+            const productionMethod = getRowValue(group.baseRow, ['Method', 'method']) || 'Photographer';
+            const deadline = validateDate(getRowValue(group.baseRow, ['Deadline', 'deadline'])) || new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+            const priority = validatePriority(getRowValue(group.baseRow, ['Priority', 'priority'])) || 'Medium';
+            const brief = getRowValue(group.baseRow, ['Brief', 'brief']) || 'Imported from CPT';
+
+            if (existing) {
+              existing.title = title;
+              existing.method = productionMethod;
+              existing.production = productionMethod;
+              existing.productionMethod = productionMethod;
+              existing.deadline = deadline;
+              existing.priority = priority;
+              existing.brief = brief;
+              existing.offerName = group.offerName || existing.offerName;
+              existing.offerId = group.offerId || existing.offerId;
+              existing.imageRequestId = group.imageRequestId;
+              existing.updatedAt = nowIso;
+              existing.articles = mergeCptArticles(existing, group.articles, nowIso);
+              importedCount++;
+            } else {
+              const newOrder = {
+                orderNumber,
+                title,
+                status: 'Order Created',
+                orderType: 'PS',
+                method: productionMethod,
+                production: productionMethod,
+                productionMethod: productionMethod,
+                photographer: getRowValue(group.baseRow, ['Photographer', 'photographer']) || 'Unassigned',
+                assignedTo: getRowValue(group.baseRow, ['Photographer', 'photographer'])
+                  ? authSystem.getUserIdByName(getRowValue(group.baseRow, ['Photographer', 'photographer']))
+                  : null,
+                deadline,
+                costCenter: getRowValue(group.baseRow, ['Cost Center', 'CostCenter', 'costCenter']) || 'CC-CPT',
+                priority,
+                brief,
+                articles: group.articles,
+                budget: null,
+                deliverables: parseArticlesField(getRowValue(group.baseRow, ['Deliverables', 'deliverables'])).map(a => a.name),
+                salesOrg: getRowValue(group.baseRow, ['Sales Org', 'SalesOrg', 'salesOrg']) ? normalizeFilterValue(getRowValue(group.baseRow, ['Sales Org', 'SalesOrg', 'salesOrg'])) : null,
+                eventId: getRowValue(group.baseRow, ['Event ID', 'EventId', 'eventId']) || '',
+                purchaseGroup: getRowValue(group.baseRow, ['Purchase Group', 'PurchaseGroup', 'purchaseGroup']) || (authSystem.getCurrentUser().purchaseGroups ? authSystem.getCurrentUser().purchaseGroups[0] : 100),
+                offerId: group.offerId,
+                offerName: group.offerName,
+                photoReference: getRowValue(group.baseRow, ['Photo Reference', 'PhotoReference', 'photoReference']) || null,
+                imageRequestId: group.imageRequestId,
+                photoStatus: getRowValue(group.baseRow, ['Photo Status', 'PhotoStatus', 'photoStatus']) || 'New Request',
+                cloudinaryUrl: null,
+                createdBy: authSystem.getCurrentUser().id,
+                createdAt: nowIso,
+                updatedAt: nowIso,
+                comments: [],
+                uploadedContent: [],
+              };
+
+              assignSalesOrgToOrder(newOrder, allOrders.length + importedCount);
+              ensureOrderPhotoMetadata([newOrder]);
+              allOrders.unshift(newOrder);
+              importedCount++;
+            }
+          }
+
+          if (typeof window.markDataRefreshed === 'function') {
+            window.markDataRefreshed('CPT import');
+          }
+        }
+
+        // Legacy import (non-CPT rows) remains supported
         for (let i = 0; i < data.length; i++) {
           const row = data[i];
+
+          if (rowLooksLikeCpt(row)) {
+            continue;
+          }
           
           // Validate required fields
           if (!row.Title || !row.Title.trim()) {
@@ -14652,6 +16016,10 @@ const __fallbackThemeCSS = `
         // Close modal
         document.getElementById('excelImportModal').remove();
         
+        if (typeof LoadingSpinner !== 'undefined') {
+          LoadingSpinner.hide();
+        }
+        
         // Update global orders and refresh view
     assignSalesOrgMetadata(allOrders);
     window.rkhOrders = allOrders;
@@ -14677,6 +16045,9 @@ const __fallbackThemeCSS = `
         showToast(message, 'success');
         
       } catch (error) {
+        if (typeof LoadingSpinner !== 'undefined') {
+          LoadingSpinner.hide();
+        }
         document.getElementById('validationMessage').textContent = 'Error processing data: ' + error.message;
         console.error('Import error:', error);
       }
@@ -15709,35 +17080,40 @@ const __fallbackThemeCSS = `
     };
 
     window.testTemplateRule = function() {
-      const triggerType = document.getElementById('triggerTypeInput').value;
-      const operator = document.getElementById('triggerOperatorInput').value;
-      const triggerValue = document.getElementById('triggerValueInput').value.trim().toLowerCase();
-      const photoTypes = Array.from(document.querySelectorAll('.photoTypeCheckbox:checked')).map(cb => cb.value);
-      
-      if (!triggerValue || photoTypes.length === 0) {
-        alert('Please enter a trigger value and select photo types to test');
-        return;
-      }
-      
-      // Test with sample data
-      const testSamples = [
-        { category: 'electronics', article: 'PHONE-IPHONE15', supplier: 'APPLE' },
-        { category: 'clothing', article: 'SHIRT-COTTON-BLU', supplier: 'FASHION' },
-        { category: 'home-decor', article: 'LAMP-TABLE-LED', supplier: 'DECOR' }
-      ];
-      
-      const matches = testSamples.filter(sample => {
-        let testValue = '';
-        switch(triggerType) {
-          case 'category': testValue = sample.category; break;
-          case 'keyword': testValue = sample.article; break;
-          case 'supplier': testValue = sample.supplier; break;
+      if (typeof Logger !== 'undefined' && Logger.isDebugMode()) {
+        const triggerType = document.getElementById('triggerTypeInput').value;
+        const operator = document.getElementById('triggerOperatorInput').value;
+        const triggerValue = document.getElementById('triggerValueInput').value.trim().toLowerCase();
+        const photoTypes = Array.from(document.querySelectorAll('.photoTypeCheckbox:checked')).map(cb => cb.value);
+        
+        if (!triggerValue || photoTypes.length === 0) {
+          alert('Please enter a trigger value and select photo types to test');
+          return;
         }
         
-        return window.matchesRule(testValue.toLowerCase(), operator, triggerValue);
-      });
-      
-      alert(`Test Results:\nTrigger: ${triggerType} ${operator} "${triggerValue}"\nMatches: ${matches.length} out of ${testSamples.length} samples\nWould include: ${photoTypes.join(', ')}`);
+        // Test with sample data
+        const testSamples = [
+          { category: 'electronics', article: 'PHONE-IPHONE15', supplier: 'APPLE' },
+          { category: 'clothing', article: 'SHIRT-COTTON-BLU', supplier: 'FASHION' },
+          { category: 'home-decor', article: 'LAMP-TABLE-LED', supplier: 'DECOR' }
+        ];
+        
+        const matches = testSamples.filter(sample => {
+          let testValue = '';
+          switch(triggerType) {
+            case 'category': testValue = sample.category; break;
+            case 'keyword': testValue = sample.article; break;
+            case 'supplier': testValue = sample.supplier; break;
+          }
+          
+          return window.matchesRule(testValue.toLowerCase(), operator, triggerValue);
+        });
+        
+        alert(`Test Results:\nTrigger: ${triggerType} ${operator} "${triggerValue}"\nMatches: ${matches.length} out of ${testSamples.length} samples\nWould include: ${photoTypes.join(', ')}`);
+      } else {
+        console.warn('testTemplateRule: Debug mode is disabled. Enable with Logger.enable() in console.');
+        alert('⚠️ Debug mode disabled. Enable with Logger.enable() in console to test template rules.');
+      }
     };
 
     window.matchesRule = function(testValue, operator, triggerValue) {
@@ -17869,7 +19245,7 @@ const __fallbackThemeCSS = `
         : (Array.isArray(window.rkhOrders) ? window.rkhOrders : []);
 
       const newOrder = {
-        orderNumber: 'ORD-' + Date.now(),
+        orderNumber: window.generateNextOrderNumber(),
         title: formData.get('title'),
         priority: formData.get('priority') || 'Medium',
         method: formData.get('method'),
@@ -17888,8 +19264,9 @@ const __fallbackThemeCSS = `
         tactic: formData.get('tactic') || null,  // Capture Tactic from form
         offerId: '10' + Math.floor(Math.random() * 900000 + 100000),
         articleNumber: 'ART-' + Date.now().toString().slice(-6),
-  photoReference: selectedPhotoReference || null,
-  imageRequestId: rawImageRequestInput,
+        fileName: 'SG_' + Math.floor(Math.random() * 900000 + 100000), // Generate SG_XXXXXX filename
+        photoReference: selectedPhotoReference || null,
+        imageRequestId: rawImageRequestInput,
         photoStatus: 'New',
         articles: processArticlesWithTemplate(formData.get('articles'), formData.get('template')),
         deliverables: ['Product Photography'],
@@ -19726,6 +21103,63 @@ const __fallbackThemeCSS = `
   }
 }
 
+  // Migration: Add Photo Group to Photo Service orders
+  (function migratePhotoServiceOrders() {
+    try {
+      if (typeof localStorage === 'undefined') return;
+      
+      const ordersJson = localStorage.getItem('orders');
+      if (!ordersJson) return;
+      
+      const orders = JSON.parse(ordersJson);
+      let updated = false;
+      
+      orders.forEach(order => {
+        if (order.orderType === 'PS' && Array.isArray(order.articles)) {
+          // We need to map the articles to ensure we capture the changes
+          order.articles = order.articles.map(article => {
+            const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            const randomLetter = letters[Math.floor(Math.random() * letters.length)];
+            const photoGroupValue = `Model ${randomLetter}`;
+
+            if (typeof article === 'string') {
+               // Convert string to object to support photoGroup
+               const eanMatch = article.match(/\[EAN:\s*(\d+)\]/);
+               const name = article.replace(/\[EAN:\s*\d+\]/, '').trim();
+               updated = true;
+               return {
+                 name: name,
+                 articleNumber: eanMatch ? eanMatch[1] : '',
+                 photoGroup: photoGroupValue,
+                 unitOfMeasure: 'EA',
+                 fileName: `ENV.${Math.floor(Math.random() * 100000).toString().padStart(6, '0')}.jpg`
+               };
+            } else if (typeof article === 'object' && article !== null) {
+               if (!article.photoGroup) {
+                 article.photoGroup = photoGroupValue;
+                 updated = true;
+               }
+               return article;
+            }
+            return article;
+          });
+        }
+      });
+      
+      if (updated) {
+        localStorage.setItem('orders', JSON.stringify(orders));
+        console.log('[Migration] Updated Photo Service orders with Photo Group data (including string conversions)');
+        
+        // Force a re-render if possible
+        if (typeof window.drawOrderRows === 'function') {
+            setTimeout(window.drawOrderRows, 100);
+        }
+      }
+    } catch (e) {
+      console.error('[Migration] Failed to migrate Photo Service orders', e);
+    }
+  })();
+
 })(); // End of IIFE
 
 // ============================================================================
@@ -19752,6 +21186,24 @@ const __fallbackThemeCSS = `
     console.error('[Post-IIFE] ❌ WebSocket not initialized by IIFE');
   }
 })();
+
+// ============================================================================
+// Global Test Function Assignments (Conditional on Debug Mode)
+// ============================================================================
+// Centralized assignment to avoid duplicate definitions throughout the file
+if (typeof Logger !== 'undefined' && Logger.isDebugMode()) {
+  window.testGoogleAIConnection = testGoogleAIConnection;
+  window.testRunwareConnection = () => testGoogleAIConnection();
+} else {
+  window.testGoogleAIConnection = () => {
+    console.warn('⚠️ Test functions disabled. Enable with: Logger.enable()');
+    showToast && showToast('⚠️ Debug mode disabled. Enable with Logger.enable() in console.', 'warning');
+  };
+  window.testRunwareConnection = () => {
+    console.warn('⚠️ Test functions disabled. Enable with: Logger.enable()');
+    showToast && showToast('⚠️ Debug mode disabled. Enable with Logger.enable() in console.', 'warning');
+  };
+}
 
 // Run in browser console:
 configureGoogleAI("your-api-key-here")

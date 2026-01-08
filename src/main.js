@@ -45,14 +45,18 @@ class PhotoOrderApp {
     const explicitUrl = process.env.CCP_RENDERER_URL || process.env.VITE_DEV_SERVER_URL;
 
     if (explicitUrl) {
-      console.log('[Renderer] Loading from explicit URL:', explicitUrl);
+      if (this.isDev) {
+        console.log('[Renderer] Loading from explicit URL:', explicitUrl);
+      }
       return { type: 'url', value: explicitUrl };
     }
 
     const distIndexPath = path.join(__dirname, '../dist/renderer/index.html');
 
     if (fs.existsSync(distIndexPath)) {
-      console.log('[Renderer] Loading bundled renderer from dist/renderer/index.html');
+      if (this.isDev) {
+        console.log('[Renderer] Loading bundled renderer from dist/renderer/index.html');
+      }
       return { type: 'file', value: distIndexPath };
     }
 
@@ -61,7 +65,9 @@ class PhotoOrderApp {
       return { type: 'url', value: 'http://localhost:8080' };
     }
 
-    console.log('[Renderer] Falling back to legacy index.html');
+    if (this.isDev) {
+      console.log('[Renderer] Falling back to legacy index.html');
+    }
     return { type: 'file', value: path.join(__dirname, '../index.html') };
   }
 
@@ -71,8 +77,8 @@ class PhotoOrderApp {
     }
     
     autoUpdater.on('checking-for-update', () => {
-      if (this.canCheckForUpdates()) {
-        console.log('Checking for update...');
+      if (this.canCheckForUpdates() && this.isDev) {
+        console.log('[Auto-Updater] Checking for update...');
       }
     });
     
@@ -80,27 +86,28 @@ class PhotoOrderApp {
       if (!this.canCheckForUpdates()) {
         return;
       }
-      console.log('Update available:', info.version);
+      console.log('[Auto-Updater] Update available:', info.version);
       this.showUpdateNotification('update-available', info);
     });
     
     autoUpdater.on('update-not-available', (info) => {
-      if (this.canCheckForUpdates()) {
-        console.log('Update not available');
+      if (this.canCheckForUpdates() && this.isDev) {
+        console.log('[Auto-Updater] Update not available');
       }
     });
     
     autoUpdater.on('error', (err) => {
       if (this.canCheckForUpdates()) {
-        console.log('Error in auto-updater:', err);
+        console.error('[Auto-Updater] Error:', err.message);
       }
     });
     
     autoUpdater.on('download-progress', (progressObj) => {
-      let log_message = "Download speed: " + progressObj.bytesPerSecond;
-      log_message = log_message + ' - Downloaded ' + progressObj.percent + '%';
-      log_message = log_message + ' (' + progressObj.transferred + "/" + progressObj.total + ')';
-      console.log(log_message);
+      if (!this.isDev) {
+        return; // Don't log in production
+      }
+      const percent = Math.round(progressObj.percent);
+      console.log(`[Auto-Updater] Download progress: ${percent}% (${progressObj.transferred}/${progressObj.total})`);
       
       if (this.mainWindow) {
         this.mainWindow.webContents.send('download-progress', progressObj);
@@ -108,7 +115,7 @@ class PhotoOrderApp {
     });
     
     autoUpdater.on('update-downloaded', (info) => {
-      console.log('Update downloaded:', info.version);
+      console.log('[Auto-Updater] Update downloaded:', info.version);
       this.showUpdateNotification('update-downloaded', info);
     });
   }
@@ -271,14 +278,16 @@ class PhotoOrderApp {
 
       // Start server
       this.localServer = app.listen(port, () => {
-        console.log(`Local server running on port ${port}`);
+        if (this.isDev) {
+          console.log(`[Local Server] Running on port ${port}`);
+        }
         
         // Setup WebSocket server for real-time updates
         this.setupWebSocketServer(port + 1);
       });
 
       this.localServer.on('error', (error) => {
-        console.error(`Local server error on port ${port}:`, error);
+        console.error(`[Local Server] Error on port ${port}:`, error.message);
       });
     }
   }
@@ -287,7 +296,9 @@ class PhotoOrderApp {
     this.wsServer = new WebSocket.Server({ port });
     
     this.wsServer.on('connection', (ws) => {
-      console.log('WebSocket client connected');
+      if (this.isDev) {
+        console.log('[WebSocket] Client connected');
+      }
       
       ws.send(JSON.stringify({
         type: 'welcome',
@@ -299,17 +310,19 @@ class PhotoOrderApp {
           const data = JSON.parse(message);
           this.handleWebSocketMessage(ws, data);
         } catch (error) {
-          console.error('WebSocket message error:', error);
+          console.error('[WebSocket] Message error:', error.message);
         }
       });
       
       ws.on('close', () => {
-        console.log('WebSocket client disconnected');
+        if (this.isDev) {
+          console.log('[WebSocket] Client disconnected');
+        }
       });
     });
 
     this.wsServer.on('error', (error) => {
-      console.error(`WebSocket server error on port ${port}:`, error);
+      console.error(`[WebSocket] Server error on port ${port}:`, error.message);
     });
   }
 
@@ -323,7 +336,9 @@ class PhotoOrderApp {
         this.broadcastToClients({ type: 'order-updated', data: data.payload });
         break;
       default:
-        console.log('Unknown WebSocket message type:', data.type);
+        if (this.isDev) {
+          console.log('[WebSocket] Unknown message type:', data.type);
+        }
     }
   }
 
@@ -348,7 +363,7 @@ class PhotoOrderApp {
     };
 
     const isValidFilePath = (filePath) => {
-      if (!filePath || typeof filePath !== 'string') return false;
+      if (!filePath || typeof filePath !== 'string') {return false;}
       const normalized = path.normalize(filePath);
       const resolved = path.resolve(app.getPath('userData'), normalized);
       return resolved.startsWith(app.getPath('userData'));
@@ -764,7 +779,7 @@ class PhotoOrderApp {
   }
 
   showUpdateNotification(type, info) {
-    if (!this.mainWindow) return;
+    if (!this.mainWindow) {return;}
 
     const options = {
       type: 'info',

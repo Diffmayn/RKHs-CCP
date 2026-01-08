@@ -6,10 +6,27 @@ const ROOT_DIR = __dirname;
 const PORT = 8080;
 
 const server = http.createServer((req, res) => {
-    // Add CORS headers for cross-origin access
-    res.setHeader('Access-Control-Allow-Origin', '*');
+    // Secure CORS headers - only allow localhost origins
+    const origin = req.headers.origin;
+    const allowedOrigins = [
+        'http://localhost:8080',
+        'http://127.0.0.1:8080',
+        'http://localhost:5173', // Vite dev server
+        'http://127.0.0.1:5173'
+    ];
+    
+    if (allowedOrigins.includes(origin)) {
+        res.setHeader('Access-Control-Allow-Origin', origin);
+    }
+    
     res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    
+    // Security headers
+    res.setHeader('X-Content-Type-Options', 'nosniff');
+    res.setHeader('X-Frame-Options', 'DENY');
+    res.setHeader('X-XSS-Protection', '1; mode=block');
+    res.setHeader('Content-Security-Policy', "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' wss://ws-api.runware.ai https://generativelanguage.googleapis.com");
     
     // Handle preflight requests
     if (req.method === 'OPTIONS') {
@@ -75,6 +92,7 @@ const server = http.createServer((req, res) => {
             // Read and serve the file
             fs.readFile(filePath, (readErr, data) => {
                 if (readErr) {
+                    console.error('File read error:', readErr.message, 'Path:', filePath);
                     res.writeHead(500, { 'Content-Type': 'text/plain' });
                     res.end('500 Internal Server Error');
                     return;
@@ -86,6 +104,7 @@ const server = http.createServer((req, res) => {
         });
         
     } catch (error) {
+        console.error('Request handling error:', error.message, 'URL:', req.url);
         res.writeHead(400, { 'Content-Type': 'text/plain' });
         res.end('400 Bad Request - Invalid path');
     }

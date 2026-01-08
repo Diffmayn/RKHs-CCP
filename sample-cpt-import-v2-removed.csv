@@ -1,0 +1,3 @@
+Offer ID,Offer Name,Image Request ID,Article Number,Article Name,EAN,Photo Group,Purchase Group,Deadline,Method,Priority,Brief
+10761234,Winter Promo Offer,IR123456,ART-1001,Wool Blanket Blue,5700000000001,Textile,500,2025-12-24,Photographer,Medium,Second CPT import (ART-1002 removed from offer)
+10761234,Winter Promo Offer,IR123457,ART-2001,Cotton Pillowcase,5700000000003,Home,400,2025-12-24,Photographer,Medium,Second CPT import (unchanged)

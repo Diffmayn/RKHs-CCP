@@ -131,7 +131,7 @@ const EVENT_ID_CONFIG = {
   
   // Display formatting
   displayFormat: (eventId) => {
-    if (!eventId) return 'No Event';
+    if (!eventId) {return 'No Event';}
     
     // Extract components for readable display
     const week = eventId.substring(1, 3);
@@ -240,9 +240,9 @@ function getTacticTypeColor(tacticType) {
  * @returns {string} Formatted display string
  */
 function formatTacticHierarchy(tacticType, tactic) {
-  if (!tacticType && !tactic) return 'No Tactic Assigned';
-  if (tacticType && !tactic) return tacticType;
-  if (!tacticType && tactic) return tactic;
+  if (!tacticType && !tactic) {return 'No Tactic Assigned';}
+  if (tacticType && !tactic) {return tacticType;}
+  if (!tacticType && tactic) {return tactic;}
   return `${tacticType} → ${tactic}`;
 }
 
@@ -263,10 +263,10 @@ function isIntegratedOrder(order) {
  * @returns {string} Badge text
  */
 function getIntegrationBadge(order) {
-  if (!order.eventId) return null;
+  if (!order.eventId) {return null;}
   
-  if (order.offerId) return '🔗 CPT Integrated';
-  if (order.imageRequestId) return '🔗 PMR Integrated';
+  if (order.offerId) {return '🔗 CPT Integrated';}
+  if (order.imageRequestId) {return '🔗 PMR Integrated';}
   
   return '📋 Event Assigned';
 }

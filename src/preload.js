@@ -109,7 +109,9 @@ const storageHandlers = {
     try {
       return JSON.parse(localValue);
     } catch (error) {
-      console.warn('Failed to parse stored value for key', key, error);
+      if (process.env.NODE_ENV === 'development') {
+        console.warn('[Storage] Failed to parse stored value for key', key, error);
+      }
       return localValue;
     }
   },
@@ -262,4 +264,7 @@ contextBridge.exposeInMainWorld('appLifecycle', {
   }
 });
 
-console.log('Preload script initialized successfully');
+// Only log in development
+if (process.env.NODE_ENV === 'development') {
+  console.log('[Preload] Script initialized successfully');
+}

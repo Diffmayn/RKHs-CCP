@@ -159,13 +159,25 @@
           console.warn('[Fallback] Activating fallback runtime.');
           updateLoadingProgress('Loading application...');
           
-          try { 
-            // Use script tag for better file:// protocol compatibility
-            const script = document.createElement('script');
-            script.src = './fallback-bundle.js';
-            script.onload = () => {
-              console.log('[Fallback] Script loaded successfully');
-              updateLoadingProgress('Initializing...');
+          try {
+            // Load Logger utility first (for conditional logging)
+            const loggerScript = document.createElement('script');
+            loggerScript.src = './src/logger.js';
+            loggerScript.onload = () => {
+              console.log('[Logger] Conditional logging system loaded');
+              
+              // Load loading spinner component
+              const loadingScript = document.createElement('script');
+              loadingScript.src = './src/loading-spinner.js';
+              loadingScript.onload = () => {
+                console.log('[Loading] Loading spinner component loaded');
+                
+                // Now load the main application bundle
+                const script = document.createElement('script');
+                script.src = './fallback-bundle.js';
+                script.onload = () => {
+                  console.log('[Fallback] Script loaded successfully');
+                  updateLoadingProgress('Initializing...');
               
               // Load Tactics configuration first (needed for Event ID/Tactic features)
               setTimeout(() => {
@@ -202,12 +214,46 @@
                   updateLoadingProgress('Ready');
                 }
               }, 100);
+              };
+              script.onerror = (e) => {
+                console.error('[Fallback] Script failed to load:', e);
+                updateLoadingProgress('Error: Failed to load application. Please check console for details.', true);
+              };
+              document.head.appendChild(script);
             };
-            script.onerror = (e) => {
-              console.error('[Fallback] Script failed to load:', e);
-              updateLoadingProgress('Error: Failed to load application. Please check console for details.', true);
+            loadingScript.onerror = (e) => {
+              console.warn('[Loading] Loading spinner failed to load (non-critical):', e);
+              // Continue without loading spinner
+              const script = document.createElement('script');
+              script.src = './fallback-bundle.js';
+              script.onload = () => {
+                console.log('[Fallback] Script loaded successfully');
+                updateLoadingProgress('Initializing...');
+              };
+              script.onerror = (e2) => {
+                console.error('[Fallback] Script failed to load:', e2);
+                updateLoadingProgress('Error: Failed to load application.', true);
+              };
+              document.head.appendChild(script);
+            };
+            document.head.appendChild(loadingScript);
+          };
+          loggerScript.onerror = (e) => {
+            console.warn('[Logger] Logger failed to load (non-critical):', e);
+            // Continue without logger
+            const script = document.createElement('script');
+            script.src = './fallback-bundle.js';
+            script.onload = () => {
+              console.log('[Fallback] Script loaded successfully (without logger)');
+              updateLoadingProgress('Initializing...');
+            };
+            script.onerror = (e2) => {
+              console.error('[Fallback] Script failed to load:', e2);
+              updateLoadingProgress('Error: Failed to load application.', true);
             };
             document.head.appendChild(script);
+          };
+          document.head.appendChild(loggerScript);
           } catch(e){ 
             console.error('[Fallback] Load failed with exception:', e);
             updateLoadingProgress('Error: Application failed to start. Please refresh the page.', true);

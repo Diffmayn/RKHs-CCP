@@ -1,0 +1,23 @@
+# Dependencies
+node_modules/
+package-lock.json
+
+# Build outputs
+dist/
+build/
+out/
+
+# Large bundles
+fallback-bundle.js
+orig-fallback.js
+*.min.js
+
+# Logs
+*.log
+
+# Documentation
+*.md
+
+# Config files we want to preserve exactly
+.vscode/
+.git/
