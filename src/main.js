@@ -250,9 +250,16 @@ class PhotoOrderApp {
 
       app.use(cors(corsOptions));
       
-      // Serve static files
-      app.use(express.static(path.join(__dirname, '..')));
+      // Serve static files — restricted to safe directories only
+      app.use(express.static(path.join(__dirname, '../public')));
+      app.use(express.static(path.join(__dirname, '../dist')));
       app.use('/assets', express.static(path.join(__dirname, '../assets')));
+      // Serve root-level files needed by index.html with restricted options
+      app.use(express.static(path.join(__dirname, '..'), {
+        index: false,
+        dotfiles: 'deny',
+        extensions: ['html', 'js', 'css', 'png', 'jpg', 'svg', 'ico', 'json']
+      }));
       
       // API endpoints
       app.get('/api/health', (req, res) => {
@@ -501,7 +508,7 @@ class PhotoOrderApp {
             return { success: false, error: 'Cannot write to system directory' };
           }
           
-          fs.writeFileSync(filePath, data, { mode: 0o644 }); // Read/write for owner only
+          fs.writeFileSync(filePath, data, { mode: 0o600 }); // Read/write for owner only
           return { success: true, path: filePath };
         }
         return { success: false, cancelled: true };

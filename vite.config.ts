@@ -4,6 +4,7 @@ import fs from "fs";
 
 export default defineConfig({
   root: path.resolve(__dirname, "src/renderer"),
+  publicDir: path.resolve(__dirname, "public"),
   build: {
     outDir: path.resolve(__dirname, "dist/renderer"),
     emptyOutDir: true,
@@ -25,6 +26,22 @@ export default defineConfig({
   plugins: [
     {
       name: "copy-legacy-assets",
+      configureServer(server) {
+        // Serve root-level files needed by the renderer during dev
+        // (fallback-bundle.js was previously in public/ — now only at root)
+        const rootServedFiles = ['/fallback-bundle.js', '/configure_gemini_aq.js'];
+        server.middlewares.use((req: any, res: any, next: any) => {
+          if (rootServedFiles.includes(req.url?.split('?')[0])) {
+            const filePath = path.resolve(__dirname, req.url.split('?')[0].slice(1));
+            if (fs.existsSync(filePath)) {
+              res.setHeader('Content-Type', 'application/javascript');
+              fs.createReadStream(filePath).pipe(res);
+              return;
+            }
+          }
+          next();
+        });
+      },
       closeBundle() {
         const projectRoot = __dirname;
         const distRoot = path.resolve(projectRoot, "dist");

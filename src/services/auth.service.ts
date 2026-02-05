@@ -157,6 +157,12 @@ export class AuthService {
 
 	private currentUser: AuthUser | null = null;
 
+	private loginAttempts: Map<string, { count: number; lastAttempt: number }> = new Map();
+
+	private readonly maxLoginAttempts = 5;
+
+	private readonly lockoutDuration = 15 * 60 * 1000; // 15 minutes
+
 	constructor(options: AuthServiceOptions = {}) {
 		this.storage = options.storage ?? createDefaultStorage();
 		this.logger = {
@@ -213,18 +219,46 @@ export class AuthService {
 		return this.testUsers[key];
 	}
 
-	login(username: string, password: string): boolean {
+	login(username: string, password: string): { success: boolean; error?: string } {
+		const normalizedUsername = username.trim().toLowerCase();
+		
+		// Check rate limiting
+		const attempts = this.loginAttempts.get(normalizedUsername);
+		if (attempts) {
+			const timeSinceLastAttempt = Date.now() - attempts.lastAttempt;
+			if (attempts.count >= this.maxLoginAttempts && timeSinceLastAttempt < this.lockoutDuration) {
+				const remainingTime = Math.ceil((this.lockoutDuration - timeSinceLastAttempt) / 60000);
+				this.logger.warn("Account locked due to too many failed attempts", normalizedUsername);
+				return { success: false, error: `Account locked. Try again in ${remainingTime} minutes.` };
+			}
+			if (timeSinceLastAttempt >= this.lockoutDuration) {
+				this.loginAttempts.delete(normalizedUsername);
+			}
+		}
+
 		const record = this.resolveUserRecord(username);
 		if (!record) {
-			return false;
+			this.recordFailedAttempt(normalizedUsername);
+			return { success: false, error: "Invalid username or password" };
 		}
 
 		if (record.password !== password) {
-			return false;
+			this.recordFailedAttempt(normalizedUsername);
+			return { success: false, error: "Invalid username or password" };
 		}
 
+		// Clear failed attempts on successful login
+		this.loginAttempts.delete(normalizedUsername);
 		this.setCurrentUser({ ...record.user });
-		return true;
+		return { success: true };
+	}
+
+	private recordFailedAttempt(username: string): void {
+		const attempts = this.loginAttempts.get(username) ?? { count: 0, lastAttempt: 0 };
+		this.loginAttempts.set(username, {
+			count: attempts.count + 1,
+			lastAttempt: Date.now(),
+		});
 	}
 
 	logout() {
@@ -383,5 +417,8 @@ export class AuthService {
 		return null;
 	}
 }
+
+// Singleton instance
+export const authService = new AuthService();
 
 export type { AuthUser, PhotoOrder } from "../types";

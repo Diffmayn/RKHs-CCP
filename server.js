@@ -3,9 +3,48 @@ const fs = require('fs');
 const path = require('path');
 
 const ROOT_DIR = __dirname;
-const PORT = 8080;
+const PORT = process.env.PORT || 8080;
+
+// Simple rate limiting
+const requestCounts = new Map();
+const RATE_LIMIT_WINDOW = 60000; // 1 minute
+const MAX_REQUESTS_PER_WINDOW = 200;
+
+const checkRateLimit = (ip) => {
+    const now = Date.now();
+    const record = requestCounts.get(ip) || { count: 0, resetTime: now + RATE_LIMIT_WINDOW };
+    
+    if (now > record.resetTime) {
+        record.count = 1;
+        record.resetTime = now + RATE_LIMIT_WINDOW;
+    } else {
+        record.count++;
+    }
+    
+    requestCounts.set(ip, record);
+    return record.count <= MAX_REQUESTS_PER_WINDOW;
+};
+
+// Cleanup old rate limit entries every 5 minutes
+setInterval(() => {
+    const now = Date.now();
+    for (const [ip, record] of requestCounts.entries()) {
+        if (now > record.resetTime) {
+            requestCounts.delete(ip);
+        }
+    }
+}, 5 * 60 * 1000);
 
 const server = http.createServer((req, res) => {
+    const clientIp = req.socket.remoteAddress || 'unknown';
+    
+    // Rate limiting check
+    if (!checkRateLimit(clientIp)) {
+        res.writeHead(429, { 'Content-Type': 'text/plain' });
+        res.end('429 Too Many Requests');
+        return;
+    }
+
     // Secure CORS headers - only allow localhost origins
     const origin = req.headers.origin;
     const allowedOrigins = [
@@ -26,7 +65,9 @@ const server = http.createServer((req, res) => {
     res.setHeader('X-Content-Type-Options', 'nosniff');
     res.setHeader('X-Frame-Options', 'DENY');
     res.setHeader('X-XSS-Protection', '1; mode=block');
-    res.setHeader('Content-Security-Policy', "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' wss://ws-api.runware.ai https://generativelanguage.googleapis.com");
+    res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+    res.setHeader('Permissions-Policy', 'geolocation=(), microphone=(), camera=()');
+    res.setHeader('Content-Security-Policy', "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' wss://ws-api.runware.ai https://generativelanguage.googleapis.com");
     
     // Handle preflight requests
     if (req.method === 'OPTIONS') {

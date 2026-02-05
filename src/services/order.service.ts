@@ -4,8 +4,14 @@ import type {
 	PhotoOrder,
 } from "../types";
 
-const sanitizeString = (value: unknown): string =>
-	typeof value === "string" ? value.trim() : "";
+const sanitizeString = (value: unknown): string => {
+	if (typeof value !== "string") return "";
+	// Basic XSS prevention - strip potentially dangerous characters
+	return value
+		.trim()
+		.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "")
+		.replace(/javascript:/gi, "");
+};
 
 const coerceQuantity = (value: unknown): number | string | "" => {
 	if (value === null || value === undefined || value === "") {
@@ -38,6 +44,9 @@ const coerceArticleInput = (
 	combinedPhoto: sanitizeString(input.combinedPhoto),
 	fileName: sanitizeString(input.fileName),
 	contentType: sanitizeString(input.contentType),
+	sku: sanitizeString(input.sku),
+	description: sanitizeString(input.description),
+	category: sanitizeString(input.category),
 });
 
 export const PURCHASE_GROUPS: Record<number, string> = {
@@ -254,8 +263,11 @@ export class OrderStore {
 
 	private readonly listeners = new Set<OrderStoreListener>();
 
-	constructor(initialOrders: PhotoOrder[] = []) {
+	private readonly maxOrders: number;
+
+	constructor(initialOrders: PhotoOrder[] = [], maxOrders = 10000) {
 		this.orders = [...initialOrders];
+		this.maxOrders = maxOrders;
 	}
 
 	getAll(): PhotoOrder[] {
@@ -267,16 +279,26 @@ export class OrderStore {
 		this.emit();
 	}
 
-	upsert(order: PhotoOrder): void {
+	upsert(order: PhotoOrder): boolean {
+		if (!order?.orderNumber) {
+			console.warn("[OrderStore] Cannot upsert order without orderNumber");
+			return false;
+		}
+
 		const index = this.orders.findIndex((item) => item.orderNumber === order.orderNumber);
 
 		if (index >= 0) {
 			this.orders[index] = { ...this.orders[index], ...order };
 		} else {
+			if (this.orders.length >= this.maxOrders) {
+				console.warn(`[OrderStore] Max orders limit (${this.maxOrders}) reached`);
+				return false;
+			}
 			this.orders.push(order);
 		}
 
 		this.emit();
+		return true;
 	}
 
 	patch(orderNumber: string, next: Partial<PhotoOrder>): PhotoOrder | null {

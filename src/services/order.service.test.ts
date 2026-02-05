@@ -99,7 +99,8 @@ describe('Order Service', () => {
     });
 
     it('should add new order', () => {
-      store.upsert(mockOrder);
+      const result = store.upsert(mockOrder);
+      expect(result).toBe(true);
       expect(store.getAll()).toHaveLength(1);
       expect(store.getAll()[0].orderNumber).toBe('ORD-001');
     });
@@ -112,12 +113,25 @@ describe('Order Service', () => {
       expect(store.getAll()[0].title).toBe('Updated Title');
     });
 
+    it('should reject order without orderNumber', () => {
+      const invalidOrder = { title: 'No Order Number' } as PhotoOrder;
+      const result = store.upsert(invalidOrder);
+      
+      expect(result).toBe(false);
+      expect(store.getAll()).toHaveLength(0);
+    });
+
     it('should find order by number', () => {
       store.upsert(mockOrder);
       const found = store.findByOrderNumber('ORD-001');
       
       expect(found).not.toBeNull();
       expect(found?.title).toBe('Test Order');
+    });
+
+    it('should return null for non-existent order', () => {
+      const found = store.findByOrderNumber('NON-EXISTENT');
+      expect(found).toBeNull();
     });
 
     it('should remove order', () => {
@@ -128,6 +142,11 @@ describe('Order Service', () => {
       expect(store.getAll()).toHaveLength(0);
     });
 
+    it('should return false when removing non-existent order', () => {
+      const removed = store.remove('NON-EXISTENT');
+      expect(removed).toBe(false);
+    });
+
     it('should notify listeners on changes', () => {
       const listener = jest.fn();
       store.subscribe(listener);
@@ -135,6 +154,29 @@ describe('Order Service', () => {
       store.upsert(mockOrder);
       
       expect(listener).toHaveBeenCalledWith([mockOrder]);
+    });
+
+    it('should unsubscribe listeners', () => {
+      const listener = jest.fn();
+      const unsubscribe = store.subscribe(listener);
+      
+      unsubscribe();
+      store.upsert(mockOrder);
+      
+      expect(listener).not.toHaveBeenCalled();
+    });
+
+    it('should patch order', () => {
+      store.upsert(mockOrder);
+      const patched = store.patch('ORD-001', { status: 'completed' });
+      
+      expect(patched).not.toBeNull();
+      expect(patched?.status).toBe('completed');
+    });
+
+    it('should return null when patching non-existent order', () => {
+      const patched = store.patch('NON-EXISTENT', { status: 'completed' });
+      expect(patched).toBeNull();
     });
   });
 });

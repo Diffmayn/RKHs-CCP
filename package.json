@@ -140,8 +140,7 @@
     "cors": "^2.8.5",
     "ws": "^8.14.2",
     "archiver": "^6.0.1",
-    "uuid": "^9.0.1",
-    "moment": "^2.29.4"
+    "uuid": "^9.0.1"
   },
   "devDependencies": {
     "@types/node": "^20.12.7",

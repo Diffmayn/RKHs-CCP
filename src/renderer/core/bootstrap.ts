@@ -5,6 +5,8 @@ import { initializeElectronBridge } from "@runtime/electronBridge";
 import { applyCitrixOptimizations } from "@runtime/citrixOptimizations";
 import { loadFallbackRuntime } from "@runtime/fallbackLoader";
 import { createLoadingController } from "@ui/loadingScreen";
+import { initializeContextMenu } from "@ui/contextMenu";
+import "@ui/contextMenu.css";
 
 export const bootstrap = async () => {
   configureGlobalErrorHandling();
@@ -25,6 +27,10 @@ export const bootstrap = async () => {
   }
 
   await loadFallbackRuntime(loading, environment);
+
+  // Initialize context menu for right-click access to features
+  initializeContextMenu();
+  logger.info("Context menu initialized");
 
   logger.info("Renderer bootstrap complete");
 };

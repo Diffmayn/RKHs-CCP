@@ -6,10 +6,12 @@
   <title>RKH's Content Creation Program</title>
   
   <!-- Enhanced favicon for desktop app -->
-  <link rel="icon" type="image/png" href="./CCP Logog.png">
+  <link rel="icon" type="image/png" href="./CCP-Logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="dns-prefetch" href="https://generativelanguage.googleapis.com">
   
   <!-- Electron & Citrix optimizations -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' 'unsafe-eval' data: blob: https:; img-src 'self' data: blob: https:; media-src 'self' data: blob:; script-src 'self' 'unsafe-inline' 'unsafe-eval'; connect-src 'self' https: wss: ws:;">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' data: blob: https:; img-src 'self' data: blob: https:; media-src 'self' data: blob:; script-src 'self' 'unsafe-inline'; connect-src 'self' https: wss: ws:;">
   <meta name="application-name" content="RKH's Content Creation Program">
   <meta name="msapplication-TileColor" content="#2563eb">
   <meta name="theme-color" content="#2563eb">
@@ -51,14 +53,14 @@
 <body class="h-full m-0 p-0">
 
 
-  <div id="loading-screen" class="fixed inset-0 bg-white z-50 flex items-center justify-center" style="display: none;">
+  <div id="loading-screen" class="fixed inset-0 bg-white z-50 flex items-center justify-center" style="display: none;" role="status" aria-live="polite" aria-label="Loading application">
     <div class="text-center">
       <div class="relative">
-        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-        <div class="absolute inset-0 rounded-full h-12 w-12 border-t-2 border-blue-300 mx-auto animate-pulse"></div>
+        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto" aria-hidden="true"></div>
+        <div class="absolute inset-0 rounded-full h-12 w-12 border-t-2 border-blue-300 mx-auto animate-pulse" aria-hidden="true"></div>
       </div>
       <p class="mt-4 text-gray-600 font-medium">Loading Content Creation Program...</p>
-      <div class="mt-2 text-xs text-gray-400" id="loading-progress">Initializing...</div>
+      <div class="mt-2 text-xs text-gray-400" id="loading-progress" aria-live="polite">Initializing...</div>
       
       <!-- Desktop-specific loading info -->
       <div id="desktop-loading-info" class="hidden mt-4 text-xs text-gray-500 space-y-1">

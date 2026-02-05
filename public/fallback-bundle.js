@@ -9,15 +9,6 @@ console.log('[FALLBACK-BUNDLE] 🚀 FILE IS LOADING... Updated: ' + new Date().t
   
   // Global feature flags
   var featureFlags = (typeof window !== 'undefined' && window.featureFlags) ? window.featureFlags : {};
-
-  // Unified order type normalisation utility
-  function normalizeOrderType(value) {
-    const normalized = String(value || '').trim().toLowerCase();
-    if (normalized === 'po' || normalized === 'photo order') return 'PO';
-    if (normalized === 'ps' || normalized === 'photo service') return 'PS';
-    return value || '';
-  }
-  if (typeof window !== 'undefined') window.normalizeOrderType = normalizeOrderType;
   featureFlags.gpt5CodexPreview = false;
   featureFlags.gpt5CodexRollout = 'preview';
   featureFlags.gpt5CodexAudience = 'all-clients';
@@ -3121,7 +3112,7 @@ const __fallbackThemeCSS = `
 
           <div id="loginError" style="margin-bottom: 24px; padding: 12px; background: #fef2f2; border: 1px solid #fecaca; border-radius: 8px; color: #dc2626; display: none;"></div>
 
-          ${(typeof Logger !== 'undefined' && Logger.isDebugMode && Logger.isDebugMode()) ? `<div style="padding-top: 24px; border-top: 1px solid rgba(196, 139, 90, 0.2);">
+          <div style="padding-top: 24px; border-top: 1px solid rgba(196, 139, 90, 0.2);">
             <p style="margin: 0 0 16px 0; font-size: 14px; color: #6b5440; text-align: center; font-weight: 600; letter-spacing: 0.3px;">Test Credentials - Click to use:</p>
             <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; font-size: 12px;">
               <div style="background: #fff6ea; padding: 12px; border-radius: 8px; cursor: pointer; border: 1px solid rgba(196, 139, 90, 0.2); transition: all 0.15s;" 
@@ -3174,7 +3165,7 @@ const __fallbackThemeCSS = `
               </div>
             </div>
             <p style="margin: 16px 0 0 0; font-size: 11px; color: #9ca3af; text-align: center;">Each role has different permissions and access levels</p>
-          </div>` : ''}
+          </div>
         </div>
       </div>
     `;
@@ -3348,7 +3339,7 @@ const __fallbackThemeCSS = `
         return productImageDataUrls[baseFileName];
       }
       // Fallback to file path
-      return `/images/products/${baseFileName}.svg`;
+      return `/images/products/${baseFileName}.jpg`;
     }
     // Check for other image file extensions
     if (fileName.match(/\.(jpg|jpeg|png|gif|svg|webp)$/i)) {
@@ -4164,12 +4155,12 @@ const __fallbackThemeCSS = `
     }
 
     orders.forEach((order, index) => {
-      if (normalizeOrderType(order.orderType) === 'PS') {
+      if (order.orderType === 'PS') {
         order.costCenter = '';
       }
 
       // Skip Image Request ID generation for Photo Orders (PO)
-      if (normalizeOrderType(order.orderType) === 'PO') {
+      if (order.orderType === 'PO') {
         order.imageRequestId = '';
         order.photoReference = '';
         order.photoRef = '';
@@ -10295,9 +10286,11 @@ const __fallbackThemeCSS = `
       if (!headerRow) return;
 
       const headers = Array.from(headerRow.children);
-      const normalizedOrderType = normalizeOrderType(orderFilters.orderType || '');
-      const hideForPhotoService = normalizedOrderType === 'PS';
-      const hideForPhotoOrder = normalizedOrderType === 'PO';
+      const normalizedOrderType = typeof normalizeComparisonValue === 'function'
+        ? normalizeComparisonValue(orderFilters.orderType || '')
+        : normalizeFilterValue(orderFilters.orderType || '');
+      const hideForPhotoService = normalizedOrderType === 'ps' || normalizedOrderType === 'photo service';
+      const hideForPhotoOrder = normalizedOrderType === 'po' || normalizedOrderType === 'photo order';
       const hideForAnyPhotoType = hideForPhotoService || hideForPhotoOrder;
 
       const toggleColumnByLabel = (label, shouldHide) => {
@@ -11302,12 +11295,8 @@ const __fallbackThemeCSS = `
 
     // Show new order modal as large side panel
     function showNewOrderModal() {
-      // Check if this modal is already open (toggle behavior)
-      const existingModal = document.getElementById('newOrderRightModal');
-      if (existingModal) {
-        closeNewOrderModal();
-        return;
-      }
+      // Hidden by user request
+      return;
 
       // Close any other open right-side modals
       closeAllRightSideModals();
@@ -12518,7 +12507,7 @@ const __fallbackThemeCSS = `
       const canManageOrders = typeof safeAuth.canManageOrders === 'function' ? safeAuth.canManageOrders() : false;
       const canAssignWork = typeof safeAuth.canAssignWork === 'function' ? safeAuth.canAssignWork() : false;
       const canEditOrder = typeof safeAuth.canEditOrder === 'function' ? safeAuth.canEditOrder(order) : (canManageOrders || canAssignWork);
-      const canCancelOrder = normalizeOrderType(order.orderType) === 'PO' && order.status !== 'Cancelled' && !order.isLocked;
+      const canCancelOrder = order.orderType === 'PO' && order.status !== 'Cancelled' && !order.isLocked;
       const canEditStatus = canManageOrders && !order.isLocked && order.status !== 'Cancelled';
 
       const teamMembers = [
@@ -13273,9 +13262,11 @@ const __fallbackThemeCSS = `
             }
           }] : []);
 
-          const normalizedOrderType = normalizeOrderType(order.orderType);
-          const isPhotoOrder = normalizedOrderType === 'PO';
-          const isPhotoServiceOrder = normalizedOrderType === 'PS';
+          const normalizedOrderType = (typeof normalizeComparisonValue === 'function')
+            ? normalizeComparisonValue(order.orderType)
+            : String(order.orderType || '').trim().toLowerCase();
+          const isPhotoOrder = normalizedOrderType === 'po' || normalizedOrderType === 'photo order';
+          const isPhotoServiceOrder = normalizedOrderType === 'ps' || normalizedOrderType === 'photo service';
 
           const rows = dataSource.length ? dataSource.map((article, index) => {
             const raw = article && typeof article.raw === 'object' ? article.raw : {};
@@ -13442,13 +13433,11 @@ const __fallbackThemeCSS = `
           const expandLabel = isExpanded ? 'Collapse line items' : 'Expand line items';
 
           const groupDisplay = o.group || placeholderSpan;
-          const isPO = normalizeOrderType(o.orderType) === 'PO';
-          const isPS = normalizeOrderType(o.orderType) === 'PS';
-          const costCenterDisplay = isPO ? (o.costCenter || placeholderSpan) : placeholderSpan;
-          const purchaseGroupDisplay = isPO ? formatPurchaseGroupDisplay(o.purchaseGroup) : '';
+          const costCenterDisplay = o.orderType === 'PO' ? (o.costCenter || placeholderSpan) : placeholderSpan;
+          const purchaseGroupDisplay = o.orderType === 'PO' ? formatPurchaseGroupDisplay(o.purchaseGroup) : '';
           const orderTypeDisplay = (o.orderType || 'PS');
           const isSampleReceived = String(o.status || '').toLowerCase() === 'sample recieved';
-          const sampleDeliveryDisplay = isPO
+          const sampleDeliveryDisplay = o.orderType === 'PO'
             ? (o.sampleDelivery
                 ? (isSampleReceived
                     ? `<span style="display:inline-flex;align-items:center;padding:2px 8px;border-radius:999px;background:rgba(16,185,129,0.18);color:#065f46;font-weight:600;">${o.sampleDelivery}</span>`
@@ -13466,8 +13455,8 @@ const __fallbackThemeCSS = `
           const principle = o.principle || placeholderSpan;
           const productionInfo = buildProductionInfo(o);
           const previewCell = buildPreviewCell(o);
-          const canCancelFromTable = isPO && o.status !== 'Cancelled' && !o.isLocked;
-          const prioIndicator = isPS && o.prio
+          const canCancelFromTable = o.orderType === 'PO' && o.status !== 'Cancelled' && !o.isLocked;
+          const prioIndicator = o.orderType === 'PS' && o.prio
             ? `<span title="${o.prio}" style="display:inline-block;width:8px;height:8px;border-radius:999px;background:${o.prio === 'Prio 1' ? '#3b82f6' : '#f59e0b'};margin-right:6px;vertical-align:middle;box-shadow:0 0 0 2px rgba(255,255,255,0.85);"></span>`
             : '';
 
@@ -13493,20 +13482,20 @@ const __fallbackThemeCSS = `
             </td>
             <td style="padding:6px 8px;${baseCellTextColor}font-size:12px;"><strong>${o.orderNumber}</strong></td>
             <td style="padding:6px 8px;${baseCellTextColor}font-size:12px;">${activityDisplay}</td>
-            <td style="padding:6px 8px;${baseCellTextColor}font-size:12px;">${isPO ? '' : pageDisplay}</td>
-            <td style="padding:6px 8px;${baseCellTextColor}font-size:12px;">${isPO ? '' : offerId}</td>
-            <td style="padding:6px 8px;${baseCellTextColor}font-size:12px;">${isPO ? '' : groupDisplay}</td>
+            <td style="padding:6px 8px;${baseCellTextColor}font-size:12px;">${o.orderType === 'PO' ? '' : pageDisplay}</td>
+            <td style="padding:6px 8px;${baseCellTextColor}font-size:12px;">${o.orderType === 'PO' ? '' : offerId}</td>
+            <td style="padding:6px 8px;${baseCellTextColor}font-size:12px;">${o.orderType === 'PO' ? '' : groupDisplay}</td>
             <td style="padding:6px 8px;${baseCellTextColor}font-size:12px;">${costCenterDisplay}</td>
             <td style="padding:6px 8px;${baseCellTextColor}font-size:12px;">${purchaseGroupDisplay}</td>
             <td style="padding:6px 8px;${baseCellTextColor}font-size:12px;">${orderTypeDisplay}</td>
-            <td style="padding:6px 8px;${baseCellTextColor}min-width:150px;font-size:12px;">${isPO ? '' : offerName}</td>
+            <td style="padding:6px 8px;${baseCellTextColor}min-width:150px;font-size:12px;">${o.orderType === 'PO' ? '' : offerName}</td>
             <td style="padding:6px 8px;${baseCellTextColor}font-size:12px;">${shotType}</td>
             <td style="padding:6px 8px;${baseCellTextColor}font-size:12px;">${photoRef}</td>
             <td style="padding:6px 8px;${baseCellTextColor}font-size:12px;">${productionInfo}</td>
-            <td style="padding:6px 8px;${baseCellTextColor}font-size:12px;">${isPO ? '' : principle}</td>
-            <td style="padding:6px 8px;${baseCellTextColor}font-size:12px;">${isPO ? '' : renderFileNameWithPreview(o.fileName || 'SG_' + Math.floor(Math.random() * 900000 + 100000), o.uploadedAt, o.cloudinaryUrl, o.uploadedContent && o.uploadedContent[0] ? o.uploadedContent[0].data : null)}</td>
+            <td style="padding:6px 8px;${baseCellTextColor}font-size:12px;">${o.orderType === 'PO' ? '' : principle}</td>
+            <td style="padding:6px 8px;${baseCellTextColor}font-size:12px;">${o.orderType === 'PO' ? '' : renderFileNameWithPreview(o.fileName || 'SG_' + Math.floor(Math.random() * 900000 + 100000), o.uploadedAt, o.cloudinaryUrl, o.uploadedContent && o.uploadedContent[0] ? o.uploadedContent[0].data : null)}</td>
             <td style="padding:6px 8px;${baseCellTextColor}font-size:12px;">
-              ${isPO ? '' : (o.uploadedAt 
+              ${o.orderType === 'PO' ? '' : (o.uploadedAt 
                 ? new Date(o.uploadedAt).toLocaleString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }).replace(',', '')
                 : `<span style="color:#2563eb;cursor:pointer;text-decoration:underline;" onclick="event.stopPropagation(); window.showMassUploadModal()">Ready for Upload</span>`)
               }
@@ -16524,7 +16513,7 @@ const __fallbackThemeCSS = `
 
           for (const [, group] of grouped.entries()) {
             const existing = allOrders.find(o =>
-              o && normalizeOrderType(o.orderType) === 'PS' &&
+              o && o.orderType === 'PS' &&
               String(o.offerId || '').trim() === String(group.offerId || '').trim() &&
               String(o.imageRequestId || o.orderNumber || '').trim() === String(group.imageRequestId || '').trim()
             );
@@ -21764,7 +21753,7 @@ const __fallbackThemeCSS = `
       let updated = false;
       
       orders.forEach(order => {
-        if (normalizeOrderType(order.orderType) === 'PS' && Array.isArray(order.articles)) {
+        if (order.orderType === 'PS' && Array.isArray(order.articles)) {
           // We need to map the articles to ensure we capture the changes
           order.articles = order.articles.map(article => {
             const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
