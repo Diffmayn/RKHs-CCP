@@ -3080,6 +3080,8 @@ const __fallbackThemeCSS = `
 
   // Show login screen if not authenticated
   function showLoginScreen() {
+  const shouldShowTestCredentials = (typeof Logger !== 'undefined' && Logger.isDebugMode && Logger.isDebugMode())
+    || (typeof window !== 'undefined' && window.location && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'));
 
   root.innerHTML = `
   <div class="auth-viewport" style="min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; box-sizing: border-box;">
@@ -3121,7 +3123,7 @@ const __fallbackThemeCSS = `
 
           <div id="loginError" style="margin-bottom: 24px; padding: 12px; background: #fef2f2; border: 1px solid #fecaca; border-radius: 8px; color: #dc2626; display: none;"></div>
 
-          ${(typeof Logger !== 'undefined' && Logger.isDebugMode && Logger.isDebugMode()) ? `<div style="padding-top: 24px; border-top: 1px solid rgba(196, 139, 90, 0.2);">
+          ${shouldShowTestCredentials ? `<div style="padding-top: 24px; border-top: 1px solid rgba(196, 139, 90, 0.2);">
             <p style="margin: 0 0 16px 0; font-size: 14px; color: #6b5440; text-align: center; font-weight: 600; letter-spacing: 0.3px;">Test Credentials - Click to use:</p>
             <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; font-size: 12px;">
               <div style="background: #fff6ea; padding: 12px; border-radius: 8px; cursor: pointer; border: 1px solid rgba(196, 139, 90, 0.2); transition: all 0.15s;" 
@@ -6237,7 +6239,7 @@ const __fallbackThemeCSS = `
     #fallback-app .stat-card.clickable-tile:hover { background: rgba(244, 220, 188, 0.85); border-color: #c48b5a; transform: translateY(-3px); box-shadow: 0 16px 40px rgba(142, 102, 64, 0.18); }
     #fallback-app .stat-number { font-size: 24px; font-weight: 700; color: #b67740; }
     #fallback-app .stat-label { font-size: 12px; color: #8d765b; text-transform: uppercase; letter-spacing: 0.6px; }
-    #fallback-app table { border-collapse: collapse; width: 100%; margin-top: 12px; background: rgba(255, 250, 242, 0.92); border-radius: 12px; overflow: hidden; box-shadow: 0 14px 44px rgba(82, 60, 35, 0.12); }
+    #fallback-app table { border-collapse: separate; border-spacing: 0; width: 100%; margin-top: 12px; background: rgba(255, 250, 242, 0.92); border-radius: 12px; overflow: visible; box-shadow: 0 14px 44px rgba(82, 60, 35, 0.12); }
     #fallback-app th, #fallback-app td { border-bottom: 1px solid rgba(196, 139, 90, 0.2); padding: 10px 14px; font-size: 13px; text-align: left; }
     #fallback-app th { background: rgba(238, 219, 196, 0.85); font-weight: 600; color: #543d28; text-transform: uppercase; letter-spacing: 0.4px; }
     #fallback-app tbody tr { background: rgba(255, 248, 237, 0.86); color: #4f3a25; transition: background 0.2s ease-in-out; }
@@ -7822,7 +7824,7 @@ const __fallbackThemeCSS = `
           border: 1px solid var(--theme-border);
           box-shadow: var(--theme-pane-shadow);
           backdrop-filter: var(--theme-pane-blur);
-          overflow: hidden;
+          overflow: visible;
           width: 100%;
           margin: 0 0 24px;
           border-top-left-radius: 0;
@@ -7831,6 +7833,27 @@ const __fallbackThemeCSS = `
           flex: 1;
           display: flex;
           flex-direction: column;
+        }
+
+        .orders-table thead {
+          position: sticky;
+          top: 0;
+          z-index: 20;
+        }
+
+        .orders-table thead tr {
+          position: sticky;
+          top: 0;
+          z-index: 20;
+        }
+
+        .orders-table thead th {
+          position: sticky;
+          top: 0;
+          z-index: 21;
+          background: var(--theme-table-header-bg);
+          box-shadow: 0 1px 0 var(--theme-table-border), 0 6px 12px rgba(79, 59, 37, 0.08);
+          background-clip: padding-box;
         }
 
         @media (max-width: 768px) {
@@ -7865,10 +7888,16 @@ const __fallbackThemeCSS = `
           border-radius: 0;
           border: none;
           box-shadow: none;
-          overflow: hidden;
+          overflow: visible;
           display: flex;
           flex-direction: column;
           transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1), background 0.4s ease;
+        }
+
+        .main-content.glass-surface,
+        .main-content.glass-floating {
+          transform: none;
+          will-change: auto;
         }
 
         .content-header {
@@ -8159,7 +8188,9 @@ const __fallbackThemeCSS = `
 
         .orders-table {
           width: 100%;
-          border-collapse: collapse;
+          border-collapse: separate;
+          border-spacing: 0;
+          overflow: visible;
         }
 
         .orders-table thead th {
@@ -10985,9 +11016,110 @@ const __fallbackThemeCSS = `
       'Premium (Transparent Background)'
     ];
     const DEFAULT_ARTICLE_CONTENT_TYPE = ARTICLE_CONTENT_TYPE_OPTIONS[0];
+    const NEW_ORDER_COMBINED_PHOTO_OPTIONS = [''].concat(Array.from({ length: 26 }, (_, i) => String.fromCharCode(65 + i)));
+    const NEW_ORDER_SHOT_TYPE_OPTIONS = [
+      '',
+      'Front',
+      'Front - Top',
+      'Front - Left Angle',
+      'Front - Right Angle',
+      'Left Side',
+      'Right Side',
+      'Back',
+      'Top',
+      'Bottom'
+    ];
+
+    const BASE_ORDER_TEMPLATES = {
+      "Women's Fashion": ['Front Packshot', 'Back Packshot'],
+      "Men's Fashion": ['Front Packshot', 'Back Packshot'],
+      'Children Fashion': ['Front Packshot', 'Back Packshot'],
+      'Shoes': ['Packshot facing Right', 'Packshot Facing Left'],
+      'Bags & Accessories': ['Front Packshot', 'Back Packshot'],
+      'Jewelry & Watches': ['Front Packshot'],
+      'Home': ['Front Packshot', 'Back Packshot'],
+      'Beauty': ['Front Packshot']
+    };
 
     if (typeof window !== 'undefined') {
       window.ARTICLE_CONTENT_TYPE_OPTIONS = ARTICLE_CONTENT_TYPE_OPTIONS;
+    }
+
+    function getCustomOrderTemplates() {
+      const stored = localStorage.getItem('orderTemplates');
+      return stored ? JSON.parse(stored) : [];
+    }
+
+    function saveCustomOrderTemplates(templates) {
+      localStorage.setItem('orderTemplates', JSON.stringify(templates));
+    }
+
+    function normalizeTemplateLines(lines) {
+      if (!Array.isArray(lines)) {
+        return [];
+      }
+      return lines.map(line => ({
+        contentType: line?.contentType || DEFAULT_ARTICLE_CONTENT_TYPE,
+        combinedPhoto: line?.combinedPhoto || '',
+        shotType: line?.shotType || ''
+      }));
+    }
+
+    function getOrderTemplateDefinitions() {
+      const definitions = {};
+      Object.entries(BASE_ORDER_TEMPLATES).forEach(([name, contentTypes]) => {
+        definitions[name] = {
+          name,
+          lines: normalizeTemplateLines(contentTypes.map(type => ({ contentType: type })))
+        };
+      });
+
+      const custom = getCustomOrderTemplates();
+      custom.forEach(template => {
+        if (!template || !template.name || !Array.isArray(template.lines) || !template.lines.length) {
+          return;
+        }
+        definitions[template.name] = {
+          name: template.name,
+          lines: normalizeTemplateLines(template.lines)
+        };
+      });
+
+      return definitions;
+    }
+
+    function populateOrderTemplateOptions(selectEl) {
+      if (!selectEl) {
+        return;
+      }
+
+      const custom = getCustomOrderTemplates();
+      selectEl.innerHTML = '<option value="">Select Template...</option>';
+
+      const standardGroup = document.createElement('optgroup');
+      standardGroup.label = 'Standard Templates';
+      Object.keys(BASE_ORDER_TEMPLATES).forEach(name => {
+        const option = document.createElement('option');
+        option.value = name;
+        option.textContent = name;
+        standardGroup.appendChild(option);
+      });
+      selectEl.appendChild(standardGroup);
+
+      if (custom.length) {
+        const customGroup = document.createElement('optgroup');
+        customGroup.label = 'Custom Templates';
+        custom.forEach(template => {
+          if (!template || !template.name) {
+            return;
+          }
+          const option = document.createElement('option');
+          option.value = template.name;
+          option.textContent = template.name;
+          customGroup.appendChild(option);
+        });
+        selectEl.appendChild(customGroup);
+      }
     }
 
     let newOrderArticleContentState = [];
@@ -11094,6 +11226,259 @@ const __fallbackThemeCSS = `
     }
     window.handleTemplateChange = handleTemplateChange;
 
+    window.showOrderTemplateBuilderModal = function() {
+      const modal = document.createElement('div');
+      modal.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:1000;display:flex;align-items:center;justify-content:center;';
+      modal.innerHTML = `
+        <div style="background:white;padding:20px;border-radius:12px;max-width:720px;width:95%;max-height:90%;overflow-y:auto;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+            <h2 style="margin:0;font-size:18px;font-weight:600;">Create Order Template</h2>
+            <button id="closeOrderTemplateBuilder" style="background:none;border:none;font-size:24px;cursor:pointer;">×</button>
+          </div>
+
+          <div style="background:#f1e8dc;padding:16px;border-radius:8px;margin-bottom:16px;">
+            <div style="display:grid;grid-template-columns:1fr 160px;gap:12px;margin-bottom:12px;">
+              <div>
+                <label style="display:block;font-weight:500;margin-bottom:4px;">Template Name</label>
+                <input id="orderTemplateNameInput" type="text" placeholder="e.g., Two Image Packshot" style="width:100%;padding:8px;border:1px solid #d1d5db;border-radius:4px;">
+              </div>
+              <div>
+                <label style="display:block;font-weight:500;margin-bottom:4px;">Lines per Article</label>
+                <input id="orderTemplateLineCount" type="number" min="1" max="10" value="2" style="width:100%;padding:8px;border:1px solid #d1d5db;border-radius:4px;">
+              </div>
+            </div>
+
+            <div id="orderTemplateLines" style="display:grid;gap:10px;"></div>
+          </div>
+
+          <div style="margin-top:16px;">
+            <h3 style="margin:0 0 8px 0;font-size:14px;font-weight:600;">Existing Custom Templates</h3>
+            <div id="orderTemplateList" style="display:grid;gap:8px;"></div>
+          </div>
+
+          <div style="display:flex;gap:12px;justify-content:flex-end;">
+            <button id="cancelOrderTemplateBuilder" style="padding:8px 14px;background:#6b5440;color:white;border:none;border-radius:4px;cursor:pointer;">Cancel</button>
+            <button id="saveOrderTemplateBuilder" style="padding:8px 16px;background:#a66b38;color:white;border:none;border-radius:4px;cursor:pointer;">Save Template</button>
+          </div>
+        </div>
+      `;
+
+      document.body.appendChild(modal);
+
+      const lineCountInput = modal.querySelector('#orderTemplateLineCount');
+      const linesContainer = modal.querySelector('#orderTemplateLines');
+      const listContainer = modal.querySelector('#orderTemplateList');
+      const nameInput = modal.querySelector('#orderTemplateNameInput');
+      let editingTemplateName = '';
+
+      const renderLineRows = () => {
+        const count = Math.max(1, Math.min(10, parseInt(lineCountInput.value, 10) || 1));
+        lineCountInput.value = String(count);
+
+        const combinedPhotoOptionsHtml = NEW_ORDER_COMBINED_PHOTO_OPTIONS
+          .map(option => {
+            const val = option === '' ? '' : option;
+            const label = option === '' ? 'Select...' : option;
+            return `<option value="${val}">${label}</option>`;
+          })
+          .join('');
+
+        const shotTypeOptionsHtml = NEW_ORDER_SHOT_TYPE_OPTIONS
+          .map(option => {
+            const val = option === '' ? '' : option;
+            const label = option === '' ? 'Select...' : option;
+            return `<option value="${val}">${label}</option>`;
+          })
+          .join('');
+
+        const contentTypeOptionsHtml = ARTICLE_CONTENT_TYPE_OPTIONS
+          .map(option => `<option value="${escapeHtml(option)}">${escapeHtml(option)}</option>`)
+          .join('');
+
+        linesContainer.innerHTML = Array.from({ length: count }, (_, index) => `
+          <div class="template-line-row" style="border:1px solid #e5e7eb;border-radius:8px;padding:10px;background:white;">
+            <div style="font-size:12px;font-weight:600;color:#4b3b2a;margin-bottom:8px;">Image ${index + 1}</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;">
+              <div>
+                <label style="display:block;font-size:11px;font-weight:600;color:#6b5440;margin-bottom:2px;">Content Type</label>
+                <select name="contentType" style="width:100%;padding:6px 8px;border:1px solid #ead7c2;border-radius:6px;font-size:11px;background:white;">
+                  ${contentTypeOptionsHtml}
+                </select>
+              </div>
+              <div>
+                <label style="display:block;font-size:11px;font-weight:600;color:#6b5440;margin-bottom:2px;">Combined Photo</label>
+                <select name="combinedPhoto" style="width:100%;padding:6px 8px;border:1px solid #ead7c2;border-radius:6px;font-size:11px;background:white;">
+                  ${combinedPhotoOptionsHtml}
+                </select>
+              </div>
+              <div>
+                <label style="display:block;font-size:11px;font-weight:600;color:#6b5440;margin-bottom:2px;">DAM Shot Type</label>
+                <select name="shotType" style="width:100%;padding:6px 8px;border:1px solid #ead7c2;border-radius:6px;font-size:11px;background:white;">
+                  ${shotTypeOptionsHtml}
+                </select>
+              </div>
+            </div>
+          </div>
+        `).join('');
+      };
+
+      renderLineRows();
+      lineCountInput.addEventListener('change', renderLineRows);
+      lineCountInput.addEventListener('input', renderLineRows);
+
+      const renderTemplateList = () => {
+        const templates = getCustomOrderTemplates();
+        if (!templates.length) {
+          listContainer.innerHTML = '<div style="font-size:12px;color:#6b5440;font-style:italic;">No custom templates yet.</div>';
+          return;
+        }
+
+        listContainer.innerHTML = templates.map(template => `
+          <div style="border:1px solid #e5e7eb;border-radius:8px;padding:10px;background:white;display:flex;justify-content:space-between;align-items:center;gap:12px;">
+            <div>
+              <div style="font-size:12px;font-weight:600;color:#4b3b2a;">${escapeHtml(template.name)}</div>
+              <div style="font-size:11px;color:#6b5440;">${template.lines?.length || 0} line(s) per article</div>
+            </div>
+            <div style="display:flex;gap:6px;">
+              <button type="button" data-action="edit" data-name="${escapeHtml(template.name)}" style="padding:4px 8px;background:#6b5440;color:white;border:none;border-radius:4px;font-size:11px;cursor:pointer;">Edit</button>
+              <button type="button" data-action="delete" data-name="${escapeHtml(template.name)}" style="padding:4px 8px;background:#ef4444;color:white;border:none;border-radius:4px;font-size:11px;cursor:pointer;">Delete</button>
+            </div>
+          </div>
+        `).join('');
+      };
+
+      const loadTemplateForEdit = (name) => {
+        const templates = getCustomOrderTemplates();
+        const template = templates.find(item => item.name === name);
+        if (!template) {
+          return;
+        }
+
+        editingTemplateName = template.name;
+        nameInput.value = template.name;
+        lineCountInput.value = String(template.lines?.length || 1);
+        renderLineRows();
+
+        const rows = Array.from(linesContainer.querySelectorAll('.template-line-row'));
+        rows.forEach((row, index) => {
+          const line = template.lines?.[index] || {};
+          const contentSelect = row.querySelector('select[name="contentType"]');
+          const combinedSelect = row.querySelector('select[name="combinedPhoto"]');
+          const shotSelect = row.querySelector('select[name="shotType"]');
+          if (contentSelect) contentSelect.value = line.contentType || DEFAULT_ARTICLE_CONTENT_TYPE;
+          if (combinedSelect) combinedSelect.value = line.combinedPhoto || '';
+          if (shotSelect) shotSelect.value = line.shotType || '';
+        });
+      };
+
+      const deleteTemplate = (name) => {
+        if (!confirm(`Delete template "${name}"?`)) {
+          return;
+        }
+        const templates = getCustomOrderTemplates().filter(item => item.name !== name);
+        saveCustomOrderTemplates(templates);
+        if (editingTemplateName === name) {
+          editingTemplateName = '';
+          nameInput.value = '';
+          lineCountInput.value = '2';
+          renderLineRows();
+        }
+        renderTemplateList();
+      };
+
+      listContainer.addEventListener('click', (event) => {
+        const target = event.target;
+        if (!(target instanceof HTMLElement)) {
+          return;
+        }
+        const action = target.getAttribute('data-action');
+        const name = target.getAttribute('data-name');
+        if (!action || !name) {
+          return;
+        }
+        if (action === 'edit') {
+          loadTemplateForEdit(name);
+        }
+        if (action === 'delete') {
+          deleteTemplate(name);
+        }
+      });
+
+      renderTemplateList();
+
+      const closeModal = () => {
+        modal.remove();
+      };
+
+      modal.querySelector('#closeOrderTemplateBuilder').addEventListener('click', closeModal);
+      modal.querySelector('#cancelOrderTemplateBuilder').addEventListener('click', closeModal);
+
+      modal.querySelector('#saveOrderTemplateBuilder').addEventListener('click', () => {
+        const name = (nameInput.value || '').trim();
+        if (!name) {
+          alert('Please provide a template name.');
+          return;
+        }
+
+        if (BASE_ORDER_TEMPLATES[name]) {
+          alert('A standard template already uses this name. Please choose another name.');
+          return;
+        }
+
+        const templates = getCustomOrderTemplates();
+        const nameTaken = templates.some(template => template.name === name);
+        if (nameTaken && name !== editingTemplateName) {
+          alert('A custom template already uses this name. Please choose another name.');
+          return;
+        }
+
+        const lines = Array.from(modal.querySelectorAll('.template-line-row')).map(row => {
+          const contentType = row.querySelector('select[name="contentType"]').value || DEFAULT_ARTICLE_CONTENT_TYPE;
+          const combinedPhoto = row.querySelector('select[name="combinedPhoto"]').value || '';
+          const shotType = row.querySelector('select[name="shotType"]').value || '';
+          return { contentType, combinedPhoto, shotType };
+        });
+
+        const currentUser = (typeof authSystem !== 'undefined' && authSystem.getCurrentUser)
+          ? authSystem.getCurrentUser().username
+          : 'User';
+
+        const existing = templates.find(template => template.name === editingTemplateName);
+        let nextTemplates = templates.filter(template => template.name !== editingTemplateName);
+        nextTemplates.push({
+          name,
+          lines,
+          createdAt: existing?.createdAt || new Date().toISOString(),
+          createdBy: existing?.createdBy || currentUser
+        });
+        nextTemplates = nextTemplates.sort((a, b) => a.name.localeCompare(b.name));
+        editingTemplateName = '';
+        saveCustomOrderTemplates(nextTemplates);
+
+        const selectEl = document.getElementById('newOrderTemplateSelect');
+        if (selectEl) {
+          populateOrderTemplateOptions(selectEl);
+          selectEl.value = name;
+          handleTemplateChange();
+        }
+
+        renderTemplateList();
+        closeModal();
+
+        const success = document.createElement('div');
+        success.style.cssText = 'position:fixed;top:20px;right:20px;background:#7fa284;color:white;padding:12px 16px;border-radius:6px;z-index:1001;';
+        success.textContent = `Template "${name}" created successfully!`;
+        document.body.appendChild(success);
+        setTimeout(() => success.remove(), 3000);
+      });
+
+      modal.addEventListener('click', (event) => {
+        if (event.target === modal) {
+          closeModal();
+        }
+      });
+    };
+
     function syncNewOrderArticleContentState() {
       // Read both textareas directly to ensure line-by-line alignment
       const articleField = document.getElementById('newOrderArticles');
@@ -11119,17 +11504,7 @@ const __fallbackThemeCSS = `
       const templateSelect = document.querySelector('select[name="template"]');
       const selectedTemplate = templateSelect ? templateSelect.value : '';
       
-      // Define template rules
-      const templateRules = {
-        "Women's Fashion": ["Front Packshot", "Back Packshot"],
-        "Men's Fashion": ["Front Packshot", "Back Packshot"],
-        "Children Fashion": ["Front Packshot", "Back Packshot"],
-        "Shoes": ["Packshot facing Right", "Packshot Facing Left"],
-        "Bags & Accessories": ["Front Packshot", "Back Packshot"],
-        "Jewelry & Watches": ["Front Packshot"],
-        "Home": ["Front Packshot", "Back Packshot"],
-        "Beauty": ["Front Packshot"]
-      };
+      const templateDefinitions = getOrderTemplateDefinitions();
 
       if (!lines.length) {
         newOrderArticleContentState = [];
@@ -11138,22 +11513,22 @@ const __fallbackThemeCSS = `
       }
 
       // If a template is selected, we regenerate the list to enforce the template rules
-      if (selectedTemplate && templateRules[selectedTemplate]) {
-         const contentTypes = templateRules[selectedTemplate];
-         const next = [];
-         lines.forEach((raw, index) => {
-            const articleName = nameLines[index] || '';
-            contentTypes.forEach(type => {
-               next.push({
-                 raw,
-                 articleName,
-                 contentType: type,
-                 combinedPhoto: '',
-                 shotType: ''
-               });
+      if (selectedTemplate && templateDefinitions[selectedTemplate]) {
+        const template = templateDefinitions[selectedTemplate];
+        const next = [];
+        lines.forEach((raw, index) => {
+          const articleName = nameLines[index] || '';
+          template.lines.forEach(line => {
+            next.push({
+              raw,
+              articleName,
+              contentType: line.contentType || DEFAULT_ARTICLE_CONTENT_TYPE,
+              combinedPhoto: line.combinedPhoto || '',
+              shotType: line.shotType || ''
             });
-         });
-         newOrderArticleContentState = next;
+          });
+        });
+        newOrderArticleContentState = next;
       } else {
           // Original logic for manual mode
           const previous = newOrderArticleContentState.map(entry => ({ ...entry, __used: false }));
@@ -11200,8 +11575,15 @@ const __fallbackThemeCSS = `
         return;
       }
 
-      const combinedPhotoOptions = [''].concat(Array.from({length: 26}, (_, i) => String.fromCharCode(65 + i)));
-      const shotTypeOptions = ['', 'Front', 'Front - Top', 'Front - Left Angle', 'Front - Right Angle', 'Left Side', 'Right Side', 'Back', 'Top', 'Bottom'];
+      const combinedPhotoOptions = NEW_ORDER_COMBINED_PHOTO_OPTIONS;
+      const shotTypeOptions = NEW_ORDER_SHOT_TYPE_OPTIONS;
+
+      const perArticleCounts = new Map();
+      newOrderArticleContentState.forEach((entry) => {
+        const key = entry.raw || '';
+        perArticleCounts.set(key, (perArticleCounts.get(key) || 0) + 1);
+      });
+      const perArticleIndex = new Map();
 
       const rows = newOrderArticleContentState.map((entry, index) => {
         const contentTypeOptionsHtml = ARTICLE_CONTENT_TYPE_OPTIONS
@@ -11230,11 +11612,17 @@ const __fallbackThemeCSS = `
           .join('');
 
         const articleNameDisplay = entry.articleName ? `<div style="font-size:11px;color:#6b5440;margin-bottom:4px;font-weight:500;">${escapeHtml(entry.articleName)}</div>` : '';
+        const rawKey = entry.raw || '';
+        const nextImageIndex = (perArticleIndex.get(rawKey) || 0) + 1;
+        perArticleIndex.set(rawKey, nextImageIndex);
+        const useImageLabel = (perArticleCounts.get(rawKey) || 0) > 1;
+        const labelPrefix = useImageLabel ? 'Image' : 'Article';
+        const labelNumber = useImageLabel ? nextImageIndex : (index + 1);
 
         return `
           <div style="padding:12px;border-bottom:1px solid rgba(196, 139, 90, 0.18);">
             <div style="font-size:12px;color:#4b3b2a;line-height:1.4;word-break:break-word;margin-bottom:8px;">
-              <div style="font-weight:600;margin-bottom:2px;">Article ${index + 1}</div>
+              <div style="font-weight:600;margin-bottom:2px;">${labelPrefix} ${labelNumber}</div>
               ${articleNameDisplay}
               <div style="font-family:'Courier New', monospace;font-size:11px;color:#6b5440;background:rgba(196, 139, 90, 0.08);padding:4px 6px;border-radius:4px;">${escapeHtml(entry.raw)}</div>
             </div>
@@ -11398,18 +11786,13 @@ const __fallbackThemeCSS = `
                 </select>
               </div>
               <div style="min-width: 0;">
-                <label style="display: block; font-weight: 600; margin-bottom: 4px; color: #4b3b2a; font-size: 12px;">Template</label>
-                <select name="template" style="width: 100%; box-sizing: border-box; padding: 8px 12px; border: 1px solid #ead7c2; border-radius: 6px; font-size: 13px; transition: border-color 0.2s ease;"
+                <label style="display: flex; align-items: center; justify-content: space-between; font-weight: 600; margin-bottom: 4px; color: #4b3b2a; font-size: 12px;">
+                  <span>Template</span>
+                  <button type="button" id="manageOrderTemplatesBtn" style="padding: 2px 6px; background: #a66b38; color: white; border: none; border-radius: 4px; font-size: 10px; cursor: pointer;">+ Template</button>
+                </label>
+                <select id="newOrderTemplateSelect" name="template" style="width: 100%; box-sizing: border-box; padding: 8px 12px; border: 1px solid #ead7c2; border-radius: 6px; font-size: 13px; transition: border-color 0.2s ease;"
                   onfocus="this.style.borderColor='#c48b5a'" onblur="this.style.borderColor='#ead7c2'" onchange="handleTemplateChange()">
                   <option value="">Select Template...</option>
-                  <option value="Women's Fashion">Women's Fashion</option>
-                  <option value="Men's Fashion">Men's Fashion</option>
-                  <option value="Children Fashion">Children Fashion</option>
-                  <option value="Shoes">Shoes</option>
-                  <option value="Bags & Accessories">Bags & Accessories</option>
-                  <option value="Jewelry & Watches">Jewelry & Watches</option>
-                  <option value="Home">Home</option>
-                  <option value="Beauty">Beauty</option>
                 </select>
               </div>
             </div>
@@ -11486,6 +11869,17 @@ const __fallbackThemeCSS = `
       `;
 
       document.body.appendChild(modal);
+
+      const templateSelect = modal.querySelector('#newOrderTemplateSelect');
+      populateOrderTemplateOptions(templateSelect);
+
+      const manageTemplatesBtn = modal.querySelector('#manageOrderTemplatesBtn');
+      if (manageTemplatesBtn) {
+        manageTemplatesBtn.addEventListener('click', (event) => {
+          event.preventDefault();
+          window.showOrderTemplateBuilderModal();
+        });
+      }
 
       resetNewOrderArticleContentState();
       handleNewOrderArticlesInput();
