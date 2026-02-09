@@ -1264,6 +1264,21 @@ const __fallbackThemeCSS = `
           opacity: 1;
         }
 
+        /* 
+        body.orders-sticky-header .orders-table thead th {
+          position: sticky;
+          top: 0;
+          z-index: 8;
+          background-clip: padding-box;
+        }
+
+        body.orders-sticky-header .orders-table thead tr {
+          position: sticky;
+          top: 0;
+          z-index: 7;
+        } 
+        */
+
         .content-pill-btn:hover {
           transform: translateY(-1px);
           box-shadow: 0 20px 34px rgba(79, 59, 37, 0.22);
@@ -3338,9 +3353,67 @@ const __fallbackThemeCSS = `
   };
   window.productImageDataUrls = productImageDataUrls;
 
+  const ASSET_IMAGE_FILES = [
+    '1.jpg',
+    '2.jpg',
+    '3.jpg',
+    '4.webp',
+    '5.webp',
+    '6.webp',
+    '7.webp',
+    '8.webp',
+    '9.webp',
+    '10.webp',
+    '11.webp',
+    '12.jpg',
+    '13.webp',
+    '14.webp',
+    '15.jpg',
+    '16.jpg',
+    '17.jpg',
+    '18.jpg',
+    '19.webp',
+    '20.webp',
+    '22.webp',
+    '23.webp',
+    '24.webp',
+    '25.webp',
+    '26.webp',
+    '27.webp',
+    '28.webp',
+    '29.webp',
+    '30.webp',
+    '31.webp',
+    '32.webp',
+    '33.jpg',
+    '34.jpg',
+    '35.webp',
+    '36.jpg',
+    '37.webp',
+    '38.jpg',
+    '39.jpg'
+  ];
+
+  const getAssetImageUrl = (fileName) => {
+    if (!fileName) return null;
+    return ASSET_IMAGE_FILES.includes(fileName) ? `/assets/${fileName}` : null;
+  };
+
   // Helper function to get article image URL from fileName
   const getArticleImageUrl = (fileName) => {
     if (!fileName) return null;
+    const assetUrl = getAssetImageUrl(fileName);
+    if (assetUrl) {
+      return assetUrl;
+    }
+    const sgMatch = fileName.match(/^SG_(\d{6})$/i);
+    if (sgMatch) {
+      const digits = parseInt(sgMatch[1], 10);
+      if (!Number.isNaN(digits) && ASSET_IMAGE_FILES.length > 0) {
+        const assetFile = ASSET_IMAGE_FILES[digits % ASSET_IMAGE_FILES.length];
+        return `/assets/${assetFile}`;
+      }
+    }
     // Check for ENV format files (e.g., ENV.000010.jpg)
     const envMatch = fileName.match(/^ENV\.(\d+)/i);
     if (envMatch) {
@@ -3719,6 +3792,8 @@ const __fallbackThemeCSS = `
 
   const ORDER_STATUS_OPTIONS = [
     '',
+    'Not submitted',
+    'Submitted',
     'Order created',
     'Ordered',
     'Order samples ready',
@@ -3739,6 +3814,8 @@ const __fallbackThemeCSS = `
       ? window.normalizeComparisonValue(value)
       : String(value ?? '').trim().toLowerCase();
     if (!normalized) return '';
+    if (normalized.includes('not submitted')) return 'Not submitted';
+    if (normalized === 'submitted' || normalized.includes('submitted')) return 'Submitted';
     if (normalized === 'order created') return 'Order created';
     if (normalized === 'ordered') return 'Ordered';
     if (normalized === 'order samples ready') return 'Order samples ready';
@@ -4034,19 +4111,10 @@ const __fallbackThemeCSS = `
     const digits = (orderNumber || '').replace(/\D/g, '').padStart(6, '0');
     const orderSegment = digits.slice(-4);
     const articleSegment = String(index + 1).padStart(2, '0');
-    return `ENV.${orderSegment}${articleSegment}.jpg`;
+    return `SG_${orderSegment}${articleSegment}`;
   }
 
-  const ORDER_PREVIEW_IMAGES = [
-    'https://images.unsplash.com/photo-1503602642458-232111445657?auto=format&fit=crop&w=600&q=80',
-    'https://images.unsplash.com/photo-1512436991641-6745cdb1723f?auto=format&fit=crop&w=600&q=80',
-    'https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=600&q=80',
-    'https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=600&q=80',
-    'https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?auto=format&fit=crop&w=600&q=80',
-    'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=600&q=80',
-    'https://images.unsplash.com/photo-1503341455253-b2e723bb3dbb?auto=format&fit=crop&w=600&q=80',
-    'https://images.unsplash.com/photo-1491553895911-0055eca6402d?auto=format&fit=crop&w=600&q=80'
-  ];
+  const ORDER_PREVIEW_IMAGES = ASSET_IMAGE_FILES.map((fileName) => `/assets/${fileName}`);
 
   function getOrderPreviewImage(order, index = 0) {
     const seed = `${order?.orderNumber || 'order'}-${order?.title || ''}-${index}`;
@@ -4157,6 +4225,72 @@ const __fallbackThemeCSS = `
 
         return asset;
       });
+    });
+  }
+
+  function applyAssetImagesToOrders(orders) {
+    if (!Array.isArray(orders) || ASSET_IMAGE_FILES.length === 0) {
+      return;
+    }
+
+    orders.forEach((order, index) => {
+      if (!order) return;
+
+      if (index % 5 === 0) {
+        return;
+      }
+
+      const assetFile = ASSET_IMAGE_FILES[index % ASSET_IMAGE_FILES.length];
+      const assetUrl = `/assets/${assetFile}`;
+
+      if (!order.fileName || /^ENV\./i.test(order.fileName)) {
+        order.fileName = generateArticleFileName(order.orderNumber, 0);
+      }
+      order.uploadedAt = order.uploadedAt || order.createdAt || order.updatedAt || new Date().toISOString();
+
+      if (!Array.isArray(order.uploadedContent) || order.uploadedContent.length === 0) {
+        order.uploadedContent = [{}];
+      }
+
+      const firstAsset = order.uploadedContent[0] && typeof order.uploadedContent[0] === 'object'
+        ? order.uploadedContent[0]
+        : {};
+
+      firstAsset.name = order.fileName;
+      firstAsset.url = assetUrl;
+      firstAsset.thumbnailUrl = assetUrl;
+      firstAsset.data = assetUrl;
+      firstAsset.type = firstAsset.type || (assetFile.endsWith('.webp') ? 'image/webp' : 'image/jpeg');
+      firstAsset.uploadedAt = firstAsset.uploadedAt || order.uploadedAt;
+      order.uploadedContent[0] = firstAsset;
+
+      if (Array.isArray(order.articles)) {
+        order.articles = order.articles.map((article, articleIndex) => {
+          if (!article || typeof article !== 'object' || Array.isArray(article)) {
+            return article;
+          }
+
+          if (!article.fileName || /^ENV\./i.test(article.fileName)) {
+            article.fileName = generateArticleFileName(order.orderNumber, articleIndex);
+          }
+          if (article.raw && (!article.raw.fileName || /^ENV\./i.test(article.raw.fileName))) {
+            article.raw.fileName = article.fileName;
+          }
+          if (!article.cloudinaryUrl) {
+            article.cloudinaryUrl = assetUrl;
+          }
+          if (article.raw && !article.raw.cloudinaryUrl) {
+            article.raw.cloudinaryUrl = article.cloudinaryUrl;
+          }
+          if (!article.uploadedAt) {
+            article.uploadedAt = order.uploadedAt;
+          }
+          if (article.raw && !article.raw.uploadedAt) {
+            article.raw.uploadedAt = article.uploadedAt;
+          }
+          return article;
+        });
+      }
     });
   }
 
@@ -5746,6 +5880,8 @@ const __fallbackThemeCSS = `
 
   // Migration for new status values
   const statusMigrationMap = {
+    'Not submitted': 'Not submitted',
+    'Submitted': 'Submitted',
     'Draft': 'Sample missing',
     'New Request': 'Sample missing',
     'Samples Requested': 'Sample to be sent (date)',
@@ -5907,6 +6043,7 @@ const __fallbackThemeCSS = `
 
   ensureArticlesHaveFileNames(allOrders);
   ensureOrderPreviewImages(allOrders);
+  applyAssetImagesToOrders(allOrders);
   ensureOrderPhotoMetadata(allOrders);
   ensurePhotoServicePrio(allOrders);
   ensureOrderStatuses(allOrders);
@@ -6246,6 +6383,7 @@ const __fallbackThemeCSS = `
     #fallback-app tbody tr td { color: #4f3a25 !important; }
     #fallback-app tbody tr:hover { background: rgba(237, 214, 186, 0.65); }
     #fallback-app .status { padding: 3px 10px; border-radius: 14px; font-size: 11px; font-weight: 600; display: inline-block; background: rgba(210, 187, 161, 0.35); color: #4b3927; }
+    #fallback-app .Notsubmitted { background: rgba(148, 163, 184, 0.24); color: #475569; }
     #fallback-app .Ordercreated,
     #fallback-app .Ordered,
     #fallback-app .Ordersamplesready,
@@ -7008,6 +7146,8 @@ const __fallbackThemeCSS = `
                         <label style="display: block; font-size: 11px; font-weight: 600; color: #85694c; margin-bottom: 4px;">Status</label>
                         <select id="filterStatus" class="filter-select" style="width: 100%; padding: 6px; border-radius: 6px; border: 1px solid #ead7c2; background: rgba(255, 255, 255, 0.5); color: #4b3b2a;">
                           <option value="">All</option>
+                          <option value="Not submitted">Not submitted</option>
+                          <option value="Submitted">Submitted</option>
                           <option value="Sample missing">Sample missing</option>
                           <option value="Sample to be sent (date)">Sample to be sent (date)</option>
                           <option value="Sample Sent from Vendor">Sample Sent from Vendor</option>
@@ -7823,7 +7963,7 @@ const __fallbackThemeCSS = `
           border-radius: 18px;
           border: 1px solid var(--theme-border);
           box-shadow: var(--theme-pane-shadow);
-          backdrop-filter: var(--theme-pane-blur);
+          /* backdrop-filter: var(--theme-pane-blur); Removed to fix sticky header support */
           overflow: visible;
           width: 100%;
           margin: 0 0 24px;
@@ -10113,6 +10253,8 @@ const __fallbackThemeCSS = `
         overdue: 'Overdue Orders',
         today: "Today's Deadlines",
         'today-deadlines': "Today's Deadlines",
+        'not submitted': 'Not submitted',
+        submitted: 'Submitted',
         'sample missing': 'Sample missing',
         'sample to be sent (date)': 'Sample to be sent (date)',
         'sample sent from vendor': 'Sample Sent from Vendor',
@@ -10144,6 +10286,8 @@ const __fallbackThemeCSS = `
         switch (normalized) {
           case 'urgent':
             return priorityValue === 'high' || priorityValue === 'critical' || priorityValue === 'urgent';
+          case 'draft':
+            return statusValue === 'sample missing' || statusValue === 'not submitted' || statusValue === 'draft' || statusValue === 'new request';
           case 'overdue': {
             const deadline = new Date(order.deadline);
             return deadline < endOfToday && statusValue !== 'sample recieved' && statusValue !== 'cancelled';
@@ -10152,6 +10296,7 @@ const __fallbackThemeCSS = `
           case 'today-deadlines':
             return (order.deadline || '').split('T')[0] === todayStr;
           case 'sample missing':
+          case 'submitted':
           case 'sample to be sent (date)':
           case 'sample sent from vendor':
           case 'sample sent from ds':
@@ -10329,7 +10474,8 @@ const __fallbackThemeCSS = `
       const normalizedOrderType = normalizeOrderType(orderFilters.orderType || '');
       const hideForPhotoService = normalizedOrderType === 'PS';
       const hideForPhotoOrder = normalizedOrderType === 'PO';
-      const hideForAnyPhotoType = hideForPhotoService || hideForPhotoOrder;
+      // const hideForAnyPhotoType = hideForPhotoService || hideForPhotoOrder;
+      // document.body.classList.toggle('orders-sticky-header', hideForAnyPhotoType);
 
       const toggleColumnByLabel = (label, shouldHide) => {
         const targetIndex = headers.findIndex(th => (th.textContent || '').trim().toLowerCase() === label);
@@ -10364,7 +10510,7 @@ const __fallbackThemeCSS = `
       toggleColumnByLabel('principle', hideForPhotoOrder);
       toggleColumnByLabel('file name', hideForPhotoOrder);
       toggleColumnByLabel('upload time', hideForPhotoOrder);
-      toggleColumnByLabel('purchase group', hideForPhotoService);
+      toggleColumnByLabel('purchase group', false);
     }
 
     function refreshOrderFilters() {
@@ -10647,12 +10793,12 @@ const __fallbackThemeCSS = `
       const stats = {
         total: orders.length,
         complete: orders.filter(o => o.status === 'Complete' || o.status === 'Delivered').length,
-        pending: orders.filter(o => o.status === 'Pending' || o.status === 'Draft').length,
+        pending: orders.filter(o => o.status === 'Pending' || o.status === 'Draft' || o.status === 'Not submitted').length,
         inProgress: orders.filter(o => o.status === 'In Progress').length,
-        newRequests: orders.filter(o => o.status === 'New Request' || o.status === 'Draft').length
+        newRequests: orders.filter(o => o.status === 'New Request' || o.status === 'Draft' || o.status === 'Not submitted').length
       };
 
-      const draftCount = orders.filter(o => o.status === 'Draft' || o.status === 'New Request').length;
+      const draftCount = orders.filter(o => o.status === 'Draft' || o.status === 'New Request' || o.status === 'Not submitted').length;
       const pendingCount = orders.filter(o => o.status === 'Pending Approval' || o.status === 'Pending').length;
       const approvedCount = orders.filter(o => o.status === 'Approved').length;
       const samplesCount = orders.filter(o => o.status === 'Samples Requested' || o.status === 'Samples in Transit' || o.status === 'Samples Received').length;
@@ -11688,8 +11834,89 @@ const __fallbackThemeCSS = `
     window.handleArticleFieldChange = handleArticleFieldChange;
     window.handleArticleContentTypeChange = (index, value) => handleArticleFieldChange(index, 'contentType', value);
 
+    function resolveDraftArticleLine(article, index) {
+      if (!article) {
+        return `Article ${index + 1}`;
+      }
+
+      const candidates = [
+        article.sourceLine,
+        article.articleNumber,
+        article.ean,
+        article.name,
+        article.articleName,
+        article.title
+      ];
+
+      const resolved = candidates.find(value => typeof value === 'string' && value.trim().length > 0);
+      return resolved ? resolved.trim() : `Article ${index + 1}`;
+    }
+
+    function resolveDraftArticleName(article, fallbackLine) {
+      if (!article) return '';
+      const candidates = [article.name, article.articleName, article.title, article.raw && article.raw.name, article.raw && article.raw.articleName];
+      const resolved = candidates.find(value => typeof value === 'string' && value.trim().length > 0);
+      const trimmed = resolved ? resolved.trim() : '';
+      if (!trimmed || trimmed === fallbackLine) {
+        return '';
+      }
+      return trimmed;
+    }
+
+    function hydrateNewOrderFormFromOrder(order) {
+      if (!order) return;
+
+      const form = document.getElementById('newOrderForm');
+      if (!form) return;
+
+      const setValue = (selector, value) => {
+        const field = form.querySelector(selector);
+        if (field) field.value = value ?? '';
+      };
+
+      setValue('input[name="title"]', order.title || '');
+      setValue('select[name="costCenter"]', order.costCenter || '');
+      setValue('select[name="purchaseGroup"]', order.purchaseGroup !== undefined && order.purchaseGroup !== null ? String(order.purchaseGroup) : '');
+      setValue('select[name="method"]', order.method || '');
+      setValue('input[name="deadline"]', order.deadline || '');
+      setValue('input[name="budget"]', order.budget ?? '');
+      setValue('input[name="sampleDelivery"]', order.sampleDelivery || '');
+      setValue('textarea[name="brief"]', order.brief || '');
+      setValue('input[name="activity"]', order.activity || '');
+
+      const existingOrderField = document.getElementById('newOrderExistingOrderNumber');
+      if (existingOrderField) {
+        existingOrderField.value = order.orderNumber || '';
+      }
+
+      const articles = Array.isArray(order.articles) ? order.articles : [];
+      const articleLines = [];
+      const nameLines = [];
+
+      newOrderArticleContentState = articles.map((article, index) => {
+        const rawLine = resolveDraftArticleLine(article, index);
+        const nameLine = resolveDraftArticleName(article, rawLine);
+        articleLines.push(rawLine);
+        nameLines.push(nameLine);
+        return {
+          raw: rawLine,
+          articleName: nameLine,
+          contentType: (article && (article.contentType || (article.raw && article.raw.contentType))) || DEFAULT_ARTICLE_CONTENT_TYPE,
+          combinedPhoto: (article && (article.combinedPhoto || (article.raw && article.raw.combinedPhoto))) || '',
+          shotType: (article && (article.shotType || (article.raw && article.raw.shotType))) || ''
+        };
+      });
+
+      const articleField = document.getElementById('newOrderArticles');
+      if (articleField) articleField.value = articleLines.join('\n');
+      const nameField = document.getElementById('newOrderArticleNames');
+      if (nameField) nameField.value = nameLines.join('\n');
+
+      handleNewOrderArticlesInput();
+    }
+
     // Show new order modal as large side panel
-    function showNewOrderModal() {
+    function showNewOrderModal(orderToEdit) {
       // Check if this modal is already open (toggle behavior)
       const existingModal = document.getElementById('newOrderRightModal');
       if (existingModal) {
@@ -11720,13 +11947,20 @@ const __fallbackThemeCSS = `
         padding: 20px;
       `;
 
+      const isEditing = Boolean(orderToEdit && orderToEdit.orderNumber);
+      const modalTitle = isEditing ? 'Edit Draft Photo Order' : 'Create New Photo Order';
+      const modalSubtitle = isEditing
+        ? `Draft order ${orderToEdit.orderNumber} · Update details before submitting.`
+        : 'Streamline new requests with the warm CCP workspace aesthetic.';
+      const draftButtonLabel = isEditing ? 'Update Draft' : 'Save Draft';
+
       modal.innerHTML = `
   <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 2px solid rgba(196, 139, 90, 0.28);">
           <div style="display: flex; align-items: center; gap: 10px;">
             <img src="/CCP_Logog.png" alt="CCP Logo" style="width: 24px; height: 24px; object-fit: contain;" />
             <div>
-              <h3 style="margin: 0; font-size: 18px; color: #4b3b2a; font-weight: 600;">Create New Photo Order</h3>
-              <p style="margin: 2px 0 0; font-size: 11px; color: rgba(107, 84, 64, 0.78); letter-spacing: 0.3px;">Streamline new requests with the warm CCP workspace aesthetic.</p>
+              <h3 style="margin: 0; font-size: 18px; color: #4b3b2a; font-weight: 600;">${modalTitle}</h3>
+              <p style="margin: 2px 0 0; font-size: 11px; color: rgba(107, 84, 64, 0.78); letter-spacing: 0.3px;">${modalSubtitle}</p>
             </div>
           </div>
           <button onclick="closeNewOrderModal()" style="background: #ef4444; color: white; border: none; border-radius: 50%; width: 28px; height: 28px; cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center; transition: all 0.2s ease;" onmouseover="this.style.background='#dc2626'" onmouseout="this.style.background='#ef4444'">×</button>
@@ -11734,6 +11968,8 @@ const __fallbackThemeCSS = `
 
   <div style="background: linear-gradient(135deg, #fdf4e6 0%, #f2e4d2 100%); padding: 16px; border-radius: 12px; box-sizing: border-box; border: 1px solid rgba(196, 139, 90, 0.24); box-shadow: 0 18px 32px rgba(112, 82, 50, 0.12);">
           <form id="newOrderForm" onsubmit="handleNewOrderSubmit(event)">
+            <input type="hidden" id="newOrderSubmissionAction" name="submissionAction" value="draft">
+            <input type="hidden" id="newOrderExistingOrderNumber" name="existingOrderNumber" value="${isEditing ? orderToEdit.orderNumber : ''}">
             <div style="margin-bottom: 12px;">
               <label style="display: block; font-weight: 600; margin-bottom: 4px; color: #4b3b2a; font-size: 12px;">Order Title</label>
     <input name="title" required style="width: 100%; box-sizing: border-box; padding: 8px 12px; border: 1px solid #ead7c2; border-radius: 6px; font-size: 13px; transition: border-color 0.2s ease;" 
@@ -11861,7 +12097,8 @@ const __fallbackThemeCSS = `
 
             <div style="display: flex; gap: 10px; justify-content: flex-end;">
               <button type="button" onclick="closeNewOrderModal()" style="padding: 10px 16px; background: #6b5440; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 500; font-size: 13px; transition: all 0.2s ease; box-shadow: 0 4px 12px rgba(107, 84, 64, 0.25);" onmouseover="this.style.background='#4b3b2a'; this.style.transform='translateY(-1px)'" onmouseout="this.style.background='#6b5440'; this.style.transform='translateY(0)'">Cancel</button>
-                <button type="submit" style="padding: 10px 20px; background: linear-gradient(135deg, #c48b5a 0%, #a66b38 100%); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 13px; box-shadow: 0 4px 12px rgba(166, 107, 56, 0.35); transition: all 0.2s ease;" onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform='translateY(0)'">Create Order</button>
+              <button type="submit" onclick="document.getElementById('newOrderSubmissionAction').value='draft'" style="padding: 10px 20px; background: rgba(107, 84, 64, 0.95); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 13px; box-shadow: 0 4px 12px rgba(107, 84, 64, 0.3); transition: all 0.2s ease;" onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform='translateY(0)'">${draftButtonLabel}</button>
+              <button type="submit" onclick="document.getElementById('newOrderSubmissionAction').value='submit'" style="padding: 10px 20px; background: linear-gradient(135deg, #c48b5a 0%, #a66b38 100%); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 13px; box-shadow: 0 4px 12px rgba(166, 107, 56, 0.35); transition: all 0.2s ease;" onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform='translateY(0)'">Submit Order</button>
               </div>
             </form>
           </div>
@@ -11882,7 +12119,11 @@ const __fallbackThemeCSS = `
       }
 
       resetNewOrderArticleContentState();
-      handleNewOrderArticlesInput();
+      if (isEditing) {
+        hydrateNewOrderFormFromOrder(orderToEdit);
+      } else {
+        handleNewOrderArticlesInput();
+      }
 
       // Add ESC key event listener
       const escKeyHandler = function(event) {
@@ -11930,6 +12171,9 @@ const __fallbackThemeCSS = `
       event.preventDefault();
 
       const formData = new FormData(event.target);
+      const submissionAction = String(formData.get('submissionAction') || 'draft').toLowerCase();
+      const isSubmitAction = submissionAction === 'submit';
+      const existingOrderNumber = String(formData.get('existingOrderNumber') || '').trim();
       const currentUser = authSystem.getCurrentUser();
   const selectedPhotoReference = (formData.get('photoReference') || '').trim();
   const activityInput = (formData.get('activity') || '').trim();
@@ -11976,57 +12220,102 @@ const __fallbackThemeCSS = `
         return;
       }
 
-      // Generate order number
-      const orderNumber = window.generateNextOrderNumber();
-
-      // Create new order object
-      const newOrder = {
-        orderNumber: orderNumber,
-        title: formData.get('title'),
-        contentType: formData.get('contentType'),
-        combinedPhoto: formData.get('combinedPhoto'),
-        shotType: formData.get('shotType'),
-        orderType: 'PO',
-        method: formData.get('method'),
-        priority: formData.get('priority'),
-        deadline: formData.get('deadline'),
-        sampleDelivery: formData.get('sampleDelivery') || '',
-        budget: formData.get('budget') ? parseFloat(formData.get('budget')) : null,
-        photographer: formData.get('photographer') || null,
-        brief: formData.get('brief'),
-        articles: articleEntries,
-        status: 'Sample missing',
-        createdBy: currentUser.name,
-        createdDate: new Date().toLocaleDateString(),
-        updatedAt: new Date().toISOString(),
-        comments: [],
-        deliverables: ['Product Photos', 'High-Resolution Images'],
-        photoReference: selectedPhotoReference || null,
-        activity: activityInput,
-        photoStatus: 'New Request',
-        purchaseGroup: formData.get('purchaseGroup')
-      };
-
-      ensureOrderPhotoMetadata([newOrder]);
-
       const baseOrders = window.getAllOrdersSnapshot
         ? window.getAllOrdersSnapshot()
         : (Array.isArray(window.rkhOrders)
             ? window.rkhOrders
             : (typeof allOrders !== 'undefined' && Array.isArray(allOrders) ? allOrders : []));
 
-      assignSalesOrgToOrder(newOrder, Array.isArray(baseOrders) ? baseOrders.length : 0);
-      assignSalesOrgMetadata([newOrder]);
+      const existingOrder = existingOrderNumber
+        ? (Array.isArray(baseOrders)
+            ? baseOrders.find(order => String(order?.orderNumber) === String(existingOrderNumber))
+            : null)
+        : null;
+
+      const isEditing = Boolean(existingOrder);
+
+      // Generate order number
+      const orderNumber = existingOrderNumber || window.generateNextOrderNumber();
+
+      const resolvedPriority = formData.get('priority') || (existingOrder ? existingOrder.priority : null);
+      const resolvedPhotographer = formData.get('photographer') || (existingOrder ? existingOrder.photographer : null);
+      const resolvedStatus = isSubmitAction ? 'Submitted' : (existingOrder ? existingOrder.status || 'Not submitted' : 'Not submitted');
+      const resolvedPhotoStatus = isSubmitAction ? 'New Request' : (existingOrder ? existingOrder.photoStatus || 'Not submitted' : 'Not submitted');
+      const resolvedCreatedBy = existingOrder ? existingOrder.createdBy : currentUser.name;
+      const resolvedCreatedDate = existingOrder ? existingOrder.createdDate : new Date().toLocaleDateString();
+      const resolvedCreatedAt = existingOrder ? existingOrder.createdAt : new Date().toISOString();
+      const resolvedComments = existingOrder && Array.isArray(existingOrder.comments) ? existingOrder.comments : [];
+      const resolvedDeliverables = existingOrder && Array.isArray(existingOrder.deliverables)
+        ? existingOrder.deliverables
+        : ['Product Photos', 'High-Resolution Images'];
+
+      // Create new order object
+      const newOrder = {
+        ...(existingOrder || {}),
+        orderNumber: orderNumber,
+        title: formData.get('title'),
+        contentType: formData.get('contentType'),
+        combinedPhoto: formData.get('combinedPhoto'),
+        shotType: formData.get('shotType'),
+        orderType: existingOrder ? existingOrder.orderType : 'PO',
+        method: formData.get('method'),
+        priority: resolvedPriority,
+        deadline: formData.get('deadline'),
+        sampleDelivery: formData.get('sampleDelivery') || '',
+        budget: formData.get('budget') ? parseFloat(formData.get('budget')) : null,
+        photographer: resolvedPhotographer,
+        brief: formData.get('brief'),
+        articles: articleEntries,
+        status: resolvedStatus,
+        costCenter: formData.get('costCenter'),
+        createdBy: resolvedCreatedBy,
+        createdDate: resolvedCreatedDate,
+        createdAt: resolvedCreatedAt,
+        updatedAt: new Date().toISOString(),
+        comments: resolvedComments,
+        deliverables: resolvedDeliverables,
+        photoReference: selectedPhotoReference || null,
+        activity: activityInput,
+        photoStatus: resolvedPhotoStatus,
+        purchaseGroup: formData.get('purchaseGroup')
+      };
+
+      ensureOrderPhotoMetadata([newOrder]);
+
+      if (!isEditing) {
+        assignSalesOrgToOrder(newOrder, Array.isArray(baseOrders) ? baseOrders.length : 0);
+        assignSalesOrgMetadata([newOrder]);
+      }
 
       const store = typeof window.__orderStoreInstance === 'object' ? window.__orderStoreInstance : null;
 
       if (store && typeof store.upsert === 'function') {
         store.upsert(newOrder);
-      } else if (Array.isArray(window.rkhOrders)) {
-        window.rkhOrders = [...window.rkhOrders, newOrder];
-        assignSalesOrgMetadata(window.rkhOrders);
       } else {
-        window.rkhOrders = [...(Array.isArray(baseOrders) ? baseOrders : []), newOrder];
+        const applyOrderUpdate = (collection) => {
+          if (!Array.isArray(collection)) return false;
+          const index = collection.findIndex((item) => String(item?.orderNumber) === String(orderNumber));
+          if (index === -1) return false;
+          collection[index] = { ...collection[index], ...newOrder };
+          return true;
+        };
+
+        let updated = false;
+        if (isEditing) {
+          updated = applyOrderUpdate(window.rkhOrders);
+          if (!updated && typeof allOrders !== 'undefined' && Array.isArray(allOrders)) {
+            updated = applyOrderUpdate(allOrders);
+          }
+        }
+
+        if (!updated) {
+          if (Array.isArray(window.rkhOrders)) {
+            window.rkhOrders = [...window.rkhOrders, newOrder];
+          } else {
+            window.rkhOrders = [...(Array.isArray(baseOrders) ? baseOrders : []), newOrder];
+          }
+        }
+
         assignSalesOrgMetadata(window.rkhOrders);
       }
 
@@ -12044,7 +12333,8 @@ const __fallbackThemeCSS = `
       }
 
       // Show success message
-      alert(`✅ Order "${newOrder.title}" created successfully!\n\nOrder Number: ${orderNumber}`);
+      const outcomeLabel = isSubmitAction ? 'submitted' : (isEditing ? 'updated as draft' : 'saved as draft');
+      alert(`✅ Order "${newOrder.title}" ${outcomeLabel}!\n\nOrder Number: ${orderNumber}`);
 
       // Close modal
       closeNewOrderModal();
@@ -12907,6 +13197,15 @@ const __fallbackThemeCSS = `
         return;
       }
 
+      const normalizedStatus = (typeof window !== 'undefined' && typeof window.normalizeComparisonValue === 'function')
+        ? window.normalizeComparisonValue(order.status)
+        : String(order.status || '').trim().toLowerCase();
+
+      if (normalizedStatus === 'not submitted') {
+        showNewOrderModal(order);
+        return;
+      }
+
       const safeAuth = window.authSystem || {};
       const currentUser = typeof safeAuth.getCurrentUser === 'function' ? safeAuth.getCurrentUser() : { name: 'Guest', role: 'viewer' };
       const canManageOrders = typeof safeAuth.canManageOrders === 'function' ? safeAuth.canManageOrders() : false;
@@ -13619,17 +13918,19 @@ const __fallbackThemeCSS = `
         };
 
         const renderFileNameWithPreview = (fileName, uploadedAt, cloudinaryUrl, uploadedContentData) => {
-          if (!uploadedAt || uploadedAt === placeholderSpan) return fileName || placeholderSpan;
-          
-          const imageUrl = uploadedContentData || cloudinaryUrl || 'https://res.cloudinary.com/demo/image/upload/sample.jpg';
-          
+          const imageUrl = uploadedContentData || cloudinaryUrl || getArticleImageUrl(fileName);
+
+          if (!imageUrl) {
+            return fileName || placeholderSpan;
+          }
+
           return `
             <span 
               style="color: #2563eb; text-decoration: underline; text-decoration-style: dotted; cursor: pointer; text-underline-offset: 2px;" 
               onmouseenter="showThumbnailPreview(event, '${imageUrl}')"
               onmouseleave="hideThumbnailPreview()"
               onclick="event.stopPropagation(); openThumbnailModal(event, '${imageUrl}')">
-              ${fileName}
+              ${fileName || 'Preview'}
             </span>
           `;
         };
@@ -13670,6 +13971,18 @@ const __fallbackThemeCSS = `
           const normalizedOrderType = normalizeOrderType(order.orderType);
           const isPhotoOrder = normalizedOrderType === 'PO';
           const isPhotoServiceOrder = normalizedOrderType === 'PS';
+          const childColumnCount =
+            (!isPhotoOrder ? 1 : 0) +
+            1 +
+            (!isPhotoOrder ? 1 : 0) +
+            1 +
+            (!isPhotoOrder ? 1 : 0) +
+            (isPhotoServiceOrder ? 1 : 0) +
+            (!isPhotoServiceOrder ? 1 : 0) +
+            (!isPhotoServiceOrder ? 1 : 0) +
+            (isPhotoOrder ? 1 : 0) +
+            (!isPhotoServiceOrder ? 1 : 0) +
+            (!isPhotoServiceOrder ? 1 : 0);
 
           const rows = dataSource.length ? dataSource.map((article, index) => {
             const raw = article && typeof article.raw === 'object' ? article.raw : {};
@@ -13678,8 +13991,6 @@ const __fallbackThemeCSS = `
             const unitOfMeasure = raw.unitOfMeasure || raw.uom || raw.unit || order.unitOfMeasure || placeholderSpan;
             const articleNameValue = article.name || raw.articleName || order.articleName || placeholderSpan;
             const netContent = raw.netContent || raw.netWeight || raw.size || order.netContent || placeholderSpan;
-            const purchaseGroupValue = raw.purchaseGroup ?? order.purchaseGroup;
-            const purchaseGroup = formatPurchaseGroupDisplay(purchaseGroupValue);
             const combinedPhoto = raw.combinedPhoto || article.combinedPhoto || order.combinedPhoto || placeholderSpan;
             const fileName = raw.fileName || article.fileName || order.fileName || placeholderSpan;
             const uploadedAt = raw.uploadedAt || article.uploadedAt || order.uploadedAt || placeholderSpan;
@@ -13726,18 +14037,17 @@ const __fallbackThemeCSS = `
                 ${!isPhotoOrder ? `<td style="padding:6px 10px;border-bottom:1px solid ${childCellBorder};font-size:11px;${childCellTextColor}${childCellBackground}">${unitOfMeasure || placeholderSpan}</td>` : ''}
                 <td style="padding:6px 10px;border-bottom:1px solid ${childCellBorder};font-size:11px;${childCellTextColor}${childCellBackground}">${articleName}</td>
                 ${!isPhotoOrder ? `<td style="padding:6px 10px;border-bottom:1px solid ${childCellBorder};font-size:11px;${childCellTextColor}${childCellBackground}">${netContent || placeholderSpan}</td>` : ''}
-                ${!isPhotoOrder ? `<td style="padding:6px 10px;border-bottom:1px solid ${childCellBorder};font-size:11px;${childCellTextColor}${childCellBackground}">${purchaseGroup || placeholderSpan}</td>` : ''}
                 ${isPhotoServiceOrder ? `<td style="padding:6px 10px;border-bottom:1px solid ${childCellBorder};font-size:11px;${childCellTextColor}${childCellBackground}">${photoGroup || placeholderSpan}</td>` : ''}
                 ${!isPhotoServiceOrder ? `<td style="padding:6px 10px;border-bottom:1px solid ${childCellBorder};font-size:11px;${childCellTextColor}${childCellBackground}">${contentType || placeholderSpan}</td>` : ''}
                 ${!isPhotoServiceOrder ? `<td style="padding:6px 10px;border-bottom:1px solid ${childCellBorder};font-size:11px;${childCellTextColor}${childCellBackground}${combinedPhotoStyle}">${combinedPhoto || placeholderSpan}</td>` : ''}
                 ${isPhotoOrder ? `<td style="padding:6px 10px;border-bottom:1px solid ${childCellBorder};font-size:11px;${childCellTextColor}${childCellBackground}">${shotType}</td>` : ''}
-                <td style="padding:6px 10px;border-bottom:1px solid ${childCellBorder};font-size:11px;${childCellTextColor}${childCellBackground}">${fileNameCell}</td>
-                <td style="padding:6px 10px;border-bottom:1px solid ${childCellBorder};font-size:11px;${childCellTextColor}${childCellBackground}">${formattedUploadTime}</td>
+                ${!isPhotoServiceOrder ? `<td style="padding:6px 10px;border-bottom:1px solid ${childCellBorder};font-size:11px;${childCellTextColor}${childCellBackground}">${fileNameCell}</td>` : ''}
+                ${!isPhotoServiceOrder ? `<td style="padding:6px 10px;border-bottom:1px solid ${childCellBorder};font-size:11px;${childCellTextColor}${childCellBackground}">${formattedUploadTime}</td>` : ''}
               </tr>
             `;
           }).join('') : `
             <tr>
-              <td colspan="12" style="padding:12px;color:#9ca3af;text-align:center;border-bottom:1px solid rgba(196, 139, 90, 0.2);">No article details available for this order.</td>
+              <td colspan="${childColumnCount}" style="padding:12px;color:#9ca3af;text-align:center;border-bottom:1px solid rgba(196, 139, 90, 0.2);">No article details available for this order.</td>
             </tr>
           `;
 
@@ -13751,13 +14061,12 @@ const __fallbackThemeCSS = `
                     ${!isPhotoOrder ? `<th style="text-align:left;padding:8px 10px;font-size:11px;color:${isAuroraTheme || isGlassTheme ? 'rgba(20, 34, 60, 0.9)' : '#6b5440'};font-weight:600;">Unit of Measure</th>` : ''}
                     <th style="text-align:left;padding:8px 10px;font-size:11px;color:${isAuroraTheme || isGlassTheme ? 'rgba(20, 34, 60, 0.9)' : '#6b5440'};font-weight:600;">Article Name</th>
                     ${!isPhotoOrder ? `<th style="text-align:left;padding:8px 10px;font-size:11px;color:${isAuroraTheme || isGlassTheme ? 'rgba(20, 34, 60, 0.9)' : '#6b5440'};font-weight:600;">Net Content</th>` : ''}
-                    ${!isPhotoOrder ? `<th style="text-align:left;padding:8px 10px;font-size:11px;color:${isAuroraTheme || isGlassTheme ? 'rgba(20, 34, 60, 0.9)' : '#6b5440'};font-weight:600;">Purchase Group</th>` : ''}
                     ${isPhotoServiceOrder ? `<th style="text-align:left;padding:8px 10px;font-size:11px;color:${isAuroraTheme || isGlassTheme ? 'rgba(20, 34, 60, 0.9)' : '#6b5440'};font-weight:600;">Photo Group</th>` : ''}
                     ${!isPhotoServiceOrder ? `<th style="text-align:left;padding:8px 10px;font-size:11px;color:${isAuroraTheme || isGlassTheme ? 'rgba(20, 34, 60, 0.9)' : '#6b5440'};font-weight:600;">Content Type</th>` : ''}
                     ${!isPhotoServiceOrder ? `<th style="text-align:left;padding:8px 10px;font-size:11px;color:${isAuroraTheme || isGlassTheme ? 'rgba(20, 34, 60, 0.9)' : '#6b5440'};font-weight:600;">Combined Photo</th>` : ''}
                     ${isPhotoOrder ? `<th style="text-align:left;padding:8px 10px;font-size:11px;color:${isAuroraTheme || isGlassTheme ? 'rgba(20, 34, 60, 0.9)' : '#6b5440'};font-weight:600;">DAM Shot Type</th>` : ''}
-                    <th style="text-align:left;padding:8px 10px;font-size:11px;color:${isAuroraTheme || isGlassTheme ? 'rgba(20, 34, 60, 0.9)' : '#6b5440'};font-weight:600;">File Name</th>
-                    <th style="text-align:left;padding:8px 10px;font-size:11px;color:${isAuroraTheme || isGlassTheme ? 'rgba(20, 34, 60, 0.9)' : '#6b5440'};font-weight:600;">Upload Time</th>
+                    ${!isPhotoServiceOrder ? `<th style="text-align:left;padding:8px 10px;font-size:11px;color:${isAuroraTheme || isGlassTheme ? 'rgba(20, 34, 60, 0.9)' : '#6b5440'};font-weight:600;">File Name</th>` : ''}
+                    ${!isPhotoServiceOrder ? `<th style="text-align:left;padding:8px 10px;font-size:11px;color:${isAuroraTheme || isGlassTheme ? 'rgba(20, 34, 60, 0.9)' : '#6b5440'};font-weight:600;">Upload Time</th>` : ''}
                   </tr>
                 </thead>
                 <tbody>
@@ -13839,7 +14148,7 @@ const __fallbackThemeCSS = `
           const isPO = normalizeOrderType(o.orderType) === 'PO';
           const isPS = normalizeOrderType(o.orderType) === 'PS';
           const costCenterDisplay = isPO ? (o.costCenter || placeholderSpan) : placeholderSpan;
-          const purchaseGroupDisplay = isPO ? formatPurchaseGroupDisplay(o.purchaseGroup) : '';
+          const purchaseGroupDisplay = formatPurchaseGroupDisplay(o.purchaseGroup);
           const orderTypeDisplay = (o.orderType || 'PS');
           const isSampleReceived = String(o.status || '').toLowerCase() === 'sample recieved';
           const sampleDeliveryDisplay = isPO
@@ -16358,8 +16667,7 @@ const __fallbackThemeCSS = `
         }
       };
       
-      updateCount('allOrdersCount', ordersList.length);
-      updateCount('draftOrdersCount', ordersList.filter(o => matchesStatus(o.status, 'Sample missing')).length);
+      updateCount('draftOrdersCount', ordersList.filter(o => matchesStatus(o.status, 'Sample missing', 'Not submitted')).length);
       updateCount('pendingOrdersCount', ordersList.filter(o => matchesStatus(o.status, 'Sample to be sent')).length);
       updateCount('approvedOrdersCount', ordersList.filter(o => matchesStatus(o.status, 'Sample Sent from Vendor')).length);
       updateCount('samplesOrdersCount', ordersList.filter(o => matchesStatus(o.status, 'Sample sent from DS')).length);
