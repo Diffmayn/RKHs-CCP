@@ -7975,6 +7975,38 @@ const __fallbackThemeCSS = `
           flex-direction: column;
         }
 
+        .orders-table-container.orders-view-transition {
+          animation: orders-view-swap 350ms cubic-bezier(0.2, 0.0, 0.2, 1) forwards;
+        }
+
+        .orders-table-container.orders-fading-out {
+          opacity: 0;
+          transform: scale(0.995) translateY(4px);
+          transition: opacity 120ms ease-out, transform 120ms ease-out;
+        }
+
+        @keyframes orders-view-swap {
+          0% {
+            opacity: 0;
+            transform: translateY(12px) scale(0.99);
+            filter: blur(2px);
+          }
+          60% {
+             opacity: 1;
+             filter: blur(0);
+          }
+          100% {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          .orders-view-transition {
+            animation: none;
+          }
+        }
+
         .orders-table thead {
           position: sticky;
           top: 0;
@@ -9891,9 +9923,7 @@ const __fallbackThemeCSS = `
         updateOrderFilterSummary([]);
       }
 
-      if (typeof drawOrderRows === 'function') {
-        drawOrderRows();
-      }
+      refreshOrdersAfterFilterChange();
 
       const panel = document.getElementById('quickFiltersPanel');
       if (panel && quickFiltersOpen) {
@@ -10318,6 +10348,9 @@ const __fallbackThemeCSS = `
 
       if (!options.skipRender && typeof drawOrderRows === 'function') {
         drawOrderRows();
+        if (!options.skipAnimation) {
+          requestAnimationFrame(triggerOrdersViewTransition);
+        }
       }
     }
 
@@ -10428,13 +10461,41 @@ const __fallbackThemeCSS = `
       select.disabled = tactics.length === 0;
     }
 
-    function refreshOrdersAfterFilterChange() {
-      if (typeof drawOrderRows === 'function') {
-        drawOrderRows();
+    function runOrdersTableUpdate(updateFn, options = {}) {
+      const container = document.querySelector('.orders-table-container');
+
+      if (options.skipAnimation || !container) {
+        updateFn();
+        return;
       }
-      if (typeof updateOrdersTableColumnVisibility === 'function') {
-        updateOrdersTableColumnVisibility();
-      }
+
+      container.classList.add('orders-fading-out');
+
+      setTimeout(() => {
+        updateFn();
+        container.classList.remove('orders-fading-out');
+        requestAnimationFrame(triggerOrdersViewTransition);
+      }, 120);
+    }
+
+    function refreshOrdersAfterFilterChange(options = {}) {
+      runOrdersTableUpdate(() => {
+        if (typeof drawOrderRows === 'function') {
+          drawOrderRows();
+        }
+        if (typeof updateOrdersTableColumnVisibility === 'function') {
+          updateOrdersTableColumnVisibility();
+        }
+      }, options);
+    }
+
+    function triggerOrdersViewTransition() {
+      const container = document.querySelector('.orders-table-container');
+      if (!container) return;
+      container.classList.remove('orders-view-transition');
+      void container.offsetWidth;
+      container.classList.add('orders-view-transition');
+      setTimeout(() => container.classList.remove('orders-view-transition'), 280);
     }
 
     function handleSalesOrgFilterChange(value) {
@@ -10474,8 +10535,7 @@ const __fallbackThemeCSS = `
       const normalizedOrderType = normalizeOrderType(orderFilters.orderType || '');
       const hideForPhotoService = normalizedOrderType === 'PS';
       const hideForPhotoOrder = normalizedOrderType === 'PO';
-      // const hideForAnyPhotoType = hideForPhotoService || hideForPhotoOrder;
-      // document.body.classList.toggle('orders-sticky-header', hideForAnyPhotoType);
+      const hideForAnyPhotoType = hideForPhotoService || hideForPhotoOrder;
 
       const toggleColumnByLabel = (label, shouldHide) => {
         const targetIndex = headers.findIndex(th => (th.textContent || '').trim().toLowerCase() === label);
