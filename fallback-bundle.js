@@ -3284,8 +3284,9 @@ const __fallbackThemeCSS = `
 
           // Generate random DAM Shot Type if missing
           const damShotTypes = [
-            'Front', 'Front - Top', 'Front - Left Angle', 'Front - Right Angle',
-            'Left Side', 'Right Side', 'Back', 'Top', 'Bottom'
+            'Pack', 'Pack advanced', 'Pack background',
+            'Model', 'Model background',
+            'Additional image', 'Additional image background'
           ];
           const shotType = article.shotType || damShotTypes[Math.abs(hash) % damShotTypes.length];
 
@@ -3958,6 +3959,7 @@ const __fallbackThemeCSS = `
       });
 
       assignSalesOrgMetadata(newOrders);
+      normalizeAllOrdersShotTypes(newOrders);
 
       if (store && typeof store.upsert === 'function') {
         newOrders.forEach((order) => store.upsert(order));
@@ -7155,10 +7157,14 @@ const __fallbackThemeCSS = `
                       <div class="filter-group">
                         <label style="display: block; font-size: 11px; font-weight: 600; color: #85694c; margin-bottom: 4px;">DAM Shot Type</label>
                         <select id="filterDamShotType" class="filter-select" style="width: 100%; padding: 6px; border-radius: 6px; border: 1px solid #ead7c2; background: rgba(255, 255, 255, 0.5); color: #4b3b2a;">
-                          <option value="">All</option>
-                          <option value="packshot">Packshot</option>
-                          <option value="lifestyle">Lifestyle</option>
-                          <option value="detail">Detail</option>
+                          <option value="">All Types</option>
+                          <option value="Pack">Pack</option>
+                          <option value="Pack advanced">Pack advanced</option>
+                          <option value="Pack background">Pack background</option>
+                          <option value="Model">Model</option>
+                          <option value="Model background">Model background</option>
+                          <option value="Additional image">Additional image</option>
+                          <option value="Additional image background">Additional image background</option>
                         </select>
                       </div>
 
@@ -10001,6 +10007,7 @@ const __fallbackThemeCSS = `
     function getAccessibleOrders() {
       const sourceOrders = (typeof window.resolveOrdersSnapshot === 'function') ? window.resolveOrdersSnapshot() : (window.rkhOrders || []);
       assignSalesOrgMetadata(sourceOrders);
+      normalizeAllOrdersShotTypes(sourceOrders);
       return authSystem && typeof authSystem.getFilteredOrders === 'function'
         ? authSystem.getFilteredOrders(sourceOrders)
         : sourceOrders;
@@ -10173,6 +10180,34 @@ const __fallbackThemeCSS = `
       return meta;
     }
 
+    function normalizeAllOrdersShotTypes(orders) {
+      if (!Array.isArray(orders)) return;
+      orders.forEach(order => {
+        if (order) {
+          if (order.shotType) {
+            order.shotType = normalizeArticleShotType(order.shotType);
+          }
+          if (Array.isArray(order.articles)) {
+            order.articles.forEach(article => {
+              if (article && article.shotType) {
+                article.shotType = normalizeArticleShotType(article.shotType);
+              }
+              if (article && article.raw && article.raw.shotType) {
+                article.raw.shotType = normalizeArticleShotType(article.raw.shotType);
+              }
+            });
+          }
+          if (Array.isArray(order.uploadedContent)) {
+            order.uploadedContent.forEach(content => {
+              if (content && content.shotType) {
+                content.shotType = normalizeArticleShotType(content.shotType);
+              }
+            });
+          }
+        }
+      });
+    }
+
     function applyProductionNormalization(order) {
       if (!order || typeof order !== 'object') {
         return;
@@ -10272,6 +10307,7 @@ const __fallbackThemeCSS = `
     }
 
   assignSalesOrgMetadata((typeof window.resolveOrdersSnapshot === 'function') ? window.resolveOrdersSnapshot() : (typeof allOrders !== 'undefined' ? allOrders : []));
+  normalizeAllOrdersShotTypes((typeof window.resolveOrdersSnapshot === 'function') ? window.resolveOrdersSnapshot() : (typeof allOrders !== 'undefined' ? allOrders : []));
 
     function getSalesOrgValue(order) {
       return normalizeFilterValue(order.salesOrg || order.salesOrganisation || order.salesOrganization || order.format || '');
@@ -11290,16 +11326,44 @@ const __fallbackThemeCSS = `
     const NEW_ORDER_COMBINED_PHOTO_OPTIONS = [''].concat(Array.from({ length: 26 }, (_, i) => String.fromCharCode(65 + i)));
     const NEW_ORDER_SHOT_TYPE_OPTIONS = [
       '',
-      'Front',
-      'Front - Top',
-      'Front - Left Angle',
-      'Front - Right Angle',
-      'Left Side',
-      'Right Side',
-      'Back',
-      'Top',
-      'Bottom'
+      'Pack',
+      'Pack advanced',
+      'Pack background',
+      'Model',
+      'Model background',
+      'Additional image',
+      'Additional image background'
     ];
+
+    // Normalize old shot types to new shot type options
+    function normalizeArticleShotType(shotType) {
+      if (!shotType || typeof shotType !== 'string') return '';
+      
+      const validOptions = ['Pack', 'Pack advanced', 'Pack background', 'Model', 'Model background', 'Additional image', 'Additional image background'];
+      
+      // If it's already a valid option, return it
+      if (validOptions.includes(shotType)) return shotType;
+      
+      // Normalize old shot types to new ones
+      const normalized = shotType.toLowerCase().trim();
+      
+      if (normalized.includes('pack') || normalized.includes('front') || normalized.includes('back')) {
+        if (normalized.includes('advanced')) return 'Pack advanced';
+        if (normalized.includes('background')) return 'Pack background';
+        return 'Pack';
+      }
+      if (normalized.includes('model')) {
+        if (normalized.includes('background')) return 'Model background';
+        return 'Model';
+      }
+      if (normalized.includes('additional') || normalized.includes('detail')) {
+        if (normalized.includes('background')) return 'Additional image background';
+        return 'Additional image';
+      }
+      
+      // Default to 'Pack' if type is unrecognized
+      return 'Pack';
+    }
 
     const BASE_ORDER_TEMPLATES = {
       "Women's Fashion": ['Front Packshot', 'Back Packshot'],
