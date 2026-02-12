@@ -3284,9 +3284,8 @@ const __fallbackThemeCSS = `
 
           // Generate random DAM Shot Type if missing
           const damShotTypes = [
-            'Pack', 'Pack advanced', 'Pack background',
-            'Model', 'Model background',
-            'Additional image', 'Additional image background'
+            'Front', 'Front - Top', 'Front - Left Angle', 'Front - Right Angle',
+            'Left Side', 'Right Side', 'Back', 'Top', 'Bottom'
           ];
           const shotType = article.shotType || damShotTypes[Math.abs(hash) % damShotTypes.length];
 
@@ -3959,7 +3958,6 @@ const __fallbackThemeCSS = `
       });
 
       assignSalesOrgMetadata(newOrders);
-      normalizeAllOrdersShotTypes(newOrders);
 
       if (store && typeof store.upsert === 'function') {
         newOrders.forEach((order) => store.upsert(order));
@@ -7157,14 +7155,10 @@ const __fallbackThemeCSS = `
                       <div class="filter-group">
                         <label style="display: block; font-size: 11px; font-weight: 600; color: #85694c; margin-bottom: 4px;">DAM Shot Type</label>
                         <select id="filterDamShotType" class="filter-select" style="width: 100%; padding: 6px; border-radius: 6px; border: 1px solid #ead7c2; background: rgba(255, 255, 255, 0.5); color: #4b3b2a;">
-                          <option value="">All Types</option>
-                          <option value="Pack">Pack</option>
-                          <option value="Pack advanced">Pack advanced</option>
-                          <option value="Pack background">Pack background</option>
-                          <option value="Model">Model</option>
-                          <option value="Model background">Model background</option>
-                          <option value="Additional image">Additional image</option>
-                          <option value="Additional image background">Additional image background</option>
+                          <option value="">All</option>
+                          <option value="packshot">Packshot</option>
+                          <option value="lifestyle">Lifestyle</option>
+                          <option value="detail">Detail</option>
                         </select>
                       </div>
 
@@ -7246,6 +7240,7 @@ const __fallbackThemeCSS = `
                         <th style="padding: 4px; text-align: center; border-bottom: 1px solid var(--theme-table-border); width: 32px;" aria-label="Expand"></th>
                         <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: var(--theme-table-header-text); border-bottom: 1px solid var(--theme-table-border);">Order Number</th>
                         <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: var(--theme-table-header-text); border-bottom: 1px solid var(--theme-table-border);">Title</th>
+                        <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: var(--theme-table-header-text); border-bottom: 1px solid var(--theme-table-border);">Activity</th>
                         <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: var(--theme-table-header-text); border-bottom: 1px solid var(--theme-table-border);">Page</th>
                         <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: var(--theme-table-header-text); border-bottom: 1px solid var(--theme-table-border);">Offer ID</th>
                         <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: var(--theme-table-header-text); border-bottom: 1px solid var(--theme-table-border);">Group</th>
@@ -7253,8 +7248,6 @@ const __fallbackThemeCSS = `
                         <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: var(--theme-table-header-text); border-bottom: 1px solid var(--theme-table-border);">Purchase Group</th>
                         <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: var(--theme-table-header-text); border-bottom: 1px solid var(--theme-table-border);">Order Type</th>
                         <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: var(--theme-table-header-text); border-bottom: 1px solid var(--theme-table-border);">Offer Name</th>
-                        <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: var(--theme-table-header-text); border-bottom: 1px solid var(--theme-table-border);">Shot Type</th>
-                        <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: var(--theme-table-header-text); border-bottom: 1px solid var(--theme-table-border);">Photo Ref.</th>
                         <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: var(--theme-table-header-text); border-bottom: 1px solid var(--theme-table-border);">Production</th>
                         <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: var(--theme-table-header-text); border-bottom: 1px solid var(--theme-table-border);">Principle</th>
                         <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: var(--theme-table-header-text); border-bottom: 1px solid var(--theme-table-border);">File Name</th>
@@ -10007,7 +10000,8 @@ const __fallbackThemeCSS = `
     function getAccessibleOrders() {
       const sourceOrders = (typeof window.resolveOrdersSnapshot === 'function') ? window.resolveOrdersSnapshot() : (window.rkhOrders || []);
       assignSalesOrgMetadata(sourceOrders);
-      normalizeAllOrdersShotTypes(sourceOrders);
+      populatePhotoOrderShotTypes(sourceOrders);
+      populatePhotoOrderActivities(sourceOrders);
       return authSystem && typeof authSystem.getFilteredOrders === 'function'
         ? authSystem.getFilteredOrders(sourceOrders)
         : sourceOrders;
@@ -10023,6 +10017,107 @@ const __fallbackThemeCSS = `
 
     function normalizeComparisonValue(value) {
       return normalizeFilterValue(value).toLowerCase();
+    }
+
+    function populatePhotoOrderShotTypes(orders) {
+      if (!Array.isArray(orders)) {
+        return;
+      }
+
+      const damShotTypes = [
+        'Front',
+        'Front - Top',
+        'Front - Left Angle',
+        'Front - Right Angle',
+        'Left Side',
+        'Right Side',
+        'Back',
+        'Top',
+        'Bottom'
+      ];
+
+      const resolveShotType = (order, article, fallbackIndex) => {
+        const raw = article && typeof article.raw === 'object' ? article.raw : {};
+        const existing =
+          (article && article.shotType) ||
+          raw.shotType ||
+          order.shotType ||
+          '';
+
+        if (existing) {
+          return existing;
+        }
+
+        const hashSource = `${order.orderNumber || ''}-${(article && article.articleNumber) || raw.articleNumber || fallbackIndex}`;
+        let hash = 0;
+        for (let i = 0; i < hashSource.length; i += 1) {
+          hash = ((hash << 5) - hash) + hashSource.charCodeAt(i);
+          hash |= 0;
+        }
+        return damShotTypes[Math.abs(hash) % damShotTypes.length];
+      };
+
+      orders.forEach((order, orderIndex) => {
+        if (!order || normalizeOrderType(order.orderType) !== 'PO') {
+          return;
+        }
+
+        if (!order.shotType) {
+          order.shotType = damShotTypes[orderIndex % damShotTypes.length];
+        }
+
+        if (!Array.isArray(order.articles) || order.articles.length === 0) {
+          return;
+        }
+
+        order.articles.forEach((article, articleIndex) => {
+          if (!article || typeof article !== 'object') {
+            return;
+          }
+
+          const shotType = resolveShotType(order, article, articleIndex);
+          article.shotType = shotType;
+
+          if (!article.raw || typeof article.raw !== 'object') {
+            article.raw = {};
+          }
+          article.raw.shotType = shotType;
+        });
+      });
+    }
+
+    function populatePhotoOrderActivities(orders) {
+      if (!Array.isArray(orders)) {
+        return;
+      }
+
+      const activityOptions = [
+        'Foto cykler online',
+        'C&C',
+        'L1526022'
+      ];
+
+      let fallbackCounter = 0;
+      orders.forEach((order) => {
+        if (!order || normalizeOrderType(order.orderType) !== 'PO') {
+          return;
+        }
+
+        const existingActivity = normalizeFilterValue(order.activity);
+        if (existingActivity) {
+          return;
+        }
+
+        const hashSeed = String(order.orderNumber || order.offerId || fallbackCounter);
+        let hash = 0;
+        for (let i = 0; i < hashSeed.length; i += 1) {
+          hash = ((hash << 5) - hash) + hashSeed.charCodeAt(i);
+          hash |= 0;
+        }
+
+        order.activity = activityOptions[Math.abs(hash) % activityOptions.length];
+        fallbackCounter += 1;
+      });
     }
 
     function resolveSalesOrgFromSap(sapItem) {
@@ -10180,34 +10275,6 @@ const __fallbackThemeCSS = `
       return meta;
     }
 
-    function normalizeAllOrdersShotTypes(orders) {
-      if (!Array.isArray(orders)) return;
-      orders.forEach(order => {
-        if (order) {
-          if (order.shotType) {
-            order.shotType = normalizeArticleShotType(order.shotType);
-          }
-          if (Array.isArray(order.articles)) {
-            order.articles.forEach(article => {
-              if (article && article.shotType) {
-                article.shotType = normalizeArticleShotType(article.shotType);
-              }
-              if (article && article.raw && article.raw.shotType) {
-                article.raw.shotType = normalizeArticleShotType(article.raw.shotType);
-              }
-            });
-          }
-          if (Array.isArray(order.uploadedContent)) {
-            order.uploadedContent.forEach(content => {
-              if (content && content.shotType) {
-                content.shotType = normalizeArticleShotType(content.shotType);
-              }
-            });
-          }
-        }
-      });
-    }
-
     function applyProductionNormalization(order) {
       if (!order || typeof order !== 'object') {
         return;
@@ -10306,8 +10373,10 @@ const __fallbackThemeCSS = `
       ensureBilkaOrdersHavePreview(orders);
     }
 
-  assignSalesOrgMetadata((typeof window.resolveOrdersSnapshot === 'function') ? window.resolveOrdersSnapshot() : (typeof allOrders !== 'undefined' ? allOrders : []));
-  normalizeAllOrdersShotTypes((typeof window.resolveOrdersSnapshot === 'function') ? window.resolveOrdersSnapshot() : (typeof allOrders !== 'undefined' ? allOrders : []));
+  const initialOrdersSnapshot = (typeof window.resolveOrdersSnapshot === 'function') ? window.resolveOrdersSnapshot() : (typeof allOrders !== 'undefined' ? allOrders : []);
+  assignSalesOrgMetadata(initialOrdersSnapshot);
+  populatePhotoOrderShotTypes(initialOrdersSnapshot);
+  populatePhotoOrderActivities(initialOrdersSnapshot);
 
     function getSalesOrgValue(order) {
       return normalizeFilterValue(order.salesOrg || order.salesOrganisation || order.salesOrganization || order.format || '');
@@ -11326,44 +11395,16 @@ const __fallbackThemeCSS = `
     const NEW_ORDER_COMBINED_PHOTO_OPTIONS = [''].concat(Array.from({ length: 26 }, (_, i) => String.fromCharCode(65 + i)));
     const NEW_ORDER_SHOT_TYPE_OPTIONS = [
       '',
-      'Pack',
-      'Pack advanced',
-      'Pack background',
-      'Model',
-      'Model background',
-      'Additional image',
-      'Additional image background'
+      'Front',
+      'Front - Top',
+      'Front - Left Angle',
+      'Front - Right Angle',
+      'Left Side',
+      'Right Side',
+      'Back',
+      'Top',
+      'Bottom'
     ];
-
-    // Normalize old shot types to new shot type options
-    function normalizeArticleShotType(shotType) {
-      if (!shotType || typeof shotType !== 'string') return '';
-      
-      const validOptions = ['Pack', 'Pack advanced', 'Pack background', 'Model', 'Model background', 'Additional image', 'Additional image background'];
-      
-      // If it's already a valid option, return it
-      if (validOptions.includes(shotType)) return shotType;
-      
-      // Normalize old shot types to new ones
-      const normalized = shotType.toLowerCase().trim();
-      
-      if (normalized.includes('pack') || normalized.includes('front') || normalized.includes('back')) {
-        if (normalized.includes('advanced')) return 'Pack advanced';
-        if (normalized.includes('background')) return 'Pack background';
-        return 'Pack';
-      }
-      if (normalized.includes('model')) {
-        if (normalized.includes('background')) return 'Model background';
-        return 'Model';
-      }
-      if (normalized.includes('additional') || normalized.includes('detail')) {
-        if (normalized.includes('background')) return 'Additional image background';
-        return 'Additional image';
-      }
-      
-      // Default to 'Pack' if type is unrecognized
-      return 'Pack';
-    }
 
     const BASE_ORDER_TEMPLATES = {
       "Women's Fashion": ['Front Packshot', 'Back Packshot'],
@@ -14229,6 +14270,7 @@ const __fallbackThemeCSS = `
             (!isPhotoServiceOrder ? 1 : 0) +
             (!isPhotoServiceOrder ? 1 : 0) +
             (isPhotoOrder ? 1 : 0) +
+            (isPhotoOrder ? 1 : 0) +
             (!isPhotoServiceOrder ? 1 : 0) +
             (!isPhotoServiceOrder ? 1 : 0);
 
@@ -14248,12 +14290,16 @@ const __fallbackThemeCSS = `
               : '<span style="color:#2563eb;cursor:pointer;text-decoration:underline;" onclick="event.stopPropagation(); window.showMassUploadModal()">Ready for Upload</span>';
             const contentType = article.contentType || raw.contentType || placeholderSpan;
             const photoGroup = article.photoGroup || raw.photoGroup || placeholderSpan;
-            const shotType = article.shotType || raw.shotType || placeholderSpan;
+            const shotType = article.shotType || raw.shotType || order.shotType || placeholderSpan;
+            const photoReference = article.photoReference || raw.photoReference || order.photoReference || placeholderSpan;
             const cloudinaryUrl = raw.cloudinaryUrl || article.cloudinaryUrl || order.cloudinaryUrl || null;
             const previewData = article.uploadedImages && article.uploadedImages[0] ? article.uploadedImages[0].data : null;
             const fileNameCell = hasUpload
               ? renderFileNameWithPreview(fileName || placeholderSpan, uploadedAt, cloudinaryUrl, previewData)
               : (fileName || placeholderSpan);
+            const photoReferenceCell = isPhotoOrder
+              ? `${photoReference || placeholderSpan}<br><span style="color:#2563eb;cursor:pointer;text-decoration:underline;font-size:10px;" onclick="event.stopPropagation(); window.showMassUploadModal()">Add file</span>`
+              : (photoReference || placeholderSpan);
 
             const articleStatus = (article.status || raw.status || '').toString().trim();
             const isRemovedFromCpt = /removed\s+in\s+cpt/i.test(articleStatus);
@@ -14288,7 +14334,8 @@ const __fallbackThemeCSS = `
                 ${isPhotoServiceOrder ? `<td style="padding:6px 10px;border-bottom:1px solid ${childCellBorder};font-size:11px;${childCellTextColor}${childCellBackground}">${photoGroup || placeholderSpan}</td>` : ''}
                 ${!isPhotoServiceOrder ? `<td style="padding:6px 10px;border-bottom:1px solid ${childCellBorder};font-size:11px;${childCellTextColor}${childCellBackground}">${contentType || placeholderSpan}</td>` : ''}
                 ${!isPhotoServiceOrder ? `<td style="padding:6px 10px;border-bottom:1px solid ${childCellBorder};font-size:11px;${childCellTextColor}${childCellBackground}${combinedPhotoStyle}">${combinedPhoto || placeholderSpan}</td>` : ''}
-                ${isPhotoOrder ? `<td style="padding:6px 10px;border-bottom:1px solid ${childCellBorder};font-size:11px;${childCellTextColor}${childCellBackground}">${shotType}</td>` : ''}
+                ${isPhotoOrder ? `<td style="padding:6px 10px;border-bottom:1px solid ${childCellBorder};font-size:11px;${childCellTextColor}${childCellBackground}">${shotType || placeholderSpan}</td>` : ''}
+                ${isPhotoOrder ? `<td style="padding:6px 10px;border-bottom:1px solid ${childCellBorder};font-size:11px;${childCellTextColor}${childCellBackground}">${photoReferenceCell}</td>` : ''}
                 ${!isPhotoServiceOrder ? `<td style="padding:6px 10px;border-bottom:1px solid ${childCellBorder};font-size:11px;${childCellTextColor}${childCellBackground}">${fileNameCell}</td>` : ''}
                 ${!isPhotoServiceOrder ? `<td style="padding:6px 10px;border-bottom:1px solid ${childCellBorder};font-size:11px;${childCellTextColor}${childCellBackground}">${formattedUploadTime}</td>` : ''}
               </tr>
@@ -14313,6 +14360,7 @@ const __fallbackThemeCSS = `
                     ${!isPhotoServiceOrder ? `<th style="text-align:left;padding:8px 10px;font-size:11px;color:${isAuroraTheme || isGlassTheme ? 'rgba(20, 34, 60, 0.9)' : '#6b5440'};font-weight:600;">Content Type</th>` : ''}
                     ${!isPhotoServiceOrder ? `<th style="text-align:left;padding:8px 10px;font-size:11px;color:${isAuroraTheme || isGlassTheme ? 'rgba(20, 34, 60, 0.9)' : '#6b5440'};font-weight:600;">Combined Photo</th>` : ''}
                     ${isPhotoOrder ? `<th style="text-align:left;padding:8px 10px;font-size:11px;color:${isAuroraTheme || isGlassTheme ? 'rgba(20, 34, 60, 0.9)' : '#6b5440'};font-weight:600;">DAM Shot Type</th>` : ''}
+                    ${isPhotoOrder ? `<th style="text-align:left;padding:8px 10px;font-size:11px;color:${isAuroraTheme || isGlassTheme ? 'rgba(20, 34, 60, 0.9)' : '#6b5440'};font-weight:600;">Photo Ref</th>` : ''}
                     ${!isPhotoServiceOrder ? `<th style="text-align:left;padding:8px 10px;font-size:11px;color:${isAuroraTheme || isGlassTheme ? 'rgba(20, 34, 60, 0.9)' : '#6b5440'};font-weight:600;">File Name</th>` : ''}
                     ${!isPhotoServiceOrder ? `<th style="text-align:left;padding:8px 10px;font-size:11px;color:${isAuroraTheme || isGlassTheme ? 'rgba(20, 34, 60, 0.9)' : '#6b5440'};font-weight:600;">Upload Time</th>` : ''}
                   </tr>
@@ -14408,14 +14456,13 @@ const __fallbackThemeCSS = `
                     : o.sampleDelivery)
                 : placeholderSpan)
             : '';
-          const activityDisplay = o.title || placeholderSpan;
+          const titleDisplay = o.title || placeholderSpan;
+          const activityDisplay = isPO ? (o.activity || placeholderSpan) : '';
           const rawPage = o.page ?? o.pageNumber ?? o.pageNo ?? o.catalogPage ?? o.pamPage ?? o.pageReference ?? '';
           const parsedPage = parseInt(rawPage, 10);
           const pageDisplay = !isNaN(parsedPage) && parsedPage >= 0 ? String(parsedPage) : (rawPage ? String(rawPage).trim() : placeholderSpan);
           const offerId = o.offerId || placeholderSpan;
           const offerName = o.offerName || o.articleName || placeholderSpan;
-          const shotType = o.photoStatus || placeholderSpan;
-          const photoRef = o.photoReference || placeholderSpan;
           const principle = o.principle || placeholderSpan;
           const productionInfo = buildProductionInfo(o);
           const previewCell = buildPreviewCell(o);
@@ -14432,7 +14479,7 @@ const __fallbackThemeCSS = `
           const articleDetailsRow = isExpanded ? `
             <tr class="order-articles-row" data-parent-order="${o.orderNumber}">
               <td class="bulk-checkbox" style="display: none; width: 55px; min-width: 55px; max-width: 55px; height: 55px; padding: 0; text-align: center;"></td>
-              <td colspan="22" style="${childRowBackground}padding:0 20px 12px;">
+              <td colspan="21" style="${childRowBackground}padding:0 20px 12px;">
                 ${buildChildDetailsTable(o, normalizedArticles)}
               </td>
             </tr>
@@ -14445,6 +14492,7 @@ const __fallbackThemeCSS = `
               ${prioIndicator}<button type="button" class="order-expand-button" aria-label="${expandLabel}" title="${expandLabel}" onclick="toggleOrderExpansion('${o.orderNumber}', event)">${expandIcon}</button>
             </td>
             <td style="padding:6px 8px;${baseCellTextColor}font-size:12px;"><strong>${o.orderNumber}</strong></td>
+            <td style="padding:6px 8px;${baseCellTextColor}font-size:12px;">${titleDisplay}</td>
             <td style="padding:6px 8px;${baseCellTextColor}font-size:12px;">${activityDisplay}</td>
             <td style="padding:6px 8px;${baseCellTextColor}font-size:12px;">${isPO ? '' : pageDisplay}</td>
             <td style="padding:6px 8px;${baseCellTextColor}font-size:12px;">${isPO ? '' : offerId}</td>
@@ -14453,8 +14501,6 @@ const __fallbackThemeCSS = `
             <td style="padding:6px 8px;${baseCellTextColor}font-size:12px;">${purchaseGroupDisplay}</td>
             <td style="padding:6px 8px;${baseCellTextColor}font-size:12px;">${orderTypeDisplay}</td>
             <td style="padding:6px 8px;${baseCellTextColor}min-width:150px;font-size:12px;">${isPO ? '' : offerName}</td>
-            <td style="padding:6px 8px;${baseCellTextColor}font-size:12px;">${shotType}</td>
-            <td style="padding:6px 8px;${baseCellTextColor}font-size:12px;">${photoRef}</td>
             <td style="padding:6px 8px;${baseCellTextColor}font-size:12px;">${productionInfo}</td>
             <td style="padding:6px 8px;${baseCellTextColor}font-size:12px;">${isPO ? '' : principle}</td>
             <td style="padding:6px 8px;${baseCellTextColor}font-size:12px;">${isPO ? '' : renderFileNameWithPreview(o.fileName || 'SG_' + Math.floor(Math.random() * 900000 + 100000), o.uploadedAt, o.cloudinaryUrl, o.uploadedContent && o.uploadedContent[0] ? o.uploadedContent[0].data : null)}</td>
