@@ -2112,7 +2112,7 @@ const __fallbackThemeCSS = `
     const selectedType = selectElement.value;
     
     // Clear existing options
-    tacticDropdown.innerHTML = '<option value="">Select Tactic...</option>';
+    tacticDropdown.innerHTML = '<option value="" hidden>Select Tactic...</option>';
     
     if (!selectedType || !window.TacticsConfig) {
       tacticDropdown.disabled = true;
@@ -2170,7 +2170,7 @@ const __fallbackThemeCSS = `
     const currentValue = filterSelect.value;
     
     // Clear existing options except "All Events"
-  filterSelect.innerHTML = '<option value="">Events</option>';
+  filterSelect.innerHTML = '<option value="" hidden>Events</option>';
     
     // Sort Event IDs alphabetically
     eventIds.sort();
@@ -3803,11 +3803,42 @@ const __fallbackThemeCSS = `
     'Sample missing',
     'Sample to be sent (date)',
     'Sample Sent from Vendor',
-    'Sample sent from DS',
+    'Sample sent from SG',
     'Sample At photographer',
     'Sample recieved',
     'Cancelled'
   ];
+
+  // Sample Status Constants
+  const SAMPLE_STATUSES = new Set([
+    'Sample missing',
+    'Sample to be sent (date)',
+    'Sample Sent from Vendor',
+    'Sample sent from SG',
+    'Sample At photographer',
+    'Sample recieved'
+  ]);
+
+  // Helper function to check if a status is a sample status
+  function isSampleStatus(status) {
+    return SAMPLE_STATUSES.has(status);
+  }
+
+  // Helper function to get the current date formatted as YYYY-MM-DD
+  function getCurrentDateFormatted() {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
+
+  // Helper function to format a date for tooltip display
+  function formatDateForTooltip(dateStr) {
+    if (!dateStr) return '';
+    const date = new Date(dateStr + 'T00:00:00');
+    return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+  }
 
   function normalizeOrderStatusValue(value) {
     const normalized = (typeof window !== 'undefined' && typeof window.normalizeComparisonValue === 'function')
@@ -3826,7 +3857,7 @@ const __fallbackThemeCSS = `
     if (normalized.includes('missing')) return 'Sample missing';
     if (normalized.includes('to be sent')) return 'Sample to be sent (date)';
     if (normalized.includes('sent from vendor') || normalized.includes('vendor')) return 'Sample Sent from Vendor';
-    if (normalized.includes('sent from ds') || normalized.includes(' ds ')) return 'Sample sent from DS';
+    if (normalized.includes('sent from sg') || normalized.includes(' sg ')) return 'Sample sent from SG';
     if (normalized.includes('at photographer') || normalized.includes('photographer')) return 'Sample At photographer';
     if (normalized.includes('received') || normalized.includes('recieved')) return 'Sample recieved';
     if (normalized.includes('delivered') || normalized.includes('complete') || normalized.includes('completed') || normalized.includes('archive')) return 'Sample recieved';
@@ -3834,7 +3865,7 @@ const __fallbackThemeCSS = `
     if (normalized.includes('in progress') || normalized.includes('photo session') || normalized.includes('processing')) return 'Sample At photographer';
     if (normalized.includes('samples requested')) return 'Sample to be sent (date)';
     if (normalized.includes('pending approval') || normalized.includes('pending')) return 'Sample to be sent (date)';
-    if (normalized.includes('approved')) return 'Sample sent from DS';
+    if (normalized.includes('approved')) return 'Sample sent from SG';
     if (normalized.includes('in transit')) return 'Sample Sent from Vendor';
     if (normalized.includes('new request') || normalized.includes('draft')) return 'Sample missing';
     if (normalized.includes('order created')) return 'Order created';
@@ -5889,7 +5920,7 @@ const __fallbackThemeCSS = `
     'Samples Received': 'Sample recieved',
     'Pending Approval': 'Sample to be sent (date)',
     'Pending': 'Sample to be sent (date)',
-    'Approved': 'Sample sent from DS',
+    'Approved': 'Sample sent from SG',
     'In Progress': 'Sample At photographer',
     'Photo Session': 'Sample At photographer',
     'Processing': 'Sample At photographer',
@@ -6047,6 +6078,36 @@ const __fallbackThemeCSS = `
   ensureOrderPhotoMetadata(allOrders);
   ensurePhotoServicePrio(allOrders);
   ensureOrderStatuses(allOrders);
+  
+  // Add fictive sample status dates to all existing orders with sample statuses for testing
+  function addSampleStatusDatesToOrders(orders) {
+    if (!Array.isArray(orders)) return;
+    // Define fictive dates for testing - spread across the last 30 days
+    const fictiveDates = [
+      '2025-08-14',
+      '2025-08-16',
+      '2025-08-18',
+      '2025-08-19',
+      '2025-08-21',
+      '2025-08-23',
+      '2025-08-24',
+      '2025-08-25',
+      '2025-08-27',
+      '2025-08-28'
+    ];
+    let dateIndex = 0;
+    
+    orders.forEach(order => {
+      if (!order) return;
+      // Add date if order has a sample status and doesn't already have one
+      if (isSampleStatus(order.status) && !order.sampleStatusDate) {
+        order.sampleStatusDate = fictiveDates[dateIndex % fictiveDates.length];
+        dateIndex++;
+      }
+    });
+  }
+  
+  addSampleStatusDatesToOrders(allOrders);
 
   const OrderStoreCtor = window.__OrderStoreCtor || null;
   if (OrderStoreCtor) {
@@ -6309,7 +6370,7 @@ const __fallbackThemeCSS = `
     const samplesCount = orders.filter(o => 
       o.status === 'Sample to be sent (date)' ||
       o.status === 'Sample Sent from Vendor' ||
-      o.status === 'Sample sent from DS' ||
+      o.status === 'Sample sent from SG' ||
       o.status === 'Sample At photographer' ||
       o.status === 'Sample recieved'
     ).length;
@@ -6351,7 +6412,7 @@ const __fallbackThemeCSS = `
     {
       id: 'SMP-002',
       articleName: 'Espresso Beans 500g',
-      status: 'Sample sent from DS',
+      status: 'Sample sent from SG',
       location: 'Transit Vehicle #47',
       assignedTo: 'Emily Brown',
       transitHistory: 'Warehouse → Photo Box Station 3',
@@ -6383,6 +6444,10 @@ const __fallbackThemeCSS = `
     #fallback-app tbody tr td { color: #4f3a25 !important; }
     #fallback-app tbody tr:hover { background: rgba(237, 214, 186, 0.65); }
     #fallback-app .status { padding: 3px 10px; border-radius: 14px; font-size: 11px; font-weight: 600; display: inline-block; background: rgba(210, 187, 161, 0.35); color: #4b3927; }
+    #fallback-app .status-with-tooltip { position: relative; cursor: help; }
+    #fallback-app .status-tooltip { visibility: hidden; opacity: 0; position: absolute; bottom: 125%; left: 50%; transform: translateX(-50%); background-color: #2d2d2d; color: #fff; text-align: center; padding: 8px 12px; border-radius: 6px; border: 1px solid #555; font-size: 11px; white-space: nowrap; z-index: 1000; transition: opacity 0.3s ease; box-shadow: 0 4px 12px rgba(0,0,0,0.3); font-weight: normal; }
+    #fallback-app .status-tooltip::after { content: ''; position: absolute; top: 100%; left: 50%; margin-left: -5px; border-width: 5px 5px 0 5px; border-style: solid; border-color: #2d2d2d transparent transparent transparent; }
+    #fallback-app .status-with-tooltip:hover .status-tooltip { visibility: visible; opacity: 1; }
     #fallback-app .Notsubmitted { background: rgba(148, 163, 184, 0.24); color: #475569; }
     #fallback-app .Ordercreated,
     #fallback-app .Ordered,
@@ -6392,7 +6457,7 @@ const __fallbackThemeCSS = `
     #fallback-app .Imagereadyforuse,
     #fallback-app .Sampletobesent\(date\),
     #fallback-app .SampleSentfromVendor,
-    #fallback-app .SamplesentfromDS,
+    #fallback-app .SamplesentfromSG,
     #fallback-app .SampleAtphotographer { background: rgba(245, 158, 11, 0.22); color: #8a5324; }
     #fallback-app .Samplemissing { background: rgba(239, 68, 68, 0.18); color: #991b1b; }
     #fallback-app .Samplerecieved,
@@ -6472,10 +6537,10 @@ const __fallbackThemeCSS = `
     const total = resolvedOrders.length;
     const complete = resolvedOrders.filter(o => o.status === 'Sample recieved').length;
     const pending = resolvedOrders.filter(o => o.status === 'Sample missing' || o.status === 'Sample to be sent (date)').length;
-    const inProgress = resolvedOrders.filter(o => o.status === 'Sample Sent from Vendor' || o.status === 'Sample sent from DS' || o.status === 'Sample At photographer').length;
+    const inProgress = resolvedOrders.filter(o => o.status === 'Sample Sent from Vendor' || o.status === 'Sample sent from SG' || o.status === 'Sample At photographer').length;
     const newRequests = resolvedOrders.filter(o => o.status === 'Sample missing').length;
     const totalSamples = samples.length;
-    const samplesInTransit = samples.filter(s => s.status === 'Sample Sent from Vendor' || s.status === 'Sample sent from DS').length;
+    const samplesInTransit = samples.filter(s => s.status === 'Sample Sent from Vendor' || s.status === 'Sample sent from SG').length;
     return { total, complete, pending, inProgress, newRequests, totalSamples, samplesInTransit };
   }
 
@@ -7004,32 +7069,32 @@ const __fallbackThemeCSS = `
                   <select id="orderTypeFilter"
                           onchange="handleOrderTypeFilterChange(this.value)"
                           style="padding: 6px 10px; border: 1px solid rgba(216, 164, 88, 0.65); border-radius: 8px; font-size: 13px; font-family: monospace; font-weight: 500; background: #fffaf3; cursor: pointer; min-width: 140px; color: #6b5440; flex: 0 0 auto;">
-                    <option value="">Order Type</option>
+                    <option value="" hidden>Order Type</option>
                     <option value="Photo Service">Photo Service</option>
                     <option value="Photo order">Photo order</option>
                   </select>
                   <select id="salesOrgFilter"
                           onchange="handleSalesOrgFilterChange(this.value)"
                           style="padding: 6px 10px; border: 1px solid rgba(216, 164, 88, 0.65); border-radius: 8px; font-size: 13px; font-family: monospace; font-weight: 500; background: #fffaf3; cursor: pointer; min-width: 140px; color: #6b5440; flex: 0 0 auto;">
-                    <option value="">Sales Orgs</option>
+                    <option value="" hidden>Sales Orgs</option>
                     <!-- Sales org options populated on load -->
                   </select>
                   <select id="tacticTypeFilter"
                           onchange="handleTacticTypeFilterChange(this.value)"
                           style="padding: 6px 10px; border: 1px solid rgba(216, 164, 88, 0.65); border-radius: 8px; font-size: 13px; font-family: monospace; font-weight: 500; background: #fffaf3; cursor: pointer; min-width: 160px; color: #6b5440; flex: 0 0 auto;">
-                    <option value="">Tactic Types</option>
+                    <option value="" hidden>Tactic Types</option>
                     <!-- Tactic types populated dynamically -->
                   </select>
                   <select id="tacticFilter"
                           onchange="handleTacticFilterChange(this.value)"
                           style="padding: 6px 10px; border: 1px solid rgba(216, 164, 88, 0.65); border-radius: 8px; font-size: 13px; font-family: monospace; font-weight: 500; background: #fffaf3; cursor: pointer; min-width: 150px; color: #6b5440; flex: 0 0 auto;">
-                    <option value="">Tactics</option>
+                    <option value="" hidden>Tactics</option>
                     <!-- Tactics populated dynamically -->
                   </select>
                   <select id="eventIdFilter" 
                           onchange="handleEventFilterChange(this.value)" 
                           style="padding: 6px 10px; border: 1px solid rgba(216, 164, 88, 0.65); border-radius: 8px; font-size: 13px; font-family: monospace; font-weight: 500; background: #fffaf3; cursor: pointer; min-width: 150px; color: #6b5440; flex: 0 0 auto;">
-                    <option value="">Events</option>
+                    <option value="" hidden>Events</option>
                     <!-- Event IDs from PMR will be populated here -->
                   </select>
                   <div style="width: 1px; height: 24px; background: rgba(196, 139, 90, 0.25); margin: 0 4px; flex: 0 0 auto;"></div>
@@ -7151,7 +7216,7 @@ const __fallbackThemeCSS = `
                           <option value="Sample missing">Sample missing</option>
                           <option value="Sample to be sent (date)">Sample to be sent (date)</option>
                           <option value="Sample Sent from Vendor">Sample Sent from Vendor</option>
-                          <option value="Sample sent from DS">Sample sent from DS</option>
+                          <option value="Sample sent from SG">Sample sent from SG</option>
                           <option value="Sample At photographer">Sample At photographer</option>
                           <option value="Sample recieved">Sample recieved</option>
                           <option value="Cancelled">Cancelled</option>
@@ -7266,10 +7331,10 @@ const __fallbackThemeCSS = `
                   </div>
                   <div class="kanban-column" 
                        style="min-width: 250px; background: #f3e8ff; border-radius: 10px; padding: 14px; border: 1px solid rgba(139, 92, 246, 0.25);"
-                       ondrop="handleDrop(event, 'Sample sent from DS')" 
+                       ondrop="handleDrop(event, 'Sample sent from SG')" 
                        ondragover="handleDragOver(event)">
-                    <h4 style="margin: 0 0 12px; font-size: 14px; color: #6d28d9; font-weight: 600;">📬 Sent from DS</h4>
-                    <div id="sampleSentDsOrders" class="kanban-items"></div>
+                    <h4 style="margin: 0 0 12px; font-size: 14px; color: #6d28d9; font-weight: 600;">📬 Sent from SG</h4>
+                    <div id="sampleSentSgOrders" class="kanban-items"></div>
                   </div>
                   <div class="kanban-column" 
                        style="min-width: 250px; background: #fff3e6; border-radius: 10px; padding: 14px; border: 1px solid rgba(249, 115, 22, 0.25);"
@@ -9477,7 +9542,7 @@ const __fallbackThemeCSS = `
                 <div>
                   <label style="display: block; font-weight: 500; margin-bottom: 4px;">Production</label>
                   <select name="method" required style="width: 100%; padding: 8px; border: 1px solid #d1d5db; border-radius: 4px;" onchange="handleMethodChange(this)">
-                    <option value="">Select production...</option>
+                    <option value="" hidden>Select production...</option>
                     <option value="Photo Box">Photo Box</option>
                     <option value="M&B">M&B</option>
                     <option value="GILS">GILS</option>
@@ -9503,7 +9568,7 @@ const __fallbackThemeCSS = `
                   <div>
                     <label style="display: block; font-weight: 500; margin-bottom: 4px; color: #78350f;">Tactic Type</label>
                     <select name="tacticType" style="width: 100%; padding: 8px; border: 1px solid #f59e0b; border-radius: 4px;" onchange="handleTacticTypeChange(this)">
-                      <option value="">Select tactic type...</option>
+                      <option value="" hidden>Select tactic type...</option>
                       <option value="Print">Print</option>
                       <option value="Digital">Digital</option>
                       <option value="Point of Sale">Point of Sale</option>
@@ -9517,7 +9582,7 @@ const __fallbackThemeCSS = `
                   <div>
                     <label style="display: block; font-weight: 500; margin-bottom: 4px; color: #78350f;">Tactic</label>
                     <select name="tactic" id="tacticSelect" style="width: 100%; padding: 8px; border: 1px solid #f59e0b; border-radius: 4px;" disabled>
-                      <option value="">Select tactic type first...</option>
+                      <option value="" hidden>Select tactic type first...</option>
                     </select>
                   </div>
                 </div>
@@ -9532,7 +9597,7 @@ const __fallbackThemeCSS = `
                 <div id="postProductionSubMethod" style="display: none;">
                   <label style="display: block; font-weight: 500; margin-bottom: 4px;">Post Production Type</label>
                   <select name="postProductionType" style="width: 100%; padding: 8px; border: 1px solid #d1d5db; border-radius: 4px;" onchange="handlePostProductionTypeChange(this)">
-                    <option value="">Select post production type...</option>
+                    <option value="" hidden>Select post production type...</option>
                     <option value="Internal">Internal</option>
                     <option value="GenAI">GenAI (Nano Banana)</option>
                   </select>
@@ -9549,7 +9614,7 @@ const __fallbackThemeCSS = `
                     <div>
                       <label style="display: block; font-weight: 500; margin-bottom: 4px; font-size: 13px;">AI Operation</label>
                       <select name="aiOperation" style="width: 100%; padding: 6px; border: 1px solid #d1d5db; border-radius: 4px; font-size: 13px;">
-                        <option value="">Select operation...</option>
+                  <option value="" hidden>Select operation...</option>
                         <option value="color-change">Color Change</option>
                         <option value="add-model">Add Model</option>
                         <option value="background-change">Background Change</option>
@@ -9610,7 +9675,7 @@ const __fallbackThemeCSS = `
               <div>
                 <label style="display: block; font-weight: 500; margin-bottom: 4px;">Assign To</label>
                 <select name="photographer" style="width: 100%; padding: 8px; border: 1px solid #d1d5db; border-radius: 4px;">
-                  <option value="">Select photographer/photo box...</option>
+                  <option value="" hidden>Select photographer/photo box...</option>
                   <option value="Mike Rodriguez">Mike Rodriguez (Photographer)</option>
                   <option value="Emily Chen">Emily Chen (Photographer)</option>
                   <option value="Alex Turner">Alex Turner (Photo Box)</option>
@@ -10288,7 +10353,7 @@ const __fallbackThemeCSS = `
         'sample missing': 'Sample missing',
         'sample to be sent (date)': 'Sample to be sent (date)',
         'sample sent from vendor': 'Sample Sent from Vendor',
-        'sample sent from ds': 'Sample sent from DS',
+        'sample sent from sg': 'Sample sent from SG',
         'sample at photographer': 'Sample At photographer',
         'sample recieved': 'Sample recieved',
         cancelled: 'Cancelled',
@@ -10329,7 +10394,7 @@ const __fallbackThemeCSS = `
           case 'submitted':
           case 'sample to be sent (date)':
           case 'sample sent from vendor':
-          case 'sample sent from ds':
+          case 'sample sent from sg':
           case 'sample at photographer':
           case 'sample recieved':
           case 'cancelled':
@@ -10391,7 +10456,7 @@ const __fallbackThemeCSS = `
       if (!select) return;
 
       const previousValue = orderFilters.salesOrg;
-  select.innerHTML = '<option value="">Sales Orgs</option>';
+  select.innerHTML = '<option value="" hidden>Sales Orgs</option>';
 
       SALES_ORG_OPTIONS.forEach(org => {
         const option = document.createElement('option');
@@ -10412,7 +10477,7 @@ const __fallbackThemeCSS = `
         .sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
 
       const previousValue = orderFilters.tacticType;
-  select.innerHTML = '<option value="">Tactic Types</option>';
+  select.innerHTML = '<option value="" hidden>Tactic Types</option>';
 
       types.forEach(type => {
         const option = document.createElement('option');
@@ -10444,7 +10509,7 @@ const __fallbackThemeCSS = `
         .sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
 
       const previousValue = orderFilters.tactic;
-  select.innerHTML = '<option value="">Tactics</option>';
+  select.innerHTML = '<option value="" hidden>Tactics</option>';
 
       tactics.forEach(tactic => {
         const option = document.createElement('option');
@@ -11300,7 +11365,7 @@ const __fallbackThemeCSS = `
       }
 
       const custom = getCustomOrderTemplates();
-      selectEl.innerHTML = '<option value="">Select Template...</option>';
+      selectEl.innerHTML = '<option value="" hidden>Select Template...</option>';
 
       const standardGroup = document.createElement('optgroup');
       standardGroup.label = 'Standard Templates';
@@ -11929,6 +11994,8 @@ const __fallbackThemeCSS = `
       const form = document.getElementById('newOrderForm');
       if (!form) return;
 
+      const isCopyMode = Boolean(order && order.isCopyMode);
+
       const setValue = (selector, value) => {
         const field = form.querySelector(selector);
         if (field) field.value = value ?? '';
@@ -11939,14 +12006,15 @@ const __fallbackThemeCSS = `
       setValue('select[name="purchaseGroup"]', order.purchaseGroup !== undefined && order.purchaseGroup !== null ? String(order.purchaseGroup) : '');
       setValue('select[name="method"]', order.method || '');
       setValue('input[name="deadline"]', order.deadline || '');
-      setValue('input[name="budget"]', order.budget ?? '');
       setValue('input[name="sampleDelivery"]', order.sampleDelivery || '');
       setValue('textarea[name="brief"]', order.brief || '');
       setValue('input[name="activity"]', order.activity || '');
 
       const existingOrderField = document.getElementById('newOrderExistingOrderNumber');
       if (existingOrderField) {
-        existingOrderField.value = order.orderNumber || '';
+        // In copy mode, do NOT set the existing order number (so a new order is created)
+        // In edit mode, set the existing order number (so the draft is updated)
+        existingOrderField.value = isCopyMode ? '' : (order.orderNumber || '');
       }
 
       const articles = Array.isArray(order.articles) ? order.articles : [];
@@ -12008,10 +12076,15 @@ const __fallbackThemeCSS = `
       `;
 
       const isEditing = Boolean(orderToEdit && orderToEdit.orderNumber);
-      const modalTitle = isEditing ? 'Edit Draft Photo Order' : 'Create New Photo Order';
-      const modalSubtitle = isEditing
-        ? `Draft order ${orderToEdit.orderNumber} · Update details before submitting.`
-        : 'Streamline new requests with the warm CCP workspace aesthetic.';
+      const isCopyMode = Boolean(orderToEdit && orderToEdit.isCopyMode);
+      const modalTitle = isCopyMode 
+        ? `Copy Photo Order (${orderToEdit.orderNumber})`
+        : (isEditing ? 'Edit Draft Photo Order' : 'Create New Photo Order');
+      const modalSubtitle = isCopyMode
+        ? `Create a new order based on order ${orderToEdit.orderNumber}. Update title and deadline.`
+        : (isEditing
+          ? `Draft order ${orderToEdit.orderNumber} · Update details before submitting.`
+          : 'Streamline new requests with the warm CCP workspace aesthetic.');
       const draftButtonLabel = isEditing ? 'Update Draft' : 'Save Draft';
 
       modal.innerHTML = `
@@ -12029,7 +12102,7 @@ const __fallbackThemeCSS = `
   <div style="background: linear-gradient(135deg, #fdf4e6 0%, #f2e4d2 100%); padding: 16px; border-radius: 12px; box-sizing: border-box; border: 1px solid rgba(196, 139, 90, 0.24); box-shadow: 0 18px 32px rgba(112, 82, 50, 0.12);">
           <form id="newOrderForm" onsubmit="handleNewOrderSubmit(event)">
             <input type="hidden" id="newOrderSubmissionAction" name="submissionAction" value="draft">
-            <input type="hidden" id="newOrderExistingOrderNumber" name="existingOrderNumber" value="${isEditing ? orderToEdit.orderNumber : ''}">
+            <input type="hidden" id="newOrderExistingOrderNumber" name="existingOrderNumber" value="${isEditing && !isCopyMode ? orderToEdit.orderNumber : ''}">
             <div style="margin-bottom: 12px;">
               <label style="display: block; font-weight: 600; margin-bottom: 4px; color: #4b3b2a; font-size: 12px;">Order Title</label>
     <input name="title" required style="width: 100%; box-sizing: border-box; padding: 8px 12px; border: 1px solid #ead7c2; border-radius: 6px; font-size: 13px; transition: border-color 0.2s ease;" 
@@ -12058,7 +12131,7 @@ const __fallbackThemeCSS = `
                 <label style="display: block; font-weight: 600; margin-bottom: 4px; color: #4b3b2a; font-size: 12px;">Purchase Group</label>
     <select name="purchaseGroup" required style="width: 100%; box-sizing: border-box; padding: 8px 12px; border: 1px solid #ead7c2; border-radius: 6px; font-size: 13px; transition: border-color 0.2s ease;"
       onfocus="this.style.borderColor='#c48b5a'" onblur="this.style.borderColor='#ead7c2'">
-                  <option value="">Select purchase group...</option>
+    <option value="" hidden>Select purchase group...</option>
                   <option value="101">101 - Petfood</option>
                   <option value="102">102 - Coffee/Tea</option>
                   <option value="103">103 - Groceries</option>
@@ -12074,7 +12147,7 @@ const __fallbackThemeCSS = `
                 <label style="display: block; font-weight: 600; margin-bottom: 4px; color: #4b3b2a; font-size: 12px;">Production</label>
                 <select name="method" required style="width: 100%; box-sizing: border-box; padding: 8px 12px; border: 1px solid #ead7c2; border-radius: 6px; font-size: 13px; transition: border-color 0.2s ease;"
                   onfocus="this.style.borderColor='#c48b5a'" onblur="this.style.borderColor='#ead7c2'">
-                  <option value="">Select production...</option>
+                  <option value="" hidden>Select production...</option>
                   <option value="Photo Box">Photo Box</option>
                   <option value="M&B">M&B</option>
                   <option value="GILS">GILS</option>
@@ -12088,7 +12161,7 @@ const __fallbackThemeCSS = `
                 </label>
                 <select id="newOrderTemplateSelect" name="template" style="width: 100%; box-sizing: border-box; padding: 8px 12px; border: 1px solid #ead7c2; border-radius: 6px; font-size: 13px; transition: border-color 0.2s ease;"
                   onfocus="this.style.borderColor='#c48b5a'" onblur="this.style.borderColor='#ead7c2'" onchange="handleTemplateChange()">
-                  <option value="">Select Template...</option>
+                  <option value="" hidden>Select Template...</option>
                 </select>
               </div>
             </div>
@@ -12100,16 +12173,10 @@ const __fallbackThemeCSS = `
         onfocus="this.style.borderColor='#c48b5a'" onblur="this.style.borderColor='#ead7c2'">
               </div>
               <div style="min-width: 0;">
-                <label style="display: block; font-weight: 600; margin-bottom: 4px; color: #4b3b2a; font-size: 12px;">Budget (DKK)</label>
-      <input name="budget" type="number" min="0" style="width: 100%; box-sizing: border-box; padding: 8px 12px; border: 1px solid #ead7c2; border-radius: 6px; font-size: 13px; transition: border-color 0.2s ease;" placeholder="0"
+                <label style="display: block; font-weight: 600; margin-bottom: 4px; color: #4b3b2a; font-size: 12px;">Sample Delivery</label>
+      <input name="sampleDelivery" type="date" style="width: 100%; box-sizing: border-box; padding: 8px 12px; border: 1px solid #ead7c2; border-radius: 6px; font-size: 13px; transition: border-color 0.2s ease;"
         onfocus="this.style.borderColor='#c48b5a'" onblur="this.style.borderColor='#ead7c2'">
               </div>
-            </div>
-
-            <div style="margin-bottom: 12px;">
-              <label style="display: block; font-weight: 600; margin-bottom: 4px; color: #4b3b2a; font-size: 12px;">Sample Delivery</label>
-              <input name="sampleDelivery" type="date" style="width: 100%; box-sizing: border-box; padding: 8px 12px; border: 1px solid #ead7c2; border-radius: 6px; font-size: 13px; transition: border-color 0.2s ease;"
-                onfocus="this.style.borderColor='#c48b5a'" onblur="this.style.borderColor='#ead7c2'">
             </div>
 
             <div style="margin-bottom: 12px;">
@@ -12322,7 +12389,6 @@ const __fallbackThemeCSS = `
         priority: resolvedPriority,
         deadline: formData.get('deadline'),
         sampleDelivery: formData.get('sampleDelivery') || '',
-        budget: formData.get('budget') ? parseFloat(formData.get('budget')) : null,
         photographer: resolvedPhotographer,
         brief: formData.get('brief'),
         articles: articleEntries,
@@ -13481,6 +13547,7 @@ const __fallbackThemeCSS = `
           </div>
 
           <div style="display:flex;justify-content:flex-end;gap:10px;">
+            <button onclick="showCopyOrderModal('${orderNumber}')" title="Create a copy of this order" aria-label="Copy Order" style="border:none;padding:10px 16px;border-radius:10px;background:rgba(196,139,90,0.15);color:#8a6d4c;font-weight:600;font-size:13px;cursor:pointer;transition:all 0.2s ease;" onmouseover="this.style.background='rgba(196,139,90,0.25);this.style.color='#4b3b2a'" onmouseout="this.style.background='rgba(196,139,90,0.15);this.style.color='#8a6d4c'">📋 Copy</button>
             ${canManageOrders ? `
               <button onclick="showOrderHistory('${orderNumber}')" style="border:none;padding:10px 20px;border-radius:10px;background:rgba(94,73,52,0.1);color:#4b3825;font-weight:600;font-size:13px;cursor:pointer;">View History</button>
             ` : ''}
@@ -13503,6 +13570,53 @@ const __fallbackThemeCSS = `
     }
 
     window.showOrderDetails = showOrderDetails;
+
+    // Function to copy an existing order
+    function showCopyOrderModal(orderNumber) {
+      const baseOrders = window.getAllOrdersSnapshot
+        ? window.getAllOrdersSnapshot()
+        : (Array.isArray(window.rkhOrders) && window.rkhOrders.length
+            ? window.rkhOrders
+            : (typeof allOrders !== 'undefined' ? allOrders : []));
+
+      let sourceOrder = baseOrders.find(o => String(o.orderNumber) === String(orderNumber));
+      
+      if (!sourceOrder) {
+        if (window.authSystem && typeof authSystem.getFilteredOrders === 'function') {
+          try {
+            const filtered = authSystem.getFilteredOrders(baseOrders) || [];
+            sourceOrder = filtered.find(o => String(o.orderNumber) === String(orderNumber)) || sourceOrder;
+          } catch (err) {
+            console.error('[Copy Order] Unable to resolve order from filtered list:', err);
+          }
+        }
+      }
+
+      if (!sourceOrder) {
+        alert('❌ Order not found: ' + orderNumber);
+        return;
+      }
+
+      // Create a copy of the order, clearing only title, deadline, and sampleDelivery
+      const copiedOrder = {
+        ...sourceOrder,
+        title: '', // Clear title - user must enter new one
+        deadline: '', // Clear deadline - user must enter new one  
+        sampleDelivery: '', // Clear sample delivery - optional for new order
+        isCopyMode: true // Flag to indicate this is a copy operation
+      };
+
+      // Close the order details modal
+      const orderDetailsModal = document.querySelector('.order-details-modal');
+      if (orderDetailsModal) {
+        orderDetailsModal.remove();
+      }
+
+      // Open the new order modal with the copied order
+      showNewOrderModal(copiedOrder);
+    }
+
+    window.showCopyOrderModal = showCopyOrderModal;
     
     // Function to update order workflow (status and assignment)
     function updateOrderWorkflow(orderNumber) {
@@ -13531,6 +13645,11 @@ const __fallbackThemeCSS = `
           order.status = newStatus;
           changes.push(`Status: ${newStatus}`);
           updated = true;
+          
+          // Tag with current date if changing to a sample status
+          if (isSampleStatus(newStatus)) {
+            order.sampleStatusDate = getCurrentDateFormatted();
+          }
         }
       }
       
@@ -13749,6 +13868,11 @@ const __fallbackThemeCSS = `
       // Update order status
       const oldStatus = order.status;
       order.status = newStatus;
+      
+      // Tag with current date if changing to a sample status
+      if (isSampleStatus(newStatus)) {
+        order.sampleStatusDate = getCurrentDateFormatted();
+      }
       
       // Add to history
       if (!order.history) order.history = [];
@@ -14157,7 +14281,7 @@ const __fallbackThemeCSS = `
             'image reuloaded',
             'sample to be sent (date)',
             'sample sent from vendor',
-            'sample sent from ds',
+            'sample sent from sg',
             'sample at photographer'
           ]);
           if (orangeStatuses.has(normalized)) {
@@ -14177,7 +14301,9 @@ const __fallbackThemeCSS = `
                 ${statusOptions.map(status => `<option value="${status}" ${status === o.status ? 'selected' : ''}>${status}</option>`).join('')}
               </select>`
             : `${o.status || ''}`;
-          const statusCell = `<span style="${statusHighlightStyle}">${statusCellContent}</span>`;
+          const statusCell = isSampleStatus(o.status) && o.sampleStatusDate
+            ? `<span class="status-with-tooltip" style="${statusHighlightStyle}">${statusCellContent}<span class="status-tooltip">Status: ${formatDateForTooltip(o.sampleStatusDate)}</span></span>`
+            : `<span style="${statusHighlightStyle}">${statusCellContent}</span>`;
           const isOverdue = o.deadline ? (new Date(o.deadline) < new Date() && o.status !== 'Complete' && o.status !== 'Delivered') : false;
           const baseTextColor = isAuroraTheme || isGlassTheme ? 'rgba(24, 42, 78, 0.95)' : '#4b3b2a';
           const baseCellTextColor = isAuroraTheme || isGlassTheme ? 'color: rgba(24, 42, 78, 0.95) !important;' : 'color: #4b3b2a !important;';
@@ -14574,6 +14700,16 @@ const __fallbackThemeCSS = `
                 }, 200);
               }
 
+              // Tag with current date if changing to a sample status
+              const updateData = {
+                status: newStatus,
+                updatedAt: timestampIso,
+                history: nextHistory
+              };
+              if (isSampleStatus(newStatus)) {
+                updateData.sampleStatusDate = getCurrentDateFormatted();
+              }
+
               const applyPatchToCollection = (collection) => {
                 if (!Array.isArray(collection)) {
                   return;
@@ -14582,19 +14718,13 @@ const __fallbackThemeCSS = `
                 if (index !== -1) {
                   collection[index] = {
                     ...collection[index],
-                    status: newStatus,
-                    updatedAt: timestampIso,
-                    history: nextHistory
+                    ...updateData
                   };
                 }
               };
 
               if (store && typeof store.patch === 'function') {
-                store.patch(order.orderNumber, {
-                  status: newStatus,
-                  updatedAt: timestampIso,
-                  history: nextHistory
-                });
+                store.patch(order.orderNumber, updateData);
               } else {
                 applyPatchToCollection(window.rkhOrders);
                 if (typeof allOrders !== 'undefined' && Array.isArray(allOrders)) {
@@ -14838,7 +14968,7 @@ const __fallbackThemeCSS = `
         'Sample missing': 10,
         'Sample to be sent (date)': 25,
         'Sample Sent from Vendor': 45,
-        'Sample sent from DS': 60,
+        'Sample sent from SG': 60,
         'Sample At photographer': 80,
         'Sample recieved': 100,
         'Cancelled': 0
@@ -14872,7 +15002,7 @@ const __fallbackThemeCSS = `
         'Sample missing': '#6b5440',
         'Sample to be sent (date)': '#f59e0b',
         'Sample Sent from Vendor': '#3b82f6',
-        'Sample sent from DS': '#8b5cf6',
+        'Sample sent from SG': '#8b5cf6',
         'Sample At photographer': '#f97316',
         'Sample recieved': '#7fa284',
         'Cancelled': '#ef4444'
@@ -14897,7 +15027,7 @@ const __fallbackThemeCSS = `
       const sampleMissingOrders = orders.filter(o => o.status === 'Sample missing');
       const sampleToBeSentOrders = orders.filter(o => o.status === 'Sample to be sent (date)');
       const sampleSentVendorOrders = orders.filter(o => o.status === 'Sample Sent from Vendor');
-      const sampleSentDsOrders = orders.filter(o => o.status === 'Sample sent from DS');
+      const sampleSentSgOrders = orders.filter(o => o.status === 'Sample sent from SG');
       const sampleAtPhotographerOrders = orders.filter(o => o.status === 'Sample At photographer');
       const sampleRecievedOrders = orders.filter(o => o.status === 'Sample recieved');
       const cancelledOrders = orders.filter(o => o.status === 'Cancelled');
@@ -14926,7 +15056,7 @@ const __fallbackThemeCSS = `
       renderKanbanItems(sampleMissingOrders, 'sampleMissingOrders');
       renderKanbanItems(sampleToBeSentOrders, 'sampleToBeSentOrders');
       renderKanbanItems(sampleSentVendorOrders, 'sampleSentVendorOrders');
-      renderKanbanItems(sampleSentDsOrders, 'sampleSentDsOrders');
+      renderKanbanItems(sampleSentSgOrders, 'sampleSentSgOrders');
       renderKanbanItems(sampleAtPhotographerOrders, 'sampleAtPhotographerOrders');
       renderKanbanItems(sampleRecievedOrders, 'sampleRecievedOrders');
       renderKanbanItems(cancelledOrders, 'cancelledOrders');
@@ -15037,7 +15167,7 @@ const __fallbackThemeCSS = `
           filtered = scopedOrders.filter(o => o.priority === 'Urgent' || o.priority === 'High');
           break;
         case 'ready-samples':
-          filtered = scopedOrders.filter(o => o.status === 'Sample to be sent (date)' || o.status === 'Sample Sent from Vendor' || o.status === 'Sample sent from DS');
+          filtered = scopedOrders.filter(o => o.status === 'Sample to be sent (date)' || o.status === 'Sample Sent from Vendor' || o.status === 'Sample sent from SG');
           break;
         case 'overdue':
           filtered = scopedOrders.filter(o => new Date(o.deadline) < new Date() && o.status !== 'Sample recieved' && o.status !== 'Cancelled');
@@ -16730,7 +16860,7 @@ const __fallbackThemeCSS = `
       updateCount('draftOrdersCount', ordersList.filter(o => matchesStatus(o.status, 'Sample missing', 'Not submitted')).length);
       updateCount('pendingOrdersCount', ordersList.filter(o => matchesStatus(o.status, 'Sample to be sent')).length);
       updateCount('approvedOrdersCount', ordersList.filter(o => matchesStatus(o.status, 'Sample Sent from Vendor')).length);
-      updateCount('samplesOrdersCount', ordersList.filter(o => matchesStatus(o.status, 'Sample sent from DS')).length);
+      updateCount('samplesOrdersCount', ordersList.filter(o => matchesStatus(o.status, 'Sample sent from SG')).length);
       updateCount('inProgressOrdersCount', ordersList.filter(o => matchesStatus(o.status, 'Sample At photographer')).length);
       updateCount('reviewOrdersCount', ordersList.filter(o => matchesStatus(o.status, 'Sample recieved')).length);
       updateCount('completedOrdersCount', ordersList.filter(o => matchesStatus(o.status, 'Cancelled')).length);
@@ -17667,7 +17797,7 @@ const __fallbackThemeCSS = `
             <option value="Sample missing">Sample missing</option>
             <option value="Sample to be sent (date)">Sample to be sent (date)</option>
             <option value="Sample Sent from Vendor">Sample Sent from Vendor</option>
-            <option value="Sample sent from DS">Sample sent from DS</option>
+            <option value="Sample sent from SG">Sample sent from SG</option>
             <option value="Sample At photographer">Sample At photographer</option>
             <option value="Sample recieved">Sample recieved</option>
             <option value="Cancelled">Cancelled</option>
@@ -17728,6 +17858,11 @@ const __fallbackThemeCSS = `
         const order = allOrders.find(o => o.orderNumber === orderNumber);
         if (order) {
           order.status = newStatus;
+          
+          // Tag with current date if changing to a sample status
+          if (isSampleStatus(newStatus)) {
+            order.sampleStatusDate = getCurrentDateFormatted();
+          }
           order.updatedAt = new Date().toISOString();
           if (newStatus === 'Complete') {
             completedCount++;
