@@ -6,8 +6,8 @@
 **Title:** Create and Manage Photo Orders Through Modal Interface  
 **Type:** User Story  
 **Epic:** Order Management System  
-**Sprint:** Q1 2025  
-**Status:** Ready for Development  
+**Sprint:** Q1 2026  
+**Status:** Active Development  
 **Priority:** High  
 **Assignee:** Product Team  
 
@@ -1008,8 +1008,8 @@ This user story does NOT include:
 **Development Lead:** [To be assigned]  
 
 **Created:** February 12, 2026  
-**Last Updated:** February 12, 2026 (Updated with Copy Order Feature)  
-**Version:** 1.0.1
+**Last Updated:** February 17, 2026 (Latest Changes Integration)  
+**Version:** 1.1.0
 
 ---
 

@@ -4485,7 +4485,7 @@ const __fallbackThemeCSS = `
       orderNumber:'ORD-2025-002', 
       title:'Espresso Beans - E-commerce Photography', 
       status:'',
-      method:'',
+      method:'M&B',
       orderType: 'PS',
       photographer:'Emily Chen', 
       deadline:'2025-09-05', 
@@ -4598,18 +4598,7 @@ const __fallbackThemeCSS = `
       assignedTo: 'user-photo1', // Mike Rodriguez
       
       comments: [],
-      uploadedContent: [
-        {
-          id: 'file_speaker_001',
-          name: 'Wireless_Speaker_Hero_Shot.jpg',
-          type: 'image/jpeg',
-          size: 2456789,
-          data: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAwIiBoZWlnaHQ9IjYwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9ImMiIHgxPSIwJSIgeTE9IjAlIiB4Mj0iMTAwJSIgeTI9IjEwMCUiPjxzdG9wIG9mZnNldD0iMCUiIHN0eWxlPSJzdG9wLWNvbG9yOiMxZTQwYWY7c3RvcC1vcGFjaXR5OjEiLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0eWxlPSJzdG9wLWNvbG9yOiMzYjgyZjY7c3RvcC1vcGFjaXR5OjEiLz48L2xpbmVhckdyYWRpZW50PjwvZGVmcz48cmVjdCB3aWR0aD0iNjAwIiBoZWlnaHQ9IjYwMCIgZmlsbD0iI2Y1ZjVmNSIvPjxyZWN0IHg9IjE1MCIgeT0iMjAwIiB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgcng9IjMwIiBmaWxsPSJ1cmwoI2MpIi8+PGNpcmNsZSBjeD0iMjUwIiBjeT0iMzAwIiByPSI0MCIgZmlsbD0iIzFhMzU2ZSIvPjxjaXJjbGUgY3g9IjM1MCIgY3k9IjMwMCIgcj0iNDAiIGZpbGw9IiMxYTM1NmUiLz48dGV4dCB4PSIzMDAiIHk9IjQ1MCIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjI0IiBmb250LXdlaWdodD0iYm9sZCIgZmlsbD0iIzFhMzU2ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+Qmx1ZXRvb3RoIFNwZWFrZXI8L3RleHQ+PC9zdmc+',
-          uploadedBy: 'Mike Rodriguez',
-          uploadedAt: '2025-08-27T14:30:00Z',
-          uploadedByRole: 'Photographer'
-        }
-      ]
+      uploadedContent: []
     },
     {
       orderNumber:'ORD-2025-004', 
@@ -4649,25 +4638,14 @@ const __fallbackThemeCSS = `
       assignedTo: 'user-photo2', // Emily Chen
       
       comments: [],
-      uploadedContent: [
-        {
-          id: 'file_bilka_004_1',
-          name: 'ENV.000003.jpg',
-          type: 'image/jpeg',
-          size: 3456789,
-          data: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAwIiBoZWlnaHQ9IjYwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iNjAwIiBoZWlnaHQ9IjYwMCIgZmlsbD0iI2Y1ZjVmNSIvPjxyZWN0IHg9IjE1MCIgeT0iMjAwIiB3aWR0aD0iNjAiIGhlaWdodD0iMjAwIiByeD0iMTAiIGZpbGw9IiM2YjczODAiLz48cmVjdCB4PSIxNTAiIHk9IjQwMCIgd2lkdGg9IjMwMCIgaGVpZ2h0PSI4MCIgcng9IjE1IiBmaWxsPSIjZWY0NDQ0Ii8+PHBhdGggZD0iTSAyMTAgMjAwIEwgNDAwIDI1MCBMIDIxMCA0MDAiIGZpbGw9IiM5Y2EzYWYiLz48dGV4dCB4PSIzMDAiIHk9IjU1MCIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjIyIiBmb250LXdlaWdodD0iYm9sZCIgZmlsbD0iIzM3NDE0YiIgdGV4dC1hbmNob3I9Im1pZGRsZSI+SGVkZ2UgVHJpbW1lcjwvdGV4dD48L3N2Zz4=',
-          uploadedBy: 'Bilka Auto-Generator',
-          uploadedAt: '2025-08-27T14:30:00Z',
-          uploadedByRole: 'System'
-        }
-      ]
+      uploadedContent: []
     },
     // Additional orders to populate all Kanban status columns
     {
       orderNumber:'ORD-2025-005', 
       title:'Organic Pasta - Product Photography', 
       status:'Pending Approval',
-      method:'',
+      method:'Merrild',
       orderType: 'PS',
       photographer:'Emily Chen', 
       deadline:'2025-09-04', 
@@ -4703,18 +4681,7 @@ const __fallbackThemeCSS = `
       assignedTo: 'user-photo2', // Emily Chen
       
       comments: [],
-      uploadedContent: [
-        {
-          id: 'file_past_005_1',
-          name: 'Organic_Penne_Pasta_Hero_Shot.jpg',
-          type: 'image/jpeg',
-          size: 3456789,
-          data: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAwIiBoZWlnaHQ9IjYwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iNjAwIiBoZWlnaHQ9IjYwMCIgZmlsbD0iI2Y1ZjVmNSIvPjxyZWN0IHg9IjE1MCIgeT0iMTUwIiB3aWR0aD0iMzAwIiBoZWlnaHQ9IjMwMCIgcng9IjIwIiBmaWxsPSIjZmZkNzAwIi8+PHJlY3QgeD0iMTcwIiB5PSIxNzAiIHdpZHRoPSIyNjAiIGhlaWdodD0iNjAiIGZpbGw9IiNmZmZmZmYiLz48dGV4dCB4PSIzMDAiIHk9IjI4MCIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjI4IiBmb250LXdlaWdodD0iYm9sZCIgZmlsbD0iIzM3MzA4YiIgdGV4dC1hbmNob3I9Im1pZGRsZSI+T3JnYW5pYzwvdGV4dD48dGV4dCB4PSIzMDAiIHk9IjMxNSIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjI4IiBmb250LXdlaWdodD0iYm9sZCIgZmlsbD0iIzM3MzA4YiIgdGV4dC1hbmNob3I9Im1pZGRsZSI+UGFzdGE8L3RleHQ+PGNpcmNsZSBjeD0iMjIwIiBjeT0iMzgwIiByPSIxNSIgZmlsbD0iIzM3MzA4YiIvPjxjaXJjbGUgY3g9IjI2MCIgY3k9IjM4MCIgcj0iMTUiIGZpbGw9IiMzNzMwOGIiLz48Y2lyY2xlIGN4PSIzMDAiIGN5PSIzODAiIHI9IjE1IiBmaWxsPSIjMzczMDhiIi8+PGNpcmNsZSBjeD0iMzQwIiBjeT0iMzgwIiByPSIxNSIgZmlsbD0iIzM3MzA4YiIvPjxjaXJjbGUgY3g9IjM4MCIgY3k9IjM4MCIgcj0iMTUiIGZpbGw9IiMzNzMwOGIiLz48L3N2Zz4=',
-          uploadedBy: 'Emily Chen',
-          uploadedAt: '2025-08-27T14:30:00Z',
-          uploadedByRole: 'Photographer'
-        }
-      ]
+      uploadedContent: []
     },
     {
       orderNumber:'ORD-2025-006', 
@@ -4754,24 +4721,13 @@ const __fallbackThemeCSS = `
       assignedTo: 'user-photo1', // Mike Rodriguez
       
       comments: [],
-      uploadedContent: [
-        {
-          id: 'file_dairy_006_1',
-          name: 'Organic_Milk_Bottle_Hero_Shot.jpg',
-          type: 'image/jpeg',
-          size: 2876543,
-          data: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAwIiBoZWlnaHQ9IjYwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iNjAwIiBoZWlnaHQ9IjYwMCIgZmlsbD0iI2Y1ZjVmNSIvPjxyZWN0IHg9IjIyNSIgeT0iMTUwIiB3aWR0aD0iMTUwIiBoZWlnaHQ9IjMwMCIgcng9IjE1IiBmaWxsPSIjZmZmZmZmIiBzdHJva2U9IiNkNGQ0ZDQiIHN0cm9rZS13aWR0aD0iMyIvPjxyZWN0IHg9IjIzNSIgeT0iMTYwIiB3aWR0aD0iMTMwIiBoZWlnaHQ9IjYwIiBmaWxsPSIjMTA5OTY4Ii8+PHRleHQgeD0iMzAwIiB5PSIxOTUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNiIgZm9udC13ZWlnaHQ9ImJvbGQiIGZpbGw9IiNmZmZmZmYiIHRleHQtYW5jaG9yPSJtaWRkbGUiPk9yZ2FuaWM8L3RleHQ+PHRleHQgeD0iMzAwIiB5PSIyODAiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIzMiIgZm9udC13ZWlnaHQ9ImJvbGQiIGZpbGw9IiMzNzQxNGIiIHRleHQtYW5jaG9yPSJtaWRkbGUiPk1JTEs8L3RleHQ+PHRleHQgeD0iMzAwIiB5PSIzMjAiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIyMCIgZmlsbD0iIzM3NDE0YiIgdGV4dC1hbmNob3I9Im1pZGRsZSI+MUw8L3RleHQ+PC9zdmc+',
-          uploadedBy: 'Mike Rodriguez',
-          uploadedAt: '2025-08-27T10:15:00Z',
-          uploadedByRole: 'Photographer'
-        }
-      ]
+      uploadedContent: []
     },
     {
       orderNumber:'ORD-2025-007', 
       title:'Smart Home Devices - Tech Showcase', 
       status:'Complete',
-      method:'',
+      method:'GILS',
       orderType: 'PS',
       photographer:'Mike Rodriguez', 
       deadline:'2025-09-02', 
@@ -4804,18 +4760,7 @@ const __fallbackThemeCSS = `
       assignedTo: 'user-photo1', // Mike Rodriguez
       
       comments: [],
-      uploadedContent: [
-        {
-          id: 'file_bilka_007_1',
-          name: 'ENV.000006.jpg',
-          type: 'image/jpeg',
-          size: 3123456,
-          data: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAwIiBoZWlnaHQ9IjYwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iNjAwIiBoZWlnaHQ9IjYwMCIgZmlsbD0iI2Y1ZjVmNSIvPjxyZWN0IHg9IjE1MCIgeT0iMTUwIiB3aWR0aD0iMzAwIiBoZWlnaHQ9IjMwMCIgcng9IjI1IiBmaWxsPSIjZmY2ZjAwIi8+PGNpcmNsZSBjeD0iMzAwIiBjeT0iMjUwIiByPSI2MCIgZmlsbD0iI2ZmZmZmZiIvPjxjaXJjbGUgY3g9IjMwMCIgY3k9IjI1MCIgcj0iMzUiIGZpbGw9IiNmZjZmMDAiLz48dGV4dCB4PSIzMDAiIHk9IjM3MCIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjI0IiBmb250LXdlaWdodD0iYm9sZCIgZmlsbD0iI2ZmZmZmZiIgdGV4dC1hbmNob3I9Im1pZGRsZSI+U29jY2VyIEJhbGw8L3RleHQ+PC9zdmc+',
-          uploadedBy: 'Mike Rodriguez',
-          uploadedAt: '2025-08-27T12:30:00Z',
-          uploadedByRole: 'Photographer'
-        }
-      ]
+      uploadedContent: []
     },
     {
       orderNumber:'ORD-2025-008', 
@@ -4943,7 +4888,7 @@ const __fallbackThemeCSS = `
       orderNumber:'ORD-2025-010', 
       title:'Gaming Laptop - Tech Showcase', 
       status:'Samples Requested',
-      method:'',
+      method:'M&B',
       orderType: 'PS',
       photographer:'Marcus Thompson', 
       deadline:'2025-09-08', 
@@ -5077,7 +5022,7 @@ const __fallbackThemeCSS = `
       orderNumber:'ORD-2025-013', 
       title:'Organic Skincare Line', 
       status:'Photo Session',
-      method:'',
+      method:'GILS',
       orderType: 'PS',
       photographer:'Lisa Wang', 
       deadline:'2025-09-07', 
@@ -5111,7 +5056,7 @@ const __fallbackThemeCSS = `
       orderNumber:'ORD-2025-014', 
       title:'Smart Home Security System', 
       status:'Samples in Transit',
-      method:'',
+      method:'Merrild',
       orderType: 'PS',
       photographer:'Alex Johnson', 
       deadline:'2025-09-20', 
@@ -5214,7 +5159,7 @@ const __fallbackThemeCSS = `
       orderNumber:'ORD-2025-017', 
       title:'Smartphone Accessories Bundle', 
       status:'New Request',
-      method:'',
+      method:'GILS',
       orderType: 'PS',
       photographer:'Not Assigned', 
       deadline:'2025-09-25', 
@@ -5317,7 +5262,7 @@ const __fallbackThemeCSS = `
       orderNumber:'ORD-2025-020', 
       title:'Gourmet Coffee Beans', 
       status:'Delivered',
-      method:'',
+      method:'M&B',
       orderType: 'PS',
       photographer:'Ana Rodriguez', 
       deadline:'2025-08-28', 
@@ -5382,7 +5327,7 @@ const __fallbackThemeCSS = `
       orderNumber:'ORD-2025-022', 
       title:'Wireless Headphones Premium', 
       status:'Urgent',
-      method:'',
+      method:'Merrild',
       orderType: 'PS',
       photographer:'Michael Park', 
       deadline:'2025-09-05', 
@@ -5475,7 +5420,7 @@ const __fallbackThemeCSS = `
       orderNumber:'ORD-2025-025', 
       title:'Smart TV 75 inch Ultra HD', 
       status:'Photo Session',
-      method:'',
+      method:'Merrild',
       orderType: 'PS',
       photographer:'Kevin Wright', 
       deadline:'2025-09-13', 
@@ -5506,7 +5451,7 @@ const __fallbackThemeCSS = `
       orderNumber:'ORD-2025-026', 
       title:'Luxury Bedding Set', 
       status:'Samples Requested',
-      method:'',
+      method:'M&B',
       orderType: 'PS',
       photographer:'Rachel Green', 
       deadline:'2025-09-19', 
@@ -7070,7 +7015,7 @@ const __fallbackThemeCSS = `
                           onchange="handleOrderTypeFilterChange(this.value)"
                           style="padding: 6px 10px; border: 1px solid rgba(216, 164, 88, 0.65); border-radius: 8px; font-size: 13px; font-family: monospace; font-weight: 500; background: #fffaf3; cursor: pointer; min-width: 140px; color: #6b5440; flex: 0 0 auto;">
                     <option value="" hidden>Order Type</option>
-                    <option value="Photo Service">Photo Service</option>
+                    <option value="Photo Service" selected>Photo Service</option>
                     <option value="Photo order">Photo order</option>
                   </select>
                   <select id="salesOrgFilter"
@@ -9954,7 +9899,7 @@ const __fallbackThemeCSS = `
       eventId: '',
       tacticType: '',
       tactic: '',
-      orderType: ''
+      orderType: 'Photo Service'
     };
 
     function clearOrderFilters() {
@@ -9962,14 +9907,18 @@ const __fallbackThemeCSS = `
       orderFilters.eventId = '';
       orderFilters.tacticType = '';
       orderFilters.tactic = '';
-      orderFilters.orderType = '';
+      orderFilters.orderType = 'Photo Service';
       statusFilterOverride = '';
 
       const selectIds = ['salesOrgFilter', 'eventIdFilter', 'tacticTypeFilter', 'tacticFilter', 'orderTypeFilter'];
       selectIds.forEach((id) => {
         const select = document.getElementById(id);
         if (select) {
-          select.value = '';
+          if (id === 'orderTypeFilter') {
+            select.value = 'Photo Service';
+          } else {
+            select.value = '';
+          }
         }
       });
 
@@ -10690,7 +10639,7 @@ const __fallbackThemeCSS = `
     }
 
     function handleOrderTypeFilterChange(value) {
-      orderFilters.orderType = normalizeFilterValue(value);
+      orderFilters.orderType = normalizeFilterValue(value) || 'Photo Service';
       refreshOrdersAfterFilterChange();
     }
 
@@ -14430,7 +14379,7 @@ const __fallbackThemeCSS = `
             ? `background: ${commentCount > 0 ? 'linear-gradient(120deg, rgba(168, 180, 248, 0.95), rgba(125, 211, 252, 0.9))' : 'rgba(255, 255, 255, 0.35)'}; color: rgba(17, 32, 62, 0.95); border: 1px solid rgba(148, 180, 255, 0.55); padding: 6px 14px; border-radius: 999px; cursor: pointer; font-size: 11px; position: relative; box-shadow: 0 12px 26px rgba(72, 118, 182, 0.35); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);`
             : isGlassTheme
             ? `background: ${commentCount > 0 ? 'linear-gradient(135deg, #3b82f6, #2563eb)' : 'rgba(255, 255, 255, 0.5)'}; color: ${commentCount > 0 ? 'white' : '#64748b'}; border: 1px solid rgba(255, 255, 255, 0.6); padding: 6px 14px; border-radius: 999px; cursor: pointer; font-size: 11px; position: relative; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); backdrop-filter: blur(10px);`
-            : `background: ${commentCount > 0 ? '#c48b5a' : '#6b5440'}; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 11px; position: relative;`;
+            : `background: ${commentCount > 0 ? '#c48b5a' : '#6b5440'}; color: white; border: none; padding: 6px 14px; border-radius: 999px; cursor: pointer; font-size: 11px; position: relative;`;
           const unreadBadgeStyle = isAuroraTheme
             ? 'position: absolute; top: -6px; right: -6px; background: rgba(255, 82, 82, 0.92); color: white; border-radius: 999px; width: 16px; height: 16px; font-size: 10px; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(255, 255, 255, 0.65); box-shadow: 0 6px 14px rgba(239, 68, 68, 0.35);'
             : isGlassTheme
@@ -14586,7 +14535,80 @@ const __fallbackThemeCSS = `
       }
     }
 
+    function expandAllOrdersFunc() {
+      const tbody = document.getElementById('ordersBody');
+      if (!tbody) return;
+      
+      // Get all visible order numbers from table rows
+      const orderRows = Array.from(tbody.querySelectorAll('tr')).filter(row => 
+        !row.classList.contains('order-articles-row') && 
+        row.querySelector('.order-expand-button')
+      );
+      
+      orderRows.forEach(row => {
+        const button = row.querySelector('.order-expand-button');
+        if (button) {
+          const orderNumber = button.getAttribute('onclick').match(/'([^']+)'/)[1];
+          if (!expandedOrders.has(orderNumber)) {
+            expandedOrders.add(orderNumber);
+          }
+        }
+      });
+      
+      if (currentView === 'orders') {
+        drawOrderRows();
+      }
+    }
+
+    function collapseAllOrdersFunc() {
+      const tbody = document.getElementById('ordersBody');
+      if (!tbody) return;
+      
+      // Get all visible order numbers from table rows
+      const orderRows = Array.from(tbody.querySelectorAll('tr')).filter(row => 
+        !row.classList.contains('order-articles-row') && 
+        row.querySelector('.order-expand-button')
+      );
+      
+      orderRows.forEach(row => {
+        const button = row.querySelector('.order-expand-button');
+        if (button) {
+          const orderNumber = button.getAttribute('onclick').match(/'([^']+)'/)[1];
+          if (expandedOrders.has(orderNumber)) {
+            expandedOrders.delete(orderNumber);
+          }
+        }
+      });
+      
+      if (currentView === 'orders') {
+        drawOrderRows();
+      }
+    }
+
     window.toggleOrderExpansion = toggleOrderExpansion;
+    window.expandAllOrdersFunc = expandAllOrdersFunc;
+    window.collapseAllOrdersFunc = collapseAllOrdersFunc;
+
+    // Keyboard shortcuts for expand/collapse all orders
+    document.addEventListener('keydown', (e) => {
+      // Only trigger if not typing in an input and in orders view
+      const activeElement = document.activeElement;
+      const isInputField = activeElement && (activeElement.tagName === 'INPUT' || activeElement.tagName === 'TEXTAREA');
+      
+      if (isInputField || currentView !== 'orders') return;
+      
+      if (e.ctrlKey && e.shiftKey && e.key === 'E') {
+        e.preventDefault();
+        if (typeof expandAllOrdersFunc === 'function') {
+          expandAllOrdersFunc();
+        }
+      } else if (e.ctrlKey && e.shiftKey && e.key === 'C') {
+        e.preventDefault();
+        if (typeof collapseAllOrdersFunc === 'function') {
+          collapseAllOrdersFunc();
+        }
+      }
+    });
 
     // Kanban Board Functions
     function drawKanbanBoard() {
@@ -15367,7 +15389,7 @@ const __fallbackThemeCSS = `
           const unreadComments = window.commentSystem ? window.commentSystem.getUnreadCommentCount(o.orderNumber) : 0;
           const commentButtonStyle = isAuroraTheme
             ? `background: ${commentCount > 0 ? 'linear-gradient(120deg, rgba(168, 180, 248, 0.95), rgba(125, 211, 252, 0.9))' : 'rgba(255, 255, 255, 0.35)'}; color: rgba(17, 32, 62, 0.95); border: 1px solid rgba(148, 180, 255, 0.55); padding: 6px 14px; border-radius: 999px; cursor: pointer; font-size: 11px; position: relative; box-shadow: 0 12px 26px rgba(72, 118, 182, 0.35); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);`
-            : `background: ${commentCount > 0 ? '#c48b5a' : '#6b5440'}; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; position: relative;`;
+            : `background: ${commentCount > 0 ? '#c48b5a' : '#6b5440'}; color: white; border: none; padding: 6px 14px; border-radius: 999px; cursor: pointer; font-size: 12px; position: relative;`;
           const unreadBadgeStyle = isAuroraTheme
             ? 'position: absolute; top: -6px; right: -6px; background: rgba(255, 82, 82, 0.92); color: white; border-radius: 999px; width: 16px; height: 16px; font-size: 10px; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(255, 255, 255, 0.65); box-shadow: 0 6px 14px rgba(239, 68, 68, 0.35);'
             : 'position: absolute; top: -4px; right: -4px; background: #ef4444; color: white; border-radius: 50%; width: 16px; height: 16px; font-size: 10px; display: flex; align-items: center; justify-content: center;';
@@ -15755,6 +15777,14 @@ const __fallbackThemeCSS = `
       const fileInput = document.getElementById('massUploadInput');
       const files = fileInput.files;
 
+      const normalizeMatchName = (value) => {
+        if (typeof value !== 'string') return '';
+        return value
+          .trim()
+          .toLowerCase()
+          .replace(/\.[^./\\]+$/, '');
+      };
+
       if (!files || files.length === 0) {
         showToast('Please select files to upload', 'error');
         return;
@@ -15810,6 +15840,7 @@ const __fallbackThemeCSS = `
         
         reader.onload = function(e) {
           const fileName = file.name;
+          const normalizedFileName = normalizeMatchName(fileName);
           let matched = false;
           const timestamp = new Date().toISOString();
 
@@ -15820,7 +15851,7 @@ const __fallbackThemeCSS = `
             const orderStatus = order?.status || 'Pending';
             const orderPriority = order?.priority || 'Medium';
 
-            if (order.fileName && order.fileName === fileName) {
+            if (order.fileName && normalizeMatchName(order.fileName) === normalizedFileName) {
               const existingContent = Array.isArray(order.uploadedContent) ? order.uploadedContent : [];
 
               const record = {
@@ -15873,7 +15904,7 @@ const __fallbackThemeCSS = `
             if (Array.isArray(order.articles)) {
               for (let i = 0; i < order.articles.length; i++) {
                 const article = order.articles[i];
-                if (article && typeof article === 'object' && article.fileName && article.fileName === fileName) {
+                if (article && typeof article === 'object' && article.fileName && normalizeMatchName(article.fileName) === normalizedFileName) {
                   if (!article.uploadedImages) article.uploadedImages = [];
 
                   const record = {
