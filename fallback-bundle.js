@@ -7185,7 +7185,7 @@ const __fallbackThemeCSS = `
                         <th style="padding: 4px; text-align: center; border-bottom: 1px solid var(--theme-table-border); width: 32px;" aria-label="Expand"></th>
                         <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: var(--theme-table-header-text); border-bottom: 1px solid var(--theme-table-border);">Order Number</th>
                         <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: var(--theme-table-header-text); border-bottom: 1px solid var(--theme-table-border);">Title</th>
-                        <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: var(--theme-table-header-text); border-bottom: 1px solid var(--theme-table-border);">Activity</th>
+                        <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: var(--theme-table-header-text); border-bottom: 1px solid var(--theme-table-border);">Event</th>
                         <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: var(--theme-table-header-text); border-bottom: 1px solid var(--theme-table-border);">Page</th>
                         <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: var(--theme-table-header-text); border-bottom: 1px solid var(--theme-table-border);">Offer ID</th>
                         <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: var(--theme-table-header-text); border-bottom: 1px solid var(--theme-table-border);">Group</th>
@@ -10681,6 +10681,7 @@ const __fallbackThemeCSS = `
       toggleColumnByLabel('cancel', hideForPhotoService);
       toggleColumnByLabel('deadline', hideForPhotoService);
       toggleColumnByLabel('sample delivery', hideForPhotoService);
+      toggleColumnByLabel('title', hideForPhotoService);
       toggleColumnByLabel('order type', hideForAnyPhotoType);
       toggleColumnByLabel('page', hideForPhotoOrder);
       toggleColumnByLabel('offer id', hideForPhotoOrder);
@@ -14405,9 +14406,9 @@ const __fallbackThemeCSS = `
                     : o.sampleDelivery)
                 : placeholderSpan)
             : '';
-          const titleDisplay = o.title || placeholderSpan;
-          const activityDisplay = isPO ? (o.activity || placeholderSpan) : '';
-          const rawPage = o.page ?? o.pageNumber ?? o.pageNo ?? o.catalogPage ?? o.pamPage ?? o.pageReference ?? '';
+          const titleDisplay = isPS ? '' : (o.title || placeholderSpan);
+          const eventDisplay = isPS ? (o.eventId || placeholderSpan) : (isPO ? (o.activity || placeholderSpan) : '');
+          const rawPage = o.page ?? o.pageNumber ?? o.pageNo ?? o.catalogPage ?? o.pamPage ?? o.pageReference ?? '';;
           const parsedPage = parseInt(rawPage, 10);
           const pageDisplay = !isNaN(parsedPage) && parsedPage >= 0 ? String(parsedPage) : (rawPage ? String(rawPage).trim() : placeholderSpan);
           const offerId = o.offerId || placeholderSpan;
@@ -14441,8 +14442,8 @@ const __fallbackThemeCSS = `
               ${prioIndicator}<button type="button" class="order-expand-button" aria-label="${expandLabel}" title="${expandLabel}" onclick="toggleOrderExpansion('${o.orderNumber}', event)">${expandIcon}</button>
             </td>
             <td style="padding:6px 8px;${baseCellTextColor}font-size:12px;"><strong>${o.orderNumber}</strong></td>
-            <td style="padding:6px 8px;${baseCellTextColor}font-size:12px;">${titleDisplay}</td>
-            <td style="padding:6px 8px;${baseCellTextColor}font-size:12px;">${activityDisplay}</td>
+            <td style="padding:6px 8px;${baseCellTextColor}font-size:12px;display:${isPS ? 'none' : 'table-cell'};">${titleDisplay}</td>
+            <td style="padding:6px 8px;${baseCellTextColor}font-size:12px;">${eventDisplay}</td>
             <td style="padding:6px 8px;${baseCellTextColor}font-size:12px;">${isPO ? '' : pageDisplay}</td>
             <td style="padding:6px 8px;${baseCellTextColor}font-size:12px;">${isPO ? '' : offerId}</td>
             <td style="padding:6px 8px;${baseCellTextColor}font-size:12px;">${isPO ? '' : groupDisplay}</td>
