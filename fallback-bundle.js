@@ -7196,6 +7196,7 @@ const __fallbackThemeCSS = `
                         <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: var(--theme-table-header-text); border-bottom: 1px solid var(--theme-table-border);">Production</th>
                         <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: var(--theme-table-header-text); border-bottom: 1px solid var(--theme-table-border);">Principle</th>
                         <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: var(--theme-table-header-text); border-bottom: 1px solid var(--theme-table-border);">Photo Ref</th>
+                        <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: var(--theme-table-header-text); border-bottom: 1px solid var(--theme-table-border);">Shot Type</th>
                         <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: var(--theme-table-header-text); border-bottom: 1px solid var(--theme-table-border);">File Name</th>
                         <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: var(--theme-table-header-text); border-bottom: 1px solid var(--theme-table-border);">Upload Time</th>
                         <th style="padding: 8px 10px; text-align: left; font-weight: 600; color: var(--theme-table-header-text); border-bottom: 1px solid var(--theme-table-border); width: 92px;">Comments</th>
@@ -9894,6 +9895,7 @@ const __fallbackThemeCSS = `
   const SALES_ORG_OPTIONS = ['Bilka', 'føtex', 'netto', 'Fætter BR', 'Salling'];
   const PRINCIPLE_OPTIONS = ['#P 2D', '#P 2P', '#P 2D FLIP', '#P 2J FLIP', '#P 2I', '#P 2J', '#P 2K', '#P 2H', '#P 2K FLIP', '#P 2N', '#P 2M', '#P 4A', '#P 3E', '#P 4C', '#P 4E'];
   const PHOTO_REF_OPTIONS = ['#01 GINE', '#02 OPLÆGNING', '#03 OPLÆGNING FOLDET', '#04 OPLÆGNING OVERLAP', '#05 OPLÆGNING STYLET', '#06 STAK LIGE', '#07 LIGE FRA SIDEN', '#08 SKRÅT FRA SIDEN', '#10 KONSTRUERET SÆT', '#11 OPLÆGNING GRAFISK', '#12 FRI OPSTILLING', '#13 EMBALLAGE', '#15 DETALJESKUD', '#16 BUNKE', '#17 STAK STYLET', '#18 BØJLE STYLET', '1/1 MODEL', '1/2 MODEL'];
+  const SHOT_TYPE_OPTIONS = ['All Types', 'Pack', 'Pack advanced', 'Pack background', 'Model', 'Model background', 'Additional image', 'Additional image background'];
   const DEFAULT_TACTIC_TYPE = 'Print';
   const DEFAULT_TACTIC = 'Leaflet';
     const orderFilters = {
@@ -10322,6 +10324,16 @@ const __fallbackThemeCSS = `
         }
       }
 
+      // Assign Shot Type if missing (Photo Service orders only)
+      if (!order.shotType && normalizeOrderType(order.orderType) === 'PS') {
+        if (fallbackIndex !== null && !Number.isNaN(fallbackIndex)) {
+          const stIndex = Math.abs(fallbackIndex) % SHOT_TYPE_OPTIONS.length;
+          order.shotType = SHOT_TYPE_OPTIONS[stIndex];
+        } else {
+          order.shotType = SHOT_TYPE_OPTIONS[Math.floor(Math.random() * SHOT_TYPE_OPTIONS.length)];
+        }
+      }
+
       order.tacticType = DEFAULT_TACTIC_TYPE;
       order.tactic = DEFAULT_TACTIC;
       applyProductionNormalization(order);
@@ -10701,6 +10713,7 @@ const __fallbackThemeCSS = `
       toggleColumnByLabel('offer name', hideForPhotoOrder);
       toggleColumnByLabel('principle', hideForPhotoOrder);
       toggleColumnByLabel('photo ref', hideForPhotoOrder);
+      toggleColumnByLabel('shot type', hideForPhotoOrder);
       toggleColumnByLabel('file name', hideForPhotoOrder);
       toggleColumnByLabel('upload time', hideForPhotoOrder);
       toggleColumnByLabel('purchase group', false);
@@ -14422,7 +14435,8 @@ const __fallbackThemeCSS = `
           const titleDisplay = isPS ? '' : (o.title || placeholderSpan);
           const eventDisplay = isPS ? (o.eventId || placeholderSpan) : (isPO ? (o.activity || placeholderSpan) : '');
           const photoRefDisplay = isPS ? (o.photoRef || placeholderSpan) : '';
-          const rawPage = o.page ?? o.pageNumber ?? o.pageNo ?? o.catalogPage ?? o.pamPage ?? o.pageReference ?? '';;
+          const shotTypeDisplay = isPS ? (o.shotType || placeholderSpan) : '';
+          const rawPage = o.page ?? o.pageNumber ?? o.pageNo ?? o.catalogPage ?? o.pamPage ?? o.pageReference ?? '';;;
           const parsedPage = parseInt(rawPage, 10);
           const pageDisplay = !isNaN(parsedPage) && parsedPage >= 0 ? String(parsedPage) : (rawPage ? String(rawPage).trim() : placeholderSpan);
           const offerId = o.offerId || placeholderSpan;
@@ -14468,6 +14482,7 @@ const __fallbackThemeCSS = `
             <td style="padding:6px 8px;${baseCellTextColor}font-size:12px;">${productionInfo}</td>
             <td style="padding:6px 8px;${baseCellTextColor}font-size:12px;">${isPO ? '' : principle}</td>
             <td style="padding:6px 8px;${baseCellTextColor}font-size:12px;">${photoRefDisplay}</td>
+            <td style="padding:6px 8px;${baseCellTextColor}font-size:12px;">${shotTypeDisplay}</td>
             <td style="padding:6px 8px;${baseCellTextColor}font-size:12px;">${isPO ? '' : renderFileNameWithPreview(o.fileName || 'SG_' + Math.floor(Math.random() * 900000 + 100000), o.uploadedAt, o.cloudinaryUrl, o.uploadedContent && o.uploadedContent[0] ? o.uploadedContent[0].data : null)}</td>
             <td style="padding:6px 8px;${baseCellTextColor}font-size:12px;">
               ${isPO ? '' : (o.uploadedAt 
